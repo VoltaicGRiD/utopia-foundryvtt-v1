@@ -10,6 +10,9 @@
       "eff": { "long": "Effervescence", "abbr": "eff" }
     },
     "Points": {
+      "subtrait": "Subtrait",
+      "talent": "Talent",
+      "gifted": "Gifted",
       "body": "Body",
       "mind": "Mind",
       "soul": "Soul"
@@ -37,20 +40,34 @@
       "lan": { "long": "Language", "abbr": "lan" }
     },
     "Defenses": {
-      "Chill": "Chill",
-      "Energy": "Energy",
-      "Heat": "Heat",
-      "Physical": "Physical",
-      "Psyche": "Psyche"
+      "chill": "Chill",
+      "energy": "Energy",
+      "heat": "Heat",
+      "physical": "Physical",
+      "psyche": "Psyche"
     },
     "SheetLabels": {
-      "Actor": "Utopia Actor Sheet",
-      "Item": "Utopia Item Sheet"
+      "actor": "Utopia Actor Sheet",
+      "item": "Utopia Item Sheet"
     },
     "Descriptions": {
-      "Points": "Points",
-      "Defenses": "Defenses",
-      "Parent": "Parent"
+      "points": "Points",
+      "defenses": "Defenses",
+      "parent": "Parent",
+      "spellcap": "Spellcap",
+      "keepopen": "Keep open",
+      "roll": "Roll",
+      "description": "Description"
+      
+    },
+    "Talents": {
+      "tree": "Tree",
+      "position": "Position",
+      "ultimate": "Ult",
+      "position-error": {
+        "short": "Required (> 0)",
+        "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
+      }
     },
     "Attributes": {
       "Block": "Block",

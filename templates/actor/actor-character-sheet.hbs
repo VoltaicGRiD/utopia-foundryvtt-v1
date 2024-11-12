@@ -111,7 +111,11 @@
               {{#each trait.subtraits as |subtrait sub|}}
                 <tr {{#if subtrait.gifted}} class="gifted" {{/if}}>
                   <td class="rollable td-left" data-roll="3d6+@traits.{{key}}.subtraits.{{sub}}.mod"> 
-                    <span class="resource-label">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{{#if subtrait.gifted}}*{{/if}}{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}{{#if subtrait.gifted}}*{{/if}}</span>
+                    {{#if subtrait.gifted}}
+                      <span class="resource-label">&nbsp;<i class="fa-solid fa-gift"></i>&nbsp;&nbsp;-&nbsp;{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}</span>
+                    {{else}}
+                      <span class="resource-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}</span>
+                    {{/if}}
                   </td>
                   <td class="td-center">{{numberFormat subtrait.value decimals=0}}</td>
                   <td class="td-center">{{numberFormat subtrait.mod decimals=0 sign=true}}</td>
@@ -131,22 +135,55 @@
         {{!-- For the main features list, span the right two columns --}}
         <section class="main grid-span-2">
           <div class="flexcol">
-            <h3>{{localize 'UTOPIA.Descriptions.Points'}}</h3>
+            <table>
+              {{#each system.tree as |tree key|}}
+                <tr>
+                  <td>{{key}}</td>
+                  <td>{{tree}}</td>
+                </tr>
+              {{/each}}
+            </table>
+
+            <h3>{{localize 'UTOPIA.Descriptions.points'}}</h3>
             <div class="flexrow grid-3col">
               
               <button disabled>
                 <i class="fa-solid fa-gift"></i>
+                {{localize 'UTOPIA.Points.gifted'}} - 
                 {{numberFormat system.points.gifted decimals=0}}
               </button>
               
               <button disabled>
                 <i class="fa-solid fa-list"></i>
+                {{localize 'UTOPIA.Points.subtrait'}} - 
                 {{numberFormat system.points.subtrait decimals=0}}
               </button>
               
               <button class="talents">
                 <i class="fa-solid fa-heart"></i>
+                {{localize 'UTOPIA.Points.talent'}} - 
                 {{numberFormat system.points.talent decimals=0}}
+              </button>
+              
+            </div> 
+            <div class="flexrow">
+              
+              <button disabled>
+                <i class="fa-solid fa-shield"></i>
+                {{localize 'UTOPIA.Points.body'}} - 
+                {{numberFormat system.points.body decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-brain"></i>
+                {{localize 'UTOPIA.Points.mind'}} - 
+                {{numberFormat system.points.mind decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-flame"></i>
+                {{localize 'UTOPIA.Points.soul'}} - 
+                {{numberFormat system.points.soul decimals=0}}
               </button>
               
             </div> 
@@ -155,33 +192,42 @@
           <hr/>
           
           <div class="flexcol">
-            <h3>{{localize 'UTOPIA.Descriptions.Defenses'}}</h3>
-            <div class="flexrow grid-5col">
+            <h3>{{localize 'UTOPIA.Descriptions.defenses'}}</h3>
+            <div class="flexrow grid-3col">
               
               <button disabled>
                 <i class="fa-solid fa-snowflake"></i>
+                {{localize 'UTOPIA.Defenses.chill'}} - 
                 {{numberFormat system.defenses.chill decimals=0}}
               </button>
               
               <button disabled>
                 <i class="fa-solid fa-bolt"></i>
+                {{localize 'UTOPIA.Defenses.energy'}} - 
                 {{numberFormat system.defenses.energy decimals=0}}
               </button>
               
               <button disabled>
                 <i class="fa-solid fa-fire"></i>
+                {{localize 'UTOPIA.Defenses.heat'}} - 
                 {{numberFormat system.defenses.heat decimals=0}}
               </button>
-              
+            
+            </div>
+            <div class="flexrow grid-3col">
+
               <button disabled>
                 <i class="fa-solid fa-sword"></i>
+                {{localize 'UTOPIA.Defenses.physical'}} - 
                 {{numberFormat system.defenses.physical decimals=0}}
               </button>
               
               <button disabled>
                 <i class="fa-solid fa-brain"></i>
+                {{localize 'UTOPIA.Defenses.psyche'}} - 
                 {{numberFormat system.defenses.psyche decimals=0}}
               </button>
+
             </div> 
           </div>
           {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}

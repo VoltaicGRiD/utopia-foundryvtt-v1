@@ -130,7 +130,7 @@ export class UtopiaActorSheet extends ActorSheet {
         gear.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature') {
+      else if (i.type === 'talent') {
         features.push(i);
       }
       // Append to spells.
@@ -204,9 +204,9 @@ export class UtopiaActorSheet extends ActorSheet {
     html.on('click', '.gift', this._giftSubtrait.bind(this));
 
     // Talent point button click.
-    //html.on('click', '.talents', () => { game.packs.get('world.talents').render(true); })
-    //html.on('click', '.talents', this._displayTalents.bind(this));
+    html.on('click', '.talents', this._displayTalents.bind(this));
 
+    // Species point button click.
     html.on('click', '.species', this._displaySpecies.bind(this));
 
     // Drag events for macros.
@@ -369,7 +369,6 @@ export class UtopiaActorSheet extends ActorSheet {
       let subtrait = dataset.subtrait;
 
       let newPointValue = this.actor.system.points.gifted - 1;
-      console.log(this.actor.system.points.gifted);
       
       this.actor.update({
         system: {
@@ -388,13 +387,9 @@ export class UtopiaActorSheet extends ActorSheet {
         }
       })
     }  
-
-    console.log(this.actor);
   }
 
   async _displaySpecies(event) {
-    console.log(event);
-    console.log(this.actor);
 
     let species = this.actor.system.species;
     if (Object.keys(species).length !== 0)
@@ -405,6 +400,17 @@ export class UtopiaActorSheet extends ActorSheet {
     let pack = game.packs.get('utopia.species');
     let options = await pack.getDocuments();
     newSheet.displayOptions = options;
+    
+    newSheet.render(true);
+  }
+
+  async _displayTalents(event) {
+    let newSheet = new UtopiaOptionsSheet();
+    newSheet.actor = this.actor;
+    let pack = game.packs.get('utopia.talents');
+    let options = await pack.getDocuments();
+    newSheet.displayOptions = options;
+    newSheet.keepOpen = true;
     
     newSheet.render(true);
   }

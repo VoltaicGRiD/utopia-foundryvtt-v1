@@ -13,6 +13,41 @@ export class UtopiaItem extends Item {
   }
 
   /**
+   * @override
+   * Augment the actor source data with additional dynamic data. Typically,
+   * you'll want to handle most of your calculated/derived data in this step.
+   * Data calculated in this step should generally not exist in template.json
+   * (such as ability modifiers rather than ability scores) and should be
+   * available both inside and outside of character sheets (such as if an actor
+   * is queried and has a roll executed directly from it).
+   */
+  prepareDerivedData() {
+    const itemData = this;
+    const systemData = itemData.system;
+
+    // if (systemData['parent'] !== undefined && systemData['parent'] !== "") {
+    //   if (systemData['parent'] === this.uuid) {
+    //     ui.notifications.error("You cannot assign an item as a parent to itself. You maniac.");
+    //   } 
+    //   else {
+    //     let id = systemData.parent.split('.').slice(-1)[0];
+    //     let parent = foundry.utils.parseUuid(systemData.parent).collection.find(f => f._id == id);
+
+    //     if (parent === null || parent === undefined) {
+    //       return;
+    //     }
+    //     else {
+    //       this.update({
+    //         system: {
+    //           parentItem: parent
+    //         }
+    //       })
+    //     }
+    //   }
+    // }
+  }
+
+  /**
    * Prepare a data object which defines the data schema used by dice roll commands against this Item
    * @override
    */
@@ -25,6 +60,8 @@ export class UtopiaItem extends Item {
 
     // If present, add the actor's roll data
     rollData.actor = this.actor.getRollData();
+
+    console.log(rollData);
 
     return rollData;
   }

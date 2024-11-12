@@ -26,6 +26,10 @@
           "physical": 1,
           "psyche": 1
         },
+        "trees": {},
+        "resistances": [],
+        "immunity": [],
+        "spellcap": 0,
         "biography": ""
       }
     },
@@ -39,15 +43,9 @@
           "value": 0,
           "goal": 1000
         },
-        "constitution": {
-          "value": 1
-        },
-        "endurance": {
-          "value": 1
-        },
-        "effervescence": {
-          "value": 1
-        }
+        "constitution": 1,
+        "endurance": 1,
+        "effervescence": 1
       },
       "points": {
         "subtrait": 15,
@@ -141,6 +139,7 @@
     "types": ["item", "species", "talent", "spell"],
     "templates": {
       "base": {
+        "formula`": "",
         "description": ""
       }
     },
@@ -166,6 +165,11 @@
     "talent": {
       "templates": ["base"],
       "parent": "",
+      "tree": "",
+      "position": 1,
+      "attributes": {
+        "cost": []
+      },
       "points": {
         "body": 0,
         "mind": 0,

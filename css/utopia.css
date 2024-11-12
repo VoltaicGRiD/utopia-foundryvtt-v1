@@ -437,6 +437,16 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
+.utopia .flexcol {
+  margin-bottom: 10px;
+}
+.utopia .grid {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.utopia .error {
+  color: red;
+}
 .utopia .options ol {
   width: 100%;
   justify-content: center;
@@ -444,6 +454,7 @@
   list-style: none;
   gap: 10px;
   padding: 0px;
+  margin-top: 30px;
 }
 .utopia .options li {
   text-align: center;
@@ -462,6 +473,21 @@
 }
 .utopia .select:hover {
   text-shadow: 0 0 10px var(--color-shadow-primary);
+}
+.utopia label {
+  position: relative;
+}
+.utopia label .keep-open-span {
+  position: absolute;
+  left: 30px;
+  top: 5px;
+  height: 20px;
+}
+.utopia label .keep-open-input {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  height: 20px;
 }
 
 /*# sourceMappingURL=utopia.css.map */

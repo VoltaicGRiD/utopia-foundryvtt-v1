@@ -137,16 +137,28 @@ export class UtopiaActor extends Actor {
 
       let mod = actorData.system.traits[key].value - 4;
       actorData.system.traits[key].mod = mod;
-    }
 
-    console.log(actorData.system.species);
+      // Spellcap is calculated from resolve
+      actorData.system.spellcap = actorData.system.traits['wil'].subtraits['res'].value;
+    }
 
     // Iterate through items, allocating to containers
     for (let i of actorData.items) {
-      console.log(i.type);
       if (i.type === 'species') {
         actorData.system.species = i;
       }
+      // else if (i.type === 'talent') {
+      //   let tree = i.system.tree;
+      //   let position = i.system.position;
+        
+      //   actorData.update({
+      //     system: {
+      //       trees: {
+      //         [tree]: position
+      //       }
+      //     }
+      //   })
+      // }
     }
   }
   
@@ -205,7 +217,6 @@ export class UtopiaActor extends Actor {
 
   async setSpecies(item) {
     let grants = item.system.grants;
-    console.log(item);
 
     try {
       if (grants.subtraits.indexOf(',') > -1) {
@@ -214,9 +225,6 @@ export class UtopiaActor extends Actor {
         subtraits.forEach(async subtrait => {
           let parsed = String(subtrait.trim());
           let trait = await searchTraits(this.system.traits, parsed);
-
-          console.log(parsed);
-          console.log(trait);
     
           this.update({
             system: {
