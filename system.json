@@ -1,0 +1,78 @@
+{
+  "id": "utopia",
+  "title": "Utopia",
+  "description": "The Utopia system for FoundryVTT!",
+  "authors": [
+    {
+      "name": "Dustin Conlon",
+      "discord": "voltaicgrid"
+    },
+    {
+      "name": "Oridont",
+      "discord": "oridont"
+    }
+  ],
+  "url": "https://github.com/VoltaicGRiD/utopia-foundryvtt",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "bugs": "https://github.com/VoltaicGRiD/utopia-foundryvtt/issues",
+  "changelog": "CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/utopia/assets/anvil-impact.png",
+      "thumbnail": "systems/utopia/assets/anvil-impact.png"
+    }
+  ],
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": 11,
+    "verified": "11.315"
+  },
+  "esmodules": ["module/utopia.mjs"],
+  "styles": ["css/utopia.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "packs": [
+    {
+      "name": "species",
+      "label": "SRD Species",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "talents",
+      "label": "SRD Talents",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "packFolders": [],
+  "socket": false,
+  "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
+  "download": "This must link to a .zip file of the current version",
+  "background": "systems/utopia/assets/anvil-impact.png",
+  "gridDistance": 5,
+  "gridUnits": "ft",
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "power"
+}

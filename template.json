@@ -1,0 +1,180 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "base": {
+        "species": {},
+        "shp": {
+          "value": 0,
+          "min": 0
+        },
+        "dhp": {
+          "value": 0,
+          "min": 0
+        },
+        "block": "1d4",
+        "dodge": "1d12",
+        "stamina": {
+          "value": 1,
+          "min": 0,
+          "max": 10
+        },
+        "defenses": {
+          "chill": 1,
+          "energy": 1,
+          "heat": 1,
+          "physical": 1,
+          "psyche": 1
+        },
+        "biography": ""
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "attributes": {
+        "level": {
+          "value": 10
+        },
+        "experience": {
+          "value": 0,
+          "goal": 1000
+        },
+        "constitution": {
+          "value": 1
+        },
+        "endurance": {
+          "value": 1
+        },
+        "effervescence": {
+          "value": 1
+        }
+      },
+      "points": {
+        "subtrait": 15,
+        "gifted": 0,
+        "talent": 10,
+        "body": 0,
+        "mind": 0,
+        "soul": 0
+      },
+      "traits": {
+        "agi": {
+          "subtraits": {
+            "spd": {
+              "value": 1
+            },
+            "dex": {
+              "value": 1
+            }
+          },
+          "parent": "body",
+          "value": 2
+        },
+        "str": {
+          "subtraits": {
+            "pow": {
+              "value": 1
+            },
+            "for": {
+              "value": 1
+            }
+          },
+          "parent": "body",
+          "value": 2
+        },
+        "int": {
+          "subtraits": {
+            "eng": {
+              "value": 1
+            },
+            "mem": {
+              "value": 1
+            }
+          },
+          "parent": "mind",
+          "value": 2
+        },
+        "wil": {
+          "subtraits": {
+            "res": {
+              "value": 1
+            },
+            "awa": {
+              "value": 1
+            }
+          },
+          "parent": "mind",
+          "value": 2
+        },
+        "dis": {
+          "subtraits": {
+            "por": {
+              "value": 1
+            },
+            "stu": {
+              "value": 1
+            }
+          },
+          "parent": "soul",
+          "value": 2
+        },
+        "cha": {
+          "subtraits": {
+            "app": {
+              "value": 1
+            },
+            "lan": {
+              "value": 1
+            }
+          },
+          "parent": "soul",
+          "value": 2
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "cr": 0
+    }
+  },
+  "Item": {
+    "types": ["item", "species", "talent", "spell"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0,
+      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+    },
+    "species": {
+      "templates": ["base"],
+      "name": "Human",
+      "grants": {
+        "block": "2d4",
+        "dodge": "2d12",
+        "constitution": 4,
+        "endurance": 5,
+        "effervescence": 3,
+        "subtraits": 2,
+        "languages": 2
+      }
+    },
+    "talent": {
+      "templates": ["base"],
+      "parent": "",
+      "points": {
+        "body": 0,
+        "mind": 0,
+        "soul": 0
+      }
+    },
+    "spell": {
+      "templates": ["base"],
+      "spellLevel": 1
+    }
+  }
+}

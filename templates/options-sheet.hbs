@@ -1,0 +1,21 @@
+<div class="options flexcol">
+  <ol>
+    {{#each options as |option key|}}
+    <li>
+      <div class="grid grid-5col options-center">
+
+        <div class="grid-span-3">
+          <a class="source" data-option="{{option._id}}">
+            <span>{{option.name}}</span>
+          </a>
+        </div>
+
+        <div class="grid-span-2">
+          <span class="select" data-option="{{option._id}}" data-type="{{option.type}}">Select</span>
+        </div>
+
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+</div>

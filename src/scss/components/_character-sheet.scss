@@ -1,0 +1,55 @@
+.rollable-button {
+  height: 30px;
+  line-height: initial;
+  justify-content: start;
+  align-content: start;
+  text-align: center;
+}
+
+.no-margin {
+  margin: -5px;
+}
+
+.tabs {
+  justify-content: initial;
+  margin-top: -10px !important;
+}
+
+.tabs .active {
+  border-radius: 10px 10px 0px 0px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  text-shadow: initial;
+}
+
+.tabs .item:not(.active) {
+  color: rgba(0,0,0,0.5);
+  border-bottom: 1px solid black;
+}
+
+nav.sheet-tabs {
+  border-top: initial;
+}
+
+.item-fill {
+  width: 100%;
+  height: 100%;
+}
+
+.species-container {
+  position: relative;
+}
+
+.species-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.species {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

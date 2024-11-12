@@ -1,0 +1,92 @@
+{
+  "UTOPIA": {
+    "Rating": {
+      "blr": { "long": "Block Rating", "abbr": "blr" },
+      "dor": { "long": "Dodge Rating", "abbr": "dor" }
+    },
+    "Species": {
+      "con": { "long": "Constitution", "abbr": "con" },
+      "end": { "long": "Endurance", "abbr": "end" },
+      "eff": { "long": "Effervescence", "abbr": "eff" }
+    },
+    "Points": {
+      "body": "Body",
+      "mind": "Mind",
+      "soul": "Soul"
+    },
+    "Trait": {
+      "agi": { "long": "Agility", "abbr": "agi" },
+      "str": { "long": "Strength", "abbr": "str" },
+      "int": { "long": "Intelligence", "abbr": "int" },
+      "wil": { "long": "Will", "abbr": "wil" },
+      "dis": { "long": "Display", "abbr": "dis" },
+      "cha": { "long": "Charm", "abbr": "cha" }
+    },
+    "Subtrait": {
+      "spd": { "long": "Speed", "abbr": "spd" },
+      "dex": { "long": "Dexterity", "abbr": "dex" },
+      "pow": { "long": "Power", "abbr": "pow" },
+      "for": { "long": "Fortitude", "abbr": "for" },
+      "eng": { "long": "Engineering", "abbr": "eng" },
+      "mem": { "long": "Memory", "abbr": "mem" },
+      "res": { "long": "Resolve", "abbr": "res" },
+      "awa": { "long": "Awareness", "abbr": "awa" },
+      "por": { "long": "Portrayal", "abbr": "por" },
+      "stu": { "long": "Stunt", "abbr": "stu" },
+      "app": { "long": "Appeal", "abbr": "app" },
+      "lan": { "long": "Language", "abbr": "lan" }
+    },
+    "Defenses": {
+      "Chill": "Chill",
+      "Energy": "Energy",
+      "Heat": "Heat",
+      "Physical": "Physical",
+      "Psyche": "Psyche"
+    },
+    "SheetLabels": {
+      "Actor": "Utopia Actor Sheet",
+      "Item": "Utopia Item Sheet"
+    },
+    "Descriptions": {
+      "Points": "Points",
+      "Defenses": "Defenses",
+      "Parent": "Parent"
+    },
+    "Attributes": {
+      "Block": "Block",
+      "Dodge": "Dodge",
+      "Constitution": "Constitution",
+      "Endurance": "Endurance",
+      "Effervescence": "Effervescence",
+      "Subtraits": "Subtraits",
+      "Languages": "Languages"
+    },
+    "Item": {
+      "Spell": {
+        "SpellLVL": "Level {level} Spells",
+        "AddLVL": "Add LVL {level}"
+      }
+    },
+    "Effect": {
+      "Source": "Source",
+      "Toggle": "Toggle Effect",
+      "Temporary": "Temporary Effects",
+      "Passive": "Passive Effects",
+      "Inactive": "Inactive Effects",
+      "Grant": "Granted Effects"
+    }
+  },
+
+  "TYPES": {
+    "Actor": {
+      "character": "Character",
+      "npc": "NPC"
+    },
+    "Item": {
+      "item": "Item",
+      "talent": "Talent",
+      "spell": "Spell",
+      "species": "Species"
+    }
+  }
+}

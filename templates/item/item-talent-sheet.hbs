@@ -1,0 +1,49 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      <div class="grid grid-1col">
+        <div class="flecol">
+          <label for="system.parent">{{localize 'UTOPIA.Descriptions.Parent'}}</label>
+          <input disabled class="parent" name="sysem.parent" placeholder="Drag item here" type="text"/>
+        </div>
+      </div>
+      <div class="grid grid-3col">
+        <div class="flecol">
+          <label for="system.points.body">{{localize 'UTOPIA.Points.body'}}</label>
+          <input class="body" name="system.points.body" placeholder="0" type="number" value="{{system.points.body}}"/>
+        </div>
+        <div class="flecol">
+          <label for="system.points.mind">{{localize 'UTOPIA.Points.mind'}}</label>
+          <input class="mind" name="system.points.mind" placeholder="0" type="number" value="{{system.points.mind}}"/>
+        </div>
+        <div class="flecol">
+          <label for="system.points.soul">{{localize 'UTOPIA.Points.soul'}}</label>
+          <input class="soul" name="system.points.soul" placeholder="0" type="number" value="{{system.points.soul}}"/>
+        </div>
+      </div>
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedDescription target="system.description" engine="prosemirror" button=true editable=editable}}
+    </div>
+
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects">
+      {{> "systems/utopia/templates/item/parts/item-effects.hbs"}}
+    </div>
+  </section>
+
+</form>

@@ -1,0 +1,121 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img
+      class="profile-img"
+      src="{{item.img}}"
+      data-edit="img"
+      title="{{item.name}}"
+    />
+    <div class="header-fields">
+      <h1 class="charname"><input
+          name="name"
+          type="text" class="grant" 
+          value="{{item.name}}"
+          placeholder="Name"
+        /></h1>
+    </div>
+  </header>
+
+  {{! Sheet Tab Navigation }}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attributes">Attributes</a>
+  </nav>
+
+  {{! Sheet Body }}
+  <section class="sheet-body">
+
+    {{! Description Tab }}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{! Editors must receive enriched text data from getData to properly handle rolls }}
+      {{editor
+        enrichedDescription
+        target="system.description"
+        engine="prosemirror"
+        button=true
+        editable=editable
+      }}
+    </div>
+
+    {{! Attributes Tab }}
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      <div class="flexcol">
+        <div class="grid grid-2col">
+          <div>
+            <label for="block">{{localize "UTOPIA.Attributes.Block"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="block"
+              name="block"
+              value="{{system.grants.block}}"
+            />
+          </div>
+          <div>
+            <label for="dodge">{{localize "UTOPIA.Attributes.Dodge"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="dodge"
+              name="dodge"
+              value="{{system.grants.dodge}}"
+            />
+          </div>
+        </div>
+        <div class="grid grid-2col">
+          <div>
+            <label for="constitution">{{localize
+                "UTOPIA.Attributes.Constitution"
+              }}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="constitution"
+              name="constitution"
+              value="{{system.grants.constitution}}"
+            />
+          </div>
+          <div>
+            <label for="endurance">{{localize "UTOPIA.Attributes.Endurance"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="endurance"
+              name="endurance"
+              value="{{system.grants.endurance}}"
+            />
+          </div>
+          <div>
+            <label for="effervescence">{{localize
+                "UTOPIA.Attributes.Effervescence"
+              }}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="effervescence"
+              name="effervescence"
+              value="{{system.grants.effervescence}}"
+            />
+          </div>
+        </div>
+        <div class="grid grid-2col">
+          <div>
+            <label for="subtraits">{{localize "UTOPIA.Attributes.Subtraits"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="subtraits"
+              name="subtraits"
+              value="{{system.grants.subtraits}}"
+            />
+          </div>
+          <div>
+            <label for="languages">{{localize "UTOPIA.Attributes.Languages"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="languages"
+              name="languages"
+              value="{{system.grants.languages}}"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</form>

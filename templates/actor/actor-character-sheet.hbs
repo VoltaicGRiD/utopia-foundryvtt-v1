@@ -1,0 +1,217 @@
+<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <div class="header-fields">
+      <div class="resources grid grid-5col no-margin">
+
+        <div class="resource flex-group-center grid-span-3">
+          <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+        </div>
+
+        <div class="resource flex-group-center grid-span-2">
+          <h1 class="charname species-container">
+            <input disabled class="species-input" name="species" placeholder="Species" type="text" value="{{system.species.name}}"/>
+            {{#unless system.species.name}}
+              <i class="fa-solid fa-magnifying-glass species"></i>
+            {{/unless}}
+          </h1>
+        </div>
+
+      </div>
+      {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+      use both the "grid" and "grid-Ncol" class where "N" can be any number
+      from 1 to 12 and will create that number of columns.  --}}
+      <div class="resources grid grid-5col">
+
+        {{!-- "flex-group-center" is also defined in the _grid.scss file
+        and it will add a small amount of padding, a border, and will
+        center all of its child elements content and text. --}}
+        <div class="resource flex-group-center">
+          <label for="system.health.value" class="resource-label">SHP</label>
+          <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.shp.value" value="{{system.shp.value}}" data-dtype="Number"/>
+          <span> / </span>
+          <input disabled type="text" name="system.shp.max" value="{{system.shp.max}}" data-dtype="Number"/>
+          </div>
+        </div>
+
+        <div class="resource flex-group-center">
+          <label for="system.power.value" class="resource-label">DHP</label>
+          <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.dhp.value" value="{{system.dhp.value}}" data-dtype="Number"/>
+          <span> / </span>
+          <input disabled type="text" name="system.dhp.max" value="{{system.dhp.max}}" data-dtype="Number"/>
+          </div>
+        </div>
+
+        <div class="resource flex-group-center">
+          <label for="system.attributes.level.value" class="resource-label">Level</label>
+          <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="system.attributes.level.value" value="{{system.attributes.level.value}}" data-dtype="Number"/>
+          </div>
+        </div>
+
+        <div class="resource flex-group-center">
+          <label for="system.block" class="resource-label">Block</label>
+          <button class="rollable rollable-button" data-roll="{{system.block}}" name="system.block">{{system.block}}</button>
+          <div class="resource-content flexrow flex-center flex-between">
+          </div>
+        </div>
+
+        <div class="resource flex-group-center">
+          <label for="system.dodge" class="resource-label">Dodge</label>
+          <button class="rollable rollable-button" data-roll="{{system.dodge}}" name="system.dodge">{{system.dodge}}</button>
+          <div class="resource-content flexrow flex-center flex-between">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="features">Features</a>
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="items">Items</a>
+    <a class="item" data-tab="spells">Spells</a>
+    <a class="item" data-tab="effects">Effects</a>
+    <a class="item item-fill"></a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Owned Features Tab --}}
+    <div class="tab features" data-group="primary" data-tab="features">
+      <section class="grid grid-3col">
+        <aside class="sidebar">
+
+          <table class="ability-table">
+            <tr>
+              <th>(Sub)Trait</th>
+              <th>Val</th>
+              <th>Mod</th>
+              <th></th>
+              <th></th>
+            </tr>
+            {{#each system.traits as |trait key|}}
+              <tr>
+                <td class="rollable td-left" data-roll="3d6+@traits.{{key}}.mod">
+                  <span class="resource-label">{{localize (concat 'UTOPIA.Trait.' key '.long')}}</span>
+                </td>
+                <td class="td-center">{{numberFormat trait.value decimals=0}}</td>
+                <td class="td-center">{{numberFormat trait.mod decimals=0 sign=true}}</td>
+                <td></td>
+                <td></td>
+              </tr>
+              {{#each trait.subtraits as |subtrait sub|}}
+                <tr {{#if subtrait.gifted}} class="gifted" {{/if}}>
+                  <td class="rollable td-left" data-roll="3d6+@traits.{{key}}.subtraits.{{sub}}.mod"> 
+                    <span class="resource-label">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{{#if subtrait.gifted}}*{{/if}}{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}{{#if subtrait.gifted}}*{{/if}}</span>
+                  </td>
+                  <td class="td-center">{{numberFormat subtrait.value decimals=0}}</td>
+                  <td class="td-center">{{numberFormat subtrait.mod decimals=0 sign=true}}</td>
+                  <td>
+                    <button class="increase" data-trait="{{key}}" data-subtrait="{{sub}}">+</button>
+                  </td>
+                  <td>
+                    <button class="gift" data-trait="{{key}}" data-subtrait="{{sub}}">G</button>
+                  </td>
+                </tr>
+              {{/each}}
+            {{/each}}
+            
+          </table>
+        </aside>
+
+        {{!-- For the main features list, span the right two columns --}}
+        <section class="main grid-span-2">
+          <div class="flexcol">
+            <h3>{{localize 'UTOPIA.Descriptions.Points'}}</h3>
+            <div class="flexrow grid-3col">
+              
+              <button disabled>
+                <i class="fa-solid fa-gift"></i>
+                {{numberFormat system.points.gifted decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-list"></i>
+                {{numberFormat system.points.subtrait decimals=0}}
+              </button>
+              
+              <button class="talents">
+                <i class="fa-solid fa-heart"></i>
+                {{numberFormat system.points.talent decimals=0}}
+              </button>
+              
+            </div> 
+          </div>
+
+          <hr/>
+          
+          <div class="flexcol">
+            <h3>{{localize 'UTOPIA.Descriptions.Defenses'}}</h3>
+            <div class="flexrow grid-5col">
+              
+              <button disabled>
+                <i class="fa-solid fa-snowflake"></i>
+                {{numberFormat system.defenses.chill decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-bolt"></i>
+                {{numberFormat system.defenses.energy decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-fire"></i>
+                {{numberFormat system.defenses.heat decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-sword"></i>
+                {{numberFormat system.defenses.physical decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-brain"></i>
+                {{numberFormat system.defenses.psyche decimals=0}}
+              </button>
+            </div> 
+          </div>
+          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+          {{> "systems/utopia/templates/actor/parts/actor-features.hbs"}}
+        </section>
+
+      </section>
+    </div>
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography" data-group="primary" data-tab="description">
+      {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      {{editor enrichedBiography target="system.biography" engine="prosemirror" button=true editable=editable}}
+    </div>
+
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="items">
+       {{> "systems/utopia/templates/actor/parts/actor-items.hbs"}}
+    </div>
+
+    {{!-- Owned Spells Tab --}}
+    <div class="tab spells" data-group="primary" data-tab="spells">
+      {{> "systems/utopia/templates/actor/parts/actor-spells.hbs"}}
+    </div>
+
+    {{!-- Active Effects Tab --}}
+    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+      {{> "systems/utopia/templates/actor/parts/actor-effects.hbs"}}
+    </div>
+
+  </section>
+</form>
+

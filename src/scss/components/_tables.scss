@@ -1,0 +1,35 @@
+.td-left {
+  text-align: left;
+}
+
+.td-center {
+  text-align: center;
+}
+
+.point-display {
+  border-top: 1px dashed black;
+}
+
+.point-display > td {
+  padding-top: 5px;
+}
+
+.increase {
+  line-height: normal;
+}
+
+.gift {
+  line-height: normal;
+}
+
+tr:hover {
+  background-color: #9DD1D6 !important;
+}
+
+.ability-table {
+  margin-top: -5px;
+}
+
+.gifted {
+  background-color: rgba(129, 245, 153, 0.2);
+}
