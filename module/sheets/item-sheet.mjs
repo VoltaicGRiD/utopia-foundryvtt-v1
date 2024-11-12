@@ -98,6 +98,13 @@ export class UtopiaItemSheet extends ItemSheet {
       console.log(this.item);
     });
 
+    html.on('click', '.parent-name', (ev) => {
+      let uuid = this.item.system.parent;
+      let id = uuid.split('.').splice(-1)[0];
+      let item = foundry.utils.parseUuid(uuid).collection.find(f => f._id == id);
+      item.sheet.render(true);
+    })
+
     html.on('change', '.grant', (ev) => {
       let value = ev.currentTarget.value;
       let name = ev.currentTarget.name;
@@ -110,15 +117,5 @@ export class UtopiaItemSheet extends ItemSheet {
         }
       });
     })
-  }
-
-  async _onDrop(ev) {
-    console.log("Custom onDrop method in MyItemSheet", ev);
-    
-    // Optional: Call the parent class's _onDrop method
-    // if there's behavior you want to retain
-    await super._onDrop(ev);
-    
-    // Custom behavior here
   }
 }

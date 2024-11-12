@@ -5,10 +5,10 @@
       <a
         class='item-control item-create'
         title='Create item'
-        data-type='feature'
+        data-type='talent'
       >
         <i class='fas fa-plus'></i>
-        {{localize 'DOCUMENT.New' type='feature'}}
+        {{localize 'DOCUMENT.New' type='talent'}}
       </a>
     </div>
   </li>
@@ -25,7 +25,7 @@
             />
           </a>
         </div>
-        <h4>{{item.name}}</h4>
+        <h4 class="rollable" data-roll-type="item">{{item.name}}</h4>
       </div>
       <div class='item-controls'>
         <a

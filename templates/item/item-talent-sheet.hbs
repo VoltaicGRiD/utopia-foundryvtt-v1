@@ -12,31 +12,70 @@
   </nav>
 
   {{!-- Sheet Body --}}
-  <section class="sheet-body">
+  <section class="sheet-body talent-sheet">
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      <div class="grid grid-1col">
-        <div class="flecol">
-          <label for="system.parent">{{localize 'UTOPIA.Descriptions.Parent'}}</label>
-          <input disabled class="parent" name="sysem.parent" placeholder="Drag item here" type="text"/>
+
+      {{!--
+      <div class="grid grid-2col">
+        <div class="flexcol">
+          <label for="system.parent">{{localize 'UTOPIA.Descriptions.parent'}}</label>
+          <input class="parent" name="system.parent" placeholder="Paste UUID of parent here" type="text" value="{{system.parent}}"/>
+        </div>
+        <div class="flexcol parent-name">
+          <button name="system.parentItem.name">{{system.parentItem.name}}</button>
         </div>
       </div>
+      --}}
+
       <div class="grid grid-3col">
-        <div class="flecol">
+        <div class="flexcol">
           <label for="system.points.body">{{localize 'UTOPIA.Points.body'}}</label>
           <input class="body" name="system.points.body" placeholder="0" type="number" value="{{system.points.body}}"/>
         </div>
-        <div class="flecol">
+        <div class="flexcol">
           <label for="system.points.mind">{{localize 'UTOPIA.Points.mind'}}</label>
           <input class="mind" name="system.points.mind" placeholder="0" type="number" value="{{system.points.mind}}"/>
         </div>
-        <div class="flecol">
+        <div class="flexcol">
           <label for="system.points.soul">{{localize 'UTOPIA.Points.soul'}}</label>
           <input class="soul" name="system.points.soul" placeholder="0" type="number" value="{{system.points.soul}}"/>
         </div>
       </div>
+
+      <div class="grid grid-11col">
+        <div class="flexcol grid-span-5">
+          <label for="system.tree">{{localize 'UTOPIA.Talents.tree'}}</label>
+          <input class="tree" name="system.tree" placeholder="Demonic Cambion" type="text" value="{{system.tree}}"/>
+        </div>
+        <div class="flexcol grid-span-5">
+          <label for="system.position">
+            <div class="flexrow">
+              <span>
+                {{localize 'UTOPIA.Talents.position'}}
+                <i class="fa-solid fa-circle-info" data-tooltip="{{localize 'UTOPIA.Talents.position-error.long'}}"></i>
+              </span> 
+              {{!-- <span class="error">{{localize 'UTOPIA.Talents.position-error.short'}}</span> --}}
+            </div>
+          </label>
+          <input class="position" name="system.position" placeholder="1" type="number" value="{{system.position}}"/>
+        </div>
+        <div class="flexcol">
+          <label for="system.ultimate">{{localize 'UTOPIA.Talents.ultimate'}}</label>
+          <input class="ultimate" name="system.ultimate" type="checkbox" checked="{{system.ultimate}}"/>
+        </div>
+      </div>
+
+      <div class="flexrow">
+        <div class="flexcol">
+          <label for="system.formula">{{localize 'UTOPIA.Descriptions.roll'}}</label>
+          <input type="text" name="system.formula" placeholder="Roll" value="{{system.formula}}"/>
+        </div>
+      </div>
+
       {{!-- Editors must receive enriched text data from getData to properly handle rolls --}}
+      <hr/>
       {{editor enrichedDescription target="system.description" engine="prosemirror" button=true editable=editable}}
     </div>
 
