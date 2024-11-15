@@ -3,6 +3,8 @@ import {
   prepareActiveEffectCategories,
 } from '../helpers/effects.mjs';
 import { UtopiaOptionsSheet } from './options-sheet.mjs';
+import { UtopiaTalentSheetV2 } from './talents-sheet-v2.mjs';
+import { UtopiaTalentSheet } from './talents-sheet.mjs';
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -86,6 +88,8 @@ export class UtopiaActorSheet extends ActorSheet {
       this.actor.allApplicableEffects()
     );
 
+    console.log(context);
+
     return context;
   }
 
@@ -107,6 +111,7 @@ export class UtopiaActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
+    const weapons = [];
     const features = [];
     const spells = {
       0: [],
@@ -133,6 +138,10 @@ export class UtopiaActorSheet extends ActorSheet {
       else if (i.type === 'talent') {
         features.push(i);
       }
+      // Append to weapons.
+      else if (i.type === 'weapon') {
+        weapons.push(i);
+      }
       // Append to spells.
       else if (i.type === 'spell') {
         if (i.system.spellLevel != undefined) {
@@ -148,6 +157,7 @@ export class UtopiaActorSheet extends ActorSheet {
 
     // Assign and return
     context.gear = gear;
+    context.weapons = weapons;
     context.features = features;
     context.spells = spells;
     context.misc = misc;
@@ -405,13 +415,9 @@ export class UtopiaActorSheet extends ActorSheet {
   }
 
   async _displayTalents(event) {
-    let newSheet = new UtopiaOptionsSheet();
-    newSheet.actor = this.actor;
-    let pack = game.packs.get('utopia.talents');
-    let options = await pack.getDocuments();
-    newSheet.displayOptions = options;
-    newSheet.keepOpen = true;
-    
+    let newSheet = new UtopiaTalentSheetV2();
+    newSheet.classActor = this.actor;
+    newSheet.keepOpen = true;    
     newSheet.render(true);
   }
 }

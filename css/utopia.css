@@ -2,6 +2,7 @@
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
+  border: 1px solid rgba(100, 24, 255, 0.8);
 }
 
 .rollable:hover, .rollable:focus {
@@ -204,6 +205,14 @@
 }
 
 /* Styles limited to utopia sheets */
+.utopia {
+  /* On hover */
+  /* Collapsible header style */
+  /* Collapsible content style */
+  /* Active class to show the content */
+  /* Chevron icon rotation */
+  /* Smooth transition effect */
+}
 .utopia .item-form {
   font-family: "Roboto", sans-serif;
 }
@@ -385,9 +394,6 @@
 .utopia tr:hover {
   background-color: #9DD1D6 !important;
 }
-.utopia .ability-table {
-  margin-top: -5px;
-}
 .utopia .gifted {
   background-color: rgba(129, 245, 153, 0.2);
 }
@@ -447,14 +453,17 @@
 .utopia .error {
   color: red;
 }
-.utopia .options ol {
+.utopia .options {
+  width: 100%;
+}
+.utopia .options > ol {
   width: 100%;
   justify-content: center;
   align-content: center;
   list-style: none;
-  gap: 10px;
+  gap: 5px;
   padding: 0px;
-  margin-top: 30px;
+  padding: 0;
 }
 .utopia .options li {
   text-align: center;
@@ -462,14 +471,53 @@
   justify-content: center;
   border: 1px solid black;
   border-radius: 10px;
-  height: 60px;
-  margin-bottom: 5px;
+  padding: 0.5em;
 }
 .utopia .options-center {
   height: 100%;
   align-content: center;
   justify-content: center;
   margin: 0px;
+}
+.utopia .reset {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px groove var(--color-border-light-highlight);
+  height: 100%;
+}
+.utopia input[type=number]:hover::-webkit-inner-spin-button,
+.utopia input[type=number]:hover::-webkit-outer-spin-button {
+  opacity: 1;
+}
+.utopia .points {
+  margin-top: 10px;
+}
+.utopia .filter {
+  border: 1px solid black;
+}
+.utopia .sub-tree {
+  width: 100%;
+}
+.utopia .sub-tree tbody {
+  width: 100%;
+}
+.utopia .collapsible-header {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.utopia .collapsible-content {
+  display: none; /* Hidden by default */
+  margin: 0;
+  padding: 0 1em;
+}
+.utopia .collapsible-content.active {
+  display: block;
+}
+.utopia .rotate-180 {
+  transform: rotate(180deg);
+}
+.utopia .collapsible-header i {
+  transition: transform 0.3s ease; /* Applies to both directions */
 }
 .utopia .select:hover {
   text-shadow: 0 0 10px var(--color-shadow-primary);
@@ -488,6 +536,113 @@
   left: 0px;
   top: 0;
   height: 20px;
+}
+.utopia .position {
+  font-weight: 800;
+  font-size: 1em;
+}
+.utopia .talent-display {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid purple;
+  margin: -8px;
+}
+.utopia .talent-tabs {
+  color: white;
+  padding-left: 10px;
+}
+.utopia .talent-tabs ol {
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+  list-style: none;
+  gap: 5px;
+  padding: 0px;
+  padding: 0;
+}
+.utopia .talent-tabs li {
+  border: 1px solid white !important;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.5em;
+  margin-bottom: 10px;
+  font-size: 1.25em;
+}
+.utopia .talent-tabs .active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.utopia .tier-3 {
+  height: 100%;
+  display: inline-flex;
+}
+.utopia .tier-4 {
+  height: 100%;
+  display: inline-flex;
+}
+.utopia .tier-5 {
+  height: 100%;
+  display: inline-flex;
+}
+.utopia .tree-1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+.utopia .tree-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 200;
+}
+.utopia .tree-3 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 300;
+}
+.utopia .content {
+  width: 100%;
+  height: 100%;
+}
+.utopia .tab {
+  width: 100%;
+  height: 100%;
+}
+.utopia .taken {
+  fill: rgba(0, 0, 0, 0.5) !important;
+}
+.utopia .cls-1 {
+  fill: transparent;
+}
+.utopia .taking {
+  fill: url(#warfare-gradient) !important;
+}
+.utopia .tree-flex {
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  height: 650px;
+  padding: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.utopia .tree-description {
+  text-align: center;
+  color: white;
+  padding-top: 10px;
+}
+.utopia .talent-tree {
+  position: relative;
+  height: 730px;
+}
+.utopia .talent-tree img {
+  height: 100%;
+  border: none;
 }
 
 /*# sourceMappingURL=utopia.css.map */

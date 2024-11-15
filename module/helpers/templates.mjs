@@ -13,5 +13,12 @@ export const preloadHandlebarsTemplates = async function () {
     // Item partials
     'systems/utopia/templates/item/parts/item-effects.hbs',
     'systems/utopia/templates/item/parts/item-grants.hbs',
+    // Talent partials
+    'systems/utopia/templates/talents/parts/talent-warfare.hbs',
+    'systems/utopia/templates/talents/parts/talent-tactics.hbs',
+    'systems/utopia/templates/talents/parts/talent-prowess.hbs',
+    'systems/utopia/templates/talents/parts/talent-innovation.hbs',
+    'systems/utopia/templates/talents/parts/talent-magecraft.hbs',
+    'systems/utopia/templates/talents/parts/talent-influence.hbs',
   ]);
 };

@@ -25,8 +25,27 @@
             />
           </a>
         </div>
-        <h4 class="rollable" data-roll-type="item">{{item.name}}</h4>
+        <h4 data-tooltip="{{item.system.description}}" data-tooltip-direction="LEFT">{{item.name}}</h4>
       </div>
+      <div class="talent-points">
+        <h4>
+          <span>
+            <i class="fa-solid fa-shield"></i>
+            {{item.system.points.body}}
+          </span>
+          &nbsp;&nbsp;
+          <span>
+            <i class="fa-solid fa-brain"></i>
+            {{item.system.points.mind}}
+          </span>
+          &nbsp;&nbsp;
+          <span>
+            <i class="fa-solid fa-flame"></i>
+            {{item.system.points.soul}}
+          </span>
+        </h4>
+      </div>
+      {{!-- 
       <div class='item-controls'>
         <a
           class='item-control item-edit'
@@ -41,6 +60,7 @@
           <i class='fas fa-trash'></i>
         </a>
       </div>
+      --}}
     </li>
   {{/each}}
 </ol>

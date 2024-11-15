@@ -135,14 +135,31 @@
         {{!-- For the main features list, span the right two columns --}}
         <section class="main grid-span-2">
           <div class="flexcol">
-            <table>
-              {{#each system.tree as |tree key|}}
-                <tr>
-                  <td>{{key}}</td>
-                  <td>{{tree}}</td>
-                </tr>
-              {{/each}}
-            </table>
+
+            <h3>{{localize 'UTOPIA.Descriptions.attributes'}}</h3>
+            <div class="flexrow grid-3col">
+              
+              <button disabled>
+                <i class="fa-solid fa-hand-fist"></i>
+                {{localize 'UTOPIA.Attributes.constitution'}} - 
+                {{numberFormat system.attributes.constitution decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-wind"></i>
+                {{localize 'UTOPIA.Attributes.endurance'}} - 
+                {{numberFormat system.attributes.endurance decimals=0}}
+              </button>
+              
+              <button disabled>
+                <i class="fa-solid fa-ghost"></i>
+                {{localize 'UTOPIA.Attributes.effervescence'}} - 
+                {{numberFormat system.attributes.effervescence decimals=0}}
+              </button>
+              
+            </div> 
+
+            <hr/>
 
             <h3>{{localize 'UTOPIA.Descriptions.points'}}</h3>
             <div class="flexrow grid-3col">
@@ -230,6 +247,7 @@
 
             </div> 
           </div>
+
           {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
           {{> "systems/utopia/templates/actor/parts/actor-features.hbs"}}
         </section>

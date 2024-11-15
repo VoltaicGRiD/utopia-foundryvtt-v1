@@ -48,22 +48,33 @@
     },
     "SheetLabels": {
       "actor": "Utopia Actor Sheet",
-      "item": "Utopia Item Sheet"
+      "item": "Utopia Item Sheet",
+      "weapon": "Utopia Weapon Sheet"
+    },
+    "Weapons": {
+      "handling": "Handling",
+      "range": "Range"
     },
     "Descriptions": {
+      "attributes": "Attributes",
       "points": "Points",
       "defenses": "Defenses",
       "parent": "Parent",
       "spellcap": "Spellcap",
       "keepopen": "Keep open",
       "roll": "Roll",
-      "description": "Description"
-      
+      "description": "Description",
+      "tags": "Tags",
+      "filter": "Filter",
+      "filterhelp": "Type '@' and the name of a tree or category, or type '#' and an attribute followed by a comparison operation (i.e. '#body>2')"
     },
     "Talents": {
       "tree": "Tree",
       "position": "Position",
       "ultimate": "Ult",
+      "body": "Body",
+      "mind": "Mind",
+      "soul": "Soul",
       "position-error": {
         "short": "Required (> 0)",
         "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
@@ -72,13 +83,14 @@
     "Attributes": {
       "Block": "Block",
       "Dodge": "Dodge",
-      "Constitution": "Constitution",
-      "Endurance": "Endurance",
-      "Effervescence": "Effervescence",
+      "constitution": "Constitution",
+      "endurance": "Endurance",
+      "effervescence": "Effervescence",
       "Subtraits": "Subtraits",
       "Languages": "Languages"
     },
     "Item": {
+      "formula": "Formula",
       "Spell": {
         "SpellLVL": "Level {level} Spells",
         "AddLVL": "Add LVL {level}"
@@ -103,7 +115,8 @@
       "item": "Item",
       "talent": "Talent",
       "spell": "Spell",
-      "species": "Species"
+      "species": "Species",
+      "weapon": "Weapon"
     }
   }
 }
