@@ -1,5 +1,14 @@
 {
   "UTOPIA": {
+    "Actor": {
+      "Tabs": {
+        "Spells": "Spells",
+        "Gear": "Gear",
+        "Talents": "Talents",
+        "Biography": "Biography",
+        "Effects": "Effects"
+      }
+    },
     "Rating": {
       "blr": { "long": "Block Rating", "abbr": "blr" },
       "dor": { "long": "Dodge Rating", "abbr": "dor" }

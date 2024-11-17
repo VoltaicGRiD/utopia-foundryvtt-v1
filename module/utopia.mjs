@@ -11,6 +11,7 @@ import { UTOPIA } from './helpers/config.mjs';
 import isNumeric from './helpers/numeric.mjs';
 import searchTraits from './helpers/searchTraits.mjs';
 import Tagify from '../lib/tagify/tagify.esm.js';
+import { UtopiaActorSheetV2 } from './sheets/actor-sheet-appv2.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -53,6 +54,9 @@ Hooks.once('init', function () {
 
   // Register sheet application classes
   Actors.unregisterSheet('core', ActorSheet);
+  // Actors.registerSheet('utopia', UtopiaActorSheetV2, {
+  //   makeDefault: true
+  // });
   Actors.registerSheet('utopia', UtopiaActorSheet, {
     makeDefault: true,
     label: 'UTOPIA.SheetLabels.actor',
