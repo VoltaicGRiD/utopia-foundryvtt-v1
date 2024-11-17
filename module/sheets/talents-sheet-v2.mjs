@@ -1,18 +1,26 @@
 import Tagify from "../../lib/tagify/tagify.esm.js";
+import { addTalentToActor } from "../helpers/addTalent.mjs";
 
-let animationId = null;
-let databaseTalents = {};
-let selected = null;
-let talents = {};
-let actor = {};
+let animationId = null; // ID for the animation frame request
+let databaseTalents = {}; // Holds all available talents from the database
+let selected = null; // Currently selected talent name
+let talents = {}; // List of talents the actor currently has
+let actor = {}; // Reference to the actor object
 
+/**
+ * Represents the talent selection sheet for Utopia.
+ * Extends the base Application class provided by Foundry VTT.
+ */
 export class UtopiaTalentSheetV2 extends Application {
-  availableTalents = {};
-  classActor = {};
-  modifying = "";
-  keepOpen = false;
+  availableTalents = {}; // Stores the talents available for selection
+  classActor = {}; // The actor associated with this sheet
+  modifying = ""; // Placeholder for any modifying state
+  keepOpen = false; // Determines if the sheet should remain open after actions
 
-  /** @override */
+  /**
+   * Returns default options for the application.
+   * @override
+   */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["utopia", "sheet"],
@@ -29,21 +37,29 @@ export class UtopiaTalentSheetV2 extends Application {
     });
   }
 
-  /** @override */
+  /**
+   * Specifies the HTML template file to use for rendering the sheet.
+   * @override
+   */
   get template() {
-    return `systems/utopia/templates/talents-sheet-v2.hbs`;
+    return `systems/utopia/templates/talents/talents-sheet-v2.hbs`;
   }
 
-  /** @override */
+  /**
+   * Prepares data to be sent to the template for rendering.
+   * @override
+   */
   async getData() {
     const context = super.getData();
 
+    // Load all available talents from the compendium
     this.availableTalents = await game.packs.get('utopia.talents').getDocuments();
     databaseTalents = this.availableTalents;
 
-    let talentList = [];
+    let talentList = []; // List of talent names the actor possesses
+    let actorTalents = this.classActor.items.filter(i => i.type == 'talent'); // Actor's talent items
 
-    let actorTalents = this.classActor.items.filter(i => i.type == 'talent');
+    // Populate the talent list with normalized names
     actorTalents.forEach(t => {
       let name = t.name.toLowerCase().replace(' ', '_').trim();
       if (!talentList.includes(name)) {
@@ -51,20 +67,37 @@ export class UtopiaTalentSheetV2 extends Application {
       }
     });
 
-    talents = talentList;
-    actor = this.classActor;
-    
+    talents = talentList; // Update the global talents variable
+    actor = this.classActor; // Set the global actor reference
+
+    // Get the actor's species for species-specific talents
+    let actorSpecies;
+    try {
+      actorSpecies = actor.system.species.name;
+    } catch {
+      ui.notifications.error("You must have a species before opening the talent tree.");
+      super.close();
+    }
+    let species = actorSpecies.toLowerCase().replace(' ', '-').trim();
+    context.species = { [species]: true };
+
+    console.log(context.species);
+
     return context;
   }
 
-  /** @override */
+  /**
+   * Sets up event listeners and initializes the UI elements after rendering.
+   * @override
+   */
   activateListeners(html) {
     super.activateListeners(html);
 
-    let polys = document.getElementsByClassName('cls-1');
-    
+    // Get all polygon elements representing talents
+    let polys = html.find('.cls-1');
     console.log(polys);
 
+    // Mark talents that the actor already has
     for (let item of polys) {
       let name = item.getAttribute("data-name");
       if (talents.includes(name)) {
@@ -72,14 +105,17 @@ export class UtopiaTalentSheetV2 extends Application {
       }
     }
 
+    // Add event listeners for interaction with talent polygons
     html.on("mousedown", "polygon", this._animate.bind(this));
     html.on("mouseup", "polygon", this._stopAnimate.bind(this));
     html.on("mouseleave", "polygon", this._stopAnimate.bind(this));
-
-    html.on("contextmenu", "polygon", this._source.bind(this));
   }
 
-  async _animate(event) {
+  /**
+   * Initiates the animation when a talent polygon is clicked.
+   * @param {Event} event - The mousedown event.
+   */
+  _animate(event) {
     let target = event.currentTarget;
     selected = target.dataset.name;
     if (!target.classList.contains('taken')) {
@@ -93,13 +129,21 @@ export class UtopiaTalentSheetV2 extends Application {
     }
   }
 
-  async _stopAnimate(event) {
+  /**
+   * Stops the animation when the mouse is released or leaves the polygon.
+   * @param {Event} event - The mouseup or mouseleave event.
+   */
+  _stopAnimate(event) {
     let target = event.currentTarget;
     target.classList.remove('taking');
     stopAnimation();
   }
 
-  async _source(event) {
+  /**
+   * Shows the talent sheet for the selected talent when right-clicked.
+   * @param {Event} event 
+   */
+  _source(event) {
     let dataset = event.currentTarget.dataset;
     let name = dataset.name;
     let item = this.availableTalents.find((f) => f.name.toLowerCase().replace(' ', '_').trim() == name);
@@ -108,16 +152,24 @@ export class UtopiaTalentSheetV2 extends Application {
   }
 }
 
+/**
+ * Updates the talent selection UI after a talent is added.
+ * @param {string} talent - The name of the talent to update.
+ */
 async function updateTalents(talent) {
-  
+  // Add the new talent to the list if it's not already included
   if (!talents.includes(talent)) {
     talents.push(talent);
   }
 
+  // Get all polygon elements representing talents
   let polys = document.getElementsByClassName('cls-1');
     
+  // Iterate through each polygon element
   for (let item of polys) {
+    // Get the name attribute of the polygon
     let name = item.getAttribute("data-name");
+    // If the talent is in the list of talents, mark it as taken
     if (talents.includes(name)) {
       if (!item.classList.contains('taken')) {
         item.classList.add('taken');
@@ -126,150 +178,73 @@ async function updateTalents(talent) {
   }
 }
 
-let startTime = null;
-let timestamp = null;
-let duration = 2000;
+let startTime = null; // Timestamp when the animation started
+let timestamp = null; // Current timestamp in the animation
+let duration = 2000; // Total duration of the animation in milliseconds
 
+/**
+ * Stops the ongoing animation.
+ */
 function stopAnimation() {
-  window.cancelAnimationFrame(animationId);
-  startTime = null;
-  timestamp = null;
-  animationId = null;
-  let stop = document.getElementById('gradient-stop');
-  stop.setAttribute('offset', '0%');
+  if (animationId) {
+    // Cancel the ongoing animation frame request
+    window.cancelAnimationFrame(animationId);
+    // Reset the start time and timestamp for the animation
+    startTime = null;
+    timestamp = null;
+    // Clear the animation ID
+    animationId = null;
+    // Reset the gradient stop offset to 0%
+    let stop = document.getElementById('gradient-stop');
+    stop.setAttribute('offset', '0%');
+  }
 }
 
+/**
+ * Animates the gradient or other visual effects for talent selection.
+ * @param {DOMHighResTimeStamp} timestamp - The current time.
+ */
 function animate(timestamp) {
   if (!startTime) startTime = timestamp;
-    let elapsed = timestamp - startTime;
-    let progress = elapsed / duration;
+  const progress = (timestamp - startTime) / duration;
 
-    // Loop the animation indefinitely
-    if (progress >= 0.96) {
-      progress = 1;
-      startTime = null; // Reset startTime for continuous loop
+  // Check if the animation progress is near completion
+  if (progress >= 0.96) {
+    stopAnimation(); // Stop the animation
+    select(); // Proceed with talent selection
+    return; // Exit the animation loop
+  }
 
-      stopAnimation();
-      select();
-      return;
-    }
+  // Eased progress for smooth animation
+  const easedProgress = easeInOutQuad(progress % 1);
 
-    // Apply the easing function
-    const easedProgress = easeInOutQuad(progress % 1);
+  // Calculate the offset based on eased progress
+  const offset = easedProgress * 100; // From 0% to 100%
 
-    // Calculate the offset based on eased progress
-    const offset = easedProgress * 100; // From 0% to 100%
+  // Update the offset attribute for the gradient stop
+  let stop = document.getElementById('gradient-stop');
+  stop.setAttribute('offset', offset + '%');
 
-    // Update the offset attribute
-    let stop = document.getElementById('gradient-stop');
-    stop.setAttribute('offset', offset + '%');
-
-    console.log(stop, offset);
-
-    // Continue the animation
-    animationId = window.requestAnimationFrame(animate);
+  // Continue the animation
+  animationId = window.requestAnimationFrame(animate);
 }
 
-// Easing function (easeInOutQuad)
+/**
+ * Easing function for animation (easeInOutQuad).
+ * @param {number} t - The current time factor between 0 and 1.
+ * @returns {number} - The eased value.
+ */
 function easeInOutQuad(t) {
   return t < 0.5
     ? 2 * t * t
     : -1 + (4 - 2 * t) * t;
 }
 
+/**
+ * Handles the selection of a talent by the user.
+ * Checks prerequisites and updates the actor's talents accordingly.
+ */
 async function select() {
-  let option = selected;
-  console.log(databaseTalents);
-  let item = databaseTalents.find((f) => { 
-    let name = f.name.toLowerCase().replace(' ', '_').trim();
-    return name == option
-  });
-  console.log(item);
-  let points = item.system.points;
-  let cost = points.body + points.mind + points.soul;
-
-  console.log("Cost: ", cost);
-
-  if (actor.system.points.talent >= cost) {
-    let talentPosition = item.system.position;
-    let tree = item.system.tree;
-    let data = [item];
-
-    if (talentPosition == -1) {
-      let created = await Item.createDocuments(data, {
-        parent: actor,
-      });
-
-      let newPoints = actor.system.points.talent - cost;
-      actor.update({
-        "system.points.talent": newPoints,
-      });
-
-      updateTalents(selected);
-    } 
-    else {
-      let treePosition = actor.system.trees[tree];
-
-      if (treePosition !== undefined) {
-        if (talentPosition - 1 === treePosition) {
-          let newTree = { [tree]: talentPosition };
-          let newTrees = { ...actor.system.trees, ...newTree };
-
-          actor.update({
-            "system.trees": newTrees,
-          });
-
-          let created = await Item.createDocuments(data, {
-            parent: actor,
-          });
-
-          let newPoints = actor.system.points.talent - cost;
-          actor.update({
-            "system.points.talent": newPoints,
-          });
-
-          updateTalents(selected);
-        } 
-        else if (talentPosition <= treePosition) {
-          ui.notifications.error("You already have that talent.");
-          return;
-        } 
-        else {
-          ui.notifications.error(
-            `You do not have the prerequisite talent to take this talent from the '${tree}' talent tree.`
-          );
-          return;
-        }
-      } 
-      else {
-        // The actor does not have this talent tree, so initialize it
-        // Create a new trees object by copying existing trees and adding the new tree with position 1
-        let newTree = { [tree]: 1 };
-        let newTrees = { ...actor.system.trees, ...newTree };
-
-        console.log(newTrees);
-
-        // Update the actor's talent trees
-        actor.update({
-          "system.trees": newTrees,
-        });
-
-        let created = await Item.createDocuments(data, {
-          parent: actor,
-        });
-
-        let points = actor.system.points.talent - cost;
-        actor.update({
-          "system.points.talent": points,
-        });
-
-        updateTalents(selected);
-      }
-    }
-  } 
-  else {
-    ui.notifications.error(
-      "This actor does not have enough talent points to add a talent. Duh..."
-    );
-  }
+  addTalentToActor(actor, selected);
+  updateTalents(selected);
 }

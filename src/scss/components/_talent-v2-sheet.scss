@@ -35,8 +35,6 @@
     background-color: rgba(255,255,255,0.2);
   }
 
-
-
 .tier-3 {
   height: 100%;
   display: inline-flex;
@@ -85,6 +83,16 @@
 
 .taken {
   fill: rgba(0,0,0,0.5) !important;
+}
+
+.claimed {
+  fill: #f00;
+}
+
+.taken::before {
+  content: url('/systems/utopia/assets/claimed.png');
+  transform: rotate(-45deg);
+  z-index: 9999;
 }
 
 .cls-1 {

@@ -20,5 +20,13 @@ export const preloadHandlebarsTemplates = async function () {
     'systems/utopia/templates/talents/parts/talent-innovation.hbs',
     'systems/utopia/templates/talents/parts/talent-magecraft.hbs',
     'systems/utopia/templates/talents/parts/talent-influence.hbs',
+    // Talent species partials
+    'systems/utopia/templates/talents/parts/talent-human.hbs',
+    'systems/utopia/templates/talents/parts/talent-automaton.hbs',
+    'systems/utopia/templates/talents/parts/talent-cyborg.hbs',
+    'systems/utopia/templates/talents/parts/talent-dwarf.hbs',
+    'systems/utopia/templates/talents/parts/talent-elf.hbs',
+    'systems/utopia/templates/talents/parts/talent-oxtus.hbs',
+    'systems/utopia/templates/talents/parts/talent-cambion.hbs',
   ]);
 };

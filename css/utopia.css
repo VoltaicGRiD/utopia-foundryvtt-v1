@@ -614,6 +614,14 @@
 .utopia .taken {
   fill: rgba(0, 0, 0, 0.5) !important;
 }
+.utopia .claimed {
+  fill: #f00;
+}
+.utopia .taken::before {
+  content: url("/systems/utopia/assets/claimed.png");
+  transform: rotate(-45deg);
+  z-index: 9999;
+}
 .utopia .cls-1 {
   fill: transparent;
 }
