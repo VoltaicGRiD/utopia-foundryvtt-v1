@@ -1,17 +1,555 @@
-/* Error: Can't find stylesheet to import.
- *    ,
- * 25 |   @import 'components/talent-sheet-v2';
- *    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- *    '
- *   src\scss\utopia.scss 25:11  root stylesheet */
-
-body::before {
-  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
-      "Droid Sans Mono", monospace, monospace;
-  white-space: pre;
-  display: block;
-  padding: 1em;
-  margin-bottom: 1em;
-  border-bottom: 2px solid black;
-  content: "Error: Can't find stylesheet to import.\a    \2577 \a 25 \2502    @import 'components/talent-sheet-v2';\a    \2502            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   src\\scss\\utopia.scss 25:11  root stylesheet";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+/* Global styles */
+.window-app {
+  font-family: "Roboto", sans-serif;
+  border: 1px solid rgba(100, 24, 255, 0.8);
 }
+
+.rollable:hover, .rollable:focus {
+  color: #000;
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+
+.grid,
+.grid-2col {
+  display: grid;
+  grid-column: span 2/span 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+  padding: 0;
+}
+
+.grid-3col {
+  grid-column: span 3/span 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-4col {
+  grid-column: span 4/span 4;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.grid-5col {
+  grid-column: span 5/span 5;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.grid-6col {
+  grid-column: span 6/span 6;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.grid-7col {
+  grid-column: span 7/span 7;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.grid-8col {
+  grid-column: span 8/span 8;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.grid-9col {
+  grid-column: span 9/span 9;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+
+.grid-10col {
+  grid-column: span 10/span 10;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+
+.grid-11col {
+  grid-column: span 11/span 11;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+}
+
+.grid-12col {
+  grid-column: span 12/span 12;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.grid-start-2 {
+  grid-column-start: 2;
+}
+
+.grid-start-3 {
+  grid-column-start: 3;
+}
+
+.grid-start-4 {
+  grid-column-start: 4;
+}
+
+.grid-start-5 {
+  grid-column-start: 5;
+}
+
+.grid-start-6 {
+  grid-column-start: 6;
+}
+
+.grid-start-7 {
+  grid-column-start: 7;
+}
+
+.grid-start-8 {
+  grid-column-start: 8;
+}
+
+.grid-start-9 {
+  grid-column-start: 9;
+}
+
+.grid-start-10 {
+  grid-column-start: 10;
+}
+
+.grid-start-11 {
+  grid-column-start: 11;
+}
+
+.grid-start-12 {
+  grid-column-start: 12;
+}
+
+.grid-span-2 {
+  grid-column-end: span 2;
+}
+
+.grid-span-3 {
+  grid-column-end: span 3;
+}
+
+.grid-span-4 {
+  grid-column-end: span 4;
+}
+
+.grid-span-5 {
+  grid-column-end: span 5;
+}
+
+.grid-span-6 {
+  grid-column-end: span 6;
+}
+
+.grid-span-7 {
+  grid-column-end: span 7;
+}
+
+.grid-span-8 {
+  grid-column-end: span 8;
+}
+
+.grid-span-9 {
+  grid-column-end: span 9;
+}
+
+.grid-span-10 {
+  grid-column-end: span 10;
+}
+
+.grid-span-11 {
+  grid-column-end: span 11;
+}
+
+.grid-span-12 {
+  grid-column-end: span 12;
+}
+
+.flex-group-center,
+.flex-group-left,
+.flex-group-right {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.flex-group-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.flex-group-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.flexshrink {
+  flex: 0;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flexlarge {
+  flex: 2;
+}
+
+.align-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.align-center {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Styles limited to utopia sheets */
+.utopia {
+  /* On hover */
+  /* Collapsible header style */
+  /* Collapsible content style */
+  /* Active class to show the content */
+  /* Chevron icon rotation */
+  /* Smooth transition effect */
+}
+.utopia .item-form {
+  font-family: "Roboto", sans-serif;
+}
+.utopia .sheet-header {
+  flex: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.utopia .sheet-header .profile-img {
+  flex: 0 0 100px;
+  height: 100px;
+  margin-right: 10px;
+}
+.utopia .sheet-header .header-fields {
+  flex: 1;
+}
+.utopia .sheet-header h1.charname {
+  height: 50px;
+  padding: 0px;
+  margin: 5px 0;
+  border-bottom: 0;
+}
+.utopia .sheet-header h1.charname input {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.utopia .sheet-tabs {
+  flex: 0;
+}
+.utopia .sheet-body,
+.utopia .sheet-body .tab,
+.utopia .sheet-body .tab .editor {
+  height: 100%;
+}
+.utopia .tox .tox-editor-container {
+  background: #fff;
+}
+.utopia .tox .tox-edit-area {
+  padding: 0 8px;
+}
+.utopia .resource-label {
+  font-weight: bold;
+}
+.utopia .items-header {
+  height: 28px;
+  margin: 2px 0;
+  padding: 0;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
+  font-weight: bold;
+}
+.utopia .items-header > * {
+  font-size: 14px;
+  text-align: center;
+}
+.utopia .items-header .item-name {
+  font-weight: bold;
+  padding-left: 5px;
+  text-align: left;
+  display: flex;
+}
+.utopia .items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  color: #444;
+}
+.utopia .items-list .item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.utopia .items-list .item-name {
+  flex: 2;
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  text-align: left;
+  align-items: center;
+  display: flex;
+}
+.utopia .items-list .item-name h3, .utopia .items-list .item-name h4 {
+  margin: 0;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.utopia .items-list .item-controls {
+  display: flex;
+  flex: 0 0 100px;
+  justify-content: flex-end;
+}
+.utopia .items-list .item-controls a {
+  font-size: 12px;
+  text-align: center;
+  margin: 0 6px;
+}
+.utopia .items-list .item {
+  align-items: center;
+  padding: 0 2px;
+  border-bottom: 1px solid #c9c7b8;
+}
+.utopia .items-list .item:last-child {
+  border-bottom: none;
+}
+.utopia .items-list .item .item-name {
+  color: #191813;
+}
+.utopia .items-list .item .item-name .item-image {
+  flex: 0 0 30px;
+  height: 30px;
+  background-size: 30px;
+  border: none;
+  margin-right: 5px;
+}
+.utopia .items-list .item-prop {
+  text-align: center;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+  font-size: 12px;
+}
+.utopia .items-list .items-header {
+  height: 28px;
+  margin: 2px 0;
+  padding: 0;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px groove #eeede0;
+  font-weight: bold;
+}
+.utopia .items-list .items-header > * {
+  font-size: 12px;
+  text-align: center;
+}
+.utopia .items-list .items-header .item-name {
+  padding-left: 5px;
+  text-align: left;
+}
+.utopia .item-formula {
+  flex: 0 0 200px;
+  padding: 0 8px;
+}
+.utopia .effects .item .effect-source,
+.utopia .effects .item .effect-duration,
+.utopia .effects .item .effect-controls {
+  text-align: center;
+  border-left: 1px solid #c9c7b8;
+  border-right: 1px solid #c9c7b8;
+  font-size: 12px;
+}
+.utopia .effects .item .effect-controls {
+  border: none;
+}
+.utopia .td-left {
+  text-align: left;
+}
+.utopia .td-center {
+  text-align: center;
+}
+.utopia .point-display {
+  border-top: 1px dashed black;
+}
+.utopia .point-display > td {
+  padding-top: 5px;
+}
+.utopia .increase {
+  line-height: normal;
+}
+.utopia .gift {
+  line-height: normal;
+}
+.utopia tr:hover {
+  background-color: #9DD1D6 !important;
+}
+.utopia .gifted {
+  background-color: rgba(129, 245, 153, 0.2);
+}
+.utopia .rollable-button {
+  height: 30px;
+  line-height: initial;
+  justify-content: start;
+  align-content: start;
+  text-align: center;
+}
+.utopia .no-margin {
+  margin: -5px;
+}
+.utopia .tabs {
+  justify-content: initial;
+  margin-top: -10px !important;
+}
+.utopia .tabs .active {
+  border-radius: 10px 10px 0px 0px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  text-shadow: initial;
+}
+.utopia .tabs .item:not(.active) {
+  color: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid black;
+}
+.utopia nav.sheet-tabs {
+  border-top: initial;
+}
+.utopia .item-fill {
+  width: 100%;
+  height: 100%;
+}
+.utopia .species-container {
+  position: relative;
+}
+.utopia .species-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.utopia .species {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.utopia .flexcol {
+  margin-bottom: 10px;
+}
+.utopia .grid {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.utopia .error {
+  color: red;
+}
+.utopia .options {
+  width: 100%;
+}
+.utopia .options > ol {
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+  list-style: none;
+  gap: 5px;
+  padding: 0px;
+  padding: 0;
+}
+.utopia .options li {
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.utopia .options-center {
+  height: 100%;
+  align-content: center;
+  justify-content: center;
+  margin: 0px;
+}
+.utopia .reset {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px groove var(--color-border-light-highlight);
+  height: 100%;
+}
+.utopia input[type=number]:hover::-webkit-inner-spin-button,
+.utopia input[type=number]:hover::-webkit-outer-spin-button {
+  opacity: 1;
+}
+.utopia .points {
+  margin-top: 10px;
+}
+.utopia .filter {
+  border: 1px solid black;
+}
+.utopia .sub-tree {
+  width: 100%;
+}
+.utopia .sub-tree tbody {
+  width: 100%;
+}
+.utopia .collapsible-header {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.utopia .collapsible-content {
+  display: none; /* Hidden by default */
+  margin: 0;
+  padding: 0 1em;
+}
+.utopia .collapsible-content.active {
+  display: block;
+}
+.utopia .rotate-180 {
+  transform: rotate(180deg);
+}
+.utopia .collapsible-header i {
+  transition: transform 0.3s ease; /* Applies to both directions */
+}
+.utopia .select:hover {
+  text-shadow: 0 0 10px var(--color-shadow-primary);
+}
+.utopia label {
+  position: relative;
+}
+.utopia label .keep-open-span {
+  position: absolute;
+  left: 30px;
+  top: 5px;
+  height: 20px;
+}
+.utopia label .keep-open-input {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  height: 20px;
+}
+.utopia .position {
+  font-weight: 800;
+  font-size: 1em;
+}
+.utopia .ability-table tr td {
+  padding: 0.25em 0.5em;
+}
+.utopia .attack-table {
+  margin: 0px;
+  margin-bottom: 2em;
+}
+.utopia .attack-table td {
+  padding: 0.25em 0.5em;
+}
+
+/*# sourceMappingURL=utopia.css.map */

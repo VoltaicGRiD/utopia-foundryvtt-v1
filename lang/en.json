@@ -58,7 +58,8 @@
     "SheetLabels": {
       "actor": "Utopia Actor Sheet",
       "item": "Utopia Item Sheet",
-      "weapon": "Utopia Weapon Sheet"
+      "weapon": "Utopia Weapon Sheet",
+      "attack": "Utopia Attack Sheet"
     },
     "Weapons": {
       "handling": "Handling",

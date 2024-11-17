@@ -1,0 +1,38 @@
+<form> 
+  <h3>
+    Strike against: 
+    <a data-action="target">
+      {{#if target}}
+        {{target.name}}
+      {{else}}
+        [No Target]
+      {{/if}}
+      <i data-action="target" class="fa-solid fa-rotate-right"></i>
+    </a>
+  </h3>
+  <table class="attack-table">
+    <tr> 
+      <th>Modifier</th>
+      <th>Source</th>
+      <th>Amount</th>
+      <th></th>
+    </tr>
+    {{#each modifier as |mod|}}
+      <tr>
+        <td>{{mod.value}}</td>
+        <td>{{mod.source}}</td>
+        <td>{{mod.amount}}</td>
+        <td><button class="remove" data-modifier="{{mod}}">-</button></td>
+      </tr>
+    {{/each}}
+  </table>
+  <div class="flexrow">
+    <button data-action="clear">Clear</button>
+    <button data-action="add">Add</button>
+  </div>
+  <hr/>
+  <div class="flexrow">
+    <button data-action="cancel">Cancel</button>
+    <button data-action="submit">Roll</button>
+  </div>
+</form>

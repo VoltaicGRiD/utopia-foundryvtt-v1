@@ -1,3 +1,5 @@
+import { UtopiaAttackSheet } from "../sheets/attack-sheet.mjs";
+
 /**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
@@ -73,6 +75,13 @@ export class UtopiaItem extends Item {
    */
   async roll() {
     const item = this;
+
+    if (this.type == "weapon") {
+      console.log("Rolling weapon...", item);
+      const sheet = new UtopiaAttackSheet({ document: this });
+      sheet.render(true);
+      return null;
+    }
 
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });

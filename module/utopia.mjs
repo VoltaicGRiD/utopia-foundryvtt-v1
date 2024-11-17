@@ -11,11 +11,27 @@ import { UTOPIA } from './helpers/config.mjs';
 import isNumeric from './helpers/numeric.mjs';
 import searchTraits from './helpers/searchTraits.mjs';
 import Tagify from '../lib/tagify/tagify.esm.js';
-import { UtopiaActorSheetV2 } from './sheets/actor-sheet-appv2.mjs';
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
+
+// Add key classes to the global scope so they can be more easily used
+// by downstream developers
+globalThis.boilerplate = {
+  documents: {
+    UtopiaActor,
+    UtopiaItem,
+  },
+  applications: {
+    UtopiaActorSheet,
+    UtopiaItemSheet,
+    UtopiaWeaponSheet,
+  },
+  utils: {
+    rollItemMacro,
+  },
+};
 
 Hooks.once('init', function () {
   // Add utility classes to the global game object so that they're more easily
@@ -42,11 +58,6 @@ Hooks.once('init', function () {
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
 
-  // Define tagify setup
-  let species = new Tagify();
-  species.addTags(["Human", "Automaton", "Regal Oxtus"]);
-  CONFIG.UTOPIA.species = species;
-
   // Active Effects are never copied to the Actor,
   // but will still apply to the Actor from within the Item
   // if the transfer property on the Active Effect is true.
@@ -71,6 +82,16 @@ Hooks.once('init', function () {
     makeDefault: true,
     types: ['weapon'],
     label: 'UTOPIA.SheetLabels.weapon',
+  });
+
+  // Register System settings in the game settings menu
+  game.settings.register('utopia', 'targetRequired', {
+    name: "UTOPIA.Settings.targetRequired",
+    hint: "UTOPIA.Settings.targetRequiredHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
   });
 
   // Preload Handlebars templates.
@@ -165,6 +186,25 @@ export async function _handleSpeciesDrop(actor, item) {
 }
 
 /* -------------------------------------------- */
+/*  Ready Hook                                  */
+/* -------------------------------------------- */
+
+Hooks.once('ready', function () {
+  // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
+  Hooks.on('hotbarDrop', (bar, data, slot) => { 
+    createDocMacro(data, slot); 
+    return false;
+  });
+
+  Hooks.on('targetToken', (user, token, targeted) => {
+    if (ui.activeWindow.constructor.name === 'UtopiaAttackSheet') {
+      let window = ui.activeWindow;
+      window.render();
+    }
+  });
+});
+
+/* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
 
@@ -175,7 +215,7 @@ export async function _handleSpeciesDrop(actor, item) {
  * @param {number} slot     The hotbar slot to use
  * @returns {Promise}
  */
-export async function createItemMacro(data, slot) {
+async function createDocMacro(data, slot) {
   // First, determine if this is a valid owned item.
   if (data.type !== 'Item') return;
   if (!data.uuid.includes('Actor.') && !data.uuid.includes('Token.')) {
@@ -201,7 +241,6 @@ export async function createItemMacro(data, slot) {
     });
   }
   game.user.assignHotbarMacro(macro, slot);
-  return false;
 }
 
 /**
