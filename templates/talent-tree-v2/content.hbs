@@ -1,0 +1,30 @@
+<div class="skill-grid">
+  {{#each talentTrees as |parentTree parentTreeName|}}
+    <div class="skill-parent-tree">
+      <div class="skill-tree-header">
+        <h3>{{parentTreeName}}</h3>
+      </div>
+
+      {{#each parentTree as |talentTree talentTreeName|}}
+        <div class="skill-tree">
+          
+          {{#each talentTree as |talent|}}
+            <div class="skill">
+              <div class="skill-icon">
+                <img class="skill-image" title="{{talent.name}}" src="{{talent.img}}" alt="{{talent.name}}">
+                <span>{{talent.name}}</span>
+              </div>
+            </div>
+            {{#unless @last}}
+              <svg class="skill-connector" width="50" height="80">
+                <line x1="0" y1="40" x2="100" y2="40" style="stroke:rgb(255,0,0);stroke-width:2" />
+              </svg>
+            {{/unless}}
+          {{/each}}
+
+        </div>
+      {{/each}}  
+
+    </div>
+  {{/each}}
+</div>

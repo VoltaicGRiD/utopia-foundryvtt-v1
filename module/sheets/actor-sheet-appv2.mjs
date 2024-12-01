@@ -1,5 +1,9 @@
 import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
-
+import { calculateFavor } from '../helpers/favorHandler.mjs';
+import { UtopiaOptionsSheet } from './options-sheet.mjs';
+import { UtopiaSubtraitSheetV2 } from './subtrait-sheet.mjs';
+import { UtopiaTalentTreeSheetV2 } from './talent-tree-sheet-v2.mjs';
+import { UtopiaTalentTreeSheet } from './talent-tree-sheet.mjs';
 const { api, sheets } = foundry.applications;
 
 /**
@@ -11,15 +15,16 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 ) {
   constructor(options = {}) {
     super(options);
-    this.#dragDrop = this.#createDragDropHandlers();
   }
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ['utopia', 'actor'],
+    classes: ['utopia', 'actor-v2'],
+    window: {
+      resizeable: true,
+    },
     position: {
-      width: 600,
-      height: 600,
+      width: 800,
     },
     actions: {
       onEditImage: this._onEditImage,
@@ -27,13 +32,23 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       createDoc: this._createDoc,
       deleteDoc: this._deleteDoc,
       toggleEffect: this._toggleEffect,
+      openTalent: this._openTalent,
       roll: this._onRoll,
+      selectTalents: this._selectTalent,
+      selectSubtraits: this._selectSubtraits,
+      selectSpecies: this._selectSpecies,
     },
-    // Custom property that's merged into `this.options`
-    dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
     form: {
       submitOnChange: true,
     },
+    tabs: [
+      'data',
+      'talents',
+      'spells',
+      'gear',
+      'biography',
+      'effects',
+    ]
   };
 
   /** @override */
@@ -45,37 +60,37 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       // Foundry-provided generic template
       template: 'templates/generic/tab-navigation.hbs',
     },
-    features: {
-      template: 'systems/utopia/templates/actor/v2/talents.hbs',
+    data: {
+      template: 'systems/utopia/templates/actor/v2/data.hbs',
     },
-    // biography: {
-    //   template: 'systems/utopia/templates/actor/biography.hbs',
-    // },
-    // gear: {
-    //   template: 'systems/utopia/templates/actor/gear.hbs',
-    // },
-    // spells: {
-    //   template: 'systems/utopia/templates/actor/spells.hbs',
-    // },
-    // effects: {
-    //   template: 'systems/utopia/templates/actor/effects.hbs',
-    // },
+    biography: {
+      template: 'systems/utopia/templates/actor/v2/biography.hbs',
+    },
+    gear: {
+      template: 'systems/utopia/templates/actor/v2/gear.hbs',
+    },
+    spells: {
+      template: 'systems/utopia/templates/actor/v2/spells.hbs',
+    },
+    effects: {
+      template: 'systems/utopia/templates/actor/v2/effects.hbs',
+    },
   };
 
   /** @override */
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     // Not all parts always render
-    options.parts = ['header', 'tabs', 'features'];
+    options.parts = ['header', 'tabs', 'biography'];
     // Don't show the other tabs if only limited view
     if (this.document.limited) return;
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'character':
-        options.parts.push('features', 'gear', 'spells', 'effects');
+        options.parts.push('data', 'gear', 'spells', 'effects');
         break;
       case 'npc':
-        options.parts.push('gear', 'effects');
+        options.parts.push('data', 'gear', 'effects');
         break;
     }
   }
@@ -95,13 +110,19 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       // Add the actor's data to context.data for easier access, as well as flags.
       system: this.actor.system,
       flags: this.actor.flags,
+      items: this.actor.items,
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
       tabs: this._getTabs(options.parts),
+      spellTabs: this._getTabs(['alteration', 'array', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'wake']),
     };
+
+    console.log(this.actor);
 
     // Offloading context prep to a helper function
     this._prepareItems(context);
+
+    console.log(context);
 
     return context;
   }
@@ -109,9 +130,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'features':
-      case 'spells':
+      case 'data':
       case 'gear':
+        context.tab = context.tabs[partId];
+        break;
+      case 'spells':  
+        context.spellTab = context.spellTabs[partId];
         context.tab = context.tabs[partId];
         break;
       case 'biography':
@@ -139,7 +163,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           this.actor.allApplicableEffects()
         );
         break;
+      default:
     }
+
     return context;
   }
 
@@ -150,10 +176,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @protected
    */
   _getTabs(parts) {
-    // If you have sub-tabs this is necessary to change
     const tabGroup = 'primary';
+
     // Default tab for first time it's rendered this session
-    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'biography';
+    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'data';
+    if (!this.tabGroups['spells']) this.tabGroups['spells'] = 'alteration';
+
     return parts.reduce((tabs, partId) => {
       const tab = {
         cssClass: '',
@@ -169,13 +197,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'header':
         case 'tabs':
           return tabs;
+        case 'data':
+          tab.id = 'data';
+          tab.label += 'Data';
+          break;
         case 'biography':
           tab.id = 'biography';
           tab.label += 'Biography';
-          break;
-        case 'features':
-          tab.id = 'features';
-          tab.label += 'Features';
           break;
         case 'gear':
           tab.id = 'gear';
@@ -189,8 +217,52 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           tab.id = 'effects';
           tab.label += 'Effects';
           break;
+        case 'alteration': 
+          tab.group = 'spells';
+          tab.id = 'alteration';
+          tab.label += 'Alteration';
+          break;
+        case 'array':
+          tab.group = 'spells';
+          tab.id = 'array';
+          tab.label += 'Array';
+          break;
+        case 'divination':
+          tab.group = 'spells';
+          tab.id = 'divination';
+          tab.label += 'Divination';
+          break;
+        case 'enchantment':
+          tab.group = 'spells';
+          tab.id = 'enchantment';
+          tab.label += 'Enchantment';
+          break;
+        case 'evocation':
+          tab.group = 'spells';
+          tab.id = 'evocation';
+          tab.label += 'Evocation';
+          break;
+        case 'illusion':
+          tab.group = 'spells';
+          tab.id = 'illusion';
+          tab.label += 'Illusion';
+          break;
+        case 'necromancy':
+          tab.group = 'spells';
+          tab.id = 'necromancy';
+          tab.label += 'Necromancy';
+          break;
+        case 'wake':
+          tab.group = 'spells';
+          tab.id = 'wake';
+          tab.label += 'Wake';
+          break;
+        default:
       }
+      
       if (this.tabGroups[tabGroup] === tab.id) tab.cssClass = 'active';
+      if (this.tabGroups['spells'] === tab.id) tab.cssClass = 'active';
+
       tabs[partId] = tab;
       return tabs;
     }, {});
@@ -203,50 +275,75 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    */
   _prepareItems(context) {
     // Initialize containers.
-    // You can just use `this.document.itemTypes` instead
-    // if you don't need to subdivide a given type like
-    // this sheet does with spells
     const gear = [];
-    const features = [];
+    const weapons = [];
+    const talents = [];
+    const actions = [];
     const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: [],
+      alteration: [],
+      array: [],
+      divination: [],
+      enchantment: [],
+      evocation: [],
+      illusion: [],
+      necromancy: [],
+      wake: [],
     };
+    const misc = [];
 
     // Iterate through items, allocating to containers
     for (let i of this.document.items) {
+      i.img = i.img || Item.DEFAULT_ICON;
       // Append to gear.
-      if (i.type === 'gear') {
+      if (i.type === 'item') {
         gear.push(i);
       }
-      // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
+      // Append to talents.
+      else if (i.type === 'talent') {
+        talents.push(i);
+      }
+      // Append to weapons.
+      else if (i.type === 'weapon') {
+        weapons.push(i);
+      }
+      else if (i.type === 'action') {
+        actions.push(i);
       }
       // Append to spells.
       else if (i.type === 'spell') {
-        if (i.system.spellLevel != undefined) {
-          spells[i.system.spellLevel].push(i);
+        if (i.system.arts) {
+          i.system.arts.forEach((art) => {
+            spells[art].push(i);
+          });
         }
+      }
+
+      // Else, append to misc.
+      else {
+        misc.push(i);
       }
     }
 
-    for (const s of Object.values(spells)) {
-      s.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    }
+    actions.forEach((action) => {
+      console.log(action);
+      if (action.system.type == "interrupt") {
+        action.isReaction = true;
+      }
+    });
+
+    console.log(actions);
+
+    // Assign and return
+    context.weapons = weapons;
+    context.talents = talents;
+    context.spells = spells;
+    context.actions = actions;
+    context.misc = misc;
 
     // Sort then assign
     context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.features = features.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.spells = spells;
+
+    return context;
   }
 
   /**
@@ -258,11 +355,65 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @override
    */
   _onRender(context, options) {
-    this.#dragDrop.forEach((d) => d.bind(this.element));
-    this.#disableOverrides();
-    // You may want to add other special handling here
-    // Foundry comes with a large number of utility classes, e.g. SearchFilter
-    // That you may want to implement yourself.
+    // Enable the ability to update the actor's image
+    const updateElements = this.element.querySelectorAll('[data-action="update"]')
+    updateElements.forEach(e => 
+      e.addEventListener('change', this._update.bind(this))
+    );
+  }
+
+  async _update(event) {
+    event.preventDefault();
+    const target = event.target;
+    const value = target.value;
+    const attr = target.name;
+    this.document.update({ [attr]: value });
+  }
+
+  static async _selectSpecies(event, target) {
+    // Get the actor's species data
+    let species = this.actor.system.species;
+
+    // If the actor already has a species, do nothing
+    if (Object.keys(species).length !== 0)
+      return;
+
+    // Create a new options sheet for species selection
+    let newSheet = new UtopiaOptionsSheet();
+    newSheet.actor = this.actor;
+
+    // Retrieve the species options from the 'utopia.species' compendium
+    let pack = game.packs.get('utopia.species');
+    let options = await pack.getDocuments();
+    newSheet.displayOptions = options;
+    
+    // Render the options sheet to the user
+    newSheet.render(true);
+  }
+  
+  static async _openTalent(event, target) {
+    console.log(event);
+    const talent = this.actor.items.get(target.dataset.target);
+    talent.sheet.render(true);
+  }
+
+  static async _selectTalent(event, target) {
+    // Create a new talent sheet instance
+    //let newSheet = new UtopiaTalentTreeSheet();
+    let newSheet = new UtopiaTalentTreeSheetV2();
+    newSheet.actor = this.actor;
+    newSheet.keepOpen = true;    
+    
+    // Render the talent sheet
+    newSheet.render(true);
+  }
+
+  static async _selectSubtraits(event, target) {
+    let newSheet = new UtopiaSubtraitSheetV2();
+    newSheet.classActor = this.actor;
+    newSheet.keepOpen = true;
+    
+    newSheet.render(true);
   }
 
   /**************
@@ -308,6 +459,8 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @protected
    */
   static async _viewDoc(event, target) {
+    console.log(event, target);
+
     const doc = this._getEmbeddedDocument(target);
     doc.sheet.render(true);
   }
@@ -384,23 +537,64 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const dataset = target.dataset;
 
     // Handle item rolls.
-    switch (dataset.rollType) {
-      case 'item':
-        const item = this._getEmbeddedDocument(target);
+    if (dataset.rollType) {
+      if (dataset.rollType == 'item') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
         if (item) return item.roll();
+      }
+      else if (dataset.rollType == 'trait') {
+        return await this.actor.performCheck(dataset.trait);
+      }
+      else if (dataset.rollType == 'spell') {
+        return await this.actor.castSpell(dataset);
+      }
+    }   
+
+    // Handle actor rolls.
+    let chatMessage = "";
+    const trait = dataset.trait || "none";
+    const [net, disfavor, favor] = calculateFavor(trait, this.actor.system.disfavors, this.actor.system.favors);
+    
+    // Update the chat message with disfavor and favor amounts
+    chatMessage += `Roll has ${disfavor} disfavor and ${favor} favor!\n`;
+
+    // Adjust the roll formula based on net favor or disfavor
+    if (disfavorAmount > 0 && favorAmount > 0) {
+      let netEffect = favorAmount - disfavorAmount;
+      if (netEffect > 0) {
+        // Net favor: increase the number of dice
+        finalRoll = dataset.roll.replace('3d6', `${3 + netEffect}d6`);
+      } else {
+        // Net disfavor: decrease the number of dice
+        finalRoll = dataset.roll.replace('3d6', `${3 - Math.abs(netEffect)}d6`);
+      }
+    } else if (disfavorAmount > 0) {
+      // Only disfavor: decrease the number of dice
+      let netEffect = disfavorAmount;
+      finalRoll = dataset.roll.replace('3d6', `${3 - netEffect}d6`);
+    } else if (favorAmount > 0) {
+      // Only favor: increase the number of dice
+      let netEffect = favorAmount;
+      finalRoll = dataset.roll.replace('3d6', `${3 + netEffect}d6`);
     }
 
-    // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
-    }
+    // Create the label for the chat message
+    let label = `${dataset.label} - ${chatMessage}`;
+
+    // Create and perform the roll
+    let roll = new Roll(finalRoll, this.actor.getRollData());
+    console.log(roll);
+
+    // Send the roll result to chat
+    let message = await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: label,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+    console.log(message);
+
+    return roll;
   }
 
   /** Helper Functions */

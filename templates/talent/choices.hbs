@@ -1,0 +1,10 @@
+<form> 
+
+  <div class="form-group">
+    {{#each choices as |choice|}}
+      <label>{{choice}}</label>
+      <input type="radio" class="choice" name="choices" value={{choice}}></input>
+    {{/each}}
+  </div>
+  
+</form>

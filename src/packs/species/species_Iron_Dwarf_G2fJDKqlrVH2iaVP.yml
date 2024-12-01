@@ -1,0 +1,50 @@
+name: Iron Dwarf
+type: species
+_id: G2fJDKqlrVH2iaVP
+img: icons/svg/item-bag.svg
+system:
+  formula: ''
+  description: ''
+  flavor: ''
+  name: Human
+  grants:
+    block: '3'
+    dodge: 1d12
+    constitution: 4
+    endurance: '6'
+    effervescence: 3
+    subtraits: mem,res,awa
+    languages: utopian,dwarvish
+  block:
+    quantity: 3
+    size: 4
+  subtraits:
+    - Memory
+    - Resolve
+    - Awareness
+  dodge:
+    size: 12
+  constitution: 4
+  endurance: 6
+  effervescence: 3
+  languages:
+    - Utopian
+    - Dwarvish
+effects: []
+folder: null
+sort: 0
+ownership:
+  default: 0
+  nLkleFyXeCclB3Jg: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: utopia
+  systemVersion: 0.1.0
+  createdTime: 1731343516429
+  modifiedTime: 1732961133969
+  lastModifiedBy: nLkleFyXeCclB3Jg
+_key: '!items!G2fJDKqlrVH2iaVP'
+

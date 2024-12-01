@@ -32,14 +32,18 @@
       <input type="text" class="weapon-tags" name="weapon-quality" placeholder="{{localize 'UTOPIA.Descriptions.tags'}}" value="{{system.tags}}"/>
     </div>
 
-    <div class="grid grid-3col">
+    <div class="grid grid-4col">
       <div class="flexcol">
         <label for="system.handling">{{localize 'UTOPIA.Weapons.handling'}}</label>
         <input type="number" class="weapon-handling" name="system.handling" placeholder="{{localize 'UTOPIA.Weapons.handling'}}" value="{{system.handling}}"/>
       </div>
       <div class="flexcol">
         <label for="system.range">{{localize 'UTOPIA.Weapons.range'}}</label>
-        <input type="number" class="weapon-range" name="system.range" placeholder="{{localize 'UTOPIA.Weapons.range'}}" value="{{system.range}}"/>
+        <input type="text" class="weapon-range" name="system.range" placeholder="{{localize 'UTOPIA.Weapons.range'}}" value="{{system.range}}"/>
+      </div>
+      <div class="flexcol">
+        <label for="system.ranged">{{localize 'UTOPIA.Item.ranged'}}</label>
+        <input type="checkbox" class="weapon-ranged" name="system.ranged" placeholder="{{localize 'UTOPIA.Item.ranged'}}" value="{{system.ranged}}"/>
       </div>
       <div class="flexcol">
         <label for="system.formula">{{localize 'UTOPIA.Item.formula'}}</label>

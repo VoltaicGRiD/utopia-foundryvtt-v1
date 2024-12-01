@@ -1,0 +1,119 @@
+<div>
+
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <!-- Gradient for SVG 1 -->
+      <linearGradient id="warfare-gradient" x1="0" y1="0" x2="0" y2="1">
+        <stop id="gradient-stop" offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+        <stop offset="0%" stop-color="rgba(0,0,0,0.2)"/>
+        <stop offset="100%" stop-color="rgba(0,0,0,0.2)"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+
+  <div class="talent-display grid grid-6col">
+    <nav class="flexcol talent-tabs" data-group="primary-tabs">
+      <ol>
+        <li class="talent-tab" data-tab="warfare" data-group="primary-tabs">Warfare</li>
+        <li class="talent-tab" data-tab="tactics" data-group="primary-tabs">Tactics</li>
+        <li class="talent-tab" data-tab="innovation" data-group="primary-tabs">Innovation</li>
+        <li class="talent-tab" data-tab="magecraft" data-group="primary-tabs">Magecraft</li>
+        <li class="talent-tab" data-tab="influence" data-group="primary-tabs">Influence</li>
+        <li class="talent-tab" data-tab="prowess" data-group="primary-tabs">Prowess</li>
+        <hr/>
+        {{#if species.human}}
+          <li class="talent-tab" data-tab="human" data-group="primary-tabs">Human</li>
+        {{/if}}
+        {{#if species.automaton}}
+          <li class="talent-tab" data-tab="automaton" data-group="primary-tabs">Automaton</li>
+        {{/if}}
+        {{#if species.biotech-cyborg}}
+          <li class="talent-tab" data-tab="cyborg" data-group="primary-tabs">Biotech Cyborg</li>
+        {{/if}}
+        {{#if species.cybernetic-cyborg}}
+          <li class="talent-tab" data-tab="cyborg" data-group="primary-tabs">Cybernetic Cyborg</li>
+        {{/if}}
+        {{#if species.iron-dwarf}}
+          <li class="talent-tab" data-tab="dwarf" data-group="primary-tabs">Iron Dwarf</li>
+        {{/if}}
+        {{#if species.copper-dwarf}}
+          <li class="talent-tab" data-tab="dwarf" data-group="primary-tabs">Copper Dwarf</li>
+        {{/if}}
+        {{#if species.solar-elf}}
+          <li class="talent-tab" data-tab="elf" data-group="primary-tabs">Solar Elf</li>
+        {{/if}}
+        {{#if species.lunar-elf}}
+          <li class="talent-tab" data-tab="elf" data-group="primary-tabs">Lunar Elf</li>
+        {{/if}}
+        {{#if species.twilight-elf}}
+          <li class="talent-tab" data-tab="elf" data-group="primary-tabs">Twilight Elf</li>
+        {{/if}}
+        {{#if species.regal-oxtus}}
+          <li class="talent-tab" data-tab="oxtus" data-group="primary-tabs">Regal Oxtus</li>
+        {{/if}}
+        {{#if species.brazen-oxtus}}
+          <li class="talent-tab" data-tab="oxtus" data-group="primary-tabs">Brazen Oxtus</li>
+        {{/if}}
+        {{#if species.astute-oxtus}}
+          <li class="talent-tab" data-tab="oxtus" data-group="primary-tabs">Astute Oxtus</li>
+        {{/if}}
+        {{#if species.angelic-cambion}}
+          <li class="talent-tab" data-tab="cambion" data-group="primary-tabs">Angelic Cambion</li>
+        {{/if}}
+        {{#if species.demonic-cambion}}
+          <li class="talent-tab" data-tab="cambion" data-group="primary-tabs">Demonic Cambion</li>
+        {{/if}}
+        {{#if species.eldritch-cambion}}
+          <li class="talent-tab" data-tab="cambion" data-group="primary-tabs">Eldritch Cambion</li>
+        {{/if}}
+      </ol>
+    </nav>
+
+    <div class="content grid-span-5">
+      {{!-- Standard Talent Trees --}}
+      <div class="tab" data-tab="warfare" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-warfare.hbs"}}
+      </div>
+      <div class="tab" data-tab="tactics" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-tactics.hbs"}}
+      </div>
+      <div class="tab" data-tab="innovation" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-innovation.hbs"}}
+      </div>
+      <div class="tab" data-tab="magecraft" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-magecraft.hbs"}}
+      </div>
+      <div class="tab" data-tab="influence" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-influence.hbs"}}
+      </div>
+      <div class="tab" data-tab="prowess" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-prowess.hbs"}}
+      </div>
+      
+      {{!-- Species Talent Trees --}}
+      <div class="tab" data-tab="human" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-human.hbs"}}
+      </div>
+      <div class="tab" data-tab="automaton" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-automaton.hbs"}}
+      </div>
+      <div class="tab" data-tab="cyborg" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-cyborg.hbs"}}
+      </div>
+      <div class="tab" data-tab="dwarf" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-dwarf.hbs"}}
+      </div>
+      <div class="tab" data-tab="elf" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-elf.hbs"}}
+      </div>
+      <div class="tab" data-tab="oxtus" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-oxtus.hbs"}}
+      </div>
+      <div class="tab" data-tab="cambion" data-group="primary-tabs">
+        {{> "systems/utopia/templates/talent-tree-v1/parts/talent-cambion.hbs"}}
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,5 +1,8 @@
 import isNumeric from "../helpers/numeric.mjs";
 import searchTraits from "../helpers/searchTraits.mjs";
+import { UtopiaChatMessage } from "../sheets/chat-message.mjs";
+import { shortToLong, longToShort } from "../helpers/traitNames.mjs";
+import { calculateFavor } from "../helpers/favorHandler.mjs";
 
 /**
  * Extend the base A[c]tor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -76,12 +79,21 @@ export class UtopiaActor extends Actor {
 
     // Surface HP (SHP) is calculated from Body points
     actorData.system.shp.max = body * con + lvl;
+    if (actorData.system.shp.value > actorData.system.shp.max) {
+      actorData.system.shp.value = actorData.system.shp.max;
+    }
     
     // Deep HP (DHP) is calculated from Soul points
     actorData.system.dhp.max = soul * eff + lvl;
+    if (actorData.system.dhp.value > actorData.system.dhp.max) {
+      actorData.system.dhp.value = actorData.system.dhp.max;
+    }
 
     // Maximum stamina is calculated from mind
     actorData.system.stamina.max = mind * end + lvl;
+    if (actorData.system.stamina.value > actorData.system.stamina.max) {
+      actorData.system.stamina.value = actorData.system.stamina.max;
+    }
 
     // Loop through ability scores, and add their modifiers to our sheet output.
     for (const key in actorData.system.traits) {
@@ -147,18 +159,6 @@ export class UtopiaActor extends Actor {
       if (i.type === 'species') {
         actorData.system.species = i;
       }
-      // else if (i.type === 'talent') {
-      //   let tree = i.system.tree;
-      //   let position = i.system.position;
-        
-      //   actorData.update({
-      //     system: {
-      //       trees: {
-      //         [tree]: position
-      //       }
-      //     }
-      //   })
-      // }
     }
   }
   
@@ -178,11 +178,11 @@ export class UtopiaActor extends Actor {
   getRollData() {
     // Starts off by populating the roll data with a shallow copy of `this.system`
     const data = { ...this.system };
-
+  
     // Prepare character roll data.
     this._getCharacterRollData(data);
     this._getNpcRollData(data);
-
+    
     return data;
   }
 
@@ -194,9 +194,14 @@ export class UtopiaActor extends Actor {
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
-    if (data.abilities) {
-      for (let [k, v] of Object.entries(data.abilities)) {
+    if (data.traits) {
+      for (let [k, v] of Object.entries(data.traits)) {
         data[k] = foundry.utils.deepClone(v);
+        data[shortToLong(k)] = foundry.utils.deepClone(v);
+        for (let [k2, v2] of Object.entries(data.traits[k].subtraits)) {
+          data[k2] = foundry.utils.deepClone(v2);
+          data[shortToLong(k2)] = foundry.utils.deepClone(v2);
+        }
       }
     }
 
@@ -216,55 +221,50 @@ export class UtopiaActor extends Actor {
   }
 
   async setSpecies(item) {
-    let grants = item.system.grants;
+    let grants = item.system;
+    console.log(grants);
 
-    try {
-      if (grants.subtraits.indexOf(',') > -1) {
-        let subtraits = grants.subtraits.split(',')
-    
-        subtraits.forEach(async subtrait => {
-          let parsed = String(subtrait.trim());
-          let trait = await searchTraits(this.system.traits, parsed);
-    
-          this.update({
-            system: {
-              traits: {
-                [trait]: {
-                  subtraits: {
-                    [parsed]: {
-                      gifted: true
-                    }
-                  }
-                }    
-              }
-            }
-          })  
-        })    
+    // Reset all gifted subtraits
+    for (let key in this.system.traits) {
+      for (let subkey in this.system.traits[key].subtraits) {
+        this.update({
+          [`system.traits.${key}.subtraits.${subkey}.gifted`]: false
+        });
       }
-    } catch {
+    }
+    
+    if (grants.subtraits == '[Any 2 Subtraits]') {
       let points = this.system.points.gifted;
-      
-      if (isNumeric(grants.subtraits)) {
-        points += parseInt(grants.subtraits);
-      }
-      else {
-        points += grants.subtraits;
-      }
-
+      points += 2;
       this.update({
-        system: {
-          points: {
-            gifted: points
-          }
-        }
-      })
+        ['system.points.gifted']: points
+      });
+    } else {
+      let subtraits = grants.subtraits;
+        
+      subtraits.forEach(async subtrait => {
+        // Subtraits look like: [{"value": "TRAIT"}]
+        
+        let trait = await searchTraits(this.system.traits, subtrait);
+        let formattedTrait = longToShort(subtrait.toLowerCase());
+  
+        this.update({
+          [`system.traits.${trait}.subtraits.${formattedTrait}.gifted`]: true
+        });
+      }); 
     }
 
     this.update({
       system: {
         species: item,
-        block: grants['block'],
-        dodge: grants['dodge'],
+        block: {
+          quantity: grants['block'].quantity,
+          size: grants['block'].size
+        },
+        dodge: {
+          quantity: grants['dodge'].quantity,
+          size: grants['dodge'].size
+        },
         attributes: {
           constitution: grants['constitution'],
           endurance: grants['endurance'],
@@ -272,5 +272,143 @@ export class UtopiaActor extends Actor {
         }
       }
     })
+  }
+
+  async performCheck(trait, flavor = "") {
+    let formulaTrait = trait;
+
+    if (trait.length === 3) {
+      formulaTrait = shortToLong(trait);
+    }
+
+    let defaultCheck = 3;
+    let [netFavor, disfavor, favor] = calculateFavor(trait, this.system.disfavors, this.system.favors);    
+    let totalCheck = defaultCheck + netFavor;
+
+    let formula = `${totalCheck}d6 + @${formulaTrait}.mod`;
+
+    console.log(formula);
+    let rollData = this.getRollData();
+    let roll = await new Roll(formula, rollData).roll();
+    let tooltip = await roll.getTooltip();
+    
+    let description = `${formulaTrait.capitalize()} check!`;
+    let gifted = rollData[trait].gifted || false;
+
+    const template = 'systems/utopia/templates/chat/check-card.hbs';
+    const templateData = {
+      actor: this,
+      data: rollData,
+      formula: roll.formula,
+      total: roll.total,
+      result: roll.result,
+      flavor: flavor,
+      tooltip: tooltip,
+      gifted: gifted,
+      description: description
+    }
+
+    const chatData = UtopiaChatMessage.applyRollMode({
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
+      content: await renderTemplate(template, templateData),
+      flags: { utopia: { item: this._id } },
+      sound: CONFIG.sounds.dice,
+    });
+
+    await UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+  }
+
+  async applyDamage(damage, source, type) {
+    console.log(damage, source, type);
+
+    type = type.toLowerCase().trim();
+    let defense = this.system.defenses[type] || 0;
+    let total = damage - defense;
+
+    if (total < 0) {
+      total = 0;
+    }
+
+    let shp = this.system.shp.value;
+    let dhp = this.system.dhp.value;
+
+    // 24 SHP - 30 Damage = 0 SHP, 6 DHP    
+    let newShp = shp - total;
+    let newDhp;
+    
+    let shpDamageTaken = total;
+    let dhpDamageTaken = 0;
+
+    if (newShp < 0) {
+      shpDamageTaken = shp;
+      let remaining = Math.abs(newShp);
+      dhpDamageTaken = remaining;
+      newShp = 0;
+      
+      newDhp = dhp - remaining;
+    }
+
+    this.update({
+      ['system.shp.value']: newShp,
+      ['system.dhp.value']: newDhp
+    })
+
+    const template = 'systems/utopia/templates/chat/damage-card.hbs';
+    const templateData = {
+      actor: this,
+      data: await this.getRollData(),
+      content: `${this.name} takes ${total} [${type.capitalize()}] damage!`,
+      shp: shpDamageTaken,
+      dhp: dhpDamageTaken
+    }
+
+    const chatData = UtopiaChatMessage.applyRollMode({
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
+      content: await renderTemplate(template, templateData),
+      flags: { utopia: { item: this._id } },
+    });
+
+    await UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+
+    if (this.statuses.has('concentration')) {
+      console.log("Creature in concentration was injured!"); 
+
+      let formula = "3d6 + @traits.str.subtraits.for.mod";
+      this.performCheck(formula, `${this.name} rolls to maintain concentration!`);
+        
+      // let rollData = this.getRollData();
+      // let roll = await new Roll(formula, rollData).roll();
+      // let tooltip = await roll.getTooltip();
+      // let rollSuccess = false;      
+
+      // if (roll.total >= total) {
+      //   rollSuccess = true;
+      // }
+
+      // const template = 'systems/utopia/templates/chat/check-card.hbs';
+      // const templateData = {
+      //   actor: this,
+      //   data: await this.getRollData(),
+      //   formula: roll.formula,
+      //   total: roll.total,
+      //   result: roll.result,
+      //   flavor: `${this.name} rolls to maintain concentration!`,
+      //   tooltip: tooltip,
+      //   success: rollSuccess,
+      //   toBeat: total
+      // }
+
+      // const chatData = UtopiaChatMessage.applyRollMode({
+      //   style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      //   speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
+      //   content: await renderTemplate(template, templateData),
+      //   flags: { utopia: { item: this._id } },
+      //   system: { dice: roll.dice }
+      // });
+
+      // await UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+    }
   }
 }

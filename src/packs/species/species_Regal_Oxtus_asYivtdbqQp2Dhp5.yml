@@ -1,0 +1,51 @@
+name: Regal Oxtus
+type: species
+_id: asYivtdbqQp2Dhp5
+img: icons/svg/item-bag.svg
+system:
+  formula: ''
+  description: ''
+  flavor: ''
+  name: Human
+  grants:
+    block: 2d4
+    dodge: 2d12
+    constitution: 4
+    endurance: '4'
+    effervescence: 3
+    subtraits: mem,por,app
+    languages: 2
+  block:
+    quantity: 2
+    size: 4
+  subtraits:
+    - Memory
+    - Portrayal
+    - Appeal
+  dodge:
+    quantity: 2
+    size: 12
+  constitution: 4
+  endurance: 4
+  effervescence: 3
+  languages:
+    - Utopian
+    - Oxtan
+effects: []
+folder: null
+sort: 0
+ownership:
+  default: 0
+  nLkleFyXeCclB3Jg: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: utopia
+  systemVersion: 0.1.0
+  createdTime: 1731343813817
+  modifiedTime: 1732961158524
+  lastModifiedBy: nLkleFyXeCclB3Jg
+_key: '!items!asYivtdbqQp2Dhp5'
+

@@ -1,0 +1,20 @@
+<div class="utopia">
+  <div class="chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow">
+      <img src="{{actor.img}}" alt="{{actor.name}}" />
+      <h3>{{actor.name}}</h3>
+    </header>
+
+    <div class="tags" data-tooltip-class="utopia">
+
+    </div>
+
+    <div class="card-content">
+      {{content}}
+      <div class="damage-result">
+        <h4 class="shp-damage">{{shp}} SHP</h4>
+        <h4 class="dhp-damage">{{dhp}} DHP</h4>
+      </div>
+    </div>
+  </div>
+</div>

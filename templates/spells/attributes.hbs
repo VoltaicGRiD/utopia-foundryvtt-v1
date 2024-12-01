@@ -1,0 +1,73 @@
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="spell-attributes">
+
+    <div class="flexcol spell-art">
+      <label for="system.arts">{{localize 'UTOPIA.Spells.arts'}}</label>
+      {{!-- <input type="text" data-action="update" class="spell-art" name="system.arts" placeholder="{{localize 'UTOPIA.Spells.arts'}}"/> --}}
+      {{formInput systemFields.arts value=system.arts name='system.arts' localize=true}}
+    </div>
+{{!-- 
+    <div class="grid grid-2col">
+      <div class="flexcol">
+        <label for="system.talents">{{localize 'UTOPIA.Spells.talents'}}</label>
+        <input type="text" data-action="update" class="spell-talent" name="system.talents" placeholder="{{localize 'UTOPIA.Spells.talents'}}"/>
+      </div>
+    </div>
+  --}}
+
+    <div class="grid grid-3col">
+      <div class="flexcol">
+        <label for="system.range">{{localize 'UTOPIA.Spells.range'}}</label>
+        {{formInput systemFields.range value=system.range name='system.range' localize=true}}
+      </div>
+      <div class="flexcol">
+        <label for="system.aoe">{{localize 'UTOPIA.Spells.aoe'}}</label>
+        {{formInput systemFields.aoe value=system.aoe name='system.aoe' localize=true}}
+      </div>
+      <div class="flexcol">
+        <label for="system.duration">{{localize 'UTOPIA.Spells.duration'}}</label>
+        {{formInput systemFields.duration value=system.duration name='system.duration' localize=true}}
+      </div>
+    </div>
+
+    <div class="grid grid-10col">
+      <div class="grid-span-4 flexcol">
+        <label for="system.stamina">{{localize 'UTOPIA.Spells.stamina'}}</label>
+        {{formInput systemFields.stamina value=system.stamina name='system.stamina' localize=true}}
+      </div>
+
+      <div class="grid-span-4 flexcol">
+        <label for="system.formula">{{localize 'UTOPIA.Spells.formula'}}</label>
+        {{formInput systemFields.formula value=system.formula name='system.formula' localize=true}}
+      </div>
+
+      <div class="grid-span-2 flexcol">
+        <label for="system.type">{{localize 'UTOPIA.Spells.type'}}</label>
+        {{formInput systemFields.type value=system.type name='system.type' localize=true}}
+      </div>
+    </div>
+
+    <div class="flexcol">
+      <label for="system.flavor">{{localize 'UTOPIA.Spells.flavor'}}</label>
+      {{formInput systemFields.flavor value=system.flavor name='system.flavor' localize=true}}
+    </div>
+
+    <div class="flexcol">
+      {{localize 'UTOPIA.Spells.choices'}}
+      <div class="grid grid-3col">
+        <div class="flexcol">
+          <label for="system.choices" class="spell-choices">{C1}</label>
+          {{formInput systemFields.choices.fields.first value=system.choices.first name='system.choices.first' localize=true}}
+        </div>
+        <div class="flexcol">
+          <label for="system.choices" class="spell-choices">{C2}</label>
+          {{formInput systemFields.choices.fields.second value=system.choices.second name='system.choices.second' localize=true}}
+        </div>
+        <div class="flexcol">
+          <label for="system.choices" class="spell-choices">{C3}</label>
+          {{formInput systemFields.choices.fields.third value=system.choices.third name='system.choices.third' localize=true}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

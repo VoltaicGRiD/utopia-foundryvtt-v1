@@ -1,0 +1,50 @@
+name: Copper Dwarf
+type: species
+_id: eQ1Jg6XkwrYECEcf
+img: icons/svg/item-bag.svg
+system:
+  formula: ''
+  description: ''
+  flavor: ''
+  name: Human
+  grants:
+    block: 3d4
+    dodge: 1d12
+    constitution: 4
+    endurance: '6'
+    effervescence: 3
+    subtraits: mem,res,eng
+    languages: utopian,dwarvish
+  block:
+    quantity: 3
+    size: 4
+  subtraits:
+    - Memory
+    - Resolve
+    - Engineering
+  dodge:
+    size: 12
+  constitution: 4
+  endurance: 6
+  effervescence: 3
+  languages:
+    - Utopian
+    - Dwarvish
+effects: []
+folder: null
+sort: 0
+ownership:
+  default: 0
+  nLkleFyXeCclB3Jg: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: utopia
+  systemVersion: 0.1.0
+  createdTime: 1731343479447
+  modifiedTime: 1732961077488
+  lastModifiedBy: nLkleFyXeCclB3Jg
+_key: '!items!eQ1Jg6XkwrYECEcf'
+
