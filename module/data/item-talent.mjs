@@ -6,25 +6,21 @@ export default class UtopiaTalent extends UtopiaItemBase {
     const requiredInteger = { required: true, nullable: false, integer: true };
     const schema = super.defineSchema();
 
-    schema.quantity = new fields.NumberField({ ...requiredInteger, initial: 1, min: 1 });
-    schema.weight = new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0 });
+    schema.points = new fields.SchemaField({
+      body: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      mind: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      soul: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+    });
+    
+    schema.tree = new fields.StringField({ required: true, nullable: false });
+    schema.position = new fields.NumberField({ required: true, nullable: false, integer: true });
+    schema.formula = new fields.StringField({ required: true, nullable: false, validate: (v) => Roll.validate(v) });
 
-    // Break down roll formula into three independent fields
-    schema.roll = new fields.SchemaField({
-      diceNum: new fields.NumberField({ ...requiredInteger, initial: 1, min: 1 }),
-      diceSize: new fields.StringField({ initial: "d20" }),
-      diceBonus: new fields.StringField({ initial: "+@str.mod+ceil(@lvl / 2)" })
-    })
-
-    schema.formula = new fields.StringField({ blank: true });
+    // Primarily used by the Magecraft tree for allowing the player to choose the artistry
+    // Not sure the best way to handle this, should it change this item's name and description, or should it grant a separate item?
+    schema.choices = new fields.SetField(new fields.StringField({ required: false, nullable: false }));
+    schema.category = new fields.StringField({ required: false, nullable: false });
 
     return schema;
-  }
-
-  prepareDerivedData() {
-    // Build the formula dynamically using string interpolation
-    const roll = this.roll;
-
-    this.formula = `${roll.diceNum}${roll.diceSize}${roll.diceBonus}`
   }
 }

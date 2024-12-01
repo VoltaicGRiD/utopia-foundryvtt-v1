@@ -12,6 +12,12 @@
 @import 'global/grid';
 @import 'global/flex';
 
+/* Chat override */
+@import 'chat/chat';
+
+/* Tagify classes */
+@import 'components/tagify';
+
 /* Styles limited to utopia sheets */
 .utopia {
   @import 'components/forms';
@@ -19,10 +25,14 @@
   @import 'components/items';
   @import 'components/effects';
   @import 'components/tables';
-  @import 'components/character-sheet';
-  @import 'components/talent-sheet';
-  @import 'components/options-sheet';
-  //@import 'components/talent-sheet-v2';
+  @import 'components/spell-sheet';
   @import 'components/actor-sheet-v2';
+  @import 'components/options-sheet';
   @import 'components/attack-sheet';
+  @import 'components/talent-sheet-v2';
+  @import 'components/action-sheet';
+  @import 'components/chat-cards';
+  @import 'components/spell-tab';
+  @import 'components/subtrait-sheet';
+  @import 'components/talent-tree';
 }

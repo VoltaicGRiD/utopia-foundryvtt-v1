@@ -1,0 +1,48 @@
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="species-attributes">
+    <div class="flexcol">
+        <div class="grid grid-4col">
+          <div>
+            <label for="block">{{localize "UTOPIA.Species.BlockQuantity"}}</label>
+            {{formInput systemFields.block.fields.quantity value=system.block.quantity name='system.block.quantity'}}
+          </div>
+          <div>
+            <label for="block">{{localize "UTOPIA.Species.BlockSize"}}</label>
+            {{formInput systemFields.block.fields.size value=system.block.size name='system.block.size'}}
+          </div>
+          <div>
+            <label for="dodge">{{localize "UTOPIA.Species.DodgeQuantity"}}</label>
+            {{formInput systemFields.dodge.fields.quantity value=system.dodge.quantity name='system.dodge.quantity'}}
+          </div>
+          <div>
+            <label for="dodge">{{localize "UTOPIA.Species.DodgeSize"}}</label>
+            {{formInput systemFields.dodge.fields.size value=system.dodge.size name='system.dodge.size'}}
+          </div>
+        </div>
+        <div class="grid grid-2col">
+          <div>
+            <label for="constitution">{{localize "UTOPIA.Attributes.Constitution"}}</label>
+            {{formInput systemFields.constitution value=system.constitution name='system.constitution'}}
+          </div>
+          <div>
+            <label for="endurance">{{localize "UTOPIA.Attributes.Endurance"}}</label>
+            {{formInput systemFields.endurance value=system.endurance name='system.endurance'}}
+          </div>
+          <div>
+            <label for="effervescence">{{localize "UTOPIA.Attributes.Effervescence"}}</label>
+            {{formInput systemFields.effervescence value=system.effervescence name='system.effervescence'}}
+          </div>
+        </div>
+        <div class="grid grid-2col">
+          <div class="flexcol">
+            <label for="subtraits">{{localize "UTOPIA.Species.Subtraits"}}</label>
+            <input type="text" class="grant" name="system.subtraits"/>
+          </div>
+          <div>
+            <label for="languages">{{localize "UTOPIA.Species.Languages"}}</label>
+            {{formInput systemFields.languages value=system.languages name='system.languages'}}
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

@@ -12,8 +12,14 @@
           "value": 0,
           "min": 0
         },
-        "block": "1d4",
-        "dodge": "1d12",
+        "block": {
+          "quantity": 1,
+          "size": 4
+        },
+        "dodge": {
+          "quantity": 1,
+          "size": 12
+        },
         "stamina": {
           "value": 1,
           "min": 0,
@@ -26,6 +32,12 @@
           "physical": 1,
           "psyche": 1
         },
+        "actions": {
+          "turn": 3,
+          "interrupt": 2
+        },
+        "disfavors": [],
+        "favors": [],
         "trees": {},
         "resistances": [],
         "immunity": [],
@@ -57,11 +69,14 @@
       },
       "traits": {
         "agi": {
+          "long": "agility",
           "subtraits": {
             "spd": {
+              "long": "speed",
               "value": 1
             },
             "dex": {
+              "long": "dexterity",
               "value": 1
             }
           },
@@ -69,11 +84,14 @@
           "value": 2
         },
         "str": {
+          "long": "strength",
           "subtraits": {
             "pow": {
+              "long": "power",
               "value": 1
             },
             "for": {
+              "long": "fortitude",
               "value": 1
             }
           },
@@ -81,11 +99,14 @@
           "value": 2
         },
         "int": {
+          "long": "intelligence",
           "subtraits": {
             "eng": {
+              "long": "engineering",
               "value": 1
             },
             "mem": {
+              "long": "memory",
               "value": 1
             }
           },
@@ -93,11 +114,14 @@
           "value": 2
         },
         "wil": {
+          "long": "will",
           "subtraits": {
             "res": {
+              "long": "resolve",
               "value": 1
             },
             "awa": {
+              "long": "awareness",
               "value": 1
             }
           },
@@ -105,11 +129,14 @@
           "value": 2
         },
         "dis": {
+          "long": "display",
           "subtraits": {
             "por": {
+              "long": "portrayal",
               "value": 1
             },
             "stu": {
+              "long": "stunt",
               "value": 1
             }
           },
@@ -117,11 +144,14 @@
           "value": 2
         },
         "cha": {
+          "long": "charm",
           "subtraits": {
             "app": {
+              "long": "appeal",
               "value": 1
             },
             "lan": {
+              "long": "language",
               "value": 1
             }
           },
@@ -136,15 +166,17 @@
     }
   },
   "Item": {
-    "types": ["item", "species", "talent", "spell", "weapon"],
+    "types": ["item", "species", "talent", "spell", "weapon", "action"],
     "templates": {
       "base": {
         "formula": "",
-        "description": ""
+        "description": "",
+        "flavor": ""
       },
       "gear": {
         "formula": "",
         "description": "",
+        "flavor": "",
         "slots": 0,
         "actions": 1,
         "quantity": 1,
@@ -156,6 +188,19 @@
         "tags": {}
       }
     },
+    "action": {
+      "templates": ["base"],
+      "type": "standard",
+      "source": "",
+      "cost": 1,
+      "rules": {},
+      "trigger": "",
+      "message": "",
+      "description": "",
+      "recharge": "",
+      "requirements": {},
+      "target": "none"
+    },
     "item": {
       "templates": ["gear"]
     },
@@ -163,8 +208,10 @@
       "templates": ["gear"],
       "type": "martial",
       "handling": 2,
-      "range": 2,
-      "requirements": {}
+      "ranged": false,
+      "range": "2",
+      "requirements": {},
+      "crafter": ""
     },
     "species": {
       "templates": ["base"],
@@ -195,7 +242,17 @@
     },
     "spell": {
       "templates": ["base"],
-      "spellLevel": 1
+      "arts": [],
+      "duration": "",
+      "range": "",
+      "aoe": "",
+      "choices": {
+        "first": "",
+        "second": "",
+        "third": ""
+      },
+      "stamina": "",
+      "talents": []
     }
   }
 }

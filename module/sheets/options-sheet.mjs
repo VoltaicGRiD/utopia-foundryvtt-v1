@@ -24,11 +24,7 @@ export class UtopiaOptionsSheet extends Application {
   /** @override */
   async getData() {
     const context = super.getData();
-
     context.options = this.displayOptions;
-
-    console.log(context);
-
     return context;
   }q
 

@@ -2,21 +2,26 @@
   "UTOPIA": {
     "Actor": {
       "Tabs": {
+        "Data": "Data",
+        "Actions": "Actions",
         "Spells": "Spells",
         "Gear": "Gear",
         "Talents": "Talents",
         "Biography": "Biography",
-        "Effects": "Effects"
+        "Effects": "Effects",
+        "Alteration": "Alteration",
+        "Array": "Array",
+        "Divination": "Divination",
+        "Enchantment": "Enchantment",
+        "Evocation": "Evocation",
+        "Illusion": "Illusion",
+        "Necromancy": "Necromancy",
+        "Wake": "Wake"
       }
     },
     "Rating": {
       "blr": { "long": "Block Rating", "abbr": "blr" },
       "dor": { "long": "Dodge Rating", "abbr": "dor" }
-    },
-    "Species": {
-      "con": { "long": "Constitution", "abbr": "con" },
-      "end": { "long": "Endurance", "abbr": "end" },
-      "eff": { "long": "Effervescence", "abbr": "eff" }
     },
     "Points": {
       "subtrait": "Subtrait",
@@ -57,9 +62,11 @@
     },
     "SheetLabels": {
       "actor": "Utopia Actor Sheet",
+      "actorV2": "Utopia Actor Sheet V2",
       "item": "Utopia Item Sheet",
       "weapon": "Utopia Weapon Sheet",
-      "attack": "Utopia Attack Sheet"
+      "attack": "Utopia Attack Sheet",
+      "subtrait": "Subtrait Selection"
     },
     "Weapons": {
       "handling": "Handling",
@@ -67,6 +74,7 @@
     },
     "Descriptions": {
       "attributes": "Attributes",
+      "pointsleft": "Points left to spend",
       "points": "Points",
       "defenses": "Defenses",
       "parent": "Parent",
@@ -75,10 +83,13 @@
       "roll": "Roll",
       "description": "Description",
       "tags": "Tags",
+      "talents": "Talents",
       "filter": "Filter",
       "filterhelp": "Type '@' and the name of a tree or category, or type '#' and an attribute followed by a comparison operation (i.e. '#body>2')"
     },
     "Talents": {
+      "category": "Choice category",
+      "choices": "Prompt for choices (comma-separated tags)",
       "tree": "Tree",
       "position": "Position",
       "ultimate": "Ult",
@@ -90,29 +101,123 @@
         "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
       }
     },
+    "Checks": {
+      "failure": "Check Failed!",
+      "success": "Check Succeeded!"
+    },
     "Attributes": {
-      "Block": "Block",
-      "Dodge": "Dodge",
       "constitution": "Constitution",
       "endurance": "Endurance",
-      "effervescence": "Effervescence",
-      "Subtraits": "Subtraits",
-      "Languages": "Languages"
+      "effervescence": "Effervescence"
     },
     "Item": {
       "formula": "Formula",
-      "Spell": {
-        "SpellLVL": "Level {level} Spells",
-        "AddLVL": "Add LVL {level}"
-      }
+      "description": "Description"
     },
     "Effect": {
-      "Source": "Source",
-      "Toggle": "Toggle Effect",
-      "Temporary": "Temporary Effects",
-      "Passive": "Passive Effects",
-      "Inactive": "Inactive Effects",
-      "Grant": "Granted Effects"
+      "source": "Source",
+      "toggle": "Toggle Effect",
+      "temporary": "Temporary Effects",
+      "passive": "Passive Effects",
+      "inactive": "Inactive Effects",
+      "grant": "Granted Effects"
+    },
+    "StatusEffects": {
+      "deafened": "Deafened",
+      "blinded": "Blinded",
+      "dazed": "Dazed",
+      "paralysis": "Paralysis",
+      "unconscious": "Unconscious",
+      "concentration": "Concentration",
+      "focus": "Focus"
+    }, 
+    "Spells": {
+      "Arts": {
+        "array": "Array",
+        "alteration": "Alteration",
+        "divination": "Divination",
+        "enchantment": "Enchantment",
+        "evocation": "Evocation",
+        "illusion": "Illusion",
+        "necromancy": "Necromancy",
+        "wake": "Wake"
+      },
+      "Duration": {
+        "instant": "Instant",
+        "concentration": "Concentration",
+        "1Minute": "1 Minute",
+        "1MinuteFocus": "1 Minute (Focus)",
+        "1Hour": "1 Hour",
+        "1HourFocus": "1 Hour (Focus)"
+      },
+      "Range": {
+        "touch": "Touch",
+        "5M": "5 Meters",
+        "10M": "10 Meters",
+        "25M": "25 Meters",
+        "50M": "50 Meters"
+      },
+      "Type": {
+        "attack": "Attack",
+        "healing": "Healing",
+        "defense": "Defense",
+        "utility": "Utility"
+      },
+      "arts": "Spell arts",
+      "talents": "Required talents",
+      "stamina": "Stamina formula",
+      "formula": "Roll formula",
+      "type": "Type",
+      "attack": "Attack",
+      "healing": "Healing",
+      "defense": "Defense",
+      "utility": "Utility",
+      "choices": "Unique choices (use '{C#}' to reference the choice at the corresponding index in formulas)",
+      "choiceExample": "Heat, Energy, Chill",
+      "flavor": "Flavor text",
+      "range": "Range",
+      "aoe": "Area of effect",
+      "duration": "Duration"
+    },
+    "Actions": {
+      "Tabs": {
+        "attributes": "Attributes",
+        "description": "Description",
+        "rules": "Rules"
+      },
+      "formula": "Formula",
+      "type": "Type",
+      "standard": "Standard",
+      "interrupt": "Interrupt",
+      "free": "Free",
+      "source": "Source",
+      "cost": "Cost",
+      "rules": "Rules",
+      "trigger": "Trigger",
+      "message": "Message",
+      "description": "Description",
+      "recharge": "Recharge",
+      "requirements": "Requirements",
+      "target": "Target",
+      "contested": "Contested",
+      "aid": "Aid",
+      "none": "None"
+    },
+    "Species": {
+      "blockQuantity": "Block dice quantity",
+      "dodgeQuantity": "Dodge dice quantity",
+      "blockSize": "Block dice size",
+      "dodgeSize": "Dodge dice size",
+      "subtraits": "Granted subtraits",
+      "languages": "Granted languages"
+    },
+    "Settings": {
+      "autoRollAttacks": "Bypass attack roll dialog",
+      "autoRollAttacksHint": "When enabled, the modifier window that appears when attacking will be bypassed and the attack will be rolled immediately",
+      "targetRequired": "Targeting required for attacks",
+      "targetRequiredHint": "When enabled, a target must be selected before an attack can be rolled",
+      "saveSheetTab": "Save last open sheet tab",
+      "saveSheetTabHint": "When enabled, the last open tab of a sheet will be saved and restored when the sheet is reopened. (does not work for sub-tabs)"
     }
   },
 
@@ -126,7 +231,8 @@
       "talent": "Talent",
       "spell": "Spell",
       "species": "Species",
-      "weapon": "Weapon"
+      "weapon": "Weapon",
+      "action": "Action"
     }
   }
 }

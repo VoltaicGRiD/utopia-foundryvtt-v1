@@ -1,109 +1,72 @@
-{{! Sheet Header }}
-<header class='sheet-header'>
-  <img
-    class='profile-img'
-    src='{{actor.img}}'
-    data-edit='img'
-    data-action='onEditImage'
-    title='{{actor.name}}'
-    height='100'
-    width='100'
-  />
-  <div class='header-fields'>
-    <div class='document-name'>
-      <input
-        name='name'
-        type='text'
-        value='{{actor.name}}'
-        placeholder='Name'
-      />
+<header class="sheet-header">
+  <img class="profile-img" src="{{actor.img}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+  <div class="header-fields">
+    <div class="resources grid grid-5col no-margin">
+
+      <div class="resource flex-group-center grid-span-3">
+        <h1 class="char-name"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      </div>
+
+      <div class="resource flex-group-center grid-span-2">
+        <h1 class="char-name species-container">
+          <input disabled class="species-input" name="species" placeholder="Species" type="text" value="{{system.species.name}}"/>
+          {{#unless system.species.name}}
+            <i data-action="selectSpecies" class="fa-solid fa-magnifying-glass species"></i>
+          {{/unless}}
+        </h1>
+      </div>
+
     </div>
-    {{! The grid classes are defined in scss/global/_grid.scss. To use,
-      use both the "grid" and "grid-Ncol" class where "N" can be any number
-      from 1 to 12 and will create that number of columns.  }}
-    <div class='resources grid grid-3col'>
+    <div class="resources grid grid-6col">
 
-      {{! "flex-group-center" is also defined in the _grid.scss file
-        and it will add a small amount of padding, a border, and will
-        center all of its child elements content and text. }}
-      <div class='resource flex-group-center'>
-        <label for='system.health.value' class='resource-label'>
-          {{localize 'UTOPIA.Actor.base.FIELDS.health.value.label'}}
-        </label>
-        <div class='resource-content flexrow flex-center flex-between'>
-          <input
-            type='text'
-            name='system.health.value'
-            value='{{system.health.value}}'
-            data-dtype='Number'
-          />
-          <span> / </span>
-          <input
-            type='text'
-            name='system.health.max'
-            value='{{system.health.max}}'
-            data-dtype='Number'
-          />
+      <div class="resource flex-group-center">
+        <label for="system.health.value" class="resource-label">SHP</label>
+        <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="system.shp.value" data-action="update" value="{{system.shp.value}}" data-dtype="Number"/>
+        <span> / </span>
+        <input disabled type="text" name="system.shp.max" value="{{system.shp.max}}" data-dtype="Number"/>
         </div>
       </div>
 
-      <div class='resource flex-group-center'>
-        <label for='system.power.value' class='resource-label'>
-          {{localize 'UTOPIA.Actor.base.FIELDS.power.value.label'}}
-        </label>
-        <div class='resource-content flexrow flex-center flex-between'>
-          <input
-            type='text'
-            name='system.power.value'
-            value='{{system.power.value}}'
-            data-dtype='Number'
-          />
-          <span> / </span>
-          <input
-            type='text'
-            name='system.power.max'
-            value='{{system.power.max}}'
-            data-dtype='Number'
-          />
+      <div class="resource flex-group-center">
+        <label for="system.dhp.value" class="resource-label">DHP</label>
+        <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="system.dhp.value" data-action="update" value="{{system.dhp.value}}" data-dtype="Number"/>
+        <span> / </span>
+        <input disabled type="text" name="system.dhp.max" value="{{system.dhp.max}}" data-dtype="Number"/>
         </div>
       </div>
 
-      <div class='resource flex-group-center'>
-        {{#if (eq actor.type 'character')}}
-          <label class='resource-label'>
-            {{localize 'UTOPIA.Actor.Character.FIELDS.attributes.level.value.label'}}
-          </label>
-          <div class='resource-content flexrow flex-center flex-between'>
-            <input
-              type='text'
-              name='system.attributes.level.value'
-              value='{{system.attributes.level.value}}'
-              data-dtype='Number'
-            />
-          </div>
-        {{/if}}
-        {{#if (eq actor.type 'npc')}}
-          <label class='resource-label'>
-            {{localize 'UTOPIA.Actor.NPC.FIELDS.cr.label'}} / {{localize 'UTOPIA.Actor.NPC.xp.label'}}
-          </label>
-          <div class='resource-content flexrow flex-center flex-between'>
-            <input
-              type='text'
-              name='system.cr'
-              value='{{system.cr}}'
-              data-dtype='Number'
-            />
-            <span></span>
-            <input
-              type='text'
-              disabled='true'
-              name='system.xp'
-              value='{{system.xp}}'
-              data-dtype='Number'
-            />
-          </div>
-        {{/if}}
+      <div class="resource flex-group-center">
+        <label for="system.stamina.value" class="resource-label">Stamina</label>
+        <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="system.stamina.value" data-action="update" value="{{system.stamina.value}}" data-dtype="Number"/>
+        <span> / </span>
+        <input disabled type="text" name="system.stamina.max" value="{{system.stamina.max}}" data-dtype="Number"/>
+        </div>
       </div>
+
+      <div class="resource flex-group-center">
+        <label for="system.attributes.level.value" class="resource-label">Level</label>
+        <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="system.attributes.level.value" data-action="update" value="{{system.attributes.level.value}}" data-dtype="Number"/>
+        </div>
+      </div>
+
+      <div class="resource flex-group-center">
+        <label for="system.block" class="resource-label">Block</label>
+        <button data-action="roll" data-trait="block" data-roll="{{numberFormat system.block.quantity}}d{{numberFormat system.block.size}}" name="system.block">{{numberFormat system.block.quantity}}d{{numberFormat system.block.size}}</button>
+        <div class="resource-content flexrow flex-center flex-between">
+        </div>
+      </div>
+
+      <div class="resource flex-group-center">
+        <label for="system.dodge" class="resource-label">Dodge</label>
+        <button data-action="roll" data-trait="dodge" data-roll="{{numberFormat system.dodge.quantity}}d{{numberFormat system.dodge.size}}" name="system.dodge">{{numberFormat system.dodge.quantity}}d{{numberFormat system.dodge.size}}</button>
+        <div class="resource-content flexrow flex-center flex-between">
+        </div>
+      </div>
+
     </div>
   </div>
 </header>

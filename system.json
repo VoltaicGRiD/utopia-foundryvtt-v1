@@ -38,6 +38,11 @@
       "path": "lang/en.json"
     }
   ],
+  "documentTypes": {
+    "ChatMessage": {
+      "weapon": {}
+    }
+  },
   "packs": [
     {
       "name": "species",
@@ -64,9 +69,48 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "actions",
+      "label": "SRD Actions",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spells",
+      "label": "SRD Spells",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "gear",
+      "label": "SRD Gear",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
-  "packFolders": [],
+  "packFolders": ["SRD Content"],
   "socket": false,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
   "download": "This must link to a .zip file of the current version",

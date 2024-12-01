@@ -51,7 +51,3 @@ UTOPIA.subtraitsAbbreviations = {
   app: 'UTOPIA.Subtrait.App.abbr',
   lan: 'UTOPIA.Subtrait.Lan.abbr',
 }
-
-UTOPIA.descriptions = {
-  gifts: 'Gifts remaining:'
-}

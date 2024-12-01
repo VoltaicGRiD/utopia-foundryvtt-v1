@@ -15,16 +15,24 @@
       <th>Modifier</th>
       <th>Source</th>
       <th>Amount</th>
+      <th>Calculated</th>
       <th></th>
     </tr>
-    {{#each modifier as |mod|}}
+    {{#if modifiers}}
+      {{#each modifiers as |mod|}}
+        <tr>
+          <td>{{mod.value}}</td>
+          <td>{{mod.source}}</td>
+          <td>{{mod.amount}}</td>
+          <td><input type="checkbox" disabled {{#if mod.calculated}}checked{{/if}}></td>
+          <td><button data-action="remove" data-modifier="{{mod}}">-</button></td>
+        </tr>
+      {{/each}}
+    {{else}}
       <tr>
-        <td>{{mod.value}}</td>
-        <td>{{mod.source}}</td>
-        <td>{{mod.amount}}</td>
-        <td><button class="remove" data-modifier="{{mod}}">-</button></td>
+        <td colspan="5">No modifiers</td>
       </tr>
-    {{/each}}
+    {{/if}}
   </table>
   <div class="flexrow">
     <button data-action="clear">Clear</button>

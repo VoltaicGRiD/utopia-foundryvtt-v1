@@ -40,23 +40,41 @@
     {{! Attributes Tab }}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       <div class="flexcol">
-        <div class="grid grid-2col">
+        <div class="grid grid-4col">
           <div>
-            <label for="block">{{localize "UTOPIA.Attributes.Block"}}</label>
+            <label for="block">{{localize "UTOPIA.Attributes.BlockQuantity"}}</label>
             <input
               type="text" class="grant" 
               placeholder="block"
               name="block"
-              value="{{system.grants.block}}"
+              value="{{system.grants.block.quanity}}"
             />
           </div>
           <div>
-            <label for="dodge">{{localize "UTOPIA.Attributes.Dodge"}}</label>
+            <label for="block">{{localize "UTOPIA.Attributes.BlockSize"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="block"
+              name="block"
+              value="{{system.grants.block.size}}"
+            />
+          </div>
+          <div>
+            <label for="dodge">{{localize "UTOPIA.Attributes.DodgeQuantity"}}</label>
             <input
               type="text" class="grant" 
               placeholder="dodge"
               name="dodge"
-              value="{{system.grants.dodge}}"
+              value="{{system.grants.dodge.quanity}}"
+            />
+          </div>
+          <div>
+            <label for="dodge">{{localize "UTOPIA.Attributes.DodgeSize"}}</label>
+            <input
+              type="text" class="grant" 
+              placeholder="dodge"
+              name="dodge"
+              value="{{system.grants.dodge.size}}"
             />
           </div>
         </div>
@@ -94,7 +112,7 @@
           </div>
         </div>
         <div class="grid grid-2col">
-          <div>
+          <div class="flexcol">
             <label for="subtraits">{{localize "UTOPIA.Attributes.Subtraits"}}</label>
             <input
               type="text" class="grant" 

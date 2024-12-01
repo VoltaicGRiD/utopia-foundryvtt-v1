@@ -1,0 +1,47 @@
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="talent-attributes">
+
+    <div class="grid grid-3col">
+      <div class="flexcol talent-body">
+        <label for="system.points.body">{{localize 'UTOPIA.Points.body'}}</label>
+        {{formInput systemFields.points.fields.body value=system.points.body name='system.points.body'}}
+      </div>
+
+      <div class="flexcol talent-mind">
+        <label for="system.points.mind">{{localize 'UTOPIA.Points.mind'}}</label>
+        {{formInput systemFields.points.fields.mind value=system.points.mind name='system.points.mind'}}
+      </div>
+
+      <div class="flexcol talent-soul">
+        <label for="system.points.soul">{{localize 'UTOPIA.Points.soul'}}</label>
+        {{formInput systemFields.points.fields.soul value=system.points.soul name='system.points.soul'}}
+      </div>
+    </div>
+
+    <div class="grid grid-5col">
+      <div class="flexcol grid-span-2">
+        <label for="system.tree">{{localize 'UTOPIA.Talents.tree'}}</label>
+        {{formInput systemFields.tree value=system.tree name='system.tree'}}
+      </div>
+      <div class="flexcol">
+        <label for="system.position">{{localize 'UTOPIA.Talents.position'}}</label>
+        {{formInput systemFields.position value=system.position name='system.position'}}
+      </div>
+      <div class="flexcol grid-span-2">
+        <label for="system.duration">{{localize 'UTOPIA.Item.formula'}}</label>
+        {{formInput systemFields.formula value=system.duration name='system.duration'}}
+      </div>
+    </div>
+
+    <div class="grid grid-3col">
+      <div class="flexcol grid-span-2">
+        <label for="system.choices">{{localize 'UTOPIA.Talents.choices'}}</label>
+        {{formInput systemFields.choices value=system.choices name='system.choices'}}
+      </div>  
+      <div class="flexcol">
+        <label for="system.category">{{localize 'UTOPIA.Talents.category'}}</label>
+        {{formInput systemFields.category value=system.category name='system.category'}}
+      </div>  
+    </div>
+  </div>
+</div>

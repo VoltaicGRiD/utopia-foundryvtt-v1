@@ -10,18 +10,17 @@ export async function addTalentToActor(actor, selected) {
   let databaseTalents = await game.packs.get('utopia.talents').getDocuments();
 
   // Find the corresponding talent item from the database
-  let item = undefined;
+  let item;
 
   // Find the talent in the database
   try {
-    item = databaseTalents.find((f) => {
-      let name = f.name.toLowerCase().replace(' ', '_').trim();
-      return name == selected;
-    });
+    item = databaseTalents.find((f) => f.name.toLowerCase().replace(' ', '_').trim() == selected);
   } catch (e) {
     ui.notifications.error("Talent not found in the database.");
     return
   }
+
+  console.log(actor, selected, item, databaseTalents);
 
   // We need to check all of the following:
   // 1. Actor has enough talent points
@@ -37,7 +36,8 @@ export async function addTalentToActor(actor, selected) {
 
   // Does the actor have enough talent points?
   // Calculate the cost of the talent based on its point values
-  let cost = item.system.points.body + item.system.points.mind + item.system.points.soul;  
+  let points = item.system.points;
+  let cost = points.body + points.mind + points.soul;  
   let actorPoints = actor.system.points.talent;
   if (actorPoints < cost) {
     // Not enough talent points to add the talent
@@ -47,12 +47,73 @@ export async function addTalentToActor(actor, selected) {
 
   // Is the talent the first in it's tree?
   let talentPosition = item.system.position;
-  if (talentPosition == 1);
+  if (talentPosition == 1)
   {
     // First talent in the tree
-    await createTalent(actor, item);
+    await checkForChoices(actor, item);
     return;
+  } else {
+    // Talent is not the first in the tree
+    let tree = item.system.tree;
+    let treePosition = actor.system.trees[tree];
+    if (treePosition == talentPosition - 1) {
+      // Actor has the prerequisite talent
+      await checkForChoices(actor, item);
+      return;
+    } else {
+      // Actor does not have the prerequisite talent
+      ui.notifications.error("You do not have the prerequisite talent for this talent.");
+      return;
+    }
   }
+}
+
+export function checkForChoices(actor, item) {
+  let choices = item.system.choices;
+  if (choices.length > 0) {
+    // Talent has choices
+    let data = {
+      actor: actor,
+      item: item
+    }
+    renderChoices(data);
+  } else {
+    // Talent has no choices
+    createTalent(actor, item, true);
+  }
+}
+
+export function renderChoices(data) {
+  let template = "systems/utopia/templates/talent/choices.hbs";
+  let html = renderTemplate(template, data);
+  let dialog = new Dialog({
+    title: "Talent Choices",
+    content: html,
+    buttons: {
+      one: {
+        icon: '<i class="fas fa-check"></i>',
+        label: "Submit",
+        callback: (html) => {
+          submitChoices(html, data);
+        }
+      }
+    }
+  });
+  dialog.render(true);
+}
+
+export function submitChoices(html, data) {
+  let choice;
+  html.find('.choice').each((i, c) => {
+    if (c.checked) {
+      choice = c.value;
+    }
+  });
+
+  let item = data.item;
+  item.update({ ['system.choices']: choices });
+  item.update({ ['name']: `${item.name} (${choices})` });
+  createTalent(data.actor, item, true);
 }
 
 /**

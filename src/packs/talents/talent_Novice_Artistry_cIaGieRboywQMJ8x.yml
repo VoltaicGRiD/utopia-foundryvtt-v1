@@ -1,0 +1,43 @@
+folder: RPsM9ukKML8mhqDI
+name: Novice Artistry
+type: talent
+_id: cIaGieRboywQMJ8x
+img: icons/svg/item-bag.svg
+system:
+  formula: ''
+  description: >-
+    <p><span style="font-family: docs-Rowdies">You can cast and craft spells
+    that require the Art of Array.</span></p>
+  flavor: ''
+  parent: ''
+  tree: Magecraft-1
+  position: 1
+  attributes:
+    cost: []
+  points:
+    body: 1
+    mind: 1
+    soul: 0
+  ultimate: true
+  choices:
+    - Evocation
+    - Enchantment
+    - Illusion
+  category: Novice Artistry
+effects: []
+sort: 400000
+ownership:
+  default: 0
+  6Pk79J5bUCHatGG1: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: utopia
+  systemVersion: 0.1.0
+  createdTime: 1731700490436
+  modifiedTime: 1733009322798
+  lastModifiedBy: nLkleFyXeCclB3Jg
+_key: '!items!cIaGieRboywQMJ8x'
+

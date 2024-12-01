@@ -99,14 +99,6 @@ export class UtopiaWeaponSheet extends ItemSheet {
       onManageActiveEffect(ev, this.item)
     );
 
-    // html.on('change', 'input', (ev) => {
-    //   let path = ev.currentTarget.name;
-    //   let value = ev.currentTarget.value;
-    //   console.log(ev);
-    //   this.item.update({ [path]: value });
-    //   console.log(this.item);
-    // });
-
     let input = document.querySelector('.weapon-tags');
     // init Tagify script on the above inputs
     let tagify = new Tagify(input, {
@@ -132,6 +124,7 @@ export class UtopiaWeaponSheet extends ItemSheet {
       this.item.update({
         [name]: value
       });
+      console.log(this.item);
     });
   }
 }

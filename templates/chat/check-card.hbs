@@ -1,0 +1,60 @@
+<div class="utopia">
+  <div class="chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow">
+      <img src="{{actor.img}}" alt="{{actor.name}}" />
+      <h3>{{actor.name}}</h3>
+    </header>
+
+    <div class="tags" data-tooltip-class="utopia">
+
+    </div>
+
+    <div class="card-content">
+      <div class="dice-roll" data-tooltip-class="utopia">
+        {{#if flavor~}}
+            <div class="dice-flavor">
+                {{flavor}}
+            </div>
+        {{~/if}}
+        {{#if description~}}
+            <div class="dice-description">
+                {{description}}
+            </div>
+        {{~/if}}
+        <div class="dice-result">
+          <div class="dice-formula">{{formula}}</div>
+          {{{tooltip}}}
+          <h4 class="dice-total
+            {{#if toBeat}}
+              {{#if success}} 
+                check-success
+              {{else}}
+                check-failure
+              {{/if}}
+            {{/if}}
+          ">
+            {{#if gifted}}
+              <i class="fa-solid fa-gift dice-gifted"></i>
+            {{/if}}
+            {{total}}{{#if toBeat}} vs. {{toBeat}}{{/if}}
+          </h4>
+          {{#if toBeat}}
+            <div class="success-card
+              {{#if success}} 
+                check-success
+              {{else}}
+                check-failure
+              {{/if}}
+            ">
+              {{#if success}} 
+                {{localize 'UTOPIA.Checks.success'}}
+              {{else}}
+                {{localize 'UTOPIA.Checks.failure'}}
+              {{/if}}
+            </div>        
+          {{/if}}    
+        </div>
+      </div>
+    </div>
+</div>
+</div>

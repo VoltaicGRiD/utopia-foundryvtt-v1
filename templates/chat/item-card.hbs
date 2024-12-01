@@ -1,0 +1,55 @@
+<div class="utopia">
+<div class="chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <h3>{{item.name}}</h3>
+    </header>
+
+    <div class="tags" data-tooltip-class="utopia">
+
+    </div>
+
+    <div class="card-content">
+      <div class="dice-roll" data-tooltip-class="utopia">
+        {{#if flavor~}}
+            <div class="dice-flavor">
+                {{flavor}}
+            </div>
+        {{~/if}}
+        <div class="dice-result">
+            <div class="dice-formula">{{formula}}</div>
+            {{{tooltip}}}
+            <h4 class="dice-total">{{total}}</h4>
+        </div>
+    </div>
+    {{#if canRollDamage}}
+        <div class="message-buttons" data-identifier="{{identifier}}">
+            <button type="button" class="success" data-action="{{action}}-damage" data-outcome="success">
+                {{localize "PF2E.DamageLabel"}}
+                {{#if (eq degree 2)}}
+                    <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
+                        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
+                    </span>
+                {{/if}}
+            </button>
+            <button type="button" class="critical-success" data-action="{{action}}-damage" data-outcome="critical-success">
+                {{localize "PF2E.CriticalDamageLabel"}}
+                {{#if (eq degree 3)}}
+                    <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
+                        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
+                    </span>
+                {{/if}}
+            </button>
+        </div>
+    {{/if}}
+    </div>
+
+    <footer data-visibility="gm">
+      <span>GM, damage your targeted creature?</span>
+      <div class="grid grid-2col message-buttons">
+        <button type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
+        <button type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
+      </div>
+    </footer>
+</div>
+</div>
