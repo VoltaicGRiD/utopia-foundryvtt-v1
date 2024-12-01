@@ -10,7 +10,7 @@
 
       {{#if option.system.grants}}
       <div class="grid grid-5col options-center">
-
+        
         <div class="grid-span-3">
           <a class="source" data-option="{{option._id}}">
             <span>{{option.name}}</span>
@@ -25,7 +25,13 @@
       {{/if}}
 
       {{#if option.system.points}} 
-        <div class="grid grid-8col options-center">
+        <div class="grid grid-9col options-center">
+
+          <div>
+            <a class="position" data-option="{{option._id}}">
+              <span>{{option.system.position}}</span>
+            </a>
+          </div>
 
           <div class="grid-span-3">
             <a class="source" data-option="{{option._id}}">

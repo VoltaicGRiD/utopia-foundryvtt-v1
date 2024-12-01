@@ -1,11 +1,15 @@
-.options ol {
+.options {
+  width: 100%;
+}
+
+.options > ol {
   width: 100%;
   justify-content: center;
   align-content: center;
   list-style: none;
-  gap: 10px;
+  gap: 5px;
   padding: 0px;
-  margin-top: 30px;
+  padding: 0;
 }
 
 .options li {
@@ -14,8 +18,7 @@
   justify-content: center;
   border: 1px solid black;
   border-radius: 10px;
-  height: 60px;
-  margin-bottom: 5px;
+  padding: 0.5em;
 }
 
 .options-center {
@@ -23,6 +26,63 @@
   align-content: center;
   justify-content: center;
   margin: 0px;
+}
+
+.reset {
+  background: rgba(0, 0, 0, 0.1);
+  border: 2px groove var(--color-border-light-highlight);
+  height: 100%;
+}
+
+/* On hover */
+input[type=number]:hover::-webkit-inner-spin-button, 
+input[type=number]:hover::-webkit-outer-spin-button { 
+    opacity: 1;
+}
+
+.points {
+  margin-top: 10px;
+}
+
+.filter {
+  border: 1px solid black;
+}
+
+.sub-tree {
+  width: 100%;
+}
+
+.sub-tree tbody {
+  width: 100%;
+}
+
+/* Collapsible header style */
+.collapsible-header {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* Collapsible content style */
+.collapsible-content {
+  display: none; /* Hidden by default */
+  margin: 0;
+  padding: 0 1em;
+}
+
+/* Active class to show the content */
+.collapsible-content.active {
+  display: block;
+}
+
+/* Chevron icon rotation */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Smooth transition effect */
+.collapsible-header i {
+  transition: transform 0.3s ease; /* Applies to both directions */
 }
 
 .select:hover {
@@ -46,3 +106,8 @@ label {
     top: 0;
     height: 20px;
   }
+
+.position {
+  font-weight: 800;
+  font-size: 1em;
+}

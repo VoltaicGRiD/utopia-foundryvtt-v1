@@ -136,18 +136,35 @@
     }
   },
   "Item": {
-    "types": ["item", "species", "talent", "spell"],
+    "types": ["item", "species", "talent", "spell", "weapon"],
     "templates": {
       "base": {
-        "formula`": "",
+        "formula": "",
         "description": ""
+      },
+      "gear": {
+        "formula": "",
+        "description": "",
+        "slots": 0,
+        "actions": 1,
+        "quantity": 1,
+        "cost": {
+          "copper": 0,
+          "silver": 0,
+          "gold": 0
+        },
+        "tags": {}
       }
     },
     "item": {
-      "templates": ["base"],
-      "quantity": 1,
-      "weight": 0,
-      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+      "templates": ["gear"]
+    },
+    "weapon": {
+      "templates": ["gear"],
+      "type": "martial",
+      "handling": 2,
+      "range": 2,
+      "requirements": {}
     },
     "species": {
       "templates": ["base"],

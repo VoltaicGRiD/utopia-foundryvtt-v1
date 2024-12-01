@@ -1,0 +1,69 @@
+<div class="options">
+  {{!-- <label>
+    <input name="keep-open" class="keep-open-input" type="checkbox" checked="{{keepOpen}}">
+    <span class="keep-open-span">{{localize 'UTOPIA.Descriptions.keepopen'}}</span>
+  </label>
+   --}}
+
+  <div class="flexcol">
+    <label for="filter">
+      {{localize 'UTOPIA.Descriptions.filter'}}&nbsp;
+      <i class="fa-solid fa-circle-info" data-tooltip="{{localize 'UTOPIA.Descriptions.filterhelp'}}"></i>
+    </label>
+    <div class="grid grid-10col">
+      <input name="filter" class="filter-box filter grid-span-8" id="filter"/>
+      <button class="rollable-button reset grid-span-2"><i class="fa-solid fa-circle-xmark"></i>&nbsp;clear</button>
+    </div>
+    <div class="points grid grid-12col">
+      <div class="flexcol grid-span-2">
+        <label for="body-input">{{localize 'UTOPIA.Talents.body'}} &gt;</label>
+        <input name="points body-input" data-type="body" id="body-input" type="number"/>
+      </div>
+      <div class="flexcol grid-span-2">
+        <label for="mind-input">{{localize 'UTOPIA.Talents.mind'}} &gt;</label>
+        <input name="points mind-input" data-type="mind" id="mind-input" type="number"/>
+      </div>
+      <div class="flexcol grid-span-2">
+        <label for="soul-input">{{localize 'UTOPIA.Talents.soul'}} &gt;</label>
+        <input name="points soul-input" data-type="soul" id="soul-input" type="number"/>
+      </div>
+    </div>
+  </div>
+
+  <ol class="flexcol">
+    {{#each trees as |objects treeKey|}}
+      <li class="tree collapsable">
+        <div class="grid grid-10col collapsible-header" data-tree-key="{{treeKey}}" >
+          <div>
+            <i class="fa-solid fa-chevron-up"></i>
+          </div>
+          <div class="grid-span-9">
+            <span>{{treeKey}}</span>
+          </div>
+        </div>
+        <div class="collapsible-content" id="content-{{treeKey}}">
+          <table class="sub-tree">
+            <tr>
+              <th>Pos</th>
+              <th>Name</th>
+              <th>Body</th>
+              <th>Mind</th>
+              <th>Soul</th>
+              <th></th>
+            </tr>
+            {{#each objects as |talent subkey|}}
+              <tr data-tooltip="{{talent.system.description}}">
+                <td>{{talent.system.position}}</td>
+                <td class="source" data-option="{{talent._id}}">{{talent.name}}</td>
+                <td>{{talent.system.points.body}}</td>
+                <td>{{talent.system.points.mind}}</td>
+                <td>{{talent.system.points.soul}}</td>
+                <td class="select" data-option="{{talent._id}}">Select</td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      </li>
+    {{/each}}
+  </ol>
+</div>

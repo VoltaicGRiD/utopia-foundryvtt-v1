@@ -11,7 +11,8 @@ export class UtopiaOptionsSheet extends Application {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['utopia', 'sheet'],
       width: 400,
-      height: 600
+      height: 600,
+      title: 'Options'
     });
   }
 
@@ -64,13 +65,67 @@ export class UtopiaOptionsSheet extends Application {
       }
       case 'talent': {
         if (this.actor.system.points.talent > 0) {
+          let talentPosition = item.system.position;
+          let tree = item.system.tree;
           let data = [item];
-          let created = await Item.createDocuments(data, {parent: this.actor})
 
-          let points = this.actor.system.points.talent - 1;
-          this.actor.update({
-            'system.points.talent': points
-          })
+          if (talentPosition == -1) {
+            let created = await Item.createDocuments(data, {parent: this.actor})
+
+            let points = this.actor.system.points.talent - 1;
+            this.actor.update({
+              'system.points.talent': points
+            })
+          }
+          else {
+            let treePosition = this.actor.system.trees[tree];
+
+            if (treePosition !== undefined) {
+              if (talentPosition - 1 === treePosition) {
+                let newTree = { [tree]: talentPosition };
+                let newTrees = { ...this.actor.system.trees, ...newTree };
+
+                this.actor.update({
+                  "system.trees": newTrees
+                })
+
+                let created = await Item.createDocuments(data, {parent: this.actor})
+
+                let points = this.actor.system.points.talent - 1;
+                this.actor.update({
+                  'system.points.talent': points
+                })
+              }
+              else if (talentPosition <= treePosition) {
+                ui.notifications.error("You already have that talent.");
+                return;
+              }
+              else {
+                ui.notifications.error(`You do not have the prerequisite talent to take this talent from the '${tree}' talent tree.`);
+                return;
+              }
+            }
+            else {
+              // The actor does not have this talent tree, so initialize it
+              // Create a new trees object by copying existing trees and adding the new tree with position 1
+              let newTree = { [tree]: 1 };
+              let newTrees = { ...this.actor.system.trees, ...newTree };
+
+              console.log(newTrees);
+
+              // Update the actor's talent trees
+              this.actor.update({
+                  "system.trees": newTrees
+              });
+
+              let created = await Item.createDocuments(data, {parent: this.actor})
+
+              let points = this.actor.system.points.talent - 1;
+              this.actor.update({
+                'system.points.talent': points
+              })
+            }         
+          }
         }
         else {
           ui.notifications.error("This actor does not have enough talent points to add a talent. Duh...");
