@@ -1,0 +1,20 @@
+<div class="tab actions {{tab.cssClass}}" data-group="primary" data-tab="actions">
+  <div class="grid grid-3col">
+    {{#each actions as |action|}}
+      <div class="grid grid-6col">
+        <button class="grid-span-5 action" data-roll-type="action" data-target="{{action.id}}" data-action="roll">
+          {{action.name}} - {{action.system.formula}}
+          {{#if (eq action.isReaction true)}}
+            <span><i class="fa-solid fa-circle-pause"></i>&nbsp;{{action.system.cost}}</span>
+          {{else}}
+            <span><i class="fa-solid fa-circle-dot"></i>&nbsp;{{action.system.cost}}</span>
+          {{/if}}
+          </div>
+        </button>
+        <button data-action="deleteAction" data-target="{{action.id}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    {{/each}}
+  </div>
+</div>

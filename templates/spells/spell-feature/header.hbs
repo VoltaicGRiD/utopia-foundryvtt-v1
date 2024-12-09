@@ -1,0 +1,21 @@
+<header class='sheet-header'>
+  <img
+    class='spell-feature-icon'
+    src='{{item.img}}'
+    data-edit='img'
+    data-action="image"
+    title='{{item.name}}'
+    style='filter: invert(100%);'
+  />
+  <div class="flexcol">
+    <div class='header-fields'>
+      <h1 class='item-name'><input
+          name='name'
+          type='text'
+          value='{{item.name}}'
+          data-action="update"
+          placeholder='Name'
+        /></h1>
+    </div>
+  </div>
+</header>

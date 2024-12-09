@@ -1,0 +1,7 @@
+{{#each choices as |choice|}}
+<label><input type="radio" class="choice" name="choices" value={{choice}}/> {{choice}}</label>
+{{/each}}
+
+{{#each alreadyTaken as |choice|}}
+<label><input type="radio" class="choice" name="choices" value={{choice}} disabled/> {{choice}} (Already Taken)</label>
+{{/each}}

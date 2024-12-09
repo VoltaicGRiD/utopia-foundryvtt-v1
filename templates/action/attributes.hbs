@@ -1,117 +1,54 @@
 {{! Sheet Body }}
-<form>
-
-  <section
-    class="tab attributes {{tab.cssClass}}"
-    data-group="primary"
-    data-tab="attributes"
-  >
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="action-attributes">
     <div class="flexcol">
 
       {{! Action type, source, and cost }}
-      <div class="grid grid-3col">
-        <div class="flexcol">
+      <div class="grid grid-6col">
+        <div class="flexcol grid-span-2">
           <label for="system.type">{{localize "UTOPIA.Actions.type"}}</label>
-          <select data-action="update" name="system.type" id="system.type">
-            {{#select system.type}}
-            <option value="standard">{{localize
-                "UTOPIA.Actions.standard"
-              }}</option>
-            <option value="interrupt">{{localize
-                "UTOPIA.Actions.interrupt"
-              }}</option>
-            <option value="free">{{localize "UTOPIA.Actions.free"}}</option>
-            {{/select}}
-          </select>
+          {{formInput systemFields.type value=system.type name="system.type" localize=true}}
         </div>
 
-        <div class="flexcol">
-          <label for="system.source">{{localize
-              "UTOPIA.Actions.source"
-            }}</label>
-          <input
-            data-action="update"
-            type="text"
-            name="system.source"
-            placeholder="{{localize 'UTOPIA.Actions.source'}}"
-            value="{{system.source}}"
-          />
+        <div class="flexcol grid-span-4">
+          <label for="system.source">{{localize "UTOPIA.Actions.source"}}</label>
+          {{formInput systemFields.source value=system.source name="system.source" localize=true}}
         </div>
 
-        <div class="flexcol">
-          <label for="system.cost">{{localize "UTOPIA.Actions.cost"}}</label>
-          <input
-            data-action="update"
-            type="number"
-            name="system.cost"
-            placeholder="{{localize 'UTOPIA.Actions.cost'}}"
-            value="{{system.cost}}"
-          />
-        </div>
       </div>
 
       {{! Action trigger, recharge, contested, aid }}
-      <div class="grid grid-3col">
-        <div class="flexcol">
-          <label for="system.trigger">{{localize
-              "UTOPIA.Actions.trigger"
-            }}</label>
-          <input
-            data-action="update"
-            type="text"
-            name="system.trigger"
-            placeholder="{{localize 'UTOPIA.Actions.trigger'}}"
-            value="{{system.trigger}}"
-          />
+      <div class="grid grid-8col">
+        <div class="flexcol grid-span-3">
+          <label for="system.trigger">{{localize "UTOPIA.Actions.trigger"}}</label>
+          {{formInput systemFields.triggers value=system.triggers name="system.triggers" localize=true}}
         </div>
 
-        <div class="flexcol">
-          <label for="system.recharge">{{localize
-              "UTOPIA.Actions.source"
-            }}</label>
-          <input
-            data-action="update"
-            type="text"
-            name="system.recharge"
-            placeholder="{{localize 'UTOPIA.Actions.recharge'}}"
-            value="{{system.recharge}}"
-          />
+        <div class="flexcol grid-span-3">
+          <label for="system.recharge">{{localize "UTOPIA.Actions.recharge"}}</label>
+          {{formInput systemFields.recharge value=system.recharge name="system.recharge" localize=true}}
         </div>
 
-        <div class="flexcol">
+        <div class="flexcol grid-span-2">
           <label for="system.target">{{localize "UTOPIA.Actions.target"}}</label>
-          <select data-action="update" name="system.target" id="system.target">
-            {{#select system.target}}
-            <option value="none">{{localize "UTOPIA.Actions.none"}}</option>
-            <option value="contested">{{localize
-                "UTOPIA.Actions.contested"
-              }}</option>
-            <option value="aid">{{localize
-                "UTOPIA.Actions.aid"
-              }}</option>
-            {{/select}}
-          </select>
+          {{formInput systemFields.target value=system.target name="system.target" localize=true}}
         </div>
 
       </div>
 
       {{! Action formula }}
-      <div class="flexrow">
+      <div class="grid grid-6col">
         <div class="flexcol">
-          <label for="system.formula">{{localize
-              "UTOPIA.Actions.formula"
-            }}</label>
-          <input
-            data-action="update"
-            type="text"
-            name="system.formula"
-            placeholder="{{localize 'UTOPIA.Actions.formula'}}"
-            value="{{system.formula}}"
-          />
+          <label for="system.cost">{{localize "UTOPIA.Actions.cost"}}</label>
+          {{formInput systemFields.cost value=system.cost name="system.cost" localize=true}}
+        </div>
+
+        <div class="flexcol grid-span-5">
+          <label for="system.formula">{{localize "UTOPIA.Actions.formula"}}</label>
+          {{formInput systemFields.formula value=system.formula name="system.formula" localize=true}}
         </div>
       </div>
 
     </div>
-  </section>
-
-</form>
+  </div>
+</div>

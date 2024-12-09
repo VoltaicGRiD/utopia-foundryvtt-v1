@@ -7,3 +7,17 @@
   font-weight: bold;
   margin-bottom: 0.2em;
 }
+
+.interrupt-selector input[type="checklist"] {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.interrupt-selector input[checked] {
+  background-color: #c3ff93;
+}
+
+.interrupt-selector  input:not([checked]) {
+  background-color: #fdabab;
+}

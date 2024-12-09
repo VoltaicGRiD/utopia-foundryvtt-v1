@@ -1,3 +1,5 @@
+const { api } = foundry.applications;
+
 /**
  * Handles the selection of a talent by the user.
  * Checks prerequisites and updates the actor's talents accordingly.
@@ -10,15 +12,19 @@ export async function addTalentToActor(actor, selected) {
   let databaseTalents = await game.packs.get('utopia.talents').getDocuments();
 
   // Find the corresponding talent item from the database
-  let item;
+  let originalItem = undefined;
 
   // Find the talent in the database
   try {
-    item = databaseTalents.find((f) => f.name.toLowerCase().replace(' ', '_').trim() == selected);
+    // If no match, try to match id
+    originalItem = originalItem ? originalItem : databaseTalents.find((f) => f.id == selected);
   } catch (e) {
     ui.notifications.error("Talent not found in the database.");
     return
   }
+
+  // Clone the original item to avoid modifying the database
+  let item = originalItem.toObject();
 
   console.log(actor, selected, item, databaseTalents);
 
@@ -37,8 +43,9 @@ export async function addTalentToActor(actor, selected) {
   // Does the actor have enough talent points?
   // Calculate the cost of the talent based on its point values
   let points = item.system.points;
-  let cost = points.body + points.mind + points.soul;  
+  let cost = parseInt(points.body) + parseInt(points.mind) + parseInt(points.soul);  
   let actorPoints = actor.system.points.talent;
+  console.log("Cost: ", cost, "Actor Points: ", actorPoints);
   if (actorPoints < cost) {
     // Not enough talent points to add the talent
     ui.notifications.error("This actor does not have enough talent points to add a talent.");
@@ -68,51 +75,106 @@ export async function addTalentToActor(actor, selected) {
   }
 }
 
-export function checkForChoices(actor, item) {
-  let choices = item.system.choices;
-  if (choices.length > 0) {
-    // Talent has choices
-    let data = {
-      actor: actor,
-      item: item
-    }
-    renderChoices(data);
+/**
+ * Checks if a talent has choices to be made and handles the selection process.
+ * If choices are required, presents them to the user; otherwise, directly creates the talent.
+ *
+ * @param {Actor} actor - The actor to which the talent may be added.
+ * @param {Item} item - The talent item being considered.
+ */
+export async function checkForChoices(actor, item) {
+  let itemChoices = item.system.choices;
+  
+  if (itemChoices.length > 0) {
+    // Talent requires the user to make choices
+    let category = item.system.category;
+
+    // Retrieve choices already made by the actor in this category
+    let alreadyChosenSet = await getActorChoices(actor, category);
+    let alreadyChosen = [...alreadyChosenSet];
+
+    // Prepare data for rendering the choices dialog
+    const data = {
+      // Exclude choices the actor has already taken
+      choices: itemChoices.filter((c) => !alreadyChosen.includes(c)),
+      alreadyTaken: alreadyChosen,
+    };
+
+    // Render the choices dialog for the user
+    await renderChoices(data);
   } else {
-    // Talent has no choices
+    // Talent does not require choices, create it directly
     createTalent(actor, item, true);
   }
 }
 
-export function renderChoices(data) {
-  let template = "systems/utopia/templates/talent/choices.hbs";
-  let html = renderTemplate(template, data);
-  let dialog = new Dialog({
-    title: "Talent Choices",
-    content: html,
-    buttons: {
-      one: {
-        icon: '<i class="fas fa-check"></i>',
-        label: "Submit",
-        callback: (html) => {
-          submitChoices(html, data);
-        }
-      }
-    }
+/**
+ * Retrieves the choices the actor has already made for a specific talent category.
+ *
+ * @param {Actor} actor - The actor whose choices are being retrieved.
+ * @param {string} category - The talent category to check.
+ * @returns {Array} An array of choices the actor has already taken.
+ */
+export async function getActorChoices(actor, category) {
+  // Get all talent items the actor possesses
+  let actorItems = actor.items.filter((i) => i.type == 'talent');
+  // Filter talents by the specified category
+  let actorChoices = actorItems.filter((i) => i.system.category == category);
+  let choices = [];
+  // Extract the choices from each talent item
+  actorChoices.forEach((c) => {
+    choices.push([...c.system.choices][0]);
   });
-  dialog.render(true);
+  console.log("Actor already owned choices: ", choices);
+  return choices;
 }
 
-export function submitChoices(html, data) {
-  let choice;
-  html.find('.choice').each((i, c) => {
-    if (c.checked) {
-      choice = c.value;
+/**
+ * Renders the dialog allowing the user to select from available choices.
+ *
+ * @param {Object} data - Contains available choices and choices already taken.
+ */
+export async function renderChoices(data) {
+  let template = "systems/utopia/templates/dialogs/talent-choices.hbs";
+  // Render the HTML content using the specified template and data
+  let html = await renderTemplate(template, data);
+  // Create a new dialog for choice selection
+  let dialog = new api.DialogV2({
+    window: {
+      title: "Talent Choices",
+    },
+    content: html,
+    buttons: [{
+      default: true,
+      action: "choice",
+      icon: 'fas fa-check',
+      label: "Make choice (permanent)",
+      // Callback to retrieve the selected choice value from the form
+      callback: (event, button, dialog) => button.form.elements.choices.value
+    }],
+    // Handle the submission of the dialog
+    submit: result => {
+      submitChoices(result, data);
     }
-  });
+  }).render(true);
+}
 
+/**
+ * Processes the user's selected choice and creates the talent item accordingly.
+ *
+ * @param {string} choice - The choice selected by the user.
+ * @param {Object} data - Contains the talent item and actor information.
+ */
+export async function submitChoices(choice, data) {
   let item = data.item;
-  item.update({ ['system.choices']: choices });
-  item.update({ ['name']: `${item.name} (${choices})` });
+
+  // Set the selected choice on the item's system data
+  item.system.choices = choice;
+  // Append the chosen option to the item's name
+  item.name = `${item.name} (${choice})`;
+
+  console.log(item);
+  // Create the talent item for the actor
   createTalent(data.actor, item, true);
 }
 
@@ -125,17 +187,18 @@ export function submitChoices(html, data) {
 export function createTalent(actor, item, createTree) {
   // Create the talent item
   let data = [item];
-  Item.createDocuments(data, { parent: actor });
+  actor.createEmbeddedDocuments('Item', data);
 
   // Deduct the cost of the talent from the actor's talent points
-  let cost = item.system.points.body + item.system.points.mind + item.system.points.soul;
+  let points = item.system.points;
+  let body = parseInt(points.body);
+  let mind = parseInt(points.mind);
+  let soul = parseInt(points.soul);
+  let cost = body + mind + soul;
   let newPoints = actor.system.points.talent - cost;
   actor.update({ ["system.points.talent"]: newPoints });
 
   // Update the actor's body, mind, and soul points
-  let body = item.system.points.body;
-  let mind = item.system.points.mind;
-  let soul = item.system.points.soul;
   actor.update({ 
     ['system.points.body']: actor.system.points.body + body,
     ['system.points.mind']: actor.system.points.mind + mind,

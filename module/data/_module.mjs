@@ -9,3 +9,5 @@ export {default as UtopiaItem} from "./item-item.mjs";
 export {default as UtopiaTalent} from "./item-talent.mjs";
 export {default as UtopiaSpecies} from "./item-species.mjs";
 export {default as UtopiaSpell} from "./item-spell.mjs";
+export {default as UtopiaAction} from "./item-action.mjs";
+export {default as UtopiaSpellFeature} from "./item-spell-feature.mjs";

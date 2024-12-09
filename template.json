@@ -166,7 +166,7 @@
     }
   },
   "Item": {
-    "types": ["item", "species", "talent", "spell", "weapon", "action"],
+    "types": ["item", "species", "talent", "spell", "weapon", "action", "spellFeature", "variable"],
     "templates": {
       "base": {
         "formula": "",
@@ -195,10 +195,7 @@
       "cost": 1,
       "rules": {},
       "trigger": "",
-      "message": "",
-      "description": "",
       "recharge": "",
-      "requirements": {},
       "target": "none"
     },
     "item": {
@@ -253,6 +250,17 @@
       },
       "stamina": "",
       "talents": []
+    },
+    "spellFeature": {
+      "templates": ["base"],
+      "art": "array",
+      "cost": 0,
+      "allowRedistribution": true,
+      "doesTarget": false,
+      "targetType": "point",
+      "templateType": "circle",
+      "costMultiplier": "",
+      "templateAngle": 51.33
     }
   }
 }

@@ -1,0 +1,127 @@
+// import { TokenDocumentPF2e } from "@scene";
+//import { htmlQueryAll, objectHasKey } from "@util";
+import { UtopiaChatMessage } from "../documents/chat-message.mjs";
+
+class UtopiaUserVisibility {
+  /** Edits HTML live based on permission settings. Used to hide certain blocks and values */
+  static process(html, options = {}) {
+    const visibilityElementsArray = html.querySelectorAll("[data-visibility]");
+    const visibilityElements = new Set(visibilityElementsArray);
+
+    // Remove all visibility=none elements
+    for (const element of visibilityElements.filter(
+      (e) => e.dataset.visibility === "none"
+    )) {
+      element.remove();
+    }
+
+    // Process all other visibility elements according to originating document ownership
+    const message = options.message;
+    const document =
+      options.document ??
+      message?.actor ??
+      message?.journalEntry ??
+      message ??
+      null;
+    if (document) {
+      const ownerElements = visibilityElements.filter(
+        (e) => e.dataset.visibility === "owner"
+      );
+      for (const element of ownerElements) {
+        // "owner" is generally applicable only to `data-action` buttons and anchors in chat messages
+        if (element.dataset.action) {
+          if (!document.isOwner) element.remove();
+          delete element.dataset.visibility;
+          continue;
+        }
+
+        const whoseData = element.dataset.whose ?? "self";
+        if (whoseData === "self") {
+          element.dataset.visibility = document.hasPlayerOwner ? "all" : "gm";
+          continue;
+        }
+
+        if (message?.target && whoseData === "opposer") {
+          element.dataset.visibility = message.target.actor.hasPlayerOwner
+            ? "all"
+            : "gm";
+        }
+      }
+    }
+
+    const hasOwnership = document?.isOwner ?? game.user.isGM;
+    // Hide DC for explicit save buttons (such as in spell cards)
+    //const dcSetting = game.pf2e.settings.metagame.dcs;
+    // const saveButtons = htmlQueryAll(html, "button[data-action=save]");
+    // const hideDC = !document?.hasPlayerOwner && !hasOwnership && !dcSetting;
+    // if (hideDC) {
+    //     for (const button of saveButtons) {
+    //         const saveType = button.dataset.save;
+    //         if (objectHasKey(CONFIG.PF2E.saves, saveType)) {
+    //             const saveName = game.i18n.localize(CONFIG.PF2E.saves[saveType]);
+    //             button.innerText = game.i18n.format("PF2E.SavingThrowWithName", { saveName });
+    //         }
+    //     }
+    // } else if (!document?.hasPlayerOwner && !dcSetting) {
+    //     for (const button of saveButtons) {
+    //         button.classList.add("hidden-to-others");
+    //     }
+    // }
+
+    // for (const element of htmlQueryAll(html, "[data-owner-title]")) {
+    //     if (hasOwnership) {
+    //         const value = element.dataset.ownerTitle ?? "";
+    //         element.title = value;
+    //     } else {
+    //         element.removeAttribute("data-owner-title");
+    //     }
+    // }
+
+    // Remove visibility=gm elements if the user is not a GM
+    if (!game.user.isGM) {
+      for (const element of visibilityElements.filter(
+        (e) => e.dataset.visibility === "gm"
+      )) {
+        element.remove();
+      }
+    }
+
+    return html;
+
+    //InlineRollLinks.injectRepostElements(html, document);
+    //InlineRollLinks.flavorDamageRolls(html, document);
+  }
+
+  static processMessageSender(message, html) {
+    // Hide the sender name from the card if it can't be seen from the canvas
+    if (!game.pf2e.settings.tokens.nameVisibility) return;
+    const token =
+      message.token ??
+      (message.actor
+        ? new TokenDocumentPF2e(message.actor.prototypeToken.toObject())
+        : null);
+    if (token) {
+      const sender = html.querySelector < HTMLElement > "h4.message-sender";
+      const nameToHide = token.name.trim();
+      const shouldHideName =
+        !token.playersCanSeeName && sender?.innerText.includes(nameToHide);
+      if (sender && shouldHideName) {
+        if (game.user.isGM) {
+          sender.dataset.visibility = "gm";
+        } else {
+          sender.innerText = message.author?.name ?? "Gamemaster";
+        }
+      }
+    }
+  }
+}
+
+const USER_VISIBILITIES = ["all", "owner", "gm", "none"];
+// type UserVisibility = SetElement<typeof USER_VISIBILITIES>;
+
+// interface ProcessOptions {
+//     document?: ClientDocument | null;
+//     message?: UtopiaChatMessage | null;
+//}
+
+export { USER_VISIBILITIES, UtopiaUserVisibility };

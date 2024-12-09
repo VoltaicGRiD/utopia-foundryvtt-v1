@@ -17,7 +17,9 @@
         "Illusion": "Illusion",
         "Necromancy": "Necromancy",
         "Wake": "Wake"
-      }
+      },
+      "block": "Block",
+      "dodge": "Dodge"
     },
     "Rating": {
       "blr": { "long": "Block Rating", "abbr": "blr" },
@@ -66,17 +68,25 @@
       "item": "Utopia Item Sheet",
       "weapon": "Utopia Weapon Sheet",
       "attack": "Utopia Attack Sheet",
-      "subtrait": "Subtrait Selection"
+      "subtrait": "Subtrait Selection",
+      "talent-tree-selector": "Utoipia Talent Tree"
     },
     "Weapons": {
       "handling": "Handling",
       "range": "Range"
+    },
+    "Dialog": {
+      "dealDamage": "Deal Damage",
+      "applyHealing": "Apply Healing",
+      "submit": "Submit"
     },
     "Descriptions": {
       "attributes": "Attributes",
       "pointsleft": "Points left to spend",
       "points": "Points",
       "defenses": "Defenses",
+      "damage": "Damage",
+      "damageType": "Damage Type",
       "parent": "Parent",
       "spellcap": "Spellcap",
       "keepopen": "Keep open",
@@ -84,12 +94,16 @@
       "description": "Description",
       "tags": "Tags",
       "talents": "Talents",
+      "unlock": "Make all talents available (GM Only)",
       "filter": "Filter",
-      "filterhelp": "Type '@' and the name of a tree or category, or type '#' and an attribute followed by a comparison operation (i.e. '#body>2')"
+      "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
+      "kineticForce": "Kinetic",
+      "save": "Save"
     },
     "Talents": {
       "category": "Choice category",
       "choices": "Prompt for choices (comma-separated tags)",
+      "is-species": "Species talent",
       "tree": "Tree",
       "position": "Position",
       "ultimate": "Ult",
@@ -163,6 +177,10 @@
         "defense": "Defense",
         "utility": "Utility"
       },
+      "Variables": {
+        "name": "Variable: ",
+        "cast": "Cast Spell"
+      },
       "arts": "Spell arts",
       "talents": "Required talents",
       "stamina": "Stamina formula",
@@ -179,6 +197,37 @@
       "aoe": "Area of effect",
       "duration": "Duration"
     },
+    "SpellFeatures": {
+      "cost": "PP Cost",
+      "costMultiplier": "Cost Variable",
+      "art": "Artistry",
+      "allowRedistribution": "Allow dice redistribution",
+      "doesTarget": "Creates target",
+      "costResult": "Cost result",
+      "variable": "Variable",
+      "Variables": {
+        "character": "Char",
+        "type": "Type",
+        "nameX": "Var X",
+        "nameY": "Var Y",
+        "nameZ": "Var Z",
+        "none": "None",
+        "delete": "Remove Variable",
+        "new": "New Variable",
+        "number": "Number",
+        "options": "Options",
+        "text": "Text",
+        "dice": "Dice"
+      },
+      "targetType": "Target Type",
+      "TargetType": {
+        "point": "Point",
+        "template": "Template",
+        "attach": "Attach"
+      },
+      "templateType": "Template",
+      "templateAngle": "Cone Angle"
+    },
     "Actions": {
       "Tabs": {
         "attributes": "Attributes",
@@ -187,21 +236,66 @@
       },
       "formula": "Formula",
       "type": "Type",
-      "standard": "Standard",
-      "interrupt": "Interrupt",
-      "free": "Free",
+      "Type": {
+        "standard": "Standard",
+        "interrupt": "Interrupt",
+        "special": "Special",
+        "free": "Free"
+      },
       "source": "Source",
       "cost": "Cost",
       "rules": "Rules",
       "trigger": "Trigger",
-      "message": "Message",
-      "description": "Description",
       "recharge": "Recharge",
       "requirements": "Requirements",
       "target": "Target",
-      "contested": "Contested",
-      "aid": "Aid",
-      "none": "None"
+      "Trigger": {
+        "manual": "Manual",
+        "shpDamage": "On SHP Damage",
+        "shpDamageDealt": "On SHP Damage Dealt",
+        "dhpDamage": "On DHP Damage",
+        "dhpDamageDealt": "On DHP Damage Dealt",
+        "heal": "On Heal",
+        "condition": "On Condition Gained",
+        "conditionLost": "On Condition Lost",
+        "myTurn": "Beginning of My Turn",
+        "enemyTurn": "Beginning of Enemy Turn",
+        "allyTurn": "Beginning of Ally Turn",
+        "startRound": "Start of Round",
+        "endRound": "End of Round",
+        "staminaLost": "On Stamina Lost",
+        "contest": "During Contest",
+        "test": "During Test",
+        "focusLost": "On Focus Lost",
+        "concentrationLost": "On Concentration Lost",
+        "block": "On Block",
+        "dodge": "On Dodge",
+        "spellCast": "When Spell Cast",
+        "craftStarted": "On Craft Started",
+        "craftFinished": "On Craft Finished",
+        "forageStarted": "On Forage Started",
+        "forageFinished": "On Forage Finished",
+        "restStarted": "On Rest Started",
+        "restFinished": "On Rest Finished",
+        "awareness": "Blind Awareness Test"
+      },
+      "Recharge": {
+        "immediate": "Immediately",
+        "myTurn": "Start of My Turn",
+        "turn": "Start of Every Turn",
+        "round": "Start of Every Round",
+        "minute": "Every Minute",
+        "hour": "Every Hour",
+        "day": "Every Day",
+        "week": "Every Week"
+      },
+      "Target": {
+        "none": "None",
+        "self": "Self",
+        "ally": "Ally",
+        "enemy": "Enemy",
+        "any": "Any"
+      }
     },
     "Species": {
       "blockQuantity": "Block dice quantity",
@@ -216,8 +310,16 @@
       "autoRollAttacksHint": "When enabled, the modifier window that appears when attacking will be bypassed and the attack will be rolled immediately",
       "targetRequired": "Targeting required for attacks",
       "targetRequiredHint": "When enabled, a target must be selected before an attack can be rolled",
-      "saveSheetTab": "Save last open sheet tab",
-      "saveSheetTabHint": "When enabled, the last open tab of a sheet will be saved and restored when the sheet is reopened. (does not work for sub-tabs)"
+      "autoRollContests": "Method for contest rolls",
+      "autoRollContestsHint": "Depending on the setting, contests will either be AUTOMATICALLY rolled, a PROMPT will appear, or contests must be rolled MANUALLY",
+      "autoRollContestsNone": "None",
+      "autoRollContestsPrompt": "Prompt",
+      "autoRollContestsAuto": "Automatic",
+      "displayDamage": "Display damage in chat",
+      "displayDamageHint": "Depending on the setting, one of the following occurs: Either the EXACT damage is displayed, an ESTIMATE is displayed, or the damage is HIDDEN",
+      "displayDamageNone": "Hidden",
+      "displayDamageExact": "Exact",
+      "displayDamageEstimate": "Estimate"
     }
   },
 

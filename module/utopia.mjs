@@ -1,3 +1,5 @@
+const { api } = foundry.applications;
+
 // Import document classes.
 import { UtopiaActor } from './documents/actor.mjs';
 import { UtopiaItem } from './documents/item.mjs';
@@ -5,13 +7,12 @@ import { UtopiaItem } from './documents/item.mjs';
 import { UtopiaItemSheet } from './sheets/item-sheet.mjs';
 import { UtopiaWeaponSheet } from './sheets/weapon-sheet.mjs';
 import { UtopiaActionSheet } from './sheets/action-sheet.mjs';
-import { UtopiaChatMessage } from './sheets/chat-message.mjs';
+import { UtopiaChatMessage } from './documents/chat-message.mjs';
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from './helpers/templates.mjs';
 import { UTOPIA } from './helpers/config.mjs';
 import isNumeric from './helpers/numeric.mjs';
 import searchTraits from './helpers/searchTraits.mjs';
-import Tagify from '../lib/tagify/tagify.esm.js';
 import { UtopiaActorSheetV2 } from './sheets/actor-sheet-appv2.mjs';
 import { UtopiaSpellSheet } from './sheets/spell-sheet.mjs';
 import { UtopiaSpeciesSheet } from './sheets/species-sheet.mjs';
@@ -19,12 +20,15 @@ import { UtopiaTalentTreeSheet } from './sheets/talent-tree-sheet.mjs';
 import { UtopiaTalentSheet } from './sheets/talent-sheet.mjs';
 import { UtopiaOptionsSheet } from './sheets/options-sheet.mjs';
 import { UtopiaSubtraitSheetV2 } from './sheets/subtrait-sheet.mjs';
+import { UtopiaSpellFeatureSheet } from './sheets/spell-feature-sheet.mjs';
 import * as models from './data/_module.mjs';
 import { addTalentToActor } from './helpers/addTalent.mjs';
 import gatherTalents from './helpers/gatherTalents.mjs';
 import { longToShort, shortToLong, traitLongNames, traitShortNames } from './helpers/traitNames.mjs';
 import rangeTest from './helpers/rangeTest.mjs';
-import { calculateFavor } from './helpers/favorHandler.mjs';
+import { calculateTraitFavor } from './helpers/favorHandler.mjs';
+import { runTrigger, triggers, UtopiaTrigger } from './helpers/runTrigger.mjs';
+import { UtopiaSpellVariable } from './documents/spell-variable.mjs';
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -38,6 +42,7 @@ globalThis.utopia = {
     UtopiaActor,
     UtopiaItem,
     UtopiaChatMessage,
+    UtopiaSpellVariable,
   },
   applications: {
     UtopiaItemSheet,
@@ -50,6 +55,8 @@ globalThis.utopia = {
     UtopiaSubtraitSheetV2,
     UtopiaSpeciesSheet,
     UtopiaTalentSheet,
+    UtopiaSpellFeatureSheet,
+    UtopiaTrigger,
   },
   utils: {
     rollItemMacro,
@@ -58,7 +65,9 @@ globalThis.utopia = {
     shortToLong,
     longToShort,
     rangeTest,
-    calculateFavor,
+    calculateTraitFavor,
+    runTrigger,
+    triggers,
     traitShortNames,
     traitLongNames,
   },
@@ -70,6 +79,7 @@ Hooks.once('init', function () {
   // accessible in global contexts.
   game.utopia = {
     UtopiaChatMessage,
+    UtopiaSpellVariable,
     UtopiaActor,
     UtopiaItem,
     rollItemMacro,
@@ -78,7 +88,8 @@ Hooks.once('init', function () {
     shortToLong,
     longToShort,
     rangeTest,
-    calculateFavor,
+    calculateTraitFavor,
+    triggers,
     traitShortNames,
     traitLongNames,
   };
@@ -97,6 +108,13 @@ Hooks.once('init', function () {
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
   CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
+  CONFIG.SpellVariable = {
+    dataModels: { spellVariable: UtopiaSpellVariable },
+    documentClass: UtopiaSpellVariable,
+    sheetClasses: { spellVariable: UtopiaSpellFeatureSheet },
+    typeLabels: { base: "TYPES.Base" },
+    legacyTransferral: true,
+  }
 
   // Setting up schema handling for the system.
   // This is supposed to replace the default 'Template.json' file.
@@ -106,6 +124,8 @@ Hooks.once('init', function () {
     spell: models.UtopiaSpell,
     species: models.UtopiaSpecies,
     talent: models.UtopiaTalent,
+    action: models.UtopiaAction,
+    spellFeature: models.UtopiaSpellFeature,
   }
 
   // Active Effects are never copied to the Actor,  // but will still apply to the Actor from within the Item
@@ -117,6 +137,7 @@ Hooks.once('init', function () {
   registerItemSheets();
   registerStatusEffects();
   registerGameSettings();
+  registerGameKeybindings();
 
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
@@ -177,7 +198,136 @@ function registerItemSheets() {
     types: ['talent'],
     label: 'UTOPIA.SheetLabels.talent',
   });
+  Items.registerSheet('utopia', UtopiaSpellFeatureSheet, {
+    makeDefault: true,
+    types: ['spellFeature'],
+    label: 'UTOPIA.SheetLabels.spellComponent',
+  });
 }
+//#endregion
+
+//#region Game Keybindings
+/* -------------------------------------------- */
+/*  System Settings                             */
+/* -------------------------------------------- */
+
+function registerGameKeybindings() {
+  // Open Talent Tree for selected Token
+  game.keybindings.register('utopia', "openTalentTree", {
+    name: "UTOPIA.Keybindings.openTalentTree",
+    hint: "UTOPIA.Keybindings.openTalentTreeHint",
+    editable: [
+      { key: "KeyT", modifiers: ["Control"] },
+      { key: "F1"}
+    ],
+    onDown: () => {
+      if (game.canvas.tokens.controlled.length > 0) {
+        game.canvas.tokens.controlled.forEach(token => {
+          token.actor.openTalentTree();
+        });
+      } else {
+        ui.notifications.warn("No token selected.");
+      }
+    },
+    onUp: () => {},
+    restricted: false,
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+
+  // Open Talent Tree for selected Token
+  game.keybindings.register('utopia', "openSubtraitSheet", {
+    name: "UTOPIA.Keybindings.openSubtraitSheet",
+    hint: "UTOPIA.Keybindings.openSubtraitSheetHint",
+    editable: [
+      { key: "KeyS", modifiers: ["Control"] },
+      { key: "F2"}
+    ],
+    onDown: () => {
+      if (game.canvas.tokens.controlled.length > 0) {
+        game.canvas.tokens.controlled.forEach(token => {
+          token.actor.openSubtraitSheet();
+        });
+      } else {
+        ui.notifications.warn("No token selected.");
+      }
+    },
+    onUp: () => {},
+    restricted: false,
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+  
+  // Open Talent Tree for selected Token
+  game.keybindings.register('utopia', "dealDamage", {
+    name: "UTOPIA.Keybindings.dealDamage",
+    hint: "UTOPIA.Keybindings.dealDamageHint",
+    editable: [
+      { key: "KeyD", modifiers: ["Control"] },
+      { key: "F3" }
+    ],
+    onDown: () => {
+      if (game.canvas.tokens.controlled.length > 0) {
+        game.canvas.tokens.controlled.forEach(async token => {
+          let actor = token.actor;
+          let data = {
+            defenses: actor.system.defenses,
+            block: `${actor.system.block.quantity}d${actor.system.block.size}`,
+            dodge: `${actor.system.dodge.quantity}d${actor.system.dodge.size}`,
+          }
+          let template = "systems/utopia/templates/dialogs/deal-damage.hbs";
+          
+          let html = await renderTemplate(template, data);
+
+          let dialog = new api.DialogV2({
+            window: {
+              title: `${game.i18n.localize("UTOPIA.Dialog.dealDamage")} - ${actor.name}`,
+            },
+            classes: ["utopia", "utopia-dialog"],
+            content: html,
+            buttons: [
+              {
+                default: true,
+                action: "submit",
+                icon: 'fas fa-check',
+                id: "submit-button",
+                label: "UTOPIA.Dialog.submit",
+                // Callback to retrieve the selected choice value from the form
+                callback: (event, button, dialog) => { return {
+                    damage: button.form.elements.damage.value,
+                    type: button.form.elements.type.value
+                  }
+                }
+              },
+              {
+                default: true,
+                action: "submit",
+                icon: 'fas fa-check',
+                id: "submit-button",
+                label: "UTOPIA.Dialog.submit",
+                // Callback to retrieve the selected choice value from the form
+                callback: (event, button, dialog) => { return {
+                    damage: button.form.elements.damage.value,
+                    type: button.form.elements.type.value
+                  }
+                }
+              }
+            ],
+            // Handle the submission of the dialog
+            submit: result => {
+              console.log(result);
+              actor.applyDamage({ damage: result.damage, type: result.type, source: "GM" }, true);
+            },
+          });
+          await dialog.render(true);
+        });
+      } else {
+        ui.notifications.warn("No token selected.");
+      }
+    },
+    onUp: () => {},
+    restricted: false,
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
+};
 //#endregion
 
 //#region Game Settings and Status Effects
@@ -200,18 +350,38 @@ function registerGameSettings() {
     name: "UTOPIA.Settings.autoRollAttacks",
     hint: "UTOPIA.Settings.autoRollAttacksHint",
     scope: "world",
-    config: false,
+    config: true,
     type: Boolean,
     default: true,
   });
 
-  game.settings.register('utopia', 'saveSheetTab', {
-    name: "UTOPIA.Settings.saveSheetTab",
-    hint: "UTOPIA.Settings.saveSheetTabHint",
-    scope: "client",
+  game.settings.register('utopia', 'autoRollContests', {
+    name: "UTOPIA.Settings.autoRollContests",
+    hint: "UTOPIA.Settings.autoRollContestsHint",
+    scope: "world",
     config: true,
-    type: Boolean,
-    default: true,
+    type: Number,
+    choices: {
+      0: "UTOPIA.Settings.autoRollContestsNone",
+      1: "UTOPIA.Settings.autoRollContestsPrompt",
+      2: "UTOPIA.Settings.autoRollContestsAuto",
+    },
+    default: 1,
+  });
+
+  game.settings.register('utopia', 'displayDamage', {
+    name: "UTOPIA.Settings.displayDamage",
+    hint: "UTOPIA.Settings.displayDamageHint",
+    scope: "world",
+    config: true,
+    type: Number,
+    requiresReload: true,
+    choices: {
+      0: "UTOPIA.Settings.displayDamageNone",
+      1: "UTOPIA.Settings.displayDamageEstimate",
+      2: "UTOPIA.Settings.displayDamageExact",
+    },
+    default: 1,
   });
 }
 
@@ -356,6 +526,7 @@ export async function _handleSpeciesDrop(actor, item) {
 /* -------------------------------------------- */
 
 Hooks.once('ready', function () {
+  
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on('hotbarDrop', (bar, data, slot) => { 
     createDocMacro(data, slot); 
@@ -389,6 +560,77 @@ Hooks.once('ready', function () {
         CONFIG.UTOPIA.trackedTokens.splice(index, 1);
       });
     }
+  });
+
+  Hooks.on('preUpdateActor', (actor, data, meta, userId) => {
+    // Actor is the actor being updated
+    // Data is the data that is being updated
+    // Meta is the metadata for the update
+    // UserId is the user that initiated the update
+
+    // console.log(actor, data, meta, userId);
+
+    // if (!data.system) return;
+
+    // const a = actor.toObject().system;
+    // const u = data.system;
+
+    // if (a.shp.value != u.shp.value || a.dhp.value != u.dhp.value) {
+    //   if (a.shp.value > u.shp.value) {
+    //     let damage = a.shp.value - u.shp.value;
+    //     let type = "Unlisted";
+    //     actor.applyDamage({ damage: damage, type: type });
+    //     return false;
+    //   } else if (a.shp.value < u.shp.value) {
+    //     return true;
+    //     let healing = u.shp.value - a.shp.value;
+    //     let type = "Unlisted";
+    //     actor.applyHealing(healing, type);
+    //     return false;
+    //   } else if (a.dhp.value > u.dhp.value) {
+    //     let damage = a.dhp.value - u.dhp.value;
+    //     let type = "Unlisted";
+    //     actor.applyDamage({ damage: damage, type: type });
+    //     return false;
+    //   } else if (a.dhp.value < u.dhp.value) {
+    //     return true;
+    //     let healing = u.dhp.value - a.dhp.value;
+    //     let type = "Unlisted";
+    //     actor.applyHealing(healing, type);
+    //     return false;
+    //   }
+    // } else {
+    //   try {
+    //     assumeTrigger(data, actor.toObject(), actor);
+    //     return true;
+    //   } catch (error) {
+    //     return true;
+    //   }
+    // }; 
+  });
+
+  Hooks.on('preCreateActiveEffect', (effect, options, userId) => {
+    const actor = effect.target;
+    const condition = effect.statuses[0];
+
+    runTrigger("Condition", actor, condition);
+    
+    return true;
+  });
+
+  Hooks.on('preDeleteActiveEffect', (effect, options, userId) => {
+    const actor = effect.target;
+    const condition = effect.statuses[0];
+
+    if (condition === "focus") {
+      runTrigger("FocusLost", actor, condition);
+    } else if (condition === "concentration") {
+      runTrigger("ConcentrationLost", actor, condition);
+    } else {
+      runTrigger("ConditionLost", actor, condition);
+    }
+
+    return true;
   });
 
   // ------------------

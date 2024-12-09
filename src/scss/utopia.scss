@@ -18,6 +18,12 @@
 /* Tagify classes */
 @import 'components/tagify';
 
+#tooltip:has(.skill-description) {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 /* Styles limited to utopia sheets */
 .utopia {
   @import 'components/forms';
@@ -29,7 +35,7 @@
   @import 'components/actor-sheet-v2';
   @import 'components/options-sheet';
   @import 'components/attack-sheet';
-  @import 'components/talent-sheet-v2';
+  //@import 'components/talent-sheet-v2';
   @import 'components/action-sheet';
   @import 'components/chat-cards';
   @import 'components/spell-tab';

@@ -1,12 +1,6 @@
-import gatherTalents from "../helpers/gatherTalents.mjs";
 import UtopiaItemBase from "./base-item.mjs";
 
 export default class UtopiaSpell extends UtopiaItemBase {
-  static LOCALIZATION_PREFIXES = [
-    'UTOPIA.Item.base',
-    'UTOPIA.Item.Spell',
-  ];
-
   static defineSchema() {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();

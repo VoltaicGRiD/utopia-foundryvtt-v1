@@ -1,6 +1,6 @@
 import { shortToLong, longToShort } from "./traitNames.mjs"
 
-export const calculateFavor = (trait, disfavors, favors) => {
+export const calculateTraitFavor = (trait, disfavors, favors) => {
   let short = trait;
   let long = trait;
 
