@@ -1,0 +1,194 @@
+<div class="tab details {{tab.cssClass}}" data-group="primary" data-tab="details">
+  <section class="grid grid-3col">
+    <div class="sidebar">
+
+      <table class="ability-table">
+        <tr>
+          <th>(Sub)Trait</th>
+          <th>Val</th>
+          <th>Mod</th>
+        </tr>
+        {{#each system.traits as |trait key|}}
+          <tr>
+            <td class="td-left" data-action="roll" data-roll-type="trait" data-trait="{{key}}">
+              <span class="resource-label">{{localize (concat 'UTOPIA.Trait.' key '.long')}}</span>
+            </td>
+            <td class="td-center">{{numberFormat trait.value decimals=0}}</td>
+            <td class="td-center">{{numberFormat trait.mod decimals=0 sign=true}}</td>
+          </tr>
+          {{#each trait.subtraits as |subtrait sub|}}
+            <tr {{#if subtrait.gifted}} class="gifted" {{/if}}>
+              <td class="td-left" data-action="roll" data-roll-type="trait" data-trait="{{sub}}"> 
+                {{#if subtrait.gifted}}
+                  <span class="resource-label">&nbsp;<i class="fa-solid fa-gift"></i>&nbsp;&nbsp;-&nbsp;{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}</span>
+                {{else}}
+                  <span class="resource-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{{localize (concat 'UTOPIA.Subtrait.' sub '.long')}}</span>
+                {{/if}}
+              </td>
+              <td class="td-center">{{numberFormat subtrait.value decimals=0}}</td>
+              <td class="td-center">{{numberFormat subtrait.mod decimals=0 sign=true}}</td>
+            </tr>
+          {{/each}}
+        {{/each}}
+        
+      </table>
+    </div>
+
+    {{!-- For the main features list, span the right two columns --}}
+    <section class="main grid-span-2">
+      <div class="flexcol">
+        <div class="actor-data">
+
+          <div class="flexcol">
+            <h4>{{localize 'UTOPIA.Descriptions.attributes'}}</h4>
+            <div class="flexrow data-blocks">
+              
+              <div class="data-overlay">
+                <i class="fa-solid fa-block-brick fa-fw" data-tooltip="{{localize 'UTOPIA.Attributes.constitution'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.attributes.constitution decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-rabbit-running fa-fw" data-tooltip="{{localize 'UTOPIA.Attributes.endurance'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.attributes.endurance decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-sparkles fa-fw" data-tooltip="{{localize 'UTOPIA.Attributes.effervescence'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.attributes.effervescence decimals=0}}
+                </span>
+              </div>
+            
+            </div>
+          </div>
+
+          <div class="flexcol">
+            <h4>{{localize 'UTOPIA.Descriptions.defenses'}}</h4>
+            <div class="flexrow data-blocks">
+            
+                <div class="data-overlay">
+                  <i class="fa-solid fa-snowflake fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.chill'}}"></i>
+                  <span class="data-number">
+                    {{numberFormat system.defenses.chill decimals=0}}
+                  </span>
+                </div>
+
+                <div class="data-overlay">
+                  <i class="fa-solid fa-bolt fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.energy'}}"></i>
+                  <span class="data-number">
+                    {{numberFormat system.defenses.energy decimals=0}}
+                  </span>
+                </div>
+
+                <div class="data-overlay">
+                  <i class="fa-solid fa-fire fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.heat'}}"></i>
+                  <span class="data-number">
+                    {{numberFormat system.defenses.heat decimals=0}}
+                  </span>
+                </div>
+              
+                <div class="data-overlay">
+                  <i class="fa-solid fa-hand-fist fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.physical'}}"></i>
+                  <span class="data-number">
+                    {{numberFormat system.defenses.physical decimals=0}}
+                  </span>
+                </div>
+              
+                <div class="data-overlay">
+                  <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.psyche'}}"></i>
+                  <span class="data-number">
+                    {{numberFormat system.defenses.psyche decimals=0}}
+                  </span>
+                </div>
+
+              </div> 
+
+            </div>
+          </div>
+        </div>
+        <div class="actor-data">
+          <div class="flexcol">
+            <h4>{{localize 'UTOPIA.Descriptions.points'}}</h4>
+            
+            <div class="flexrow data-blocks">
+              <div class="data-overlay">
+                <i class="fa-solid fa-gift fa-fw" data-tooltip="{{localize 'UTOPIA.Points.gifted'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.gifted decimals=0}}
+                </span>
+              </div>
+              
+              <div class="data-overlay">
+                <i class="fa-solid fa-list fa-fw" data-action="selectSubtraits" data-tooltip="{{localize 'UTOPIA.Points.subtrait'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.subtrait decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-heart fa-fw" data-action="selectTalents" data-tooltip="{{localize 'UTOPIA.Points.talent'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.talent decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-sparkles fa-fw" data-action="selectSpecialistTalents" data-tooltip="{{localize 'UTOPIA.Points.talent'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.specialist decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-shield fa-fw" data-tooltip="{{localize 'UTOPIA.Points.body'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.body decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Points.mind'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.mind decimals=0}}
+                </span>
+              </div>
+
+              <div class="data-overlay">
+                <i class="fa-solid fa-flame fa-fw" data-tooltip="{{localize 'UTOPIA.Points.soul'}}"></i>
+                <span class="data-number">
+                  {{numberFormat system.points.soul decimals=0}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actor-talents">
+          <h4>{{localize 'UTOPIA.Descriptions.talents'}}</h4>
+          <div class="grid grid-2col">
+            {{#each talents as |talent key|}}
+              {{log talent}}
+              <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
+                data-tooltip="{{localize 'UTOPIA.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
+                              {{localize 'UTOPIA.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
+                              {{localize 'UTOPIA.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
+                data-tooltip-position="top">
+                <div class="flexrow talent-content">
+                  <div>
+                    {{talent.name}}
+                  </div>
+                </div>
+              </button>
+            {{/each}}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </section>
+</div>

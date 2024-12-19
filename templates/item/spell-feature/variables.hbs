@@ -1,0 +1,40 @@
+<div class="tab variables {{tab.cssClass}}" data-group="primary" data-tab="variables">
+  {{#if variables}}
+    {{#if (gt (variables.length) 2)}}
+      <div class="grid grid-6col">
+    {{/if}}
+    {{#each variables as |variable key|}}
+      <div class="variable">
+        <div class="grid grid-6col">
+          <div class="grid-span-2">
+            {{formInput ../systemFields.variableName value=(lookup (lookup ../system.variables key) "name") name=(concat "system.variables." key ".name") localize=true}}          
+          </div>
+          <div class="grid-span-3">
+            {{formInput ../systemFields.kind value=(lookup (lookup ../system.variables key) "kind") name=(concat "system.variables." key ".kind") localize=true}}
+          </div>
+          {{#if (eq (lookup (lookup ../system.variables key) "kind") "dice")}}
+            <div class="grid-span-2">
+              {{formInput ../systemFields.dice value=(lookup (lookup ../system.variables key) "dice") name=(concat "system.variables." key ".dice") localize=true}}
+            </div>
+          {{/if}}
+          <button>
+            <a data-action="removeVariable" data-variable-id="{{key}}">{{localize 'UTOPIA.SpellFeatures.Variables.delete'}}</a>
+          </button>
+        </div>
+        {{#if (eq (lookup (lookup ../system.variables key) "kind") "options")}}
+          <input class="variable-options" name="{{concat "system.variables." key ".options"}}" data-key="{{key}}" autofocus>
+        {{/if}}
+        <div class="variable-description">
+          {{formInput ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true placeholder=(localize 'UTOPIA.Descriptions.description')}}
+        </div>
+      </div>  
+    {{/each}}
+    {{#if (gt (variables.length) 2)}}  
+      </div>
+    {{/if}}
+  {{/if}}
+
+  <button class="add-variable-button">
+    <a data-action="newVariable">{{localize 'UTOPIA.SpellFeatures.Variables.new'}}</a>
+  </button>
+</div>

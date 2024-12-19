@@ -1,8 +1,7 @@
-import { UtopiaAttackSheet } from "../sheets/attack-sheet.mjs";
-import rangeTest from '../helpers/rangeTest.mjs';
+import { UtopiaAttackSheet } from "../sheets/other/attack-sheet.mjs";
+import { rangeTest } from '../helpers/rangeTest.mjs';
 import { UtopiaChatMessage } from "./chat-message.mjs";
-import { UtopiaSpellVariableSheet } from "../sheets/spell-variable-sheet.mjs";
-const { api, sheets } = foundry.applications;
+import { UtopiaSpellVariableSheet } from "../sheets/item/spell-variable-sheet.mjs";
 
 /**
  * Extend the basic Item with custom modifications specific to the Utopia system.
@@ -26,6 +25,20 @@ export class UtopiaItem extends Item {
   prepareDerivedData() {
     const itemData = this;
     const systemData = itemData.system;
+
+    if (itemData.type === "spellFeature") {
+      if (itemData.img === "icons/svg/item-bag.svg") {
+        this.updateDefaultSpellFeatureIcon();
+      }
+    }
+  }
+
+  updateDefaultSpellFeatureIcon() {
+    let img = "systems/utopia/assets/icons/artistries/array.svg";
+
+    this.update({
+      img: img
+    })
   }
 
   /**
@@ -176,5 +189,32 @@ export class UtopiaItem extends Item {
 
     return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
   }
+
+  async createVariable() {
+    if (this.type === "spellFeature") {
+      const variables = await UtopiaItem.createDocuments([{name: "Variable", type: "variable"}]);
+      variables.forEach(async variable => {
+        console.log(variable);
+        const existing = Object.keys(this.system.variables);
+        if (existing.includes(variable._id)) {
+          return false;
+        }
+        await this.update({
+          [`system.variables.${variable._id}`]: variable,
+        });
+      });
+
+      console.log(this);
+      return true;
+    }
+    return false;
+  }
+
+  async deleteVariable(variableId) {
+    await UtopiaItem.deleteDocuments([variableId]);
+    await this.update({
+      [`system.variables.-=${variableId}`]: null,
+    });
+  } 
 }
 

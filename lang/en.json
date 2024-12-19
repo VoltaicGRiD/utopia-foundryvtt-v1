@@ -2,21 +2,21 @@
   "UTOPIA": {
     "Actor": {
       "Tabs": {
-        "Data": "Data",
-        "Actions": "Actions",
-        "Spells": "Spells",
-        "Gear": "Gear",
-        "Talents": "Talents",
-        "Biography": "Biography",
-        "Effects": "Effects",
-        "Alteration": "Alteration",
-        "Array": "Array",
-        "Divination": "Divination",
-        "Enchantment": "Enchantment",
-        "Evocation": "Evocation",
-        "Illusion": "Illusion",
-        "Necromancy": "Necromancy",
-        "Wake": "Wake"
+        "details": "Details",
+        "actions": "Actions",
+        "spells": "Spells",
+        "gear": "Gear",
+        "talents": "Talents",
+        "biography": "Biography",
+        "effects": "Effects",
+        "alteration": "Alteration",
+        "array": "Array",
+        "divination": "Divination",
+        "enchantment": "Enchantment",
+        "evocation": "Evocation",
+        "illusion": "Illusion",
+        "necromancy": "Necromancy",
+        "wake": "Wake"
       },
       "block": "Block",
       "dodge": "Dodge"
@@ -183,7 +183,7 @@
       },
       "arts": "Spell arts",
       "talents": "Required talents",
-      "stamina": "Stamina formula",
+      "stamina": "Stamina",
       "formula": "Roll formula",
       "type": "Type",
       "attack": "Attack",
@@ -195,11 +195,20 @@
       "flavor": "Flavor text",
       "range": "Range",
       "aoe": "Area of effect",
+      "aoeShort": "AoE",
       "duration": "Duration"
     },
     "SpellFeatures": {
       "cost": "PP Cost",
-      "costMultiplier": "Cost Variable",
+      "costMultiplier": "Math",
+      "CostMultiplier": {
+        "flat": "None / Flat",
+        "add": "Add",
+        "subtract": "Subtract",
+        "multiply": "Multiply",
+        "divide": "Divide",
+        "square": "Square"
+      },
       "art": "Artistry",
       "allowRedistribution": "Allow dice redistribution",
       "doesTarget": "Creates target",
@@ -212,12 +221,46 @@
         "nameY": "Var Y",
         "nameZ": "Var Z",
         "none": "None",
-        "delete": "Remove Variable",
+        "delete": "Remove",
         "new": "New Variable",
         "number": "Number",
         "options": "Options",
         "text": "Text",
-        "dice": "Dice"
+        "dice": "Dice",
+        "diceDescription": "Base Dice: "
+      },
+      "Range": {
+        "meters": "Meters",
+        "kilometers": "Kilometers"
+      },
+      "DurationRequirements": {
+        "none": "None",
+        "focus": "Focus",
+        "concentration": "Concentration"
+      },
+      "Duration": {
+        "turns": "Turns",
+        "minutes": "Minutes",
+        "hours": "Hours",
+        "days": "Days",
+        "months": "Months",
+        "years": "Years"
+      },
+      "modifies": "Special Modification",
+      "Modifies": {
+        "none": "None",
+        "range": "Range",
+        "aoe": "Area of Effect",
+        "duration": "Duration"
+      },
+      "Modifications": {
+        "value": "Value",
+        "unit": "Unit",
+        "dispelActionCost": "Dispel Action Cost",
+        "dispelInterruptCost": "Dispel Interrupt Cost",
+        "variable": "Variable",
+        "requirements": "Requirements",
+        "shape": "Shape"
       },
       "targetType": "Target Type",
       "TargetType": {
@@ -226,7 +269,12 @@
         "attach": "Attach"
       },
       "templateType": "Template",
-      "templateAngle": "Cone Angle"
+      "templateAngle": "Cone Angle",
+      "Tabs": {
+        "attributes": "Attributes",
+        "description": "Description",
+        "variables": "Variables"
+      }
     },
     "Actions": {
       "Tabs": {
@@ -247,6 +295,7 @@
       "rules": "Rules",
       "trigger": "Trigger",
       "recharge": "Recharge",
+      "stamina": "Stamina Cost",
       "requirements": "Requirements",
       "target": "Target",
       "Trigger": {
@@ -333,6 +382,7 @@
       "talent": "Talent",
       "spell": "Spell",
       "species": "Species",
+      "spellFeature": "Spell Feature",
       "weapon": "Weapon",
       "action": "Action"
     }

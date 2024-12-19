@@ -1,5 +1,5 @@
 import { UtopiaTrigger } from "../helpers/runTrigger.mjs";
-import { UtopiaUserVisibility } from "../helpers/user-visibility.mjs";
+import { UtopiaUserVisibility } from "../helpers/userVisibility.mjs";
 import { UtopiaItem } from "./item.mjs";
 
 export class UtopiaChatMessage extends ChatMessage {

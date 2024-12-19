@@ -1,11 +1,7 @@
-import isNumeric from "../helpers/numeric.mjs";
-import searchTraits from "../helpers/searchTraits.mjs";
+import { isNumeric, searchTraits, shortToLong, longToShort, calculateTraitFavor, runTrigger } from "../helpers/_module.mjs";
+import { UtopiaSubtraitSheetV2 } from "../sheets/other/subtrait-sheet.mjs";
+import { UtopiaTalentTreeSheet } from "../sheets/other/talent-tree-sheet.mjs";
 import { UtopiaChatMessage } from "./chat-message.mjs";
-import { shortToLong, longToShort } from "../helpers/traitNames.mjs";
-import { calculateTraitFavor } from "../helpers/favorHandler.mjs";
-import { runTrigger, UtopiaTrigger } from "../helpers/runTrigger.mjs";
-import { UtopiaTalentTreeSheetV2 } from "../sheets/talent-tree-sheet-v2.mjs";
-import { UtopiaSubtraitSheetV2 } from "../sheets/subtrait-sheet.mjs";
 
 /**
  * Extend the base A[c]tor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -50,7 +46,7 @@ export class UtopiaActor extends Actor {
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {
+  async _prepareCharacterData(actorData) {
     if (actorData.type !== 'character') return;
 
     // Make modifications to data here. For example:
@@ -60,25 +56,85 @@ export class UtopiaActor extends Actor {
     let mindScore = 0;
     let soulScore = 0;
 
+    let artistries = [];
+
     for (let i of actorData.items) {
       if (i.type === 'talent') {
-        bodyScore += i.system.points.body;
-        mindScore += i.system.points.mind;
-        soulScore += i.system.points.soul;
+        bodyScore += parseInt(i.system.points.body);
+        mindScore += parseInt(i.system.points.mind);
+        soulScore += parseInt(i.system.points.soul);
+
+        if (i.system.category && i.system.category.toLowerCase().includes("artistry")) {
+          artistries.push(Array.from(i.system.choices)[0]);
+        }
       }
     }
 
-    actorData.system.points.body = bodyScore;
-    actorData.system.points.mind = mindScore;
-    actorData.system.points.soul = soulScore;
+    actorData.system.artistries = artistries;
 
-    const lvl = actorData.system.attributes.level.value;
+    actorData.system.points.body = parseInt(bodyScore);
+    actorData.system.points.mind = parseInt(mindScore);
+    actorData.system.points.soul = parseInt(soulScore);
+
+    // Do we calculate the level from the experience,
+    // or do we calculate the experience from the level?
+
+    // Characters start at level 10, with 0 XP total,
+    // Each level increases the XP requirement by 100
+    // I think we have a global EXP value for the character
+    // which is used to calculate both the level and the
+    // experience required for the next level.
+
+    // The SRD states that the level is equivalent to the
+    // sum of all unspent, and spent, Talent Points.
+
+    // The SRD also states that the EXP required for the next
+    // level is equal to the current level * 100.
+
+    // Ensure experience and level are initialized
+    if (!actorData.system.experience) {
+      actorData.system.experience = { value: 0 };
+    }
+
+    if (typeof actorData.system.level !== 'number') {
+      actorData.system.level = 10;
+    }
+
+    // Ensure experience.value is a number
+    actorData.system.experience.value = Number(actorData.system.experience.value) || 0;
+
+    // Calculate the current level based on total experience
+    actorData.system.level = calculateLevelFromExperience(actorData.system.experience.value);
+
+    // Calculate experience thresholds for the current and next levels
+    actorData.system.experience.previous = getTotalExpForLevel(actorData.system.level);
+    actorData.system.experience.next = getTotalExpForLevel(actorData.system.level + 1);
+
+    // Functions for experience calculations
+    function getTotalExpForLevel(N) {
+      // Characters start at level 10 with 0 XP
+      if (N <= 10) return 0;
+      return 100 * (((N - 1) * N) / 2 - 45);
+    }
+
+    function calculateLevelFromExperience(expValue) {
+      // Solve the quadratic equation: N^2 - N - 2S = 0
+      let S = expValue / 100 + 45;
+      let discriminant = 1 + 8 * S;
+      let sqrtDiscriminant = Math.sqrt(discriminant);
+      let N = (1 + sqrtDiscriminant) / 2;
+      return Math.floor(N);
+    }
+
+    actorData.system.points.talent = actorData.system.level - (actorData.system.points.body + actorData.system.points.mind + actorData.system.points.soul);
+
     const body = actorData.system.points.body;
     const mind = actorData.system.points.mind;
     const soul = actorData.system.points.soul;
     const con = actorData.system.attributes.constitution;
     const end = actorData.system.attributes.endurance;
     const eff = actorData.system.attributes.effervescence;
+    const lvl = actorData.system.level;
 
     // Surface HP (SHP) is calculated from Body points
     actorData.system.shp.max = body * con + lvl;
@@ -203,14 +259,21 @@ export class UtopiaActor extends Actor {
       data.dodge = data.dodge.quantity + 'd' + data.dodge.size;
     }
 
-    // Add level for easier access, or fall back to 0.
-    if (data.attributes.level) {
-      data.lvl = data.attributes.level.value ?? 0;
-    }
+    data.talents = {}
+    this.items.filter(f => f.type === 'talent').forEach(t => {
+      data.talents[t.name] = parseInt(t.system.points.body) + parseInt(t.system.points.mind) + parseInt(t.system.points.soul);
+    });
 
+    data.specialists = {}
+    this.items.filter(f => f.type === 'specialistTalent').forEach(t => {
+      data.specialists[t.name] = 1;
+    });
+    
     // Prepare character roll data.
     this._getCharacterRollData(data);
     this._getNpcRollData(data);
+
+    console.log(data);
     
     return data;
   }
@@ -220,8 +283,6 @@ export class UtopiaActor extends Actor {
    */
   _getCharacterRollData(data) {
     if (this.type !== 'character') return;
-
-
   }
 
   /**
@@ -242,7 +303,7 @@ export class UtopiaActor extends Actor {
   }
 
   async openTalentTree() {
-    let newSheet = new UtopiaTalentTreeSheetV2({actor: this});
+    let newSheet = new UtopiaTalentTreeSheet({actor: this});
     newSheet.actor = this;
     
     // Render the talent sheet
@@ -304,6 +365,18 @@ export class UtopiaActor extends Actor {
     })
   }
 
+  async levelUp() {
+    console.log("Level up: ", this.system);
+    await this.update({
+      ['system.points.talent']: this.system.points.talent + 1,
+      ['system.experience.value']: this.system.experience.value - this.system.experience.next,
+      ['system.level']: this.system.points.talent + this.system.points.body + this.system.points.mind + this.system.points.soul,
+      ['system.experience.next']: this.system.level * 100,
+      ['system.points.specialist']: this.system.level % 10 === 0 ? this.system.points.specialist + 1 : this.system.points.specialist
+    });
+    console.log("Post level up: ", this.system);
+  }
+
   async performCheck(trait, data = {}) {
     let formulaTrait = trait;
 
@@ -317,7 +390,6 @@ export class UtopiaActor extends Actor {
 
     let formula = `${totalCheck}d6 + @${formulaTrait}.mod`;
 
-    console.log(formula);
     let rollData = this.getRollData();
     let roll = await new Roll(formula, rollData).roll();
     let tooltip = await roll.getTooltip();
@@ -363,13 +435,43 @@ export class UtopiaActor extends Actor {
     }
   }
 
+  async spendStamina(cost) {
+    if (this.system.stamina.value - cost < 0) {
+      const remaining = cost - this.system.stamina.value;
+      this.applyDamage({
+        damage: remaining,
+        type: "dhp"
+      }, noActionResponse = true);
+    }
+  }
+
   async castSpell(spell) {
-    console.log(spell);
+    let cost = spell.system.cost;
+    let rollData = this.getRollData();
+    console.log("Casting spell!", spell, cost, rollData);
+
+    if (rollData.system.castDiscount) {
+      cost = Math.max(spell.system.cost - rollData.system.castDiscount, 1);
+    }
+
+    if (this.system.spellcap <= cost) {
+      this.update({
+        ['system.stamina.value']: this.system.stamina.value - cost
+      })
+    } else {
+      ui.notifications.error("Your spellcap is too low to cast this spell!");
+    }
+
     spell.roll();
   }
 
   async performAction(action, data = {}, chatMessage = {}) {
     console.log(action, data, chatMessage);
+
+    if (this.inCombat) {
+      const canPerform = await this.handleCombatActions(action, data, chatMessage);
+      if (!canPerform) return;
+    }
 
     const system = action.system;
     let formula = system.formula;
@@ -397,8 +499,7 @@ export class UtopiaActor extends Actor {
     let tooltip = await roll.getTooltip();
     roll.tooltip = tooltip;
 
-    if (chatMessage) {
-      console.log(chatMessage);
+    if (Object.keys(chatMessage).length !== 0) {
       const template = "systems/utopia/templates/chat/trigger-card.hbs";
       const data = {
         actor: this,
@@ -406,12 +507,11 @@ export class UtopiaActor extends Actor {
         tooltip: tooltip,
         total: roll.total,
       }
-      const newMessage = await chatMessage.update({
+      await chatMessage.update({
         content: await renderTemplate(template, data),
         rollMode: game.settings.get('core', 'rollMode'),
         sound: CONFIG.sounds.dice,
       });
-      console.log(chatMessage);
     } else {
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this }),
@@ -420,6 +520,92 @@ export class UtopiaActor extends Actor {
       });
     }
   }
+
+  async handleCombatActions(action, data, chatMessage) {
+    const turns = game.combat.turns;
+    const turn = game.combat.turn;
+    const combatant = turns[turn].actor;
+    const cost = action.system.cost;
+
+    console.log(combatant, this, action);
+
+    // It is NOT my turn, and the action is an Interrupt Action
+    if (combatant !== this && action.isReaction) {
+      // If the actor has 1 IA, they can perform an interrupt
+      if (this.system.actions.interrupt.value >= cost) {
+        this.update({
+          ['system.actions.interrupt.value']: this.system.actions.interrupt.value - cost
+        });
+        return true;
+      } 
+      // If the actor doesn't have enough IA to perform the interrupt
+      // we need to check if they have enough TA to perform the interrupt
+      // It costs 1 Turn Actions to perform an interrupt
+      else if (this.system.actions.turn.value >= cost) {
+        this.update({
+          ['system.actions.turn.value']: this.system.actions.turn.value - cost
+        });
+        return true;
+      }
+      // If neither of these conditions are met, they cannot perform the action
+      else {
+        ui.notifications.error(`${this.name} does not have 1 Interrupt Action or 1 Turn Action to perform this action!`);
+        return false;
+      }
+    }
+
+    // It is NOT my turn, and the action is a Turn Action
+    else if (combatant !== this && !action.isReaction) {
+      // If the actor has 2 IA, they can perform the action
+      if (this.system.actions.interrupt.value >= (cost * 2)) {
+        this.update({
+          ['system.actions.interrupt.value']: this.system.actions.turn.value - (cost * 2)
+        });
+        return true;
+      }
+      // If the actor doesn't have enough IA to perform the action,
+      // they cannot perform the action
+      else {
+        ui.notifications.error(`${this.name} does not have 2 Interrupt Actions to perform this action!`);
+        return false;
+      }
+    }
+
+    // It is my turn, and the action is a Turn Action
+    else if (combatant === this && !action.isReaction) {
+      // If the actor has enough TA, they can perform the action
+      if (this.system.actions.turn.value >= cost) {
+        this.update({
+          ['system.actions.turn.value']: this.system.actions.turn.value - cost
+        });
+        return true;
+      }
+      // If the actor doesn't have enough TA to perform the action,
+      // they cannot perform the action
+      else {
+        ui.notifications.error(`${this.name} does not have enough Turn Actions to perform this action!`);
+        return false;
+      }
+    }
+
+    // It is my turn, and the action is an Interrupt Action
+    else if (combatant === this && action.isReaction) {
+      // If the actor has 1 TA, they can perform the action
+      if (this.system.actions.turn.value >= cost) {
+        this.update({
+          ['system.actions.turn.value']: this.system.actions.turn.value - cost
+        });
+        return true;
+      }
+      // If the actor doesn't have enough TA to perform the action,
+      // they cannot perform the action
+      else {
+        ui.notifications.error(`${this.name} does not have 1 Turn Action to perform this action!`);
+        return false;
+      }
+    }
+  }
+
 
   // We need to split the applyDamage function into multiple functions
   // One of them should calculate the SHP and DHP damage being dealt
@@ -434,8 +620,13 @@ export class UtopiaActor extends Actor {
     let type = data.type;
 
     type = type.toLowerCase().trim();
-    let defense = this.system.defenses[type] || 1;
-    let total = damage - defense;
+    let total = 0;
+    if (type === "kinetic" || type === "dhp" || type === "shp") {
+      total = damage;
+    } else {
+      let defense = this.system.defenses[type] || 1;
+      total = damage - defense;
+    }
 
     if (total < 0) {
       total = 0;
@@ -444,22 +635,35 @@ export class UtopiaActor extends Actor {
     let shp = this.system.shp.value;
     let dhp = this.system.dhp.value;
 
-    // 24 SHP - 30 Damage = 0 SHP, 6 DHP    
-    let newShp = shp - total;
+    let newShp = shp;
     let newDhp = dhp;
-    
-    let shpDamageTaken = total;
+
+    let shpDamageTaken = 0;
     let dhpDamageTaken = 0;
 
-    if (newShp < 0) {
-      shpDamageTaken = shp;
-      let remaining = Math.abs(newShp);
-      dhpDamageTaken = remaining;
-      newShp = 0;
-      
-      newDhp = dhp - remaining;
-    }
+    if (type === "dhp") {
+      newShp = shp;
+      newDhp = dhp - total;
 
+      dhpDamageTaken = total;
+    } else {
+      // 24 SHP - 30 Damage = 0 SHP, 6 DHP    
+      newShp = shp - total;
+      newDhp = dhp;
+
+      shpDamageTaken = total;
+      dhpDamageTaken = 0;
+  
+      if (newShp < 0) {
+        shpDamageTaken = shp;
+        let remaining = Math.abs(newShp);
+        dhpDamageTaken = remaining;
+        newShp = 0;
+        
+        newDhp = dhp - remaining;
+      }
+    }  
+  
     return { damage: damage, shpDamageTaken, dhpDamageTaken, newShp, newDhp };
   }
 
@@ -484,6 +688,10 @@ export class UtopiaActor extends Actor {
   }
 
   async applyDamage(data, noActionResponse = false) {
+    if (data.damage < 0) {
+      this.applyHealing(data.damage, data.type, data.source);
+    }
+
     let calculatedDamage = await this.calculateDamage(data);
     console.log(calculatedDamage);
     if (!noActionResponse) {
@@ -502,7 +710,7 @@ export class UtopiaActor extends Actor {
     const automate = game.settings.get('utopia', 'autoRollContests');
     if (automate === 1) { // Prompt to perform condition checks
       if (statuses.includes('concentration')) {
-        templateData = chatMessage.system.templateData;
+        let templateData = chatMessage.system.templateData;
         templateData.concentration = true;
         templateData.automate = true;
 

@@ -3,7 +3,7 @@
  * @param {Item} item - The item being used for the attack.
  * @returns {Promise<boolean>} Whether the attack can proceed based on range.
  */
-export default async function rangeTest(item, target) {
+export async function rangeTest(item, target) {
   // Get the user's selected token.
   let userToken = canvas.tokens.controlled[0];
   if (!userToken) {

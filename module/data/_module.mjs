@@ -1,13 +1,16 @@
 // Export Actors
 export {default as UtopiaActorBase} from "./base-actor.mjs";
-export {default as UtopiaCharacter} from "./actor-character.mjs";
-export {default as UtopiaNPC} from "./actor-npc.mjs";
+export {default as UtopiaCharacter} from "./actor/actor-character.mjs";
+export {default as UtopiaNPC} from "./actor/actor-npc.mjs";
 
 // Export Items
 export {default as UtopiaItemBase} from "./base-item.mjs";
-export {default as UtopiaItem} from "./item-item.mjs";
-export {default as UtopiaTalent} from "./item-talent.mjs";
-export {default as UtopiaSpecies} from "./item-species.mjs";
-export {default as UtopiaSpell} from "./item-spell.mjs";
-export {default as UtopiaAction} from "./item-action.mjs";
-export {default as UtopiaSpellFeature} from "./item-spell-feature.mjs";
+export {default as UtopiaTalent} from "./item/item-talent.mjs";
+export {default as UtopiaSpecies} from "./item/item-species.mjs";
+export {default as UtopiaAction} from "./item/item-action.mjs";
+export {default as UtopiaSpellFeature} from "./item/item-spell-feature.mjs";
+export {default as UtopiaSpellVariable} from "./item/item-spell-variable.mjs";
+export {default as UtopiaSpecialistTalent} from "./item/item-specialist-talent.mjs";
+
+// Export Users
+export { default as UtopiaUser } from "./user.mjs";

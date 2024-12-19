@@ -24,21 +24,40 @@
   box-shadow: none;
 }
 
+#tooltip:has(.spellcraft-options-sheet) {
+  border: 1px solid white;
+  border-radius: 5px;
+  box-shadow: none;
+  pointer-events: initial;
+  background: black;
+
+  &:hover{
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
 /* Styles limited to utopia sheets */
 .utopia {
-  @import 'components/forms';
-  @import 'components/resource';
-  @import 'components/items';
-  @import 'components/effects';
-  @import 'components/tables';
-  @import 'components/spell-sheet';
-  @import 'components/actor-sheet-v2';
-  @import 'components/options-sheet';
-  @import 'components/attack-sheet';
-  //@import 'components/talent-sheet-v2';
-  @import 'components/action-sheet';
-  @import 'components/chat-cards';
-  @import 'components/spell-tab';
-  @import 'components/subtrait-sheet';
-  @import 'components/talent-tree';
+  @import 'components/general/resource';
+  @import 'components/general/forms';
+  @import 'components/general/effects';
+  @import 'components/general/tables';
+  @import 'components/general/items';
+  
+  @import 'components/actor/actor-sheet-v2';
+  
+  //@import 'components/item/spell-sheet';
+  @import 'components/item/action-sheet';
+  @import 'components/item/spell-tab';
+  @import 'components/item/spell-feature-sheet';
+  @import 'components/item/specialist-talent-sheet';
+  
+  @import 'components/other/options-sheet';
+  @import 'components/other/attack-sheet';
+  @import 'components/other/subtrait-sheet';
+
+  @import 'components/chat/chat-cards';
+  @import 'components/talent-tree/talent-tree';
+  @import 'components/spellcraft/spellcraft';
 }

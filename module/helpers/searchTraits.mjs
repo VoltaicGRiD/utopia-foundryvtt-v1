@@ -1,6 +1,6 @@
 import { longToShort, shortToLong } from "./traitNames.mjs";
 
-export default async function searchTraits(traits, subtrait) {
+export async function searchTraits(traits, subtrait) {
   // Get both length versions of the trait
   let long = shortToLong(subtrait.toLowerCase());
   let short = longToShort(subtrait.toLowerCase());

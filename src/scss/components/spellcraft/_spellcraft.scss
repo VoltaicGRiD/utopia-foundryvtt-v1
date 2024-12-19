@@ -1,0 +1,224 @@
+.spellcraft {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  gap: 10px;
+}
+
+.spellcraft-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: start;
+  gap: 10px;
+}
+
+.artistries {
+  max-height: 30px;
+  gap: 10px;
+}
+
+.artistry-icon {
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  fill: black !important;
+  border: none;
+  position: absolute;
+  left: 0;
+}
+
+.artistry {
+  position: relative;
+  height: 30px;
+  width: 150px;
+  color: white;
+  background-color: black;
+}
+
+.artistry.active {
+  color: black;
+  background-color: white;
+  border: none;
+}
+
+.feature-select {
+  width: 100%;
+}
+
+.feature-list {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+  overflow: auto;
+  height: 94%;
+}
+
+.feature {
+  margin-top: 5px;
+  position: relative;
+  height: 25px;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.feature-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  padding: 2px;
+  fill: black !important;
+  border: none;
+}
+
+.feature-name {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-55%);
+  height: 15px;
+  font-size: 15px;
+}
+
+.feature-controls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 25px;
+  display: flex;
+}
+
+.remove-feature, .favorite-feature {
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  padding: 2px;
+  border: none;
+  background-color: #ed3f41;
+
+  & i {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 20%;
+    left: 0;
+  }
+}
+
+.feature-variable input[type="number"] {
+  background-color: white;
+  color: black;
+  position: relative;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  padding: 2px;
+  border: none;
+  margin: 0;
+}
+
+.feature-variable .feature-variable-character {
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  width: 25px;
+}
+
+.feature-variable button {
+  position: relative;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  padding: 2px;
+  border: none;
+  margin: 0;
+
+  & i {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 20%;
+    left: 0;
+  };
+}
+
+.feature-variable-options.unset {
+  background-color: #ed3f41;
+}
+
+.spell-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spell-features {
+  width: 100%;
+}
+
+.selected-feature-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0 10px;
+}
+
+.spell-name {
+  width: 100%;
+  height: 35px;
+
+  & input {
+    font-size: 1.5em;
+  }
+}
+
+.spell-attributes {
+  width: 100%;
+
+  & .flexrow {
+    border: 1px solid rgb(92, 92, 92);
+    padding: 0.5em;
+    height: 100%;
+  }
+
+  & .spell-duration, & .spell-range, & .spell-aoe, & .spell-cost {
+    font-size: 1em;
+    font-weight: 700;
+  }
+
+  & .spell-duration-value, & .spell-range-value, & .spell-aoe-value, & .spell-cost-value {
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-left: 1em;
+  }
+}
+
+.spell-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tooltip-option {
+  background: #403e4e;
+  border: 1px solid #c9593f;
+}
+
+.tooltip-option.active {
+  background: #688b1b;
+  border: 1px solid white;
+}
