@@ -45,8 +45,18 @@
   @import 'components/general/tables';
   @import 'components/general/items';
   
-  @import 'components/actor/actor-sheet-v2';
+  &.spellcraft-sheet {
+    @import 'components/spellcraft/spellcraft';
+  }
   
+  &.actor-sheet {
+    @import 'components/actor/actor-sheet-v2';
+  }
+
+  &.spell-sheet {
+    @import 'components/spellcraft/spellcraft';
+  }
+
   //@import 'components/item/spell-sheet';
   @import 'components/item/action-sheet';
   @import 'components/item/spell-tab';
@@ -59,5 +69,5 @@
 
   @import 'components/chat/chat-cards';
   @import 'components/talent-tree/talent-tree';
-  @import 'components/spellcraft/spellcraft';
 }
+

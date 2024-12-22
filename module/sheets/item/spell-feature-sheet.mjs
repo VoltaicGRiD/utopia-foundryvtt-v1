@@ -255,11 +255,14 @@ export class UtopiaSpellFeatureSheet extends api.HandlebarsApplicationMixin(shee
   }
 
   static async _removeVariable(event) {
-    let id = event.target.dataset.variableId;
+    let id = event.target.dataset.variable;
     let data = this.document.system.variables;
+
+    console.log(this, id, data);
     
     await this.document.update({
       [`system.variables.-=${id}`]: null,
     });
+    this.render();
   }
 }

@@ -179,3 +179,56 @@
     }
   }
 }
+
+.spell-list > .grid.grid-3col {
+  align-items: start;
+}
+
+.spell {
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 0px 5px 0 5px;
+  flex-wrap: wrap;
+  
+  .spell-name, .spell-cost {
+    position: static;
+    top: 0;
+    line-height: 24px;
+    padding: 0 5px;
+    text-align: left;
+    color: white;
+    filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+  }
+
+  .spell-name {
+    left: 0;
+  }
+  
+  .spell-cost {
+    right: 0;
+  }
+
+  .spell-controls {
+    position: static;
+    left: 0;
+    top: 24px;
+    width: 100%;
+    height: 24px;
+    flex-direction: row;
+
+    & a {
+      width: 100%;
+      text-align: center;
+      line-height: 24px;
+      filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+
+
+      &:hover {
+        background-color: #ff0000;
+        color: white;
+      }
+    }
+  }
+}

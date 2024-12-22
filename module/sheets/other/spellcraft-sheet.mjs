@@ -3,7 +3,7 @@ const { api, sheets } = foundry.applications;
 import Tagify from '../../../lib/tagify/tagify.esm.js';
 import { UtopiaSpellVariable } from '../../data/_module.mjs';
 import { UtopiaItem } from '../../documents/item.mjs';
-import { gatherSpells } from '../../helpers/gatherSpells.mjs';
+import { gatherSpellFeatures, gatherSpells } from '../../helpers/gatherSpells.mjs';
 import { getTextContrast } from '../../helpers/textContrast.mjs';
 
 export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
@@ -13,6 +13,7 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
   secretFeatures = {};
   filter = "";
   actor = {};
+  spells = [];
 
   constructor(options = {}) {
     super(options);
@@ -26,6 +27,9 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     },
     actions: {
       image: this._image,
+      saveAndCast: this._saveAndCast,
+      save: this._save,
+      cast: this._cast,
     },
     window: {
       title: "UTOPIA.SheetLabels.spellcraft",
@@ -35,12 +39,15 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
   static PARTS = {
     content: {
       template: "systems/utopia/templates/other/spellcraft/spellcraft.hbs",
+      scrollable: [".feature-list"],
     },
     column: {
       template: "systems/utopia/templates/other/spellcraft/features.hbs",
+      scrollable: [''],
     },
     spell: {
       template: "systems/utopia/templates/other/spellcraft/spell.hbs",
+      scrollable: [''],
     }
   };
 
@@ -53,8 +60,12 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     if (options.isFirstRender) {
       const features = {};
 
-      const retreivedFeatures = await gatherSpells();
-      retreivedFeatures.sort((a, b) => a.folder.name.localeCompare(b.folder.name) || a.name.localeCompare(b.name) || b.cost - a.cost); 
+      const retreivedFeatures = await gatherSpellFeatures();
+      retreivedFeatures.sort((a, b) => {
+        a.folder = a.folder || {name: "Uncategorized", color: {rgb: "#000000", css: "#000000"}};
+        b.folder = b.folder || {name: "Uncategorized", color: {rgb: "#000000", css: "#000000"}};
+        return a.folder.name.localeCompare(b.folder.name) || a.name.localeCompare(b.name) || b.cost - a.cost
+      }); 
       
       const artistries = {};
 
@@ -68,12 +79,7 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
         f.value = "";
         f.stacks = 1;
 
-        if (this.actor && Object.keys(this.actor).length === 0) {
-          const actorArtistries = this.actor.system.items.filter(i => i.type === "talent");
-          
-        }
-
-        if (game.user._favorites["spellFeatures"].includes(f._id)) {
+        if (game.user.flags.favorites["spellFeature"].includes(f._id)) {
           f.favorite = true;
         } else {
           f.favorite = false;
@@ -95,6 +101,14 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
           }
         }
 
+        if (f.system.formula && f.system.formula.length > 0) {
+          f.hasFormula = true;
+          f.customFormula = false;
+        } else {
+          f.hasFormula = false;
+          f.customFormula = false;
+        }
+
         let artistryKeys = Object.keys(artistries);
         if (!artistryKeys.includes(f.folder.name)) {
           let artistryData = {
@@ -114,6 +128,52 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
         index++;
       });
 
+      this.worldSpells = {};
+
+      if (Object.keys(this.actor).length > 0) {
+        this.actor.system.items.forEach(i => {
+          if (i.type === "spell") {
+            this.worldSpells[i.uuid] = i;
+          }
+        });
+      } 
+      else if (game.user.character !== null) {
+        if (game.user.character.items && game.user.character.items.length > 0) {
+          game.user.character.items.forEach(i => {
+            if (i.type === "spell") {
+              this.worldSpells[i.uuid] = i;
+            }
+          });
+        }
+      }
+      else if (game.canvas.tokens.controlled.length > 0) {
+        const actor = game.canvas.tokens.controlled[0].actor;
+        if (actor.system.items && actor.system.items.length > 0) {
+          actor.system.items.forEach(i => {
+            if (i.type === "spell") {
+              this.worldSpells[i.uuid] = i;
+            }
+          });
+        }
+      } 
+      else if (game.user.isGM) {
+        game.actors.forEach(a => {
+          if (a.system.items && a.system.items.length > 0) {
+            a.system.items.forEach(i => {
+              if (i.type === "spell") {
+                this.worldSpells[i.uuid] = i;
+              }
+            });
+          }
+        });
+      }
+
+      const existingSpells = await gatherSpells();
+      console.log(existingSpells);
+      existingSpells.forEach(s => {
+        if (s.uuid !== undefined) this.worldSpells[s.uuid] = s;
+      });
+
       this.artistries = artistries;      
       this.features = features;
       this.selected = {};
@@ -124,13 +184,40 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       this.rangeOut = "";
       this.aoe = "None";
       this.name = "Unnamed Spell";
+      this.flavor = "";
+      this.worldSpells = {};
+      this.allowRedistribution = game.settings.get("utopia", "diceRedistribution");
     } else {
+      if (options["item"]) {
+        this.selected = options["item"].system.features;
+      }
+
       await this.updateSpell();
     }
 
+    const existingSpells = await gatherSpells();
+    existingSpells.sort((a, b) => {
+      let features = Object.keys(a.system.features).length - Object.keys(b.system.features).length;
+      let name = a.name.localeCompare(b.name);
+      let cost = a.system.cost - b.system.cost;
+      return features || name || cost;
+    })
+    console.log(existingSpells);
+    existingSpells.forEach(s => {
+      if (s.uuid !== undefined)
+        this.worldSpells[s.uuid] = s;
+      else
+        this.worldSpells[s.id] = s;
+    });
+
+    await this.getFavorites();
     await this.applyFilter();
     await this.parseSpell();
-          
+    
+    const entries = Object.entries(this.remainingFeatures);
+    entries.sort((a, b) => b[1].favorite - a[1].favorite);  
+    this.remainingFeatures = Object.fromEntries(entries);
+
     const context = {
       filter: this.filter,
       artistries: this.artistries,
@@ -141,6 +228,9 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       aoe: this.aoe,
       name: this.name,
       cost: this.cost,
+      flavor: this.flavor,
+      worldSpells: this.worldSpells,
+      allowRedistribution: this.allowRedistribution,
     }
 
     console.log(context);
@@ -160,7 +250,15 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     available.forEach(f => {
       f.draggable = true;
       f.addEventListener("dragstart", (event) => {
-        event.dataTransfer.setData("text", f.dataset.id);
+        event.dataTransfer.setData("text", JSON.stringify({id: f.dataset.id, type: "feature"}));
+      });
+    });
+
+    const spells = this.element.querySelectorAll(".spell");
+    spells.forEach(s => {
+      s.draggable = true;
+      s.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text", JSON.stringify({id: s.dataset.id, type: "spell"}));
       });
     });
 
@@ -201,15 +299,37 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
         const name = event.target.closest("li").dataset.name;
         const id = event.target.closest("li").dataset.id;
         const feature = this.features[id];
-        if (feature.favorite) {
-          feature.favorite = false;
-          game.user.removeFavorite("spellFeatures", name);
+        if (feature.favorite === true) {
+          await this.removeFavorite(feature);
+          this.render();
         } else {
-          feature.favorite = true;
-          game.user.addFavorite("spellFeatures", name);
+          await this.addFavorite(feature);
+          this.render();
         }
-        await game.user.updateFavorites(game.user._favorites);
-        this.render();
+      });
+    });
+
+    this.element.addEventListener("dragover", (event) => {
+      this.element.querySelector('.spell-panel').classList.add("dragging");
+    });
+    this.element.addEventListener("dragleave", (event) => {
+      this.element.querySelector('.spell-panel').classList.remove("dragging");
+    });
+    this.element.addEventListener("drop", (event) => {
+      this.element.querySelector('.spell-panel').classList.remove("dragging");
+    });
+
+    const spellFeaturesList = document.querySelector('.feature-list');
+    const itemHeight = 25; // Height of each item
+    const itemGap = 5; // Gap between items
+    const scrollAmount = itemHeight + itemGap; // Total scroll amount per item
+
+    spellFeaturesList.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      const delta = Math.sign(event.deltaY);
+      spellFeaturesList.scrollBy({
+        top: delta * scrollAmount,
+        behavior: 'auto'
       });
     });
 
@@ -219,15 +339,26 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     });
     spell.addEventListener("drop", async (event) => {
       event.preventDefault();
-      const id = event.dataTransfer.getData("text");
-      const feature = this.features[id];
-      if (!feature) return;
-      const length = Object.keys(this.selected).length;
-      const newId = `selected-${length}`;
-      
-      this.selected[newId] = JSON.parse(JSON.stringify(feature));
-      this.selected[newId].variables = JSON.parse(JSON.stringify(feature.system.variables));      
-      this.render();
+      const data = JSON.parse(event.dataTransfer.getData("text"));
+      if (data.type === "feature") {
+        const id = data.id;
+        const feature = this.features[id];
+        if (!feature) return;
+        const length = Object.keys(this.selected).length;
+        const newId = `selected-${length}`;
+        
+        this.selected[newId] = JSON.parse(JSON.stringify(feature));
+
+        this.render();
+      }
+      else if (data.type === "spell") {
+        const id = data.id;
+        const spell = this.worldSpells[id];
+        console.log(id, spell);
+        if (!spell) return;
+        await this.addSpell(spell);
+        this.render();
+      }
     });
 
     const name = this.element.querySelector("input[name='name']");
@@ -235,9 +366,28 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       this.name = event.target.value;
     });
 
+    const textVariables = this.element.querySelectorAll("input[class='feature-variable-text']");
+    textVariables.forEach(v => {
+      v.addEventListener("change", (event) => {
+        const featureId = event.target.dataset.feature;
+        const variableId = event.target.dataset.variable;
+        const value = event.target.value;
+
+        const parentList = event.target.closest("ol");
+        const selected = parentList.classList.contains("selected-feature-list") ? this.selected : this.features;
+        const feature = selected[featureId];
+
+        const variable = feature.system.variables[variableId];
+        variable.value = value;
+        selected[featureId].system.variables[variableId] = variable;
+        
+        this.render();
+      });
+    });
+
     const numVariables = this.element.querySelectorAll("input[type='number']");
     numVariables.forEach(v => {
-      v.addEventListener("change", (event) => {
+      v.addEventListener("change", async (event) => {
         const featureId = event.target.dataset.feature;
         const variableId = event.target.dataset.variable;
         const value = event.target.value;
@@ -248,15 +398,14 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
 
         const variable = feature.system.variables[variableId];        
         variable.value = parseInt(value);
-        selected[featureId].variables[variableId] = variable;
+        selected[featureId].system.variables[variableId] = variable;
 
         if (variable.name === "cost") {
           const cost = feature.system.cost * value;
           selected[featureId].cost = `${cost} PP`;
           let parent = event.target.closest('li');
-          console.log("cost parent", parent);
           parent.querySelector("span[class='cost']").innerHTML = `${cost} PP`;
-        } 
+        }
         
         if (variable.name === "stacks") {
           selected[featureId].stacks = parseInt(value);
@@ -271,45 +420,73 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       v.addEventListener("click", async (event) => {
         const featureId = event.target.dataset.feature;
         const variableId = event.target.dataset.variable;
-        console.log(featureId, variableId);
-        const parent = event.target.closest("ol");
-        const selected = parent.classList.contains("selected-feature-list") ? this.selected : this.features;
-        console.log(selected[featureId].system.variables[variableId]);
-        let options = selected[featureId].system.variables[variableId].options;
-        if (typeof options === "string") {
-          options = options.split(",");
-        };
+        const parentList = event.target.closest("ol");
+        const selected = parentList.classList.contains("selected-feature-list") ? this.selected : this.features;
+        const name = selected[featureId].system.variables[variableId].name;
+        const options = selected[featureId].system.variables[variableId].options.split(',');   
+        const value = selected[featureId].system.variables[variableId].value || options[0];
+        const description = selected[featureId].system.variables[variableId].description || "No description provided.";
+        const template = await renderTemplate(
+          'systems/utopia/templates/dialogs/variable-options.hbs', 
+          {name: name, description: description, options: options, selected: value}
+        );
 
-        let content = await renderTemplate('systems/utopia/templates/other/spellcraft/tooltip.hbs', { 
-          name: selected[featureId].system.variables[variableId].name,
-          description: selected[featureId].system.variables[variableId].description,
-          options: options,
-          selected: selected[featureId].value
-        });
-        console.log("tooltip render:", options, content);
-        let element = document.createElement('div');
-        element.innerHTML = content;
-        element.classList.add("spellcraft-options-sheet");
-        game.tooltip.activate(event.target, { direction: 'UP', cssClass: "utopia spellcraft-options-sheet", content: element });
-        tooltip.style.bottom = tooltip.style.bottom - 10 + "px";
-        tooltip.style.lineHeight = "0.5em";
-        tooltip.querySelectorAll("button").forEach(o => {
-          o.addEventListener("click", async (tooltipEvent) => {
-            if (!tooltipEvent.target.classList.contains("active")) {
-              tooltipEvent.target.classList.add("active");
-              tooltipEvent.target.closest("div").querySelectorAll("button").forEach(b => {
-                if (b !== tooltipEvent.target) {
-                  b.classList.remove("active");
-                }
-              });
-              // Get closest list
-              const feature = selected[featureId];
-              feature.value = tooltipEvent.target.innerHTML;
-              console.log(feature);
-              this.render();
-            }
-          });
-        });
+        new api.DialogV2({
+          window: {title: `Options for ${name}`},
+          content: template,
+          buttons: [{
+            action: "save",
+            label: "Save",
+            default: true,
+            callback: (event, button, dialog) => button.form.elements["variable-option"].value
+          }],
+          submit: result => {
+            const feature = selected[featureId];
+            const variable = feature.system.variables[variableId];
+            console.log(event);
+            event.target.style.backgroundColor = "#90c96b";
+            event.target.style.color = "#000";
+            event.target.innerHTML = `&#x2713`;
+            variable.value = result;
+          }
+        }).render(true);
+      });
+    });
+
+    const formulaDown = this.element.querySelectorAll(".formula-down");
+    formulaDown.forEach(f => {
+      f.addEventListener("click", async (event) => {
+        console.log(event);
+        const featureId = event.target.dataset.feature;
+        const feature = this.selected[featureId];
+        let currentFormula = feature.currentFormula;
+        const options = Object.values(feature.formulaOptions)[0];
+
+        if (currentFormula === 0) return;
+        else currentFormula--;
+
+        this.selected[featureId].currentFormula = currentFormula;
+        this.selected[featureId].customFormula = true;
+        
+        this.render();
+      });
+    });
+
+    const formulaUp = this.element.querySelectorAll(".formula-up");
+    formulaUp.forEach(f => {
+      f.addEventListener("click", async (event) => {
+        const featureId = event.target.dataset.feature;
+        const feature = this.selected[featureId];
+        let currentFormula = feature.currentFormula;
+        const options = Object.values(feature.formulaOptions)[0];
+
+        if (currentFormula === options.length - 1) return;
+        else currentFormula++;
+
+        this.selected[featureId].currentFormula = currentFormula;
+        this.selected[featureId].customFormula = true;
+
+        this.render();
       });
     });
 
@@ -493,6 +670,61 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
 
     staminaCost = Math.ceil(ppCost / 10);
     this.cost = staminaCost;
+
+    this.prepareFormulaOptions();
+  }
+
+  static async _save() {
+    console.log("save", this);
+    if (Object.keys(this.selected).length === 0) return;
+
+    let selected = this.selected;
+    let name = this.name;
+    let duration = this.duration;
+    let range = this.range;
+    let aoe = this.aoe;
+    let flavor = this.flavor;
+    let cost = this.cost;
+
+    let spell = new UtopiaItem({
+      name: name,
+      type: "spell",
+      system: {
+        features: selected,
+        duration: duration,
+        range: range,
+        aoe: aoe,
+        flavor: flavor,
+        cost: cost,
+      }
+    });
+
+    if (this.actor && Object.keys(this.actor).length > 0) {
+      await this.actor.createEmbeddedDocuments("Item", [spell]);
+    }
+    else if (this.spells.length === 1) { // We need to update the current spell instead
+      console.log(this.spells[0]);
+      await this.spells[0].update({
+        name: name,
+        system: {
+          features: selected,
+          duration: duration,
+          range: range,
+          aoe: aoe,
+          flavor: flavor,
+          cost: cost,
+        }
+      });
+      console.log(this.spells[0]);
+    }
+    else {
+      const doc = await game.utopia.UtopiaItem.create(spell);
+      await game.packs.get('utopia.spells').importDocument(doc);
+      await doc.delete();
+      console.log(doc);
+    }
+
+    this.render();
   }
 
   async applyFilter() {
@@ -501,7 +733,7 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       terms = this.filter.split(" ");
     else 
       terms.push(this.filter);
-    console.log(terms);
+
     const availableFeatures = this.features;
     const remainingFeatures = {};
     let index = 0;
@@ -579,12 +811,9 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
   }
 
   async parseSpell() {
-    console.log(this);
-
     if (this.duration === 0) {
       this.durationOut = "Instant";
     } else {
-      console.log(this.duration);
       let unit = "seconds";
       if (this.duration >= 6 && this.duration % 6 === 0 && this.duration < 60) {
         this.duration /= 6;
@@ -618,5 +847,125 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     } else {
       this.rangeOut = `${this.range}m`;
     }
+  }
+
+  async addSpell(spell) {
+    this.spells.push(spell);
+    if (this.spells.length === 1) {
+      this.selected = spell.system.features;
+      this.name = spell.name;
+      this.flavor = spell.system.flavor;
+      this.actor = spell.actor;
+      this.render();
+    }
+    else {
+      let spellFeatures = spell.system.features;
+      let selectedFeatures = this.selected;
+      let newFeatures = {};
+      let index = 0;
+      for (let feature of Object.values(spellFeatures)) {
+        let newId = `selected-${index}`;
+        newFeatures[newId] = feature;
+        index++;
+      }
+      for (let feature of Object.values(selectedFeatures)) {
+        let newId = `selected-${index}`;
+        newFeatures[newId] = feature;
+        index++;
+      }
+      this.selected = newFeatures;
+      this.render();
+    }
+  }
+
+  async getFavorites() {
+    const favorites = game.user.getFlag('utopia', 'favorites') || {};
+    const spellFeatures = favorites["spellFeature"] || [];
+    console.log("Favorites", spellFeatures);
+    const features = this.features;
+    for (let feature of Object.values(features)) {
+      feature.favorite = spellFeatures.includes(feature._id);
+    }
+  }
+  
+  async removeFavorite(feature) {
+    let favorites = game.user.getFlag('utopia', 'favorites') || {};
+    if (!favorites["spellFeature"]) {
+      favorites["spellFeature"] = [];
+    }
+    favorites["spellFeature"] = favorites["spellFeature"].filter(f => f !== feature._id);
+    await game.user.setFlag('utopia', 'favorites', favorites);
+  }
+  
+  async addFavorite(feature) {
+    let favorites = game.user.getFlag('utopia', 'favorites') || {};
+    if (!favorites["spellFeature"]) {
+      favorites["spellFeature"] = [];
+    }
+    if (!favorites["spellFeature"].includes(feature._id)) {
+      favorites["spellFeature"].push(feature._id);
+    }
+    await game.user.setFlag('utopia', 'favorites', favorites);
+  }
+
+  async prepareFormulaOptions() {
+    const selected = this.selected;
+    const entries = Object.entries(selected);
+    entries.forEach(entry => {
+      const itemData = entry[1];
+      const formula = itemData.system.formula;
+      let newFormula = formula;
+      const stacks = itemData.stacks || 1;
+      const variables = Object.entries(itemData.system.variables).map(v => {
+        return {[v[1].name]: v[1].value};
+      });
+      const data = foundry.utils.mergeObject(itemData.rollData, variables);
+      const roll = new Roll(formula, data);
+      const dice = roll.terms.filter(term => term instanceof Die);
+      const diceOptions = {};
+      dice.forEach((die, index) => {
+        const max = die.faces * (die.number * stacks);
+        newFormula = roll.formula.replace(die.formula, `${die.number * stacks}d${die.faces}`);
+        
+        // We only allow dice in the standard array:
+        // 4, 6, 8, 10, 12, 20, 100
+        // We need to calculate the various other options
+        const options = [4, 6, 8, 10, 12, 20, 100].filter(f => max % f === 0);
+        diceOptions[index] = [];
+
+        options.forEach(option => {
+          let count = max / option;
+          diceOptions[index].push(`${count}d${option}`);
+        });
+      });
+
+      entry[1].formulaOptions = diceOptions;
+
+      if (itemData.customFormula === false) {
+        if (game.settings.get("utopia", "diceRedistribution")) {
+          let size = game.settings.get("utopia", "diceRedistributionSize");
+          if (size === 1) {
+            entry[1].currentFormula = 0;
+          }
+          else if (size === 2) {
+            entry[1].currentFormula = diceOptions[0].length - 1;
+          } 
+          else {
+            let min = 0;
+            let max = diceOptions[0] ? diceOptions[0].length - 1 : 0;
+            // Get the middle option
+            entry[1].currentFormula = Math.floor((min + max) / 2);
+          }
+        }
+      }
+
+      if (itemData.currentFormula && itemData.currentFormula > diceOptions[0].length - 1) {
+        entry[1].currentFormula = diceOptions[0].length - 1;
+      }
+
+      console.log("Prepare formula options", entry[1]);
+    });
+
+    this.selected = Object.fromEntries(entries);
   }
 }

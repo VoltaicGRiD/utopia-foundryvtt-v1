@@ -1,4 +1,5 @@
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
+import { gatherSpellFeatures } from '../../helpers/gatherSpells.mjs';
 import { UtopiaOptionsSheet } from '../other/options-sheet.mjs';
 const { api, sheets } = foundry.applications;
 
@@ -16,7 +17,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
   /** @override */
   static DEFAULT_OPTIONS = {
-    classes: ['utopia', 'actor-v2'],
+    classes: ['utopia', 'actor-sheet'],
     window: {
       resizeable: true,
     },
@@ -35,6 +36,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       selectSubtraits: this._selectSubtraits,
       selectSpecies: this._selectSpecies,
       deleteAction: this._deleteAction,
+      editSpell: this._editSpell,
+      castSpell: this._castSpell,
+      deleteSpell: this._deleteSpell,
     },
     form: {
       submitOnChange: true,
@@ -287,16 +291,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const weapons = [];
     const talents = [];
     const actions = [];
-    const spells = {
-      alteration: [],
-      array: [],
-      divination: [],
-      enchantment: [],
-      evocation: [],
-      illusion: [],
-      necromancy: [],
-      wake: [],
-    };
+    const spells = [];
     const misc = [];
 
     // Iterate through items, allocating to containers
@@ -319,11 +314,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       }
       // Append to spells.
       else if (i.type === 'spell') {
-        if (i.system.arts) {
-          i.system.arts.forEach((art) => {
-            spells[art.toLowerCase()].push(i);
-          });
-        }
+        spells.push(i);
       }
 
       // Else, append to misc.
@@ -362,6 +353,15 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
+
+    this.element.querySelectorAll('.spell').forEach((spell) => {
+      spell.addEventListener('click', (event) => {
+        console.log(event);
+        let controls = spell.querySelector('.spell-controls');
+        console.log(controls, controls.style.display);
+        controls.style.display = controls.style.display === 'none' ? 'flex' : 'none';
+      });
+    });
 
     // Enable the ability to update the actor's image
     // const updateElements = this.element.querySelectorAll('[data-action="update"]')
@@ -408,6 +408,18 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
   static async _selectSubtraits(event, target) {
     this.actor.openSubtraitSheet();
+  }
+
+  static async _editSpell(event, target) {
+    const spellId = target.closest('.spell').dataset.id;
+    const spell = this.actor.items.get(spellId);
+    spell.sheet.render(true);
+  }
+
+  static async _deleteSpell(event, target) {
+    const spellId = target.closest('.spell').dataset.id;
+    await this.actor.deleteEmbeddedDocuments('Item', [spellId]);
+    this.render();
   }
 
   /**************
@@ -542,7 +554,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         return await this.actor.performCheck(dataset.trait);
       }
       else if (dataset.rollType == 'spell') {
-        let spell = this.actor.items.get(dataset.itemId);
+        let spell = this.actor.items.get(dataset.spell);
         return await this.actor.castSpell(spell);
       }
       else if (dataset.rollType == 'action') {

@@ -1,6 +1,6 @@
+import { UtopiaSpellcraftSheet } from "../other/spellcraft-sheet.mjs";
+
 const { api, sheets } = foundry.applications;
-import gatherTalents from '../../helpers/gatherTalents.mjs';
-import Tagify from '../../../lib/tagify/tagify.esm.js';
 
 export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
   sheets.ItemSheetV2
@@ -12,11 +12,14 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "spell-sheet"],
     position: {
-      width: 700,
+      width: 400,
       height: "auto",
     },
     actions: {
       image: this._image,
+      cast: this._cast,
+      edit: this._edit,
+      save: this._save,
     },
     form: {
       submitOnChange: true,
@@ -28,43 +31,26 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
   };
 
   static PARTS = {
-    header: {
-      template: "systems/utopia/templates/spells/header.hbs",
-    },
-    tabs: {
-      template: "templates/generic/tab-navigation.hbs",
-    },
-    attributes: {
-      template: "systems/utopia/templates/spells/attributes.hbs",
-    },
-    description: {
-      template: "systems/utopia/templates/spells/description.hbs",
+    details: {
+      template: "systems/utopia/templates/item/spell/details.hbs",
     },
   };
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    options.parts = ["header", "tabs", "attributes", "description"];
+    options.parts = ["details"];
   }
 
   async _prepareContext(options) {
     var context = {
-      // Validates both permissions and compendium status
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
-      // Add the item document.
       item: this.item,
-      // Adding system and flags for easier access
       system: this.item.system,
-      flags: this.item.flags,
-      // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
-      // You can factor out context construction to helper functions
       tabs: this._getTabs(options.parts),
-      // Necessary for formInput and formFields helpers
-      fields: this.document.schema.fields,
-      systemFields: this.document.system.schema.fields,
+      name: this.item.name,
     };
 
     context = foundry.utils.mergeObject(context, {
@@ -78,17 +64,8 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
 
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'attributes':
-      case 'description':
+      case 'details':
         context.tab = context.tabs[partId];
-        context.enrichedDescription = await TextEditor.enrichHTML(
-          this.item.system.description,
-          {
-            secrets: this.document.isOwner,
-            rollData: this.item.getRollData(),
-            relativeTo: this.item
-          }
-        );
         break;
       default:
     }
@@ -99,7 +76,7 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
     const tabGroup = 'primary';
   
     // Default tab for first time it's rendered this session
-    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'attributes';
+    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'details';
   
     return parts.reduce((tabs, partId) => {
       const tab = {
@@ -114,16 +91,9 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
       };
   
       switch (partId) {
-        case 'header':
-        case 'tabs':
-          return tabs;
-        case 'attributes':
-          tab.id = 'attributes';
-          tab.label += 'attributes';
-          break;
-        case 'description':
-          tab.id = 'description';
-          tab.label += 'description';
+        case 'details':
+          tab.id = 'details';
+          tab.label += 'details';
           break;
         default:
       }
@@ -138,121 +108,68 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
 
   async _onRender(context, options) {
     super._onRender(context, options);
-    
-    this.element.querySelector('.profile-img').addEventListener('click', this._image.bind(this));
-    // this._fixTalentSelect(context);
-    // this._fixArtSelect(context);
-  }
 
-  async _fixArtSelect(context) {
-    let options = [
-      "Array",
-      "Alteration",
-      "Divination",
-      "Enchantment",
-      "Evocation",
-      "Illusion",
-      "Necromancy",
-      "Wake",
-    ]
+    const numVariables = this.element.querySelectorAll("input[type='number']");
+    numVariables.forEach(v => {
+      v.addEventListener("change", (event) => {
+        const featureId = event.target.dataset.feature;
+        const variableId = event.target.dataset.variable;
+        const value = event.target.value;
 
-    const artSelect = document.querySelector('[name="system.arts"]');
-    const currentArts = context.system.arts;
-    artSelect.value = currentArts;
-    console.log("Current arts: ", currentArts);
-    const tagify = new Tagify(artSelect, {
-      whitelist: options, 
-      enforceWhitelist: true, 
-      dropdown: {
-          enabled: 0, 
-          maxItems: Infinity, 
-      },
-    }).on('add', (e) => {
-      if (currentArts.length == 1) {
-        if (currentArts[0].length == 0) {
-          currentArts.pop();
-        }
-      }
-
-      currentArts.push(e.detail.data.value);
-      // Event listener for when a new talent is added.
-      this.document.update({
-        ['system.arts']: currentArts,
-      });
-    }).on('remove', (e) => {
-      currentArts.splice(currentArts.indexOf(e.detail.data.value), 1);
-      this.document.update({
-        ['system.arts']: currentArts,
-      });
-    });
-  }
-
-  async _fixTalentSelect(context) { 
-    let talents = await gatherTalents();
-    let talentChoices = talents.map((talent) => {
-        return {
-            value: talent.name,
-            id: talent.id
-        }
-    });
-
-    // Sort the talent choices, prioritizing those that include "Artistry" in their name.
-    talentChoices.sort((a, b) => {
-        const aIncludesArtistry = a.value.includes("Artistry");
-        const bIncludesArtistry = b.value.includes("Artistry");
-
-        if (aIncludesArtistry && !bIncludesArtistry) {
-            return -1; // a comes before b
-        } else if (!aIncludesArtistry && bIncludesArtistry) {
-            return 1; // b comes before a
-        } else {
-            return 0; // no change in order
-        }
-    });
-
-    // Select the HTML element for talents.
-    const talentSelect = document.querySelector('[name="system.talents"]');
-    const currentTalents = context.system.talents;
-    const talentValue = talentChoices.filter((talent) => {
-        return currentTalents.includes(talent.id);
-    });
-
-    // Set the value of the talent select element to the filtered talent choices.
-    talentSelect.value = JSON.stringify(talentValue);
-
-    // Initialize Tagify on the talent select element with specific options.
-    const tagify = new Tagify(talentSelect, {
-        whitelist: talentChoices, // Only allow talents from the talentChoices array.
-        enforceWhitelist: true, // Enforce that only items from the whitelist can be added.
-        dropdown: {
-            enabled: 0, // Show the dropdown as soon as the input is focused.
-            maxItems: Infinity, // Do not limit the dropdown to a specific number of items.
-        },
-    }).on('add', (e) => {
-      if (currentTalents.length == 1) {
-        if (currentTalents[0].length == 0) {
-          currentTalents.pop();
-        }
-      }
-
-      currentTalents.push(e.detail.data.id);
-      // Event listener for when a new talent is added.
-      this.document.update({
-        ['system.talents']: currentTalents,
-      });
-    });  
-  }
-
-  async _image(event) {
-    event.preventDefault();
-    let file = await new FilePicker({
-      type: "image",
-      current: this.document.img,
-      callback: (path) => {
-        this.document.update({
-          img: path,
+        this.item.update({
+          [`system.features.${featureId}.system.variables.${variableId}.value`]: value
         });
-      },
-    }).browse();
+      });
+    });
+
+    const optVariables = this.element.querySelectorAll(".feature-variable-options");
+    // optVariables.forEach(v => {
+    //   v.addEventListener("click", async (event) => {
+    //     const featureId = event.target.dataset.feature;
+    //     const variableId = event.target.dataset.variable;
+    //     const selected = this.item.system.features;
+    //     let options = selected[featureId].system.variables[variableId].options;
+    //     if (typeof options === "string") {
+    //       options = options.split(",");
+    //     };
+
+    //     let content = await renderTemplate('systems/utopia/templates/other/spellcraft/tooltip.hbs', { 
+    //       name: selected[featureId].system.variables[variableId].name,
+    //       description: selected[featureId].system.variables[variableId].description,
+    //       options: options,
+    //       selected: selected[featureId].value
+    //     });
+    //     console.log("tooltip render:", options, content);
+    //     let element = document.createElement('div');
+    //     element.innerHTML = content;
+    //     element.classList.add("spellcraft-options-sheet");
+    //     game.tooltip.activate(event.target, { direction: 'UP', cssClass: "utopia spellcraft-options-sheet", content: element });
+    //     tooltip.style.bottom = tooltip.style.bottom - 10 + "px";
+    //     tooltip.style.lineHeight = "0.5em";
+    //     tooltip.querySelectorAll("button").forEach(o => {
+    //       o.addEventListener("click", async (tooltipEvent) => {
+    //         if (!tooltipEvent.target.classList.contains("active")) {
+    //           tooltipEvent.target.classList.add("active");
+    //           tooltipEvent.target.closest("div").querySelectorAll("button").forEach(b => {
+    //             if (b !== tooltipEvent.target) {
+    //               b.classList.remove("active");
+    //             }
+    //           });
+    //           // Get closest list
+    //           const feature = selected[featureId];
+    //           const variable = feature.system.variables[variableId];
+    //           variable.value = tooltipEvent.target.innerHTML;
+    //           console.log(feature);
+    //           this.render();
+    //         }
+    //       });
+    //     });
+    //   });
+    // });
+  }
+
+  static async _edit(event, target) {
+    let spellcraft = await new UtopiaSpellcraftSheet().render(true);
+    spellcraft.addSpell(this.item);
   }
 }

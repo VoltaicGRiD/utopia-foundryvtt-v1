@@ -192,11 +192,17 @@
       "utility": "Utility",
       "choices": "Unique choices (use '{C#}' to reference the choice at the corresponding index in formulas)",
       "choiceExample": "Heat, Energy, Chill",
-      "flavor": "Flavor text",
+      "flavor": "Spell flavor (i.e. 'A shimmering blue bolt of energy streaks from your fingertips, striking the target with a loud crack!')",
       "range": "Range",
       "aoe": "Area of effect",
       "aoeShort": "AoE",
-      "duration": "Duration"
+      "duration": "Duration",
+      "saveAndCast": "Save and Cast",
+      "save": "Save",
+      "cast": "Cast",
+      "edit": "Revise",
+      "delete": "Delete",
+      "spellcrafting": "Open in Spellcrafting"
     },
     "SpellFeatures": {
       "cost": "PP Cost",

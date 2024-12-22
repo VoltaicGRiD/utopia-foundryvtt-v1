@@ -450,14 +450,27 @@ export class UtopiaActor extends Actor {
     let rollData = this.getRollData();
     console.log("Casting spell!", spell, cost, rollData);
 
-    if (rollData.system.castDiscount) {
-      cost = Math.max(spell.system.cost - rollData.system.castDiscount, 1);
+    if (rollData.castDiscount) {
+      cost = Math.max(spell.system.cost - rollData.castDiscount, 1);
     }
 
-    if (this.system.spellcap <= cost) {
-      this.update({
-        ['system.stamina.value']: this.system.stamina.value - cost
-      })
+    if (this.system.spellcap >= cost) {
+      if (this.system.stamina.value - cost >= 0) {
+        await this.update({
+          ['system.stamina.value']: this.system.stamina.value - cost
+        });
+      }
+      else {
+        await this.update({
+          ['system.stamina.value']: 0
+        });
+        const remaining = cost - this.system.stamina.value;
+        console.log("Remaining cost: ", remaining);
+        await this.applyDamage({
+          damage: remaining,
+          type: "dhp"
+        }, true);
+      }
     } else {
       ui.notifications.error("Your spellcap is too low to cast this spell!");
     }
@@ -614,6 +627,9 @@ export class UtopiaActor extends Actor {
 
   async calculateDamage(data) {
     console.log(data);
+    if (typeof data.damage === 'number') {
+      data.damage = data.damage.toString();
+    }
     let roll = new Roll(data.damage, this.getRollData())
     let result = await roll.roll();
     let damage = result.total;

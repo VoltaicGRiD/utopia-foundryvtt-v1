@@ -1,9 +1,14 @@
 export class UtopiaUser extends User {
-  constructor (data, context) {
+  constructor(data, context) {
     super(data, context);
 
-    // Add the user's favorite crafting features
-    this._favorites = data.favorites || {spellFeatures: []};
+    // Initialize favorites from data or set default
+    this.flags.favorites = data.favorites || {
+      spellFeature: [],
+      spell: [],
+      gear: [],
+    };
+
     console.log(this);
   }
 
@@ -14,33 +19,28 @@ export class UtopiaUser extends User {
 
   prepareDerivedData() {
     super.prepareDerivedData();
+  }
 
-    const itemData = this;
-    const systemData = itemData.system;
+  async updateFavorites(favorites) {
+    this.setFlag('utopia', 'favorites', favorites);
+  }
 
-    if (itemData.type === "spellFeature") {
-      if (itemData.img === "icons/svg/item-bag.svg") {
-        this.updateDefaultSpellFeatureIcon();
-      }
+  async addFavorite(type, id) {
+    // Ensure the type exists in favorites
+    if (!this.flags.favorites[type]) {
+      this.flags.favorites[type] = [];
     }
+    const favorites = this.flags.favorites;
+    favorites[type].push(id);
+    return this.updateFavorites(favorites);
   }
 
-  get favorites () {
-    return this._favorites;
-  }
-
-  async updateFavorites (favorites) {
-    this._favorites = favorites;
-    return this.update({ favorites: this._favorites });
-  }
-  
-  async addFavorite (type, id) {
-    this._favorites[type].push(id);
-    return this.updateFavorites(this._favorites);
-  }
-
-  async removeFavorite (type, id) {
-    this._favorites[type] = this._favorites[type].filter(f => f !== id);
-    return this.updateFavorites(this._favorites);
+  async removeFavorite(type, id) {
+    // Ensure the type exists in favorites
+    if (!this.favorites[type]) {
+      return; // Or handle the case where the type does not exist
+    }
+    const favorites = this.flags.favorites[type].filter(f => f !== id);
+    return this.updateFavorites(favorites);
   }
 }

@@ -11,6 +11,7 @@ export {default as UtopiaAction} from "./item/item-action.mjs";
 export {default as UtopiaSpellFeature} from "./item/item-spell-feature.mjs";
 export {default as UtopiaSpellVariable} from "./item/item-spell-variable.mjs";
 export {default as UtopiaSpecialistTalent} from "./item/item-specialist-talent.mjs";
+export {default as UtopiaSpell} from "./item/item-spell.mjs";
 
 // Export Users
 export { default as UtopiaUser } from "./user.mjs";

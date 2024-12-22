@@ -10,7 +10,7 @@
     }
   },
   "ActiveEffect": {
-    "types": ["specialist", "talent"],
+    "types": ["passive", "temporary", "inactive", "specialist", "talent"],
     "templates": {
       "base": {
         "duration": 0,

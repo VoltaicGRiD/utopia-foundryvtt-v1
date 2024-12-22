@@ -102,8 +102,21 @@
       "flags": {}
     },
     {
-      "name": "spells",
+      "name": "spellFeatures",
       "label": "SRD Spell Features",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spells",
+      "label": "SRD Spells",
       "banner": "",
       "path": "",
       "type": "Item",
@@ -135,6 +148,11 @@
       "manifest": "https://raw.githubusercontent.com/League-of-Foundry-Developers/codemirror-lib/master/module.json"	
     }
   ],
+  "flags": {
+    "hotReload": {
+      "extensions": ["css"]
+    }
+  },
   "packFolders": ["SRD Content"],
   "socket": false,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",

@@ -12,6 +12,7 @@ import {
   UtopiaActionSheet,
   UtopiaSpeciesSheet,
   UtopiaTalentSheet,
+  UtopiaSpellSheet,
   UtopiaSpellFeatureSheet,
   UtopiaSpecialistTalentSheet
 } from "./sheets/item/_module.mjs";
@@ -149,13 +150,13 @@ Hooks.once("init", function () {
   // We can register our custom [UtopiaChatMessage] class here too, since they are qualified as "Documents".
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
-  CONFIG.User.documentClass = UtopiaUser;
+  //CONFIG.User.documentClass = UtopiaUser;
   CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
   CONFIG.ActiveEffect.documentClass = UtopiaActiveEffect; 
 
   DocumentSheetConfig.registerSheet(UtopiaActiveEffect, "utopia", UtopiaActiveEffectSheet, 
     {
-      types: ["base", "specialist", "talent"],
+      types: ["base", "passive", "temporary", "inactive", "specialist", "talent"],
       makeDefault: true,
       label: "UTOPIA.SheetLabels.activeEffect",
     }
@@ -177,6 +178,7 @@ Hooks.once("init", function () {
     spellFeature: models.UtopiaSpellFeature,
     variable: models.UtopiaSpellVariable,
     specialistTalent: models.UtopiaSpecialistTalent,
+    spell: models.UtopiaSpell,
   };
 
   // Active Effects are never copied to the Actor,  // but will still apply to the Actor from within the Item
@@ -253,7 +255,12 @@ function registerItemSheets() {
     makeDefault: true,
     types: ["specialistTalent"],
     label: "UTOPIA.SheetLabels.specialistTalent",
-  })
+  });
+  Items.registerSheet("utopia", UtopiaSpellSheet, {
+    makeDefault: true,
+    types: ["spell"],
+    label: "UTOPIA.SheetLabels.spell",
+  });
 }
 
 /* -------------------------------------------- */
@@ -453,7 +460,7 @@ function registerGameSettings() {
   game.settings.register("utopia", "diceRedistributionSize", {
     name: "UTOPIA.Settings.autoMaxDice",
     hint: "UTOPIA.Settings.autoMaxDiceHint",
-    scope: "world",
+    scope: "user",
     config: game.settings.get("utopia", "diceRedistribution"),
     type: Number,
     choices: {

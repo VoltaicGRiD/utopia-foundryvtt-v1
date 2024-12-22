@@ -1,0 +1,741 @@
+{
+  "name": "Sweetfire",
+  "type": "spell",
+  "system": {
+    "formula": "",
+    "description": "",
+    "flavor": "",
+    "arts": [],
+    "duration": "1",
+    "range": "5",
+    "aoe": "None",
+    "features": {
+      "selected-0": {
+        "_id": "d190FHq7QQbC6b7A",
+        "name": "Lingering Thermal",
+        "type": "spellFeature",
+        "img": "systems/utopia/assets/icons/artistries/evocation.svg",
+        "system": {
+          "formula": "1d4[@Type]",
+          "description": "<p style=\"text-align: left;\">Upon casting and at the beginning of each turn for the duration of the spell, affected creatures and objects are dealt an additional 1d4 Heat or Chill damage. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same. </p><p style=\"text-align: left;\">The effects of this feature may vary environmentally, based on GM discretion. For instance, 1d4 Heat damage may be exchanged for harmlessly warming a creature or lighting a small fire, while ld4 Chill damage may be enough to freeze a barrel of water for the spell’s duration.</p>",
+          "flavor": "",
+          "art": "evocation",
+          "cost": 30,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "variable0": {
+              "options": "Heat,Chill",
+              "character": "T",
+              "kind": "options",
+              "name": "Type",
+              "description": ""
+            },
+            "stacks": {
+              "name": "stacks",
+              "character": "@",
+              "kind": "number",
+              "minimum": 1,
+              "value": 4
+            }
+          },
+          "modifies": "none",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "effects": [],
+        "folder": {
+          "name": "Evocation",
+          "sorting": "a",
+          "folder": null,
+          "type": "Item",
+          "_id": "jLbboxpKvob6wmFc",
+          "description": "",
+          "sort": 100000,
+          "color": "#ee6448",
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "12.331",
+            "systemId": "utopia",
+            "systemVersion": "0.1.0",
+            "createdTime": 1734769606889,
+            "modifiedTime": 1734769606906,
+            "lastModifiedBy": "nLkleFyXeCclB3Jg"
+          }
+        },
+        "sort": 0,
+        "ownership": {
+          "default": 0,
+          "nLkleFyXeCclB3Jg": 3
+        },
+        "flags": {},
+        "_stats": {
+          "coreVersion": "12.331",
+          "systemId": "utopia",
+          "systemVersion": "0.1.0",
+          "createdTime": 1734769606898,
+          "modifiedTime": 1734769606898,
+          "lastModifiedBy": "nLkleFyXeCclB3Jg",
+          "compendiumSource": null,
+          "duplicateSource": null
+        },
+        "rollData": {
+          "0": {},
+          "1": {
+            "stacks": 4
+          },
+          "formula": "1d4[@Type]",
+          "description": "<p style=\"text-align: left;\">Upon casting and at the beginning of each turn for the duration of the spell, affected creatures and objects are dealt an additional 1d4 Heat or Chill damage. Damage dice may be redistributed in any fashion as long as the maximum damage per damage type is the same. </p><p style=\"text-align: left;\">The effects of this feature may vary environmentally, based on GM discretion. For instance, 1d4 Heat damage may be exchanged for harmlessly warming a creature or lighting a small fire, while ld4 Chill damage may be enough to freeze a barrel of water for the spell’s duration.</p>",
+          "flavor": "",
+          "art": "evocation",
+          "cost": 30,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "variable0": {
+              "options": "Heat,Chill",
+              "character": "A",
+              "kind": "options",
+              "name": "Type",
+              "description": ""
+            }
+          },
+          "modifies": "none",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0,
+          "costResult": "30 PP",
+          "variable0": 0
+        },
+        "background": "#ee6448",
+        "color": "black",
+        "value": "",
+        "stacks": 4,
+        "favorite": false,
+        "cost": "30 PP",
+        "hasFormula": true,
+        "customFormula": false,
+        "formulaOptions": {
+          "0": [
+            "4d4",
+            "2d8"
+          ]
+        },
+        "currentFormula": 0
+      },
+      "selected-1": {
+        "_id": "ZG6onOobMgBO4xkO",
+        "name": "Muse II",
+        "type": "spellFeature",
+        "img": "systems/utopia/assets/icons/artistries/enchantment.svg",
+        "system": {
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The spell remains active for X minutes after this one, requiring focus.</p>",
+          "flavor": "",
+          "art": "enchantment",
+          "cost": 20,
+          "costMultiplier": "multiply",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "cost": {
+              "name": "cost",
+              "character": "X",
+              "kind": "number",
+              "minimum": 1,
+              "value": 1
+            },
+            "stacks": {
+              "name": "stacks",
+              "character": "@",
+              "kind": "number",
+              "minimum": 1,
+              "value": 1
+            }
+          },
+          "modifies": "duration",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 1,
+            "variable": "",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "minutes",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "effects": [],
+        "folder": {
+          "name": "Enchantment",
+          "sorting": "a",
+          "folder": null,
+          "type": "Item",
+          "_id": "MxNtWOKgZszC5ZGV",
+          "description": "",
+          "sort": 100000,
+          "color": "#ee92b7",
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "12.331",
+            "systemId": "utopia",
+            "systemVersion": "0.1.0",
+            "createdTime": 1734769605936,
+            "modifiedTime": 1734769605958,
+            "lastModifiedBy": "nLkleFyXeCclB3Jg"
+          }
+        },
+        "sort": 0,
+        "ownership": {
+          "default": 0,
+          "nLkleFyXeCclB3Jg": 3
+        },
+        "flags": {},
+        "_stats": {
+          "coreVersion": "12.331",
+          "systemId": "utopia",
+          "systemVersion": "0.1.0",
+          "createdTime": 1734769605948,
+          "modifiedTime": 1734769605948,
+          "lastModifiedBy": "nLkleFyXeCclB3Jg",
+          "compendiumSource": null,
+          "duplicateSource": null
+        },
+        "rollData": {
+          "0": {
+            "cost": 1
+          },
+          "1": {
+            "stacks": 1
+          },
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The spell remains active for X minutes after this one, requiring focus.</p>",
+          "flavor": "",
+          "art": "enchantment",
+          "cost": 20,
+          "costMultiplier": "multiply",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {},
+          "modifies": "duration",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 1,
+            "variable": "",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "minutes",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0,
+          "costResult": "20X PP"
+        },
+        "background": "#ee92b7",
+        "color": "black",
+        "value": "",
+        "stacks": 1,
+        "favorite": false,
+        "cost": "20X PP",
+        "hasFormula": false,
+        "customFormula": false,
+        "formulaOptions": {},
+        "currentFormula": 0
+      },
+      "selected-2": {
+        "_id": "7rrSlKz9qCOk3I2I",
+        "name": "Throw I",
+        "type": "spellFeature",
+        "img": "systems/utopia/assets/icons/artistries/array.svg",
+        "system": {
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The range of the spell increases by 1 meter.</p>",
+          "flavor": "",
+          "art": "array",
+          "cost": 4,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "stacks": {
+              "name": "stacks",
+              "character": "@",
+              "kind": "number",
+              "minimum": 1,
+              "value": 5
+            }
+          },
+          "modifies": "range",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 1,
+            "variable": "",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "effects": [],
+        "folder": {
+          "name": "Array",
+          "sorting": "a",
+          "folder": null,
+          "type": "Item",
+          "_id": "ptKwuJnxkXWM4Jxq",
+          "description": "",
+          "sort": 100000,
+          "color": "#f3ec68",
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "12.331",
+            "systemId": "utopia",
+            "systemVersion": "0.1.0",
+            "createdTime": 1734769604296,
+            "modifiedTime": 1734769604314,
+            "lastModifiedBy": "nLkleFyXeCclB3Jg"
+          }
+        },
+        "sort": 100000,
+        "ownership": {
+          "default": 0,
+          "nLkleFyXeCclB3Jg": 3
+        },
+        "flags": {},
+        "_stats": {
+          "coreVersion": "12.331",
+          "systemId": "utopia",
+          "systemVersion": "0.1.0",
+          "createdTime": 1734769604307,
+          "modifiedTime": 1734769604307,
+          "lastModifiedBy": "nLkleFyXeCclB3Jg",
+          "compendiumSource": null,
+          "duplicateSource": null
+        },
+        "rollData": {
+          "0": {
+            "stacks": 5
+          },
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The range of the spell increases by 1 meter.</p>",
+          "flavor": "",
+          "art": "array",
+          "cost": 4,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {},
+          "modifies": "range",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 1,
+            "variable": "",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0,
+          "costResult": "4 PP"
+        },
+        "background": "#f3ec68",
+        "color": "black",
+        "value": "",
+        "stacks": 5,
+        "favorite": false,
+        "cost": "4 PP",
+        "hasFormula": false,
+        "customFormula": false,
+        "formulaOptions": {},
+        "currentFormula": 0
+      },
+      "selected-3": {
+        "_id": "JXzkRaJ7oUIsVXyB",
+        "name": "Create Medium Image",
+        "type": "spellFeature",
+        "img": "systems/utopia/assets/icons/artistries/illusion.svg",
+        "system": {
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The caster creates an illusionary image that the caster can vividly imagine that would fit in a 3 meter cube centered on the maw for the spell’s duration. The image is visually realistic and exists for the spell's duration. The caster may have it animate in a predetermined way, such as breathing or running, as long as it stays within the illusion’s boundaries.</p>",
+          "flavor": "",
+          "art": "illusion",
+          "cost": 60,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "variable0": {
+              "character": "I",
+              "kind": "text",
+              "description": "",
+              "dice": "",
+              "options": [],
+              "minimum": 0,
+              "maximum": 0,
+              "name": "Image",
+              "value": "Phantasmal Blue Flame"
+            },
+            "stacks": {
+              "name": "stacks",
+              "character": "@",
+              "kind": "number",
+              "minimum": 1,
+              "value": 1
+            }
+          },
+          "modifies": "none",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "effects": [],
+        "folder": {
+          "name": "Illusion",
+          "sorting": "a",
+          "folder": null,
+          "type": "Item",
+          "_id": "KHSQSKTQfJSy9HeI",
+          "description": "",
+          "sort": 100000,
+          "color": "#94d2e1",
+          "flags": {},
+          "_stats": {
+            "compendiumSource": null,
+            "duplicateSource": null,
+            "coreVersion": "12.331",
+            "systemId": "utopia",
+            "systemVersion": "0.1.0",
+            "createdTime": 1734769607673,
+            "modifiedTime": 1734769607673,
+            "lastModifiedBy": "nLkleFyXeCclB3Jg"
+          }
+        },
+        "sort": 100000,
+        "ownership": {
+          "default": 0,
+          "nLkleFyXeCclB3Jg": 3
+        },
+        "flags": {},
+        "_stats": {
+          "coreVersion": "12.331",
+          "systemId": "utopia",
+          "systemVersion": "0.1.0",
+          "createdTime": 1734769607685,
+          "modifiedTime": 1734827696527,
+          "lastModifiedBy": "nLkleFyXeCclB3Jg",
+          "compendiumSource": null,
+          "duplicateSource": null
+        },
+        "rollData": {
+          "0": {
+            "Image": "Phantasmal Blue Flame"
+          },
+          "1": {
+            "stacks": 1
+          },
+          "formula": "",
+          "description": "<p style=\"text-align: left;\">The caster creates an illusionary image that the caster can vividly imagine that would fit in a 3 meter cube centered on the maw for the spell’s duration. The image is visually realistic and exists for the spell's duration. The caster may have it animate in a predetermined way, such as breathing or running, as long as it stays within the illusion’s boundaries.</p>",
+          "flavor": "",
+          "art": "illusion",
+          "cost": 60,
+          "costMultiplier": "flat",
+          "allowRedistribution": "false",
+          "doesTarget": "false",
+          "targetType": "point",
+          "templateType": "circle",
+          "templateAngle": 53.13,
+          "variables": {
+            "variable0": {
+              "character": "I",
+              "kind": "text",
+              "description": "",
+              "dice": "",
+              "options": [],
+              "minimum": 0,
+              "maximum": 0,
+              "name": "Image"
+            }
+          },
+          "modifies": "none",
+          "modifiedAoE": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters",
+            "measured": "radius",
+            "type": "point",
+            "shape": "circle"
+          },
+          "modifiedRange": {
+            "value": 0,
+            "variable": "X",
+            "unit": "meters"
+          },
+          "modifiedDuration": {
+            "value": 0,
+            "variable": "X",
+            "unit": "turns",
+            "requirements": "focus",
+            "dispelInterruptCost": 0,
+            "dispelActionCost": 0
+          },
+          "modifiedFormula": {
+            "how": "add",
+            "value": "",
+            "replace": ""
+          },
+          "variableName": "Variable",
+          "variableDescription": "",
+          "character": "A",
+          "kind": "none",
+          "dice": "",
+          "minimum": 0,
+          "maximum": 0,
+          "costResult": "60 PP",
+          "variable0": 0
+        },
+        "background": "#94d2e1",
+        "color": "black",
+        "value": "",
+        "stacks": 1,
+        "favorite": false,
+        "cost": "60 PP",
+        "hasFormula": false,
+        "customFormula": false,
+        "formulaOptions": {},
+        "currentFormula": 0
+      }
+    },
+    "cost": 22
+  },
+  "img": "icons/svg/item-bag.svg",
+  "effects": [],
+  "folder": null,
+  "flags": {
+    "exportSource": {
+      "world": "utopiatest",
+      "system": "utopia",
+      "coreVersion": "12.331",
+      "systemVersion": "0.1.0"
+    }
+  },
+  "_stats": {
+    "coreVersion": "12.331",
+    "systemId": "utopia",
+    "systemVersion": "0.1.0",
+    "createdTime": 1734888729501,
+    "modifiedTime": 1734888729501,
+    "lastModifiedBy": "nLkleFyXeCclB3Jg"
+  }
+}

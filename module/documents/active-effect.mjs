@@ -1,8 +1,3 @@
-import { isNumeric, searchTraits, shortToLong, longToShort, calculateTraitFavor, runTrigger } from "../helpers/_module.mjs";
-import { UtopiaSubtraitSheetV2 } from "../sheets/other/subtrait-sheet.mjs";
-import { UtopiaTalentTreeSheet } from "../sheets/other/talent-tree-sheet.mjs";
-import { UtopiaChatMessage } from "./chat-message.mjs";
-
 /**
  * Extend the base A[c]tor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {ActiveEffect}
