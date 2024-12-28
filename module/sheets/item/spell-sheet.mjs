@@ -12,7 +12,7 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "spell-sheet"],
     position: {
-      width: 400,
+      width: 600,
       height: "auto",
     },
     actions: {
@@ -87,7 +87,7 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Actions.Tabs.',
+        label: 'UTOPIA.Item.Actions.Tabs.',
       };
   
       switch (partId) {

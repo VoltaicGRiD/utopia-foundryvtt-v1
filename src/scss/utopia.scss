@@ -57,6 +57,22 @@
     @import 'components/spellcraft/spellcraft';
   }
 
+  &.artifice-feature-sheet {
+    @import 'components/item/artifice-feature-sheet';
+  }
+
+  &.general-item-sheet {
+    @import 'components/item/general-item-sheet';
+  }
+
+  &.gear-sheet {
+    @import 'components/item/gear-sheet';
+  }
+
+  &.crafting-features-sheet {
+    @import 'components/other/crafting-features-sheet';
+  }
+
   //@import 'components/item/spell-sheet';
   @import 'components/item/action-sheet';
   @import 'components/item/spell-tab';

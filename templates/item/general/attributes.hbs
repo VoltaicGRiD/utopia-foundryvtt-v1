@@ -1,0 +1,34 @@
+<div class="general-attributes">
+  <div class="sidepanel">
+    <div class="row">
+      <label>{{localize 'UTOPIA.Item.General.category'}}</label>
+      {{formInput systemFields.category value=system.category name='system.category' localize=true}}
+    </div>
+    <div class="row">
+      <label>{{localize 'UTOPIA.Item.General.slots'}}</label>
+      {{formInput systemFields.slots value=system.slots name='system.slots' localize=true}}
+    </div>
+    <div class="row">
+      <label>{{localize 'UTOPIA.Item.General.value'}}</label>
+      {{formInput systemFields.value value=system.value name='system.value' localize=true}}
+    </div>
+    <div class="row">
+      <label>{{localize 'UTOPIA.Item.General.quantity'}}</label>
+      {{formInput systemFields.quantity value=system.quantity name='system.quantity' localize=true}}
+    </div>
+    <div class="row">
+      <label>{{localize 'UTOPIA.Item.General.rarity'}}</label>
+      {{formInput systemFields.rarity value=system.rarity name='system.rarity' localize=true}}
+    </div>
+  </div>
+  <div class="general-description">
+    <label for="system.description">{{localize 'UTOPIA.Item.description'}}</label>
+    {{#if editable}}
+      <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+        {{{enrichedDescription}}}
+      </prose-mirror>
+    {{else}} 
+      {{{enrichedDescription}}}
+    {{/if}}
+  </div>
+</div>

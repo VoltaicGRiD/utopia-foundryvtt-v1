@@ -20,7 +20,7 @@
         <div class='effect-controls flexrow'>
           <a
             class='effect-control'
-            data-action='createDoc'
+            data-action='createEffect'
             data-document-class='ActiveEffect'
             data-origin="{{@root.actor.uuid}}"
             data-img="icons/svg/aura.svg"
@@ -62,7 +62,7 @@
               {{/if}}
               <a
                 class='effect-control'
-                data-action='viewDoc'
+                data-action='viewEffect'
                 title='{{localize "DOCUMENT.Update" type='Effect'}}'
               >
                 <i class='fas fa-edit'></i>
@@ -70,7 +70,7 @@
               {{#if @root.editable}}
               <a
                 class='effect-control'
-                data-action='deleteDoc'
+                data-action='deleteEffect'
                 title='{{localize "DOCUMENT.Delete" type='Effect'}}'
               >
                 <i class='fas fa-trash'></i>

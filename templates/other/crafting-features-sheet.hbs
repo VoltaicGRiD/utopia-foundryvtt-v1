@@ -1,0 +1,20 @@
+<div class="crafting-features-list">
+  {{#each features as |feature|}}
+    <div class="feature" data-drag data-uuid="{{feature.system.uuid}}">
+      <div class="feature-name">
+        <p>{{feature.name}}</p>
+        <p>{{feature.cost}}</p>
+      </div>
+      <div class="content">
+        <span class="tag category">{{feature.category}}</span>
+        {{#each feature.components as |component type|}}
+          <span class="tag component">{{component}} {{type}} {{#if (eq feature.componentsPerStack "one")}}/ stack{{/if}}</span>
+        {{/each}}
+        {{#if (eq feature.system.stackable "stackable")}}
+          <span class="tag stackable">{{feature.stackable}}</span>
+        {{/if}}
+        <p>{{{feature.system.description}}}</p>
+      </div>
+    </div>
+  {{/each}}
+</div>

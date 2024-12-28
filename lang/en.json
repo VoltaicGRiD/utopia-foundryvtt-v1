@@ -19,49 +19,50 @@
         "wake": "Wake"
       },
       "block": "Block",
-      "dodge": "Dodge"
-    },
-    "Rating": {
-      "blr": { "long": "Block Rating", "abbr": "blr" },
-      "dor": { "long": "Dodge Rating", "abbr": "dor" }
-    },
-    "Points": {
-      "subtrait": "Subtrait",
-      "talent": "Talent",
-      "gifted": "Gifted",
-      "body": "Body",
-      "mind": "Mind",
-      "soul": "Soul"
-    },
-    "Trait": {
-      "agi": { "long": "Agility", "abbr": "agi" },
-      "str": { "long": "Strength", "abbr": "str" },
-      "int": { "long": "Intelligence", "abbr": "int" },
-      "wil": { "long": "Will", "abbr": "wil" },
-      "dis": { "long": "Display", "abbr": "dis" },
-      "cha": { "long": "Charm", "abbr": "cha" }
-    },
-    "Subtrait": {
-      "spd": { "long": "Speed", "abbr": "spd" },
-      "dex": { "long": "Dexterity", "abbr": "dex" },
-      "pow": { "long": "Power", "abbr": "pow" },
-      "for": { "long": "Fortitude", "abbr": "for" },
-      "eng": { "long": "Engineering", "abbr": "eng" },
-      "mem": { "long": "Memory", "abbr": "mem" },
-      "res": { "long": "Resolve", "abbr": "res" },
-      "awa": { "long": "Awareness", "abbr": "awa" },
-      "por": { "long": "Portrayal", "abbr": "por" },
-      "stu": { "long": "Stunt", "abbr": "stu" },
-      "app": { "long": "Appeal", "abbr": "app" },
-      "lan": { "long": "Language", "abbr": "lan" }
-    },
-    "Defenses": {
-      "chill": "Chill",
-      "energy": "Energy",
-      "heat": "Heat",
-      "physical": "Physical",
-      "psyche": "Psyche"
-    },
+      "dodge": "Dodge",
+      "Defenses": {
+        "chill": "Chill",
+        "energy": "Energy",
+        "heat": "Heat",
+        "physical": "Physical",
+        "psyche": "Psyche"
+      },
+      "Traits": {
+        "agi": { "long": "Agility", "abbr": "agi" },
+        "str": { "long": "Strength", "abbr": "str" },
+        "int": { "long": "Intelligence", "abbr": "int" },
+        "wil": { "long": "Will", "abbr": "wil" },
+        "dis": { "long": "Display", "abbr": "dis" },
+        "cha": { "long": "Charm", "abbr": "cha" }
+      },
+      "Subtraits": {
+        "spd": { "long": "Speed", "abbr": "spd" },
+        "dex": { "long": "Dexterity", "abbr": "dex" },
+        "pow": { "long": "Power", "abbr": "pow" },
+        "for": { "long": "Fortitude", "abbr": "for" },
+        "eng": { "long": "Engineering", "abbr": "eng" },
+        "mem": { "long": "Memory", "abbr": "mem" },
+        "res": { "long": "Resolve", "abbr": "res" },
+        "awa": { "long": "Awareness", "abbr": "awa" },
+        "por": { "long": "Portrayal", "abbr": "por" },
+        "stu": { "long": "Stunt", "abbr": "stu" },
+        "app": { "long": "Appeal", "abbr": "app" },
+        "lan": { "long": "Language", "abbr": "lan" }
+      },
+      "Points": {
+        "subtrait": "Subtrait",
+        "talent": "Talent",
+        "gifted": "Gifted",
+        "body": "Body",
+        "mind": "Mind",
+        "soul": "Soul"
+      },
+      "Attributes": {
+        "constitution": "Constitution",
+        "endurance": "Endurance",
+        "effervescence": "Effervescence"
+      }
+    },   
     "SheetLabels": {
       "actor": "Utopia Actor Sheet",
       "actorV2": "Utopia Actor Sheet V2",
@@ -70,10 +71,6 @@
       "attack": "Utopia Attack Sheet",
       "subtrait": "Subtrait Selection",
       "talent-tree-selector": "Utoipia Talent Tree"
-    },
-    "Weapons": {
-      "handling": "Handling",
-      "range": "Range"
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -91,7 +88,6 @@
       "spellcap": "Spellcap",
       "keepopen": "Keep open",
       "roll": "Roll",
-      "description": "Description",
       "tags": "Tags",
       "talents": "Talents",
       "unlock": "Make all talents available (GM Only)",
@@ -100,33 +96,356 @@
       "kineticForce": "Kinetic",
       "save": "Save"
     },
-    "Talents": {
-      "category": "Choice category",
-      "choices": "Prompt for choices (comma-separated tags)",
-      "is-species": "Species talent",
-      "tree": "Tree",
-      "position": "Position",
-      "ultimate": "Ult",
-      "body": "Body",
-      "mind": "Mind",
-      "soul": "Soul",
-      "position-error": {
-        "short": "Required (> 0)",
-        "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
-      }
-    },
+
     "Checks": {
       "failure": "Check Failed!",
       "success": "Check Succeeded!"
     },
-    "Attributes": {
-      "constitution": "Constitution",
-      "endurance": "Endurance",
-      "effervescence": "Effervescence"
-    },
     "Item": {
       "formula": "Formula",
-      "description": "Description"
+      "description": "Description",
+      "quantity": "Quantity",
+      "Artifice": {
+        "Components": {
+          "quality": "Quality",
+          "Quality": {
+            "crude": "Crude",
+            "common": "Common",
+            "extraordinary": "Extraordinary",
+            "rare": "Rare",
+            "legendary": "Legendary",
+            "mythical": "Mythical"
+          },
+          "type": "Type",
+          "Types": {
+            "material": "Material",
+            "refinement": "Refinement",
+            "power": "Power"
+          }
+        },
+        "Features": {
+          "Formulas": {
+            "melee": "Melee Formula",
+            "ranged": "Ranged Formula"
+          },
+          "affectsOthers": "Propigate to",
+          "AffectsOthers": {
+            "this": "Only this feature",
+            "all": "All formulas"
+          },
+          "craftingPrompt": "(#Prompt)",
+          "Tabs": {
+            "attributes": "Attributes",
+            "description": "Description",
+            "effects": "Effects"
+          },
+          "category": "Category",
+          "Categories": {
+            "fastWeapon": "Fast Weapon",
+            "moderateWeapon": "Moderate Weapon",
+            "slowWeapon": "Slow Weapon",
+            "shield": "Shield",
+            "chestArmor": "Chest Armor",
+            "headArmor": "Head Armor",
+            "handArmor": "Hand Armor",
+            "footArmor": "Foot Armor",
+            "consumable": "Consumable",
+            "artifact": "Artifact"
+          },
+          "ammo": "Ammunition",
+          "cost": "Cost",
+          "costModifier": "Cost Modifier",
+          "CostModifier": {
+            "flat": "Flat",
+            "add": "Add",
+            "subtract": "Subtract",
+            "multiply": "Multiply",
+            "divide": "Divide",
+            "square": "Square"
+          },
+          "costBonus": "Cost Bonus Formula",
+          "requires": "Requires",
+          "incompatible": "Incompatible with",
+          "stackable": "Stackable",
+          "Stackable": {
+            "unstackable": "Unstackable",
+            "stackable": "Stackable"
+          },
+          "maxStacks": "Max Stacks",
+          "componentsPerStack": "Components per stack",
+          "ComponentsPerStack": {
+            "all": "Any number of stacks",
+            "one": "Per stack"
+          },
+          "grantsAction": "Grants Action to Wielder / Owner"
+        },
+        "Gear": {
+          "Handling": {
+            "none": "None",
+            "oneHanded": "One-Handed",
+            "twoHanded": "Two-Handed",
+            "worn": "Worn"
+          }
+        }
+      },
+      "Spells": {
+        "Arts": {
+          "array": "Array",
+          "alteration": "Alteration",
+          "divination": "Divination",
+          "enchantment": "Enchantment",
+          "evocation": "Evocation",
+          "illusion": "Illusion",
+          "necromancy": "Necromancy",
+          "wake": "Wake"
+        },
+        "Duration": {
+          "instant": "Instant",
+          "concentration": "Concentration",
+          "1Minute": "1 Minute",
+          "1MinuteFocus": "1 Minute (Focus)",
+          "1Hour": "1 Hour",
+          "1HourFocus": "1 Hour (Focus)"
+        },
+        "Range": {
+          "touch": "Touch",
+          "5M": "5 Meters",
+          "10M": "10 Meters",
+          "25M": "25 Meters",
+          "50M": "50 Meters"
+        },
+        "Type": {
+          "attack": "Attack",
+          "healing": "Healing",
+          "defense": "Defense",
+          "utility": "Utility"
+        },
+        "Variables": {
+          "name": "Variable: ",
+          "cast": "Cast Spell"
+        },
+        "arts": "Spell arts",
+        "talents": "Required talents",
+        "stamina": "Stamina",
+        "formula": "Roll formula",
+        "type": "Type",
+        "attack": "Attack",
+        "healing": "Healing",
+        "defense": "Defense",
+        "utility": "Utility",
+        "choices": "Unique choices (use '{C#}' to reference the choice at the corresponding index in formulas)",
+        "choiceExample": "Heat, Energy, Chill",
+        "flavor": "Spell flavor (i.e. 'A shimmering blue bolt of energy streaks from your fingertips, striking the target with a loud crack!')",
+        "range": "Range",
+        "aoe": "Area of effect",
+        "aoeShort": "AoE",
+        "duration": "Duration",
+        "saveAndCast": "Save and Cast",
+        "save": "Save",
+        "cast": "Cast",
+        "edit": "Revise",
+        "delete": "Delete",
+        "spellcrafting": "Open in Spellcrafting"
+      },
+      "SpellFeatures": {
+        "cost": "PP Cost",
+        "costMultiplier": "Math",
+        "CostMultiplier": {
+          "flat": "None / Flat",
+          "add": "Add",
+          "subtract": "Subtract",
+          "multiply": "Multiply",
+          "divide": "Divide",
+          "square": "Square"
+        },
+        "art": "Artistry",
+        "allowRedistribution": "Allow dice redistribution",
+        "doesTarget": "Creates target",
+        "costResult": "Cost result",
+        "variable": "Variable",
+        "Variables": {
+          "character": "Char",
+          "type": "Type",
+          "nameX": "Var X",
+          "nameY": "Var Y",
+          "nameZ": "Var Z",
+          "none": "None",
+          "delete": "Remove",
+          "new": "New Variable",
+          "number": "Number",
+          "options": "Options",
+          "text": "Text",
+          "dice": "Dice",
+          "diceDescription": "Base Dice: "
+        },
+        "Range": {
+          "meters": "Meters",
+          "kilometers": "Kilometers"
+        },
+        "DurationRequirements": {
+          "none": "None",
+          "focus": "Focus",
+          "concentration": "Concentration"
+        },
+        "Duration": {
+          "turns": "Turns",
+          "minutes": "Minutes",
+          "hours": "Hours",
+          "days": "Days",
+          "months": "Months",
+          "years": "Years"
+        },
+        "modifies": "Special Modification",
+        "Modifies": {
+          "none": "None",
+          "range": "Range",
+          "aoe": "Area of Effect",
+          "duration": "Duration"
+        },
+        "Modifications": {
+          "value": "Value",
+          "unit": "Unit",
+          "dispelActionCost": "Dispel Action Cost",
+          "dispelInterruptCost": "Dispel Interrupt Cost",
+          "variable": "Variable",
+          "requirements": "Requirements",
+          "shape": "Shape"
+        },
+        "targetType": "Target Type",
+        "TargetType": {
+          "point": "Point",
+          "template": "Template",
+          "attach": "Attach"
+        },
+        "templateType": "Template",
+        "templateAngle": "Cone Angle",
+        "Tabs": {
+          "attributes": "Attributes",
+          "description": "Description",
+          "variables": "Variables"
+        }
+      },
+      "General": {
+        "category": "Category",
+        "Categories": {
+          "misc": "Miscellaneous",
+          "consumable": "Consumable",
+          "tool": "Tool",
+          "trinket": "Trinket",
+          "junk": "Junk",
+          "ammunition": "Ammunition",
+          "valuable": "Valuable"
+        },
+        "slots": "Slots",
+        "value": "Value",
+        "quantity": "Quantity",
+        "rarity": "Rarity",
+        "Rarity": {
+          "crude": "Crude",
+          "common": "Common",
+          "extraordinary": "Extraordinary",
+          "rare": "Rare",
+          "legendary": "Legendary",
+          "mythical": "Mythical"
+        }
+      },
+      "Actions": {
+        "Tabs": {
+          "attributes": "Attributes",
+          "description": "Description",
+          "rules": "Rules"
+        },
+        "formula": "Formula",
+        "type": "Type",
+        "Type": {
+          "standard": "Standard",
+          "interrupt": "Interrupt",
+          "special": "Special",
+          "free": "Free"
+        },
+        "source": "Source",
+        "cost": "Cost",
+        "Cost": {
+          "inherit": "Inherit from source",
+          "double": "Double inherited cost"
+        },
+        "rules": "Rules",
+        "trigger": "Trigger",
+        "recharge": "Recharge",
+        "stamina": "Stamina Cost",
+        "requirements": "Requirements",
+        "target": "Target",
+        "Trigger": {
+          "manual": "Manual",
+          "shpDamage": "On SHP Damage",
+          "shpDamageDealt": "On SHP Damage Dealt",
+          "dhpDamage": "On DHP Damage",
+          "dhpDamageDealt": "On DHP Damage Dealt",
+          "heal": "On Heal",
+          "condition": "On Condition Gained",
+          "conditionLost": "On Condition Lost",
+          "myTurn": "Beginning of My Turn",
+          "enemyTurn": "Beginning of Enemy Turn",
+          "allyTurn": "Beginning of Ally Turn",
+          "startRound": "Start of Round",
+          "endRound": "End of Round",
+          "staminaLost": "On Stamina Lost",
+          "contest": "During Contest",
+          "test": "During Test",
+          "focusLost": "On Focus Lost",
+          "concentrationLost": "On Concentration Lost",
+          "block": "On Block",
+          "dodge": "On Dodge",
+          "spellCast": "When Spell Cast",
+          "craftStarted": "On Craft Started",
+          "craftFinished": "On Craft Finished",
+          "forageStarted": "On Forage Started",
+          "forageFinished": "On Forage Finished",
+          "restStarted": "On Rest Started",
+          "restFinished": "On Rest Finished",
+          "awareness": "Blind Awareness Test"
+        },
+        "Recharge": {
+          "immediate": "Immediately",
+          "myTurn": "Start of My Turn",
+          "turn": "Start of Every Turn",
+          "round": "Start of Every Round",
+          "minute": "Every Minute",
+          "hour": "Every Hour",
+          "day": "Every Day",
+          "week": "Every Week"
+        },
+        "Target": {
+          "none": "None",
+          "self": "Self",
+          "ally": "Ally",
+          "enemy": "Enemy",
+          "any": "Any"
+        }
+      }, 
+      "Species": {
+        "blockQuantity": "Block dice quantity",
+        "dodgeQuantity": "Dodge dice quantity",
+        "blockSize": "Block dice size",
+        "dodgeSize": "Dodge dice size",
+        "subtraits": "Granted subtraits",
+        "languages": "Granted languages"
+      },
+      "Talents": {
+        "category": "Choice category",
+        "choices": "Prompt for choices (comma-separated tags)",
+        "is-species": "Species talent",
+        "tree": "Tree",
+        "position": "Position",
+        "ultimate": "Ult",
+        "body": "Body",
+        "mind": "Mind",
+        "soul": "Soul",
+        "position-error": {
+          "short": "Required (> 0)",
+          "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
+        }
+      }
     },
     "Effect": {
       "source": "Source",
@@ -145,221 +464,6 @@
       "concentration": "Concentration",
       "focus": "Focus"
     }, 
-    "Spells": {
-      "Arts": {
-        "array": "Array",
-        "alteration": "Alteration",
-        "divination": "Divination",
-        "enchantment": "Enchantment",
-        "evocation": "Evocation",
-        "illusion": "Illusion",
-        "necromancy": "Necromancy",
-        "wake": "Wake"
-      },
-      "Duration": {
-        "instant": "Instant",
-        "concentration": "Concentration",
-        "1Minute": "1 Minute",
-        "1MinuteFocus": "1 Minute (Focus)",
-        "1Hour": "1 Hour",
-        "1HourFocus": "1 Hour (Focus)"
-      },
-      "Range": {
-        "touch": "Touch",
-        "5M": "5 Meters",
-        "10M": "10 Meters",
-        "25M": "25 Meters",
-        "50M": "50 Meters"
-      },
-      "Type": {
-        "attack": "Attack",
-        "healing": "Healing",
-        "defense": "Defense",
-        "utility": "Utility"
-      },
-      "Variables": {
-        "name": "Variable: ",
-        "cast": "Cast Spell"
-      },
-      "arts": "Spell arts",
-      "talents": "Required talents",
-      "stamina": "Stamina",
-      "formula": "Roll formula",
-      "type": "Type",
-      "attack": "Attack",
-      "healing": "Healing",
-      "defense": "Defense",
-      "utility": "Utility",
-      "choices": "Unique choices (use '{C#}' to reference the choice at the corresponding index in formulas)",
-      "choiceExample": "Heat, Energy, Chill",
-      "flavor": "Spell flavor (i.e. 'A shimmering blue bolt of energy streaks from your fingertips, striking the target with a loud crack!')",
-      "range": "Range",
-      "aoe": "Area of effect",
-      "aoeShort": "AoE",
-      "duration": "Duration",
-      "saveAndCast": "Save and Cast",
-      "save": "Save",
-      "cast": "Cast",
-      "edit": "Revise",
-      "delete": "Delete",
-      "spellcrafting": "Open in Spellcrafting"
-    },
-    "SpellFeatures": {
-      "cost": "PP Cost",
-      "costMultiplier": "Math",
-      "CostMultiplier": {
-        "flat": "None / Flat",
-        "add": "Add",
-        "subtract": "Subtract",
-        "multiply": "Multiply",
-        "divide": "Divide",
-        "square": "Square"
-      },
-      "art": "Artistry",
-      "allowRedistribution": "Allow dice redistribution",
-      "doesTarget": "Creates target",
-      "costResult": "Cost result",
-      "variable": "Variable",
-      "Variables": {
-        "character": "Char",
-        "type": "Type",
-        "nameX": "Var X",
-        "nameY": "Var Y",
-        "nameZ": "Var Z",
-        "none": "None",
-        "delete": "Remove",
-        "new": "New Variable",
-        "number": "Number",
-        "options": "Options",
-        "text": "Text",
-        "dice": "Dice",
-        "diceDescription": "Base Dice: "
-      },
-      "Range": {
-        "meters": "Meters",
-        "kilometers": "Kilometers"
-      },
-      "DurationRequirements": {
-        "none": "None",
-        "focus": "Focus",
-        "concentration": "Concentration"
-      },
-      "Duration": {
-        "turns": "Turns",
-        "minutes": "Minutes",
-        "hours": "Hours",
-        "days": "Days",
-        "months": "Months",
-        "years": "Years"
-      },
-      "modifies": "Special Modification",
-      "Modifies": {
-        "none": "None",
-        "range": "Range",
-        "aoe": "Area of Effect",
-        "duration": "Duration"
-      },
-      "Modifications": {
-        "value": "Value",
-        "unit": "Unit",
-        "dispelActionCost": "Dispel Action Cost",
-        "dispelInterruptCost": "Dispel Interrupt Cost",
-        "variable": "Variable",
-        "requirements": "Requirements",
-        "shape": "Shape"
-      },
-      "targetType": "Target Type",
-      "TargetType": {
-        "point": "Point",
-        "template": "Template",
-        "attach": "Attach"
-      },
-      "templateType": "Template",
-      "templateAngle": "Cone Angle",
-      "Tabs": {
-        "attributes": "Attributes",
-        "description": "Description",
-        "variables": "Variables"
-      }
-    },
-    "Actions": {
-      "Tabs": {
-        "attributes": "Attributes",
-        "description": "Description",
-        "rules": "Rules"
-      },
-      "formula": "Formula",
-      "type": "Type",
-      "Type": {
-        "standard": "Standard",
-        "interrupt": "Interrupt",
-        "special": "Special",
-        "free": "Free"
-      },
-      "source": "Source",
-      "cost": "Cost",
-      "rules": "Rules",
-      "trigger": "Trigger",
-      "recharge": "Recharge",
-      "stamina": "Stamina Cost",
-      "requirements": "Requirements",
-      "target": "Target",
-      "Trigger": {
-        "manual": "Manual",
-        "shpDamage": "On SHP Damage",
-        "shpDamageDealt": "On SHP Damage Dealt",
-        "dhpDamage": "On DHP Damage",
-        "dhpDamageDealt": "On DHP Damage Dealt",
-        "heal": "On Heal",
-        "condition": "On Condition Gained",
-        "conditionLost": "On Condition Lost",
-        "myTurn": "Beginning of My Turn",
-        "enemyTurn": "Beginning of Enemy Turn",
-        "allyTurn": "Beginning of Ally Turn",
-        "startRound": "Start of Round",
-        "endRound": "End of Round",
-        "staminaLost": "On Stamina Lost",
-        "contest": "During Contest",
-        "test": "During Test",
-        "focusLost": "On Focus Lost",
-        "concentrationLost": "On Concentration Lost",
-        "block": "On Block",
-        "dodge": "On Dodge",
-        "spellCast": "When Spell Cast",
-        "craftStarted": "On Craft Started",
-        "craftFinished": "On Craft Finished",
-        "forageStarted": "On Forage Started",
-        "forageFinished": "On Forage Finished",
-        "restStarted": "On Rest Started",
-        "restFinished": "On Rest Finished",
-        "awareness": "Blind Awareness Test"
-      },
-      "Recharge": {
-        "immediate": "Immediately",
-        "myTurn": "Start of My Turn",
-        "turn": "Start of Every Turn",
-        "round": "Start of Every Round",
-        "minute": "Every Minute",
-        "hour": "Every Hour",
-        "day": "Every Day",
-        "week": "Every Week"
-      },
-      "Target": {
-        "none": "None",
-        "self": "Self",
-        "ally": "Ally",
-        "enemy": "Enemy",
-        "any": "Any"
-      }
-    },
-    "Species": {
-      "blockQuantity": "Block dice quantity",
-      "dodgeQuantity": "Dodge dice quantity",
-      "blockSize": "Block dice size",
-      "dodgeSize": "Dodge dice size",
-      "subtraits": "Granted subtraits",
-      "languages": "Granted languages"
-    },
     "Settings": {
       "autoRollAttacks": "Bypass attack roll dialog",
       "autoRollAttacksHint": "When enabled, the modifier window that appears when attacking will be bypassed and the attack will be rolled immediately",
@@ -389,8 +493,18 @@
       "spell": "Spell",
       "species": "Species",
       "spellFeature": "Spell Feature",
-      "weapon": "Weapon",
-      "action": "Action"
+      "action": "Action",
+      "artificeFeature": "Artifice Feature",
+      "artificeMaterial": "Artifice Material",
+      "gear": "Gear"
+    },
+    "ActiveEffect": {
+      "temporary": "Temporary",
+      "passive": "Passive",
+      "inactive": "Inactive",
+      "talent": "Talent",
+      "specialist": "Specialist",
+      "gear": "Gear"
     }
   }
 }

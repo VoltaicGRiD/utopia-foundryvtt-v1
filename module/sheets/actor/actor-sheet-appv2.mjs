@@ -43,15 +43,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     form: {
       submitOnChange: true,
     },
-    tabs: [
-      'details',
-      'actions',
-      'talents',
-      'spells',
-      'gear',
-      'biography',
-      'effects',
-    ],
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
   };
 

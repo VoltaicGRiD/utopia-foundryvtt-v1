@@ -18,14 +18,14 @@
             </div>
           {{/if}}
           <button data-variable="{{key}}">
-            <a data-action="removeVariable" data-variable="{{key}}">{{localize 'UTOPIA.SpellFeatures.Variables.delete'}}</a>
+            <a data-action="removeVariable" data-variable="{{key}}">{{localize 'UTOPIA.Item.SpellFeatures.Variables.delete'}}</a>
           </button>
         </div>
         {{#if (eq (lookup (lookup ../system.variables key) "kind") "options")}}
           <input class="variable-options" name="{{concat "system.variables." key ".options"}}" data-key="{{key}}" autofocus>
         {{/if}}
         <div class="variable-description">
-          {{formInput ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true placeholder=(localize 'UTOPIA.Descriptions.description')}}
+          {{formInput ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true placeholder=(localize 'UTOPIA.Item.description')}}
         </div>
       </div>  
     {{/each}}
@@ -35,6 +35,6 @@
   {{/if}}
 
   <button class="add-variable-button">
-    <a data-action="newVariable">{{localize 'UTOPIA.SpellFeatures.Variables.new'}}</a>
+    <a data-action="newVariable">{{localize 'UTOPIA.Item.SpellFeatures.Variables.new'}}</a>
   </button>
 </div>

@@ -10,7 +10,7 @@
     }
   },
   "ActiveEffect": {
-    "types": ["passive", "temporary", "inactive", "specialist", "talent"],
+    "types": ["passive", "temporary", "inactive", "specialist", "talent", "gear"],
     "templates": {
       "base": {
         "duration": 0,
@@ -197,7 +197,18 @@
     }
   },
   "Item": {
-    "types": ["species", "specialistTalent", "talent", "spell", "equipment", "weapon", "action", "spellFeature"],
+    "types": [
+      "action", 
+      "species", 
+      "talent", 
+      "specialistTalent", 
+      "spell", 
+      "spellFeature", 
+      "gear", 
+      "artificeFeature", 
+      "artificeMaterial",
+      "general"
+    ],
     "templates": {
       "base": {
         "formula": "",
@@ -211,12 +222,7 @@
         "slots": 0,
         "actions": 1,
         "quantity": 1,
-        "cost": {
-          "copper": 0,
-          "silver": 0,
-          "gold": 0
-        },
-        "tags": {}
+        "category": "fastWeapon"
       }
     },
     "action": {
@@ -301,6 +307,30 @@
     "equipment": {
       "templates": ["gear"]
       
+    },
+    "artificeMaterial": {
+      "templates": ["base"],
+      "quality": "crude",
+      "type": "material",
+      "quantity": 1
+    },
+    "artificeFeature": {
+      "templates": ["base"],
+      "category": "fastWeapon",
+      "cost": 0,
+      "costMultiplier": "flat",
+      "stackable": false
+    },
+    "gear": {
+      "templates": ["gear"]
+    },
+    "general": {
+      "templates": ["base"],
+      "quantity": 1,
+      "slots": 1,
+      "value": 0,
+      "category": "misc",
+      "rarity": "common"
     }
   }
 }

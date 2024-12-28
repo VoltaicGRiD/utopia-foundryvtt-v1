@@ -2,12 +2,19 @@
   <div class="form-group stacked">
     <label>{{ localize "EFFECT.Description" }}</label>
     {{#if editable}}
-      <prose-mirror name="data.description" data-document-u-u-i-d="{{data.uuid}}" value="{{data.description}}" collaborate="true" toggled="true">
+      <prose-mirror name="description" data-document-u-u-i-d="{{effect.uuid}}" value="{{description}}" collaborate="true" toggled="true">
         {{{enrichedDescription}}}
       </prose-mirror>
     {{else}} 
       {{{enrichedDescription}}}
     {{/if}}  
+  </div>
+
+  <div class="form-group">
+    <label>Transfer to Actor</label>
+    <div class="form-fields">
+      <input type="checkbox" name="transfer" checked="{{transfer}}">
+    </div>
   </div>
 
   <div class="form-group">

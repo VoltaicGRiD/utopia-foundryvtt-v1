@@ -2,15 +2,15 @@
   <div class="skill-description" {{#if (eq talent.available "available")}}available{{else if (eq talent.available "locked")}}unavailable{{else}}taken{{/if}}>
     <div class="skill-points">
       <span class="body">
-          <i class="fa-solid fa-shield" data-tooltip="{{localize 'UTOPIA.Points.body'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Points.body'}}: 
+          <i class="fa-solid fa-shield" data-tooltip="{{localize 'UTOPIA.Actor.Points.body'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Actor.Points.body'}}: 
           {{numberFormat talent.body decimals=0}}
       </span>
       <span class="mind">
-          <i class="fa-solid fa-brain" data-tooltip="{{localize 'UTOPIA.Points.mind'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Points.mind'}}: 
+          <i class="fa-solid fa-brain" data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Actor.Points.mind'}}: 
           {{numberFormat talent.mind decimals=0}}
       </span>
       <span class="soul">
-          <i class="fa-solid fa-flame" data-tooltip="{{localize 'UTOPIA.Points.soul'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Points.soul'}}: 
+          <i class="fa-solid fa-flame" data-tooltip="{{localize 'UTOPIA.Actor.Points.soul'}}"></i>&nbsp;&nbsp;{{localize 'UTOPIA.Actor.Points.soul'}}: 
           {{numberFormat talent.soul decimals=0}}
       </span>
     </div>

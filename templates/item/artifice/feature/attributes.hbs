@@ -1,0 +1,109 @@
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="flexcol">
+    <label for="system.category">{{localize 'UTOPIA.Item.Artifice.Features.category'}}</label>
+    {{formInput systemFields.category value=system.category name='system.category' localize=true tabindex="1"}}
+  </div>
+
+  <div class="grid grid-3col">
+    <div class="flexcol">
+      <label for="system.cost">{{localize 'UTOPIA.Item.Artifice.Features.cost'}}</label>
+      {{formInput systemFields.cost value=system.cost name='system.cost' localize=true tabindex="2"}}
+    </div>
+    <div class="flexcol">
+      <label for="system.costModifier">{{localize 'UTOPIA.Item.Artifice.Features.costModifier'}}</label>
+      {{formInput systemFields.costModifier value=system.costModifier name='system.costModifier' localize=true tabindex="3"}}
+    </div>
+    <div class="flexcol">
+      <label for="system.costBonus">{{localize 'UTOPIA.Item.Artifice.Features.costBonus'}}</label>
+      {{formInput systemFields.costBonus value=system.costBonus name='system.costBonus' localize=true tabindex="3" placeholder="+ (2 * system.range.far)"}}
+    </div>
+  </div>
+
+  <div class="grid grid-2col">
+    <div class="flexcol">
+      <label for="system.incompatible">{{localize 'UTOPIA.Item.Artifice.Features.incompatible'}}</label>
+      {{formInput systemFields.incompatible value=system.incompatible name='system.incompatible' localize=true tabindex="4"}}
+    </div>
+
+    <div class="flexcol">
+      <label for="system.requires">{{localize 'UTOPIA.Item.Artifice.Features.requires'}}</label>
+      {{formInput systemFields.requires value=system.requires name='system.requires' localize=true tabindex="4"}}
+    </div>
+  </div>
+
+  <div class="grid grid-7col">
+    <div class="flexcol">
+      <label>{{localize 'UTOPIA.Item.Artifice.Features.ammo'}}</label>
+      {{formInput systemFields.ammo.fields.quantity value=system.ammo.quantity name='system.ammo.quantity' localize=true tabindex="5"}}
+    </div>
+    <div class="flexcol grid-span-2">
+      <span>&nbsp;</span>
+      {{formInput systemFields.ammo.fields.item value=system.ammo.item name='system.ammo.item' localize=true tabindex="5"}}
+    </div>
+    <div class="flexcol grid-span-2">
+      <label for="system.stackable">{{localize 'UTOPIA.Item.Artifice.Features.stackable'}}</label>
+      {{formInput systemFields.stackable value=system.stackable name='system.stackable' localize=true tabindex="5"}}
+    </div>
+    {{#if (eq system.stackable "stackable")}}
+      <div class="flexcol grid-span-2">
+        <label for="system.maxStacks">{{localize 'UTOPIA.Item.Artifice.Features.maxStacks'}}</label>
+        {{formInput systemFields.maxStacks value=system.maxStacks name='system.maxStacks' localize=true tabindex="6"}}
+      </div>
+    {{/if}}
+  </div>
+  
+  {{#if (or (eq system.category 'fastWeapon') (eq system.category 'moderateWeapon') (eq system.category 'slowWeapon'))}}
+    <div class="grid grid-3col">
+
+      <div class="flexcol">
+        <label for="system.formulas.melee">{{localize 'UTOPIA.Item.Artifice.Features.Formulas.melee'}}</label>
+        {{formInput systemFields.formulas.fields.melee value=system.formulas.melee name='system.formulas.melee' localize=true tabindex="6"}}
+      </div>  
+
+      <div class="flexcol">
+        <label for="system.formulas.ranged">{{localize 'UTOPIA.Item.Artifice.Features.Formulas.ranged'}}</label>
+        {{formInput systemFields.formulas.fields.ranged value=system.formulas.ranged name='system.formulas.ranged' localize=true tabindex="7"}}
+      </div>  
+
+      <div class="flexcol">
+        <label for="system.affectsOthers">{{localize 'UTOPIA.Item.Artifice.Features.affectsOthers'}}</label>
+        {{formInput systemFields.affectsOthers value=system.affectsOthers name='system.affectsOthers' localize=true tabindex="8"}}
+      </div>  
+
+    </div>
+  {{/if}}
+
+  <div class="flexcol">
+    <label for="system.craftingPrompt"><i>{{localize 'UTOPIA.Item.Artifice.Features.craftingPrompt'}}</i></label>
+    <input type="text" class="crafting-prompt-input" value="{{system.craftingPrompt}}" name="system.craftingPrompt">
+  </div>
+
+  <div class="grid grid-5col">
+    <div class="flexcol">
+      <label for="system.components.material">{{localize 'UTOPIA.Item.Artifice.Components.Types.material'}}</label>
+      {{formInput systemFields.components.fields.material value=system.components.material name='system.components.material' localize=true tabindex="8"}}
+    </div>
+    
+    <div class="flexcol">
+      <label for="system.components.refinement">{{localize 'UTOPIA.Item.Artifice.Components.Types.refinement'}}</label>
+      {{formInput systemFields.components.fields.refinement value=system.components.refinement name='system.components.refinement' localize=true tabindex="9"}}
+    </div>
+    
+    <div class="flexcol">
+      <label for="system.components.power">{{localize 'UTOPIA.Item.Artifice.Components.Types.power'}}</label>
+      {{formInput systemFields.components.fields.power value=system.components.power name='system.components.power' localize=true tabindex="10"}}
+    </div>
+
+    {{#if (eq system.stackable "stackable")}}
+      <div class="flexcol grid-span-2">
+        <label for="system.componentsPerStack">{{localize 'UTOPIA.Item.Artifice.Features.componentsPerStack'}}</label>
+        {{formInput systemFields.componentsPerStack value=system.componentsPerStack name='system.componentsPerStack' localize=true tabindex="8"}}
+      </div>  
+    {{/if}}
+  </div>
+
+  <div class="flexcol">
+    <label for="system.grantsAction">{{localize 'UTOPIA.Item.Artifice.Features.grantsAction'}}</label>
+    {{formInput systemFields.grantsAction value=system.grantsAction name='system.grantsAction' localize=true tabindex="11"}}
+  </div>
+</div>

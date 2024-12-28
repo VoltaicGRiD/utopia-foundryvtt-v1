@@ -1,0 +1,62 @@
+<div class="primary">
+  <header class='sheet-header'>
+    <img
+      class='item-icon'
+      src='{{item.img}}'
+      data-edit='img'
+      data-action="image"
+      title='{{item.name}}'
+    />
+    <div class="flexcol">
+      <div class='header-fields'>
+        <h1 class='item-name'><input
+            name='name'
+            type='text'
+            value='{{item.name}}'
+            data-action="update"
+            placeholder='Name'
+          /></h1>
+      </div>
+    </div>
+  </header>
+
+  <div class="gear-content">
+
+    <div class="item-category">
+      {{formInput systemFields.category value=system.category name='system.category' localize=true}}
+      <i data-action="categoryDescription" class="fas fa-circle-info"></i>
+    </div>
+    
+    <div class="gear-tags grid grid-3col">
+      <span>{{system.slots}} Slots</span>
+      <span>{{localize (lookup systemFields.handling.choices system.handling)}}</span>
+      <span>{{system.actions}} Actions</span>
+    </div>
+    
+    <div class="attributes">
+      <div class="features">
+        {{#each features as |feature|}}
+          <div class="feature" data-drag data-uuid="{{feature.system.uuid}}">
+            <div class="feature-name">
+              <p>{{feature.name}}</p>
+              <p>{{feature.cost}}</p>
+            </div>
+            <div class="content">
+              <span class="tag category">{{feature.category}}</span>
+              {{#each feature.components as |component type|}}
+                <span class="tag component">{{component}} {{type}} {{#if (eq feature.componentsPerStack "one")}}/ stack{{/if}}</span>
+              {{/each}}
+              {{#if (eq feature.system.stackable "stackable")}}
+                <span class="tag stackable">{{feature.stackable}}</span>
+              {{/if}}
+              <p>{{{feature.system.description}}}</p>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <button class="crafting-button" data-action="toggleCrafting">Crafting</button>
+
+  </div>
+</div>

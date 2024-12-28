@@ -51,6 +51,8 @@ export default class UtopiaActiveEffectSheet extends api.HandlebarsApplicationMi
       limited: this.document.limited,
       data: this.document,
       config: CONFIG.UTOPIA,
+      transfer: this.document.transfer,
+      description: this.document.description,
       tabs: this._getTabs(options.parts),
       effect: this.document,
       isActorEffect: this.document.parent.documentName === 'Actor',
@@ -92,6 +94,11 @@ export default class UtopiaActiveEffectSheet extends api.HandlebarsApplicationMi
         id: 'talent',
         label: game.i18n.localize("EFFECT.Talent"),
         selected: context.data.type === 'talent' ? "selected" : ""
+      },
+      gear: {
+        id: 'gear',
+        label: game.i18n.localize("EFFECT.Gear"),
+        selected: context.data.type === 'gear' ? "selected" : ""
       }
     }
 
@@ -140,7 +147,7 @@ export default class UtopiaActiveEffectSheet extends api.HandlebarsApplicationMi
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Actions.Tabs.',
+        label: 'UTOPIA.Item.Actions.Tabs.',
       };
   
       switch (partId) {

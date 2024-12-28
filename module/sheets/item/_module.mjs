@@ -5,3 +5,7 @@ export { UtopiaTalentSheet } from "./talent-sheet.mjs";
 export { UtopiaSpellSheet } from "./spell-sheet.mjs";
 export { UtopiaWeaponSheetV1 as UtopiaWeaponSheet } from "./weapon-sheet-v1.mjs";
 export { UtopiaSpecialistTalentSheet } from "./specialist-talent-sheet.mjs";
+export { UtopiaArtificeMaterialSheet } from "./artifice/material-sheet.mjs";
+export { UtopiaArtificeFeatureSheet } from "./artifice/feature-sheet.mjs";
+export { UtopiaGeneralItemSheet } from "./general-item-sheet.mjs";
+export { UtopiaGearSheet } from "./gear/gear-sheet.mjs";
