@@ -1,0 +1,35 @@
+.item-formula {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid var(--color-scrollbar);
+  border-radius: 5px;
+  padding: 0;
+  background-color: #302831;
+
+  .term {
+    width: fit-content;
+    position: relative;
+    line-height: 35px;
+    margin-right: 5px;
+    
+    &[data-type="operator"] {
+      color: var(--color-text-light-5);
+      font-size: 1.5em;
+    }
+
+    &[data-type="dice"] {
+      color: var(--color-text-light-primary);
+
+      & select {
+        padding-left: 25px;
+        padding-right: 0;
+      }
+
+      & i {
+        line-height: 35px;
+        position: absolute;
+        left: 5px;
+      }
+    }
+  }
+}

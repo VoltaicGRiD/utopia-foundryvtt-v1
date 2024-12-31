@@ -1,11 +1,18 @@
 .primary {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   height: 100%;
 
   header {
     width: 100%;
+    position: relative;
+
+    .valid-indicator {
+      position: absolute;
+      right: 10px;
+      top: inherit;
+      font-size: 3em;
+      top: 10px;
+    }
   }
 }
 
@@ -42,8 +49,6 @@
 .gear-content {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .features {
@@ -56,9 +61,8 @@
   .feature {
     display: flex;
     flex-direction: column;
-    padding: 0 1em;
+    padding: 0 5px;
     border-radius: 5px;
-    height: 24px;
     border: 1px solid #ce5e1f; 
     position: relative;
 
@@ -66,66 +70,87 @@
       height: 24px;
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      gap: 10px;
+      position: relative;
       align-content: center;
       align-items: center;
-      pointer-events: none;
       line-height: 24px;
+
+      & .feature-tagline {
+        position: absolute;
+        right: 0;
+        line-height: 24px;
+      }
     }
 
-    .content {
-      visibility: hidden;
-      opacity: 0;
-      display: none;
-      background: black;
-      border: 1px solid white;
-      position: absolute;
-      left: 0;
-      top: 105%;
-      border-radius: 5px;
-      box-shadow: none;
-      pointer-events: none;
-      padding: 1em;
-      width: 100%;
-      height: auto;
-      z-index: 200;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 3px;
+    .stacks {
+      font-size: 1.2em;
+      line-height: 24px;
 
-      .tag {
-        height: 24px;
-        width: auto;
-        padding: 0 0.5em;
-        text-wrap: none;
-        align-items: center;
-        align-content: center;
-        text-align: center;
+      i {
+        font-size: 0.8em;
         line-height: 24px;
 
-        &.category {
-          border: 1px solid #ce5e1f;
-        }
-
-        &.component {
-          border: 1px solid #c2ce1f;
-        }
-
-        &.stackable {
-          border: 1px solid #1fce5e;
-        }
-
-        &.componentPerStack {
-          border: 1px solid #158b40;
+        &:hover {
+          color: #ce5e1f;
         }
       }
     }
 
-    &:hover {
-      .content {
-        visibility: visible;
-        opacity: 1;
-        display: flex;
+    .cost-variable {
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+      position: absolute;
+      width: 50px;
+      right: 0;
+      line-height: 24px;
+      height: 24px;
+
+      span {
+        position: absolute;
+        left: 5px;
+        line-height: 24px;
+        height: 24px;
+        z-index: 501;
+      }
+
+      input {
+        width: 50px;
+        padding-left: 20px;
+        text-align: right;
+      }
+    }
+
+    .choices {
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding-bottom: 5px;
+    
+      .choice {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+
+        span {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          pointer-events: none;
+          border: 2px solid #aaa;
+          border-radius: 4px;
+          background-color: #333;
+          color: #fff;
+
+          &:hover {
+            background-color: #444;
+          }
+        }
+
+        &[selected] span {
+          background-color: #ce5e1f;
+          border-color: #ce5e1f;
+        }
       }
     }
   }

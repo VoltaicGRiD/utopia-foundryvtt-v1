@@ -140,9 +140,6 @@
   overflow: visible;
   text-align: left;
   pointer-events: none;
-  // position: absolute;
-  // top: 50%;
-  // transform: translateY(-50%);
   width: 300px;
   background-color: rgba(0,0,0,0.9);
   z-index: 1000;
@@ -151,18 +148,21 @@
   line-height: 1.2rem;
   overflow-y: auto;
   letter-spacing: 0.5px;
-}
 
-.skill-description[unavailable] {
-  box-shadow: 0 0 10px 8px #5d142b;
-}
+  .locked {
+    background-color: #5d142b;
+    color: white;
+  }
 
-.skill-description[available] {
-  box-shadow: 0 0 10px 8px #ffffff;
-}
+  .unlocked {
+    background-color: #ffffff;
+    color: black;
+  }
 
-.skill-description[taken] {
-  box-shadow: 0 0 10px 8px #d3c78c;
+  .taken {
+    background-color: #d3c78c;
+    color: black;
+  }
 }
 
 .skill-points {
@@ -189,19 +189,4 @@
 .trait {
   font-weight: 900;
   color: #d3688a;
-}
-
-.skill-description  .locked {
-  background-color: #5d142b;
-  color: white;
-}
-
-.skill-description  .unlocked {
-  background-color: #ffffff;
-  color: black;
-}
-
-.skill-description .taken {
-  background-color: #d3c78c;
-  color: black;
 }

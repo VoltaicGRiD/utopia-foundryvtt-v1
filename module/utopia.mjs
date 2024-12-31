@@ -52,6 +52,8 @@ import * as models from "./data/_module.mjs";
 import { UtopiaUser } from "./documents/user.mjs";
 import { UtopiaActiveEffect } from "./documents/active-effect.mjs";
 import UtopiaActiveEffectSheet from "./sheets/other/active-effect-sheet.mjs";
+import UtopiaDiceTerm from "./other/dice.mjs";
+import UtopiaDie from "./other/die.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -160,21 +162,11 @@ Hooks.once("init", function () {
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
   CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
-  //CONFIG.ActiveEffect.documentClass = UtopiaActiveEffect; 
-
-  // DocumentSheetConfig.registerSheet(UtopiaActiveEffect, "utopia", UtopiaActiveEffectSheet, 
-  //   {
-  //     types: ["base", "passive", "temporary", "inactive", "specialist", "talent", "gear"],
-  //     makeDefault: true,
-  //     label: "UTOPIA.SheetLabels.activeEffect",
-  //   }
-  // );
+  CONFIG.Dice.terms.d = UtopiaDie;
+  CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
+  CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
 
   console.log(DocumentSheetConfig);
-
-  // CONFIG.User.dataModels = {
-  //   user: models.UtopiaUser,
-  // }
 
   // Setting up schema handling for the system.
   // This is supposed to replace the default 'Template.json' file.

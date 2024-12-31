@@ -1,10 +1,17 @@
 <div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
-  <div class="flexcol">
-    <label for="system.category">{{localize 'UTOPIA.Item.Artifice.Features.category'}}</label>
-    {{formInput systemFields.category value=system.category name='system.category' localize=true tabindex="1"}}
+  <div class="grid grid2col">
+    <div class="flexcol">
+      <label for="system.category">{{localize 'UTOPIA.Item.Artifice.Features.category'}}</label>
+      {{formInput systemFields.category value=system.category name='system.category' localize=true tabindex="1"}}
+    </div>
+
+    <div class="flexcol">
+      <label for="system.tagline">{{localize 'UTOPIA.Item.Artifice.Features.tagline'}}</label>
+      {{formInput systemFields.tagline value=system.tagline name='system.tagline' localize=true tabindex="1"}}
+    </div>
   </div>
 
-  <div class="grid grid-3col">
+  <div class="grid grid-5col">
     <div class="flexcol">
       <label for="system.cost">{{localize 'UTOPIA.Item.Artifice.Features.cost'}}</label>
       {{formInput systemFields.cost value=system.cost name='system.cost' localize=true tabindex="2"}}
@@ -14,6 +21,10 @@
       {{formInput systemFields.costModifier value=system.costModifier name='system.costModifier' localize=true tabindex="3"}}
     </div>
     <div class="flexcol">
+      <label for="system.costLimit">{{localize 'UTOPIA.Item.Artifice.Features.costLimit'}}</label>
+      {{formInput systemFields.costLimit value=system.costLimit name='system.costLimit' localize=true tabindex="3"}}
+    </div>
+    <div class="flexcol grid-span-2">
       <label for="system.costBonus">{{localize 'UTOPIA.Item.Artifice.Features.costBonus'}}</label>
       {{formInput systemFields.costBonus value=system.costBonus name='system.costBonus' localize=true tabindex="3" placeholder="+ (2 * system.range.far)"}}
     </div>

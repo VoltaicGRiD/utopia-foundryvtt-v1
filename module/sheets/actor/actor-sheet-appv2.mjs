@@ -1,6 +1,7 @@
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
 import { gatherSpellFeatures } from '../../helpers/gatherSpells.mjs';
 import { UtopiaOptionsSheet } from '../other/options-sheet.mjs';
+import { UtopiaSpellcraftSheet } from '../other/spellcraft-sheet.mjs';
 const { api, sheets } = foundry.applications;
 
 /**
@@ -39,6 +40,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       editSpell: this._editSpell,
       castSpell: this._castSpell,
       deleteSpell: this._deleteSpell,
+      openSpellcraft: this._openSpellcraft,
     },
     form: {
       submitOnChange: true,
@@ -572,6 +574,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     console.log(message);
 
     return roll;
+  }
+
+  static async _openSpellcraft(event, target) {
+    const sheet = new UtopiaSpellcraftSheet();
+    sheet.actor = this.actor;
+    sheet.render(true);
   }
 
   /** Helper Functions */

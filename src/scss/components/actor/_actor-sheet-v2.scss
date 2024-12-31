@@ -180,6 +180,18 @@
   }
 }
 
+.spells-header {
+  position: relative;
+
+  button {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    z-index: 1000;
+    width: 50%;
+  }
+}
+
 .spell-list > .grid.grid-3col {
   align-items: start;
 }

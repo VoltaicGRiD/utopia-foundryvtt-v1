@@ -283,6 +283,13 @@
   opacity: 1;
 }
 
+#tooltip:has(.feature-tooltip) {
+  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  box-shadow: none;
+}
+
 /* Styles limited to utopia sheets */
 .utopia {
   /* On hover */
@@ -1081,6 +1088,16 @@
 .utopia.actor-sheet .resource-max:hover label {
   z-index: 1010;
 }
+.utopia.actor-sheet .spells-header {
+  position: relative;
+}
+.utopia.actor-sheet .spells-header button {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  z-index: 1000;
+  width: 50%;
+}
 .utopia.actor-sheet .spell-list > .grid.grid-3col {
   align-items: start;
 }
@@ -1518,13 +1535,19 @@
   padding-top: 10px;
 }
 .utopia.gear-sheet .primary {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   height: 100%;
 }
 .utopia.gear-sheet .primary header {
   width: 100%;
+  position: relative;
+}
+.utopia.gear-sheet .primary header .valid-indicator {
+  position: absolute;
+  right: 10px;
+  top: inherit;
+  font-size: 3em;
+  top: 10px;
 }
 .utopia.gear-sheet .item-category {
   height: 36px;
@@ -1553,8 +1576,6 @@
 .utopia.gear-sheet .gear-content {
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
 }
 .utopia.gear-sheet .features {
   height: 100%;
@@ -1566,9 +1587,8 @@
 .utopia.gear-sheet .features .feature {
   display: flex;
   flex-direction: column;
-  padding: 0 1em;
+  padding: 0 5px;
   border-radius: 5px;
-  height: 24px;
   border: 1px solid #ce5e1f;
   position: relative;
 }
@@ -1576,58 +1596,76 @@
   height: 24px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  gap: 10px;
+  position: relative;
   align-content: center;
   align-items: center;
-  pointer-events: none;
   line-height: 24px;
 }
-.utopia.gear-sheet .features .feature .content {
-  visibility: hidden;
-  opacity: 0;
-  display: none;
-  background: black;
-  border: 1px solid white;
+.utopia.gear-sheet .features .feature .feature-name .feature-tagline {
   position: absolute;
-  left: 0;
-  top: 105%;
-  border-radius: 5px;
-  box-shadow: none;
-  pointer-events: none;
-  padding: 1em;
-  width: 100%;
-  height: auto;
-  z-index: 200;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 3px;
-}
-.utopia.gear-sheet .features .feature .content .tag {
-  height: 24px;
-  width: auto;
-  padding: 0 0.5em;
-  text-wrap: none;
-  align-items: center;
-  align-content: center;
-  text-align: center;
+  right: 0;
   line-height: 24px;
 }
-.utopia.gear-sheet .features .feature .content .tag.category {
-  border: 1px solid #ce5e1f;
+.utopia.gear-sheet .features .feature .stacks {
+  font-size: 1.2em;
+  line-height: 24px;
 }
-.utopia.gear-sheet .features .feature .content .tag.component {
-  border: 1px solid #c2ce1f;
+.utopia.gear-sheet .features .feature .stacks i {
+  font-size: 0.8em;
+  line-height: 24px;
 }
-.utopia.gear-sheet .features .feature .content .tag.stackable {
-  border: 1px solid #1fce5e;
+.utopia.gear-sheet .features .feature .stacks i:hover {
+  color: #ce5e1f;
 }
-.utopia.gear-sheet .features .feature .content .tag.componentPerStack {
-  border: 1px solid #158b40;
-}
-.utopia.gear-sheet .features .feature:hover .content {
-  visibility: visible;
-  opacity: 1;
+.utopia.gear-sheet .features .feature .cost-variable {
   display: flex;
+  flex-direction: row;
+  gap: 0;
+  position: absolute;
+  width: 50px;
+  right: 0;
+  line-height: 24px;
+  height: 24px;
+}
+.utopia.gear-sheet .features .feature .cost-variable span {
+  position: absolute;
+  left: 5px;
+  line-height: 24px;
+  height: 24px;
+  z-index: 501;
+}
+.utopia.gear-sheet .features .feature .cost-variable input {
+  width: 50px;
+  padding-left: 20px;
+  text-align: right;
+}
+.utopia.gear-sheet .features .feature .choices {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+.utopia.gear-sheet .features .feature .choices .choice {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.utopia.gear-sheet .features .feature .choices .choice span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  pointer-events: none;
+  border: 2px solid #aaa;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+}
+.utopia.gear-sheet .features .feature .choices .choice span:hover {
+  background-color: #444;
+}
+.utopia.gear-sheet .features .feature .choices .choice[selected] span {
+  background-color: #ce5e1f;
+  border-color: #ce5e1f;
 }
 .utopia.gear-sheet .crafting-button {
   position: fixed;
@@ -1646,15 +1684,23 @@
   flex-direction: column;
   gap: 5px;
   overflow-y: auto;
+  position: relative;
 }
 .utopia.crafting-features-sheet .crafting-features-list .feature {
   display: flex;
   flex-direction: column;
-  padding: 0 1em;
+  padding: 0 5px;
   border-radius: 5px;
   height: 24px;
   border: 1px solid #ce5e1f;
   position: relative;
+}
+.utopia.crafting-features-sheet .crafting-features-list .feature .cost {
+  width: 55px;
+  display: inline-block;
+  text-align: right;
+  margin-right: 3px;
+  font-weight: 700;
 }
 .utopia.crafting-features-sheet .crafting-features-list .feature .feature-name {
   height: 24px;
@@ -1666,27 +1712,56 @@
   pointer-events: none;
   line-height: 24px;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content {
-  visibility: hidden;
-  opacity: 0;
-  display: none;
-  background: black;
-  border: 1px solid white;
+.utopia.crafting-features-sheet .crafting-features-list .feature .feature-name[data-chosen=true] {
+  text-decoration: line-through;
+  color: #949494;
+}
+.utopia.crafting-features-sheet .crafting-features-list .feature .feature-name[data-incompatible=true] {
+  text-decoration: line-through;
+  color: rgb(173, 84, 84);
+}
+.utopia.crafting-features-sheet .crafting-features-list .feature .feature-tagline {
+  font-size: 10px;
+}
+.utopia.crafting-features-sheet .crafting-features-list .feature:hover .content {
+  visibility: visible;
+  opacity: 1;
+  display: flex;
+}
+.utopia.crafting-features-sheet .crafting-features-list .required-label {
   position: absolute;
-  left: 0;
-  top: 105%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  background: black;
+  color: white;
+  padding: 0 5px;
+  font-size: 14px;
+}
+.utopia.crafting-features-sheet .crafting-features-list .required-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid white;
+  padding: 5px;
+  margin-top: 10px;
+  padding: 12px 5px 5px 5px;
+}
+.utopia.crafting-features-sheet .crafting-features-list .required-feature {
+  border: 1px solid red;
+  gap: 5px;
+}
+.utopia.crafting-features-sheet .feature-tooltip {
+  border: 1px solid white;
   border-radius: 5px;
-  box-shadow: none;
-  pointer-events: none;
   padding: 1em;
-  width: 100%;
   height: auto;
   z-index: 200;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 3px;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content .tag {
+.utopia.crafting-features-sheet .feature-tooltip .tag {
   height: 24px;
   width: auto;
   padding: 0 0.5em;
@@ -1696,22 +1771,17 @@
   text-align: center;
   line-height: 24px;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content .tag.category {
+.utopia.crafting-features-sheet .feature-tooltip .tag.category {
   border: 1px solid #ce5e1f;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content .tag.component {
+.utopia.crafting-features-sheet .feature-tooltip .tag.component {
   border: 1px solid #c2ce1f;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content .tag.stackable {
+.utopia.crafting-features-sheet .feature-tooltip .tag.stackable {
   border: 1px solid #1fce5e;
 }
-.utopia.crafting-features-sheet .crafting-features-list .feature .content .tag.componentPerStack {
+.utopia.crafting-features-sheet .feature-tooltip .tag.componentPerStack {
   border: 1px solid #158b40;
-}
-.utopia.crafting-features-sheet .crafting-features-list .feature:hover .content {
-  visibility: visible;
-  opacity: 1;
-  display: flex;
 }
 .utopia .action-img {
   width: 30px;
@@ -2133,14 +2203,17 @@
   overflow-y: auto;
   letter-spacing: 0.5px;
 }
-.utopia .skill-description[unavailable] {
-  box-shadow: 0 0 10px 8px #5d142b;
+.utopia .skill-description .locked {
+  background-color: #5d142b;
+  color: white;
 }
-.utopia .skill-description[available] {
-  box-shadow: 0 0 10px 8px #ffffff;
+.utopia .skill-description .unlocked {
+  background-color: #ffffff;
+  color: black;
 }
-.utopia .skill-description[taken] {
-  box-shadow: 0 0 10px 8px #d3c78c;
+.utopia .skill-description .taken {
+  background-color: #d3c78c;
+  color: black;
 }
 .utopia .skill-points {
   pointer-events: none;
@@ -2165,17 +2238,35 @@
   font-weight: 900;
   color: #d3688a;
 }
-.utopia .skill-description .locked {
-  background-color: #5d142b;
-  color: white;
+.utopia .item-formula {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid var(--color-scrollbar);
+  border-radius: 5px;
+  padding: 0;
+  background-color: #302831;
 }
-.utopia .skill-description .unlocked {
-  background-color: #ffffff;
-  color: black;
+.utopia .item-formula .term {
+  width: fit-content;
+  position: relative;
+  line-height: 35px;
+  margin-right: 5px;
 }
-.utopia .skill-description .taken {
-  background-color: #d3c78c;
-  color: black;
+.utopia .item-formula .term[data-type=operator] {
+  color: var(--color-text-light-5);
+  font-size: 1.5em;
+}
+.utopia .item-formula .term[data-type=dice] {
+  color: var(--color-text-light-primary);
+}
+.utopia .item-formula .term[data-type=dice] select {
+  padding-left: 25px;
+  padding-right: 0;
+}
+.utopia .item-formula .term[data-type=dice] i {
+  line-height: 35px;
+  position: absolute;
+  left: 5px;
 }
 
 /*# sourceMappingURL=utopia.css.map */

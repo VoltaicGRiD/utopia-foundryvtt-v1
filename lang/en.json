@@ -69,8 +69,10 @@
       "item": "Utopia Item Sheet",
       "weapon": "Utopia Weapon Sheet",
       "attack": "Utopia Attack Sheet",
-      "subtrait": "Subtrait Selection",
-      "talent-tree-selector": "Utoipia Talent Tree"
+      "subtrait": "Utopia Subtrait Selection",
+      "talent-tree-selector": "Utopia Talent Tree",
+      "spellcraft": "Utopia Spellcrafting",
+      "craftingFeatures": "Utopia Artifice Features"
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -94,7 +96,11 @@
       "filter": "Filter",
       "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
       "kineticForce": "Kinetic",
-      "save": "Save"
+      "save": "Save",
+      "all": "All",
+      "favorite": "Favorites",
+      "available": "Available",
+      "locked": "Locked"
     },
 
     "Checks": {
@@ -154,6 +160,7 @@
           },
           "ammo": "Ammunition",
           "cost": "Cost",
+          "costLimit": "Limit X",
           "costModifier": "Cost Modifier",
           "CostModifier": {
             "flat": "Flat",
@@ -177,9 +184,15 @@
             "all": "Any number of stacks",
             "one": "Per stack"
           },
-          "grantsAction": "Grants Action to Wielder / Owner"
+          "grantsAction": "Grants Action to Wielder / Owner",
+          "tagline": "Tagline",
+          "required": "Required"
         },
         "Gear": {
+          "Validity": {
+            "valid": "Valid",
+            "invalid": "Invalid"
+          },
           "Handling": {
             "none": "None",
             "oneHanded": "One-Handed",

@@ -36,8 +36,11 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
       "multiply": "UTOPIA.Item.Artifice.Features.CostModifier.multiply",
       "divide": "UTOPIA.Item.Artifice.Features.CostModifier.divide",
     } });
+    schema.costLimit = new fields.NumberField({ required: true, nullable: false, initial: 0 });
     schema.costBonus = new fields.StringField({ required: false, nullable: true });
     
+    schema.tagline = new fields.StringField({ required: false, nullable: true, initial: "" });
+
     schema.incompatible = new fields.SetField(new fields.DocumentUUIDField({ entityClass: "Item" }), {required: false, nullable: true, initial: [] });
     schema.requires = new fields.SetField(new fields.DocumentUUIDField({ entityClass: "Item" }), {required: false, nullable: true, initial: [] });
 
@@ -45,6 +48,7 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
       "unstackable": "UTOPIA.Item.Artifice.Features.Stackable.unstackable",
       "stackable": "UTOPIA.Item.Artifice.Features.Stackable.stackable",
     } });
+    schema.stacks = new fields.NumberField({ required: false, nullable: true, initial: 1 });
     schema.maxStacks = new fields.NumberField({ required: false, nullable: true, initial: 0 });
 
     schema.range = new fields.SchemaField({
@@ -73,55 +77,90 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
     } });
 
     schema.craftingPrompt = new fields.StringField({ required: false, nullable: true, initial: "" });
+    schema.choices = new fields.SetField(new fields.StringField({ required: false, nullable: true, initial: [] }));
+    schema.choice = new fields.StringField({ required: false, nullable: true, initial: "none" });
     schema.grantsAction = new fields.DocumentUUIDField({ entityClass: "Item", required: false, nullable: true });
     
     return schema;
   }
 
   async prepareDerivedData() {
-    const ammoTypes = {};
+    // const ammoTypes = {};
 
-    const packs = game.packs.filter(p => p.metadata.entity === "Item");
-    for (let pack of packs) {
-      let items = await pack.getDocuments({type: 'general'}).filter(i => i.system.category === "ammunition");
-      items.forEach(i => ammoTypes[i.id] = i.name);
+    // const packs = game.packs.filter(p => p.metadata.entity === "Item");
+    // for (let pack of packs) {
+    //   let items = await pack.getDocuments({type: 'general'}).filter(i => i.system.category === "ammunition");
+    //   items.forEach(i => ammoTypes[i.id] = i.name);
+    // }
+
+    // const worldItems = game.items.filter(i => i.system.category === "ammunition");
+    // worldItems.forEach(i => ammoTypes[i.id] = i.name);
+
+    // this.schema.fields.ammo.fields.item.choices = ammoTypes;
+
+    if (this.formula.length > 0) {
+      if (this.formulas.melee.length === 0)
+        this.formulas.melee = this.formula;
     }
 
-    const worldItems = game.items.filter(i => i.system.category === "ammunition");
-    worldItems.forEach(i => ammoTypes[i.id] = i.name);
-
-    this.schema.fields.ammo.fields.item.choices = ammoTypes;
-
-    if (this.parent.system.costModifier !== "flat") {
-      this.parent.system.variables = {};
-      this.parent.system.variables.cost = {
+    if (this.costModifier !== "flat") {
+      this.variables = {};
+      this.variables.cost = {
         name: "Cost",
         value: 1,
         kind: "number",
       }
     }
 
-    if (this.parent.system.variables && Object.keys(this.parent.system.variables).length > 0) {
-      for (let variable of this.parent.system.variables) {
+    if (this.variables && Object.keys(this.variables).length > 0) {
+      for (let [key, variable] of Object.entries(this.variables)) {
         if (variable.name === "Cost") {
-          const mod = this.parent.system.costModifier;
-          const cost = this.parent.system.cost;
+          const mod = this.costModifier;
+          const cost = this.cost;
 
           switch (mod) {
             case "add":
-              this.parent.system.cost += variable.value;
+              this.cost += variable.value;
               break;
             case "subtract":
-              this.parent.system.cost -= variable.value;
+              this.cost -= variable.value;
               break;
             case "multiply":
-              this.parent.system.cost *= variable.value;
+              this.cost *= variable.value;
               break;
             case "divide":
-              this.parent.system.cost /= Math.floor(variable.value);
+              this.cost /= Math.floor(variable.value);
               break;
           }
         }
+      }
+    }
+
+    if (this.choices.length === 0 && this.craftingPrompt.length > 0) {
+      let values = [];
+      try {
+        values = JSON.parse(this.craftingPrompt);
+      } catch (e) {
+        values = [{value: this.craftingPrompt}]
+      }
+      // Choices is a SetField, so we need to set the values as an array
+      this.choices = values.map(v => v.value);
+
+      console.log(this.choices);
+    }
+
+    if (!this.choice) {
+      let values = [];
+      try {
+        values = JSON.parse(this.craftingPrompt);
+      } catch (e) {
+        values = [{value: this.craftingPrompt}]
+      }
+      if (values.length > 0) {
+        this.choice = values[0].value;
+      }
+      else {
+        this.choice = "none";
       }
     }
   }

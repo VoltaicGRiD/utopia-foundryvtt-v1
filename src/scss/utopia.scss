@@ -37,6 +37,13 @@
   }
 }
 
+#tooltip:has(.feature-tooltip) {
+  backdrop-filter: blur(5px);
+  background: rgba(0,0,0,0.5);
+  border: none;
+  box-shadow: none;
+}
+
 /* Styles limited to utopia sheets */
 .utopia {
   @import 'components/general/resource';
@@ -85,5 +92,7 @@
 
   @import 'components/chat/chat-cards';
   @import 'components/talent-tree/talent-tree';
+
+  @import 'components/general/formula';
 }
 

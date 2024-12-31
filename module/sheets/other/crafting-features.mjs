@@ -9,12 +9,17 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
     this.#dragDrop = this.#createDragDropHandlers();
     this.dockedTo = undefined;
     this.isDocked = true;
+    this.features = [];
+    this.chosenFeatures = [];
+    this.requiredFeatures = [];
+    this.category = "fastWeapon";
+    this.requirements = {};
   }
 
   static DEFAULT_OPTIONS = {
     classes: ['utopia', 'crafting-features-sheet'],
     position: {
-      width: 300,
+      width: 350,
       height: 500,
     },
     actions: {
@@ -46,10 +51,19 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
   static PARTS = {
     features: {
       template: 'systems/utopia/templates/other/crafting-features-sheet.hbs',
-      scrollable: ['']
+      scrollable: [""]
     },
   }
 
+  addChosenFeature(feature) {
+    this.chosenFeatures.push(feature);
+    this.render();
+  }
+
+  removeChosenFeature(feature) {
+    this.chosenFeatures = this.chosenFeatures.filter((f) => f !== feature);
+    this.render();
+  }
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
@@ -60,40 +74,104 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
   }
 
   async _prepareContext(options) {
-    let features = await gatherFeatures("artificeFeature");
-    if (this.category) {
-      features = features.filter((f) => f.system.category === this.category);
+    if (options.isFirstRender) {
+      let features = await gatherFeatures("artificeFeature");
+
+      if (this.category) {
+        features = features.filter((f) => f.system.category === this.category);
+      }
+
+      const requirements = this.requirements;
+
+      const requiredOr = requirements.or.map((r) => r.uuid);
+      const requiredAnd = requirements.and.map((r) => r.uuid);
+
+      features.forEach((f) => {
+        switch (f.system.costModifier) {
+          case "multiply": f.cost = f.system.cost + "X"; break;
+          case "divide": f.cost = f.system.cost + "/X"; break;
+          case "add": f.cost = f.system.cost + "+X"; break;
+          case "subtract": f.cost = f.system.cost + "-X"; break;
+          default: f.cost = f.system.cost;
+        }
+
+        f.category = game.i18n.localize('UTOPIA.Item.Artifice.Features.Categories.' + f.system.category);
+        f.components = {}
+
+        if (f.system.components.material) 
+          f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.material')] = f.system.components.material;
+        if (f.system.components.refinement)
+          f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.refinement')] = f.system.components.refinement;
+        if (f.system.components.power)
+          f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.power')] = f.system.components.power;
+
+        f.stackable = game.i18n.localize('UTOPIA.Item.Artifice.Features.Stackable.' + f.system.stackable);
+        if (f.stackable) {
+          f.maxStacks = f.system.maxStacks;
+          f.componentsPerStack = game.i18n.localize('UTOPIA.Item.Artifice.Features.ComponentsPerStack.' + f.system.componentsPerStack);
+        } else {
+          f.componentsPerStack = "N/A";
+        }
+
+        if (requiredOr.includes(f.system.uuid)) {
+          f.requiredOr = true;
+          this.requiredFeatures.push(f);
+        }
+
+        else if (requiredAnd.includes(f.system.uuid)) {
+          f.requiredAnd = true;
+
+          this.requiredFeatures.push(f);
+        }
+        
+        else this.features.push(f);
+      });
+    } 
+    else {
+      this.features.forEach((f) => {
+        f.chosen = false;
+        f.incompatible = false;
+        f.required = false;
+
+        this.chosenFeatures.forEach((cf) => {
+          if (cf === f.system.uuid) {
+            f.chosen = true;
+          }
+
+          if (f.system.incompatible.has(cf)) {
+            f.incompatible = true;
+          }
+
+          if (f.system.requires.has(cf)) {
+            f.required = true;
+            this.requiredFeatures.push(f);
+          }
+        });
+      });
+
+      this.features = this.features.filter((f) => !f.required);
+
+      this.requiredFeatures.forEach((f) => {
+        f.chosen = false;
+        f.incompatible = false;
+
+        this.chosenFeatures.forEach((cf) => {
+          if (cf === f.system.uuid) {
+            f.chosen = true;
+          }
+
+          if (f.system.incompatible.has(cf)) {
+            f.incompatible = true;
+          }
+        });
+      });
     }
-    features.forEach((f) => {
-      switch (f.system.costModifier) {
-        case "multiply": f.cost = f.system.cost + "X"; break;
-        case "divide": f.cost = f.system.cost + "/X"; break;
-        case "add": f.cost = f.system.cost + "+X"; break;
-        case "subtract": f.cost = f.system.cost + "-X"; break;
-        default: f.cost = f.system.cost;
-      }
 
-      f.category = game.i18n.localize('UTOPIA.Item.Artifice.Features.Categories.' + f.system.category);
-      f.components = {}
-
-      if (f.system.components.material) 
-        f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.material')] = f.system.components.material;
-      if (f.system.components.refinement)
-        f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.refinement')] = f.system.components.refinement;
-      if (f.system.components.power)
-        f.components[game.i18n.localize('UTOPIA.Item.Artifice.Components.Types.power')] = f.system.components.power;
-
-      f.stackable = game.i18n.localize('UTOPIA.Item.Artifice.Features.Stackable.' + f.system.stackable);
-      if (f.stackable) {
-        f.maxStacks = f.system.maxStacks;
-        f.componentsPerStack = game.i18n.localize('UTOPIA.Item.Artifice.Features.ComponentsPerStack.' + f.system.componentsPerStack);
-      } else {
-        f.componentsPerStack = "N/A";
-      }
-    });
+    console.log(this.chosenFeatures);
 
     const context = {
-      features: features
+      features: this.features,
+      requiredFeatures: this.requiredFeatures
     };  
 
     console.log(context);
@@ -115,9 +193,52 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
 
   async _onRender() {
     this.element.querySelectorAll('.feature').forEach((f) => {
+      f.addEventListener('mouseover', async (event) => {
+        let feature = this.features.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        if (!feature)
+          feature = this.requiredFeatures.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        let content = await renderTemplate('systems/utopia/templates/other/crafting-features-tooltip.hbs', { 
+          feature: feature
+        });
+        let element = document.createElement('div');
+        element.innerHTML = content;
+        game.tooltip.activate(event.target, { direction: 'DOWN', cssClass: "utopia crafting-features-sheet", content: element });
+      });
+
+      f.addEventListener('mouseout', (event) => {
+        game.tooltip.deactivate();
+      });
+
       f.draggable = true;
+      
       f.addEventListener('dragstart', (event) => { 
-        event.dataTransfer.setData('text/plain', JSON.stringify({ uuid: f.dataset.uuid }));
+        let feature = this.features.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        if (!feature) 
+          feature = this.requiredFeatures.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        
+        if (feature.incompatible || feature.chosen) return;
+
+        const clone = feature.clone();
+        const raw = clone.toObject();
+        raw.ref = feature.system.uuid;
+
+        const output = [];
+        output.push(raw);
+        
+        if (feature.system.requires.size > 0) {
+          for (let req of feature.system.requires) {
+            let reqFeature = this.features.find((f) => f.system.uuid === req);
+            if (!reqFeature) reqFeature = this.requiredFeatures.find((f) => f.system.uuid === req);
+            const reqClone = reqFeature.clone();
+            const reqRaw = reqClone.toObject();
+            reqRaw.ref = reqFeature.system.uuid;
+            output.push(reqRaw);
+          }
+        }
+
+        console.log(output);
+
+        event.dataTransfer.setData('text/plain', JSON.stringify(output));
       });
     });
   }

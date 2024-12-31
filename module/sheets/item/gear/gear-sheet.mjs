@@ -7,7 +7,7 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
-    UtopiaGearSheet.#descriptions = {};
+    this.children = [];
     this.dockedLeft = [];
     this.dockedRight = [];
   }
@@ -22,6 +22,11 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
       image: this._image,
       toggleCrafting: this._toggleCrafting,
       categoryDescription: this._categoryDescription,
+      increaseStacks: this._increaseStacks,
+      decreaseStacks: this._decreaseStacks,
+      removeFeature: this._removeFeature,
+      choosePrompt: this._choosePrompt,
+      updateVariable: this._updateVariable,
     },
     form: {
       submitOnChange: true,
@@ -45,6 +50,10 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
   }
 
   async _prepareContext(options) {
+    const roll = new Roll(this.item.system.formula);
+    const terms = roll.terms;
+    console.log(terms);
+
     var context = {
       // Validates both permissions and compendium status
       editable: this.isEditable,
@@ -61,7 +70,8 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
       // Add features to context
-      features: this.item.features
+      features: this.item.system.features,
+      terms: terms
     };
 
     console.log(context);
@@ -69,85 +79,110 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
     return context;
   }
 
-  async _addFeature(uuid) {
-    const newFeatures = [...this.item.system.features, uuid];
-    
+  async _addFeature(feature) {    
+    // We need to validate this is actually a feature, and not just some random data.
+    if (!feature) return;
+    if (Object.keys(feature).length === 0) return;
+    if (!feature.name) return;
+    if (!feature.system) return;
+    if (!feature.system.category) return;
+    if (feature.type !== "artificeFeature") return;
+
+    console.log(feature);
+
+    const features = this.item.system.features;
+    const id = foundry.utils.randomID();
+    feature.id = id;
+
+    const effects = feature.effects || null;
+    if (effects) {
+      for (const effect of effects) {
+        effect.flags = {
+          utopia: {
+            sourceId: id,
+          }
+        }
+        const newEffect = await ActiveEffect.create(effect, { parent: this.item });
+        this.item.createEmbeddedDocuments("ActiveEffect", [newEffect]);
+      }
+    }
+
+    feature.effects = null;
+    features[id] = feature;
+
     await this.item.update({
-      ["system.features"]: newFeatures
+      ["system.features"]: features
     });
-  }
 
-  async _removeFeature(uuid) {
-    const newFeatures = this.item.system.features.filter(f => f !== uuid);
-
-    await this.item.update({
-      ["system.features"]: newFeatures
-    });
-  }
-
-  static #descriptions = {
-    "fastWeapon": `
-<p>Fast weapons are the least damaging weapon per attack, though attacks from these weapons can be made in quick succession. Unlike other weapons, over half of the attacks from these weapons are often unresponded due to the high rate at which they come.</p>
-<p>Due to their shear size and weight limitations, it’s often more expensive to make these types of weapons include specialized features. Regardless, these remain as powerful sidearms, especially due to their ability to make the most use out of a single second of time.</p>
-<ol class="category-stats">
-	<li>Innately requires 1 turn action to attack with.</li>
-	<li>Innately requires 1 hand to attack with.</li>
-	<li>1 stack of Slam or at least 1 stack of Harsh is required.</li>	
-	<li>Innately has 0 meters of close range and 0 meters of far range. It is considered melee.</li>
-	<li>Innately does not use any modifiers when calculating damage.</li>
-	<li>Innately takes up 3 slots.</li>
-</ol>
-<ol class="category-materials">
-	<li>2 Refinement Components</li>
-	<li>1 Material Component</li>
-</ol>`,
-    "moderateWeapon": `
-<p>Moderate weapons are the most common form of weaponry, generally dealing a generic amount of damage and hitting fast enough to bring some unresponded attacks to the battlefield.</p>
-<p> These types of weapons are the most congruent for basic infantry; the hypothetical perfect middle-ground between damage and speed. Tinkerers may use this weapon type as a basis to find out whether they want something faster or something heavier.</p>
-<ol class="category-stats">
-	<li>Innately requires 2 turn actions to attack with.</li>
-	<li>Innately requires 1 hand to attack with.</li>
-	<li>1 stack of Slam or at least 1 stack of Harsh is required.</li>	
-	<li>Innately has 0 meters of close range and 0 meters of far range. It is considered melee.</li>
-	<li>Innately does not use any modifiers when calculating damage.</li>
-	<li>Innately takes up 3 slots.</li>
-</ol>
-<ol class="category-materials">
-	<li>1 Refinement Components</li>
-	<li>2 Material Component</li>
-</ol>`,
-  }
-
-  static async _categoryDescription() {
-    const category = this.item.system.category;
-    const description = this.#descriptions[category];
-
-    const descriptionSheet = new UtopiaCraftingFeaturesSheet();
-    descriptionSheet.render(true, { 
-      position: { 
-        left: this.element.offsetLeft - 300, 
-        top: this.element.offsetTop 
-      },
-      template: "systems/utopia/templates/item/gear/category-description.hbs",
-      data: {
-        description: description,
+    this.children.forEach(sheet => {
+      if (sheet instanceof UtopiaCraftingFeaturesSheet) {
+        sheet.addChosenFeature(feature.ref);
       }
     });
-    this.dockedLeft.push(descriptionSheet);
-    descriptionSheet.dockedTo = this;
+  }
+
+  static async _choosePrompt(event, target) {
+    console.log(event, target);
+
+    const value = target.dataset.choice;
+    const id = target.dataset.id;
+    await this.item.update({
+      [`system.features.${id}.system.choice`]: value,
+    });
+  }
+
+  static async _removeFeature(event, target) {
+    const id = target.dataset.id;
+
+    const effects = this.item.getEmbeddedCollection("ActiveEffect");  
+    effects.forEach(async (effect) => {
+      const sourceId = await effect.getFlag("utopia", "sourceId");
+      if (sourceId === id) {
+        await effect.delete(); 
+      }
+
+      const origin = effect.system.origin;
+      if (origin === id) {
+        await effect.delete();
+      }
+    });
+
+    const feature = this.item.system.features[id];
+    console.log(feature);
+    this.children.forEach(sheet => {
+      if (sheet instanceof UtopiaCraftingFeaturesSheet) {
+        sheet.removeChosenFeature(feature.ref);
+        sheet.render();
+      }
+    });
+
+    await this.item.update({
+      [`system.features.-=${id}`]: null,
+    });
   }
 
   static async _toggleCrafting(event, target) {
     const featureSheet = new UtopiaCraftingFeaturesSheet();
     featureSheet.category = this.item.system.category;
+    featureSheet.requirements = this.item.system.craftRequirements;
+    featureSheet.chosenFeatures = Object.values(this.item.system.features).map(f => f.ref);
     featureSheet.render(true, { 
       position: { 
-        left: this.element.offsetLeft - 300, 
+        left: this.element.offsetLeft - featureSheet.position.width, 
         top: this.element.offsetTop 
       }
     });
     this.dockedLeft.push(featureSheet);
+    this.children.push(featureSheet);
     featureSheet.dockedTo = this;
+  }
+
+  _preClose(options) {
+    super._preClose(options);
+
+    this.dockedLeft.forEach(sheet => {
+      sheet.close();
+    });
   }
 
   _onPosition(position) {
@@ -182,20 +217,51 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
 
     const features = this.element.querySelectorAll('.feature');
     features.forEach(f => {
-      f.draggable = true;
+      f.addEventListener('mouseover', async (event) => {
+        let feature = this.item.system.features[f.dataset.id];
+        let content = await renderTemplate('systems/utopia/templates/other/crafting-features-tooltip.hbs', { 
+          feature: feature
+        });
+        let element = document.createElement('div');
+        element.innerHTML = content;
+        game.tooltip.activate(event.target, { direction: 'DOWN', cssClass: "utopia crafting-features-sheet", content: element });
+      });
 
-      f.addEventListener("dragstart", (event) => {
-        console.log(event);
-        event.dataTransfer.setData('text/plain', JSON.stringify({ uuid: event.target.dataset.uuid }));
+      f.addEventListener('mouseout', (event) => {
+        game.tooltip.deactivate();
       });
-  
-      f.addEventListener("dragend", (event) => {
-        if (!this.element.contains(event.relatedTarget)) {
-          const uuid = event.target.dataset.uuid;
-          
-          this._removeFeature(uuid);
-        }
-      });
+    });
+  }
+
+  static async _increaseStacks(event, target) {
+    console.log(event, target);
+    const id = target.dataset.id;
+    const features = this.item.system.features;
+    const feature = features[id];
+
+    if (!feature.system.stacks) feature.system.stacks = 1;
+    if (!feature.system.maxStacks || feature.system.stacks < feature.system.maxStacks) {
+      feature.system.stacks += 1;
+    }
+
+    await this.item.update({
+      [`system.features.${id}`]: feature,
+    });
+  }
+
+  static async _decreaseStacks(event, target) {
+    console.log(event, target);
+    const id = target.dataset.id;
+    const features = this.item.system.features;
+    const feature = features[id];
+
+    if (!feature.system.stacks) return;
+    if (feature.system.stacks > 1) {
+      feature.system.stacks -= 1;
+    }
+
+    await this.item.update({
+      [`system.features.${id}`]: feature,
     });
   }
 
@@ -272,78 +338,16 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
    */
   async _onDrop(event) {
     const data = TextEditor.getDragEventData(event);
-    const uuid = data.uuid;
-    
-    this._addFeature(uuid);
-  }
+    console.log(data);
 
-  /**
-   * Handle dropping of an Actor data onto another Actor sheet
-   * @param {DragEvent} event            The concluding DragEvent which contains drop data
-   * @param {object} data                The data transfer extracted from the event
-   * @returns {Promise<object|boolean>}  A data object which describes the result of the drop, or false if the drop was
-   *                                     not permitted.
-   * @protected
-   */
-  async _onDropActor(event, data) {
-    if (!this.actor.isOwner) return false;
-  }
+    if (!Array.isArray(data)) return;
+    data.forEach((d) => {
+      console.log(d);
+      const keys = Object.keys(this.item.system.features);
+      if (keys.includes(d.id)) return;
 
-  /* -------------------------------------------- */
-
-  /**
-   * Handle dropping of an item reference or item data onto an Actor Sheet
-   * @param {DragEvent} event            The concluding DragEvent which contains drop data
-   * @param {object} data                The data transfer extracted from the event
-   * @returns {Promise<Item[]|boolean>}  The created or updated Item instances, or false if the drop was not permitted.
-   * @protected
-   */
-  async _onDropItem(event, data) {
-    console.log(event, data);
-
-    if (!this.actor.isOwner) return false;
-    const item = await Item.implementation.fromDropData(data);
-
-    // Handle item sorting within the same Actor
-    if (this.actor.uuid === item.parent?.uuid)
-      return this._onSortItem(event, item);
-
-    // Create the owned item
-    return this._onDropItemCreate(item, event);
-  }
-
-  /**
-   * Handle dropping of a Folder on an Actor Sheet.
-   * The core sheet currently supports dropping a Folder of Items to create all items as owned items.
-   * @param {DragEvent} event     The concluding DragEvent which contains drop data
-   * @param {object} data         The data transfer extracted from the event
-   * @returns {Promise<Item[]>}
-   * @protected
-   */
-  async _onDropFolder(event, data) {
-    if (!this.actor.isOwner) return [];
-    const folder = await Folder.implementation.fromDropData(data);
-    if (folder.type !== 'Item') return [];
-    const droppedItemData = await Promise.all(
-      folder.contents.map(async (item) => {
-        if (!(document instanceof Item)) item = await fromUuid(item.uuid);
-        return item;
-      })
-    );
-    return this._onDropItemCreate(droppedItemData, event);
-  }
-
-  /**
-   * Handle the final creation of dropped Item data on the Actor.
-   * This method is factored out to allow downstream classes the opportunity to override item creation behavior.
-   * @param {object[]|object} itemData      The item data requested for creation
-   * @param {DragEvent} event               The concluding DragEvent which provided the drop data
-   * @returns {Promise<Item[]>}
-   * @private
-   */
-  async _onDropItemCreate(itemData, event) {
-    itemData = itemData instanceof Array ? itemData : [itemData];
-    return this.actor.createEmbeddedDocuments('Item', itemData);
+      this._addFeature(d);
+    })
   }
 
   /**
