@@ -1,5 +1,5 @@
 import { prepareActiveEffectCategories } from '../helpers/effects.mjs';
-import { calculateFavor } from '../helpers/favorHandler.mjs';
+import { calculateTraitFavor } from '../helpers/favorHandler.mjs';
 import { UtopiaOptionsSheet } from './options-sheet.mjs';
 import { UtopiaSubtraitSheetV2 } from './subtrait-sheet.mjs';
 import { UtopiaTalentTreeSheetV2 } from './talent-tree-sheet-v2.mjs';
@@ -15,6 +15,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 ) {
   constructor(options = {}) {
     super(options);
+    this.#dragDrop = this.#createDragDropHandlers();
   }
 
   /** @override */
@@ -37,18 +38,21 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       selectTalents: this._selectTalent,
       selectSubtraits: this._selectSubtraits,
       selectSpecies: this._selectSpecies,
+      deleteAction: this._deleteAction,
     },
     form: {
       submitOnChange: true,
     },
     tabs: [
       'data',
+      'actions',
       'talents',
       'spells',
       'gear',
       'biography',
       'effects',
-    ]
+    ],
+    dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
   };
 
   /** @override */
@@ -62,6 +66,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     },
     data: {
       template: 'systems/utopia/templates/actor/v2/data.hbs',
+    },
+    actions: {
+      template: 'systems/utopia/templates/actor/v2/actions.hbs',
     },
     biography: {
       template: 'systems/utopia/templates/actor/v2/biography.hbs',
@@ -87,7 +94,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'character':
-        options.parts.push('data', 'gear', 'spells', 'effects');
+        options.parts.push('data', 'gear', 'spells', 'effects', 'actions');
         break;
       case 'npc':
         options.parts.push('data', 'gear', 'effects');
@@ -117,8 +124,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       spellTabs: this._getTabs(['alteration', 'array', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'wake']),
     };
 
-    console.log(this.actor);
-
     // Offloading context prep to a helper function
     this._prepareItems(context);
 
@@ -130,12 +135,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
+      case 'actions': 
       case 'data':
       case 'gear':
         context.tab = context.tabs[partId];
         break;
       case 'spells':  
-        context.spellTab = context.spellTabs[partId];
+        context.spellTab = context.spellTabs[0];
         context.tab = context.tabs[partId];
         break;
       case 'biography':
@@ -176,16 +182,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @protected
    */
   _getTabs(parts) {
-    const tabGroup = 'primary';
-
     // Default tab for first time it's rendered this session
-    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'data';
+    if (!this.tabGroups['primary']) this.tabGroups['primary'] = 'data';
     if (!this.tabGroups['spells']) this.tabGroups['spells'] = 'alteration';
 
     return parts.reduce((tabs, partId) => {
       const tab = {
         cssClass: '',
-        group: tabGroup,
+        group: 'primary',
         // Matches tab property to
         id: '',
         // FontAwesome Icon, if you so choose
@@ -200,6 +204,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'data':
           tab.id = 'data';
           tab.label += 'Data';
+          break;
+        case 'actions':
+          tab.id = 'actions';
+          tab.label += 'Actions';
           break;
         case 'biography':
           tab.id = 'biography';
@@ -260,7 +268,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         default:
       }
       
-      if (this.tabGroups[tabGroup] === tab.id) tab.cssClass = 'active';
+      if (this.tabGroups['primary'] === tab.id) tab.cssClass = 'active';
       if (this.tabGroups['spells'] === tab.id) tab.cssClass = 'active';
 
       tabs[partId] = tab;
@@ -313,7 +321,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       else if (i.type === 'spell') {
         if (i.system.arts) {
           i.system.arts.forEach((art) => {
-            spells[art].push(i);
+            spells[art.toLowerCase()].push(i);
           });
         }
       }
@@ -325,13 +333,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     }
 
     actions.forEach((action) => {
-      console.log(action);
-      if (action.system.type == "interrupt") {
+      if (action.system.type == "Interrupt") {
         action.isReaction = true;
       }
     });
-
-    console.log(actions);
 
     // Assign and return
     context.weapons = weapons;
@@ -355,11 +360,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @override
    */
   _onRender(context, options) {
+    this.#dragDrop.forEach((d) => d.bind(this.element));
+    this.#disableOverrides();
+
     // Enable the ability to update the actor's image
-    const updateElements = this.element.querySelectorAll('[data-action="update"]')
-    updateElements.forEach(e => 
-      e.addEventListener('change', this._update.bind(this))
-    );
+    // const updateElements = this.element.querySelectorAll('[data-action="update"]')
+    // updateElements.forEach(e => 
+    //   e.addEventListener('change', this._update.bind(this))
+    // );
   }
 
   async _update(event) {
@@ -368,6 +376,11 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const value = target.value;
     const attr = target.name;
     this.document.update({ [attr]: value });
+  }
+
+  static async _deleteAction(event, target) {
+    await this.actor.deleteEmbeddedDocuments('Item', [target.dataset.target]);
+    this.render();
   }
 
   static async _selectSpecies(event, target) {
@@ -398,22 +411,11 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   }
 
   static async _selectTalent(event, target) {
-    // Create a new talent sheet instance
-    //let newSheet = new UtopiaTalentTreeSheet();
-    let newSheet = new UtopiaTalentTreeSheetV2();
-    newSheet.actor = this.actor;
-    newSheet.keepOpen = true;    
-    
-    // Render the talent sheet
-    newSheet.render(true);
+    this.actor.openTalentTree();
   }
 
   static async _selectSubtraits(event, target) {
-    let newSheet = new UtopiaSubtraitSheetV2();
-    newSheet.classActor = this.actor;
-    newSheet.keepOpen = true;
-    
-    newSheet.render(true);
+    this.actor.openSubtraitSheet();
   }
 
   /**************
@@ -474,6 +476,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @protected
    */
   static async _deleteDoc(event, target) {
+    console.log(event, target);
     const doc = this._getEmbeddedDocument(target);
     await doc.delete();
   }
@@ -547,40 +550,19 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         return await this.actor.performCheck(dataset.trait);
       }
       else if (dataset.rollType == 'spell') {
-        return await this.actor.castSpell(dataset);
+        let spell = this.actor.items.get(dataset.itemId);
+        return await this.actor.castSpell(spell);
+      }
+      else if (dataset.rollType == 'action') {
+        let action = this.actor.items.get(dataset.target);
+        console.log(action);
+        return await this.actor.performAction(action); 
       }
     }   
 
     // Handle actor rolls.
-    let chatMessage = "";
-    const trait = dataset.trait || "none";
-    const [net, disfavor, favor] = calculateFavor(trait, this.actor.system.disfavors, this.actor.system.favors);
-    
-    // Update the chat message with disfavor and favor amounts
-    chatMessage += `Roll has ${disfavor} disfavor and ${favor} favor!\n`;
-
-    // Adjust the roll formula based on net favor or disfavor
-    if (disfavorAmount > 0 && favorAmount > 0) {
-      let netEffect = favorAmount - disfavorAmount;
-      if (netEffect > 0) {
-        // Net favor: increase the number of dice
-        finalRoll = dataset.roll.replace('3d6', `${3 + netEffect}d6`);
-      } else {
-        // Net disfavor: decrease the number of dice
-        finalRoll = dataset.roll.replace('3d6', `${3 - Math.abs(netEffect)}d6`);
-      }
-    } else if (disfavorAmount > 0) {
-      // Only disfavor: decrease the number of dice
-      let netEffect = disfavorAmount;
-      finalRoll = dataset.roll.replace('3d6', `${3 - netEffect}d6`);
-    } else if (favorAmount > 0) {
-      // Only favor: increase the number of dice
-      let netEffect = favorAmount;
-      finalRoll = dataset.roll.replace('3d6', `${3 + netEffect}d6`);
-    }
-
     // Create the label for the chat message
-    let label = `${dataset.label} - ${chatMessage}`;
+    let label = `${dataset.label}`;
 
     // Create and perform the roll
     let roll = new Roll(finalRoll, this.actor.getRollData());

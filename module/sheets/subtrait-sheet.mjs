@@ -5,7 +5,7 @@ const { api, sheets } = foundry.applications;
  * Extends the base Application class provided by Foundry VTT.
  */
 export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
-  classActor = {}; // The actor associated with this sheet
+  actor = {}; // The actor associated with this sheet
   keepOpen = false; // Determines if the sheet should remain open after actions
 
   constructor(options = {}) {
@@ -42,8 +42,8 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
   async _prepareContext(options) {
     var context = {
-      actor: this.classActor,
-      traits: this.classActor.system.traits,
+      actor: this.actor,
+      traits: this.actor.system.traits,
       subtraits: await this._handleSubtraits()
     };
 
@@ -51,7 +51,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
   }
 
   async _handleSubtraits() {
-    const traits = this.classActor.system.traits;
+    const traits = this.actor.system.traits;
     let subtraits = {};
     
     let traitKeys = Object.keys(traits);

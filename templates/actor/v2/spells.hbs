@@ -4,8 +4,8 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="spell-tabs tabs" data-group="spells">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    {{#each spellTabs as |spellTab|}}
-      <a class="item" data-spell-tab="{{spellTab.tab}}" data-group="spells">{{localize spellTab.label}}</a>
+    {{#each spellTabs as |spellTabIterator spellTabName|}}
+      <a class="item {{spellTabIterator.cssClass}}" data-action="tab" data-tab="{{spellTabName}}" data-group="spells">{{localize spellTabIterator.label}}</a>
     {{/each}}
   </nav>
 
@@ -13,9 +13,9 @@
     <div class="tab alteration {{spellTab.cssClass}}" data-group="spells" data-tab="alteration">
       <h4>{{localize 'UTOPIA.Spells.Alteration'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.alteration}}
-          {{#each system.spells.alteration as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.alteration}}
+          {{#each spells.alteration as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -29,9 +29,9 @@
     <div class="tab array {{spellTab.cssClass}}" data-group="spells" data-tab="array">
       <h4>{{localize 'UTOPIA.Spells.Array'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.array}}
-          {{#each system.spells.array as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.array}}
+          {{#each spells.array as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -45,9 +45,9 @@
     <div class="tab divination {{spellTab.cssClass}}" data-group="spells" data-tab="divination">
       <h4>{{localize 'UTOPIA.Spells.Divination'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.divination}}
-          {{#each system.spells.divination as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.divination}}
+          {{#each spells.divination as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -61,9 +61,9 @@
     <div class="tab enchantment {{spellTab.cssClass}}" data-group="spells" data-tab="enchantment">
       <h4>{{localize 'UTOPIA.Spells.Enchantment'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.enchantment}}
-          {{#each system.spells.enchantment as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.enchantment}}
+          {{#each spells.enchantment as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -77,9 +77,9 @@
     <div class="tab evocation {{spellTab.cssClass}}" data-group="spells" data-tab="evocation">
       <h4>{{localize 'UTOPIA.Spells.Evocation'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.evocation}}
-          {{#each system.spells.evocation as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.evocation}}
+          {{#each spells.evocation as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -93,9 +93,9 @@
     <div class="tab illusion {{spellTab.cssClass}}" data-group="spells" data-tab="illusion">
       <h4>{{localize 'UTOPIA.Spells.Illusion'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.illusion}}
-          {{#each system.spells.illusion as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.illusion}}
+          {{#each spells.illusion as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -109,9 +109,9 @@
     <div class="tab necromancy {{spellTab.cssClass}}" data-group="spells" data-tab="necromancy">
       <h4>{{localize 'UTOPIA.Spells.Necromancy'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.necromancy}}
-          {{#each system.spells.necromancy as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.necromancy}}
+          {{#each spells.necromancy as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>
@@ -125,9 +125,9 @@
     <div class="tab wake {{spellTab.cssClass}}" data-group="spells" data-tab="wake">
       <h4>{{localize 'UTOPIA.Spells.Wake'}}</h4>
       <div class="grid grid-4col">
-        {{#if system.spells.wake}}
-          {{#each system.spells.wake as |spell|}}
-            <button class="spell" data-action="roll" data-roll-type="item" data-item-id="{{spell.id}}">
+        {{#if spells.wake}}
+          {{#each spells.wake as |spell|}}
+            <button class="spell" data-action="roll" data-roll-type="spell" data-item-id="{{spell.id}}">
               <h5>{{spell.name}}</h5>
               <p>{{spell.description}}</p>
             </button>

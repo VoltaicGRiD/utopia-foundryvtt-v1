@@ -17,11 +17,9 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
     },
     actions: {
       image: this._image,
-      //update: this._update,
     },
     form: {
       submitOnChange: true,
-      closeOnSubmit: false,
     },
     tag: "form",
     window: {
@@ -83,6 +81,14 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
       case 'attributes':
       case 'description':
         context.tab = context.tabs[partId];
+        context.enrichedDescription = await TextEditor.enrichHTML(
+          this.item.system.description,
+          {
+            secrets: this.document.isOwner,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item
+          }
+        );
         break;
       default:
     }

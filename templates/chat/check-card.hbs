@@ -11,16 +11,18 @@
 
     <div class="card-content">
       <div class="dice-roll" data-tooltip-class="utopia">
-        {{#if flavor~}}
+        <div class="flexcol">
+          {{#if flavor~}}
             <div class="dice-flavor">
                 {{flavor}}
             </div>
-        {{~/if}}
-        {{#if description~}}
+          {{~/if}}
+          {{#if description~}}
             <div class="dice-description">
                 {{description}}
             </div>
-        {{~/if}}
+          {{~/if}}
+        </div>
         <div class="dice-result">
           <div class="dice-formula">{{formula}}</div>
           {{{tooltip}}}

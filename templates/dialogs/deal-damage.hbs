@@ -1,0 +1,71 @@
+<div class="deal-damage-dialog">
+  <form>
+    <div class="flexrow" style="justify-content: space-evenly;">
+      <div class="data-overlay">
+        <i class="fa-solid fa-snowflake fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.chill'}}"></i>
+        <span class="data-number">
+          {{numberFormat defenses.chill decimals=0}}
+        </span>
+      </div>
+
+      <div class="data-overlay">
+        <i class="fa-solid fa-bolt fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.energy'}}"></i>
+        <span class="data-number">
+          {{numberFormat defenses.energy decimals=0}}
+        </span>
+      </div>
+
+      <div class="data-overlay">
+        <i class="fa-solid fa-fire fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.heat'}}"></i>
+        <span class="data-number">
+          {{numberFormat defenses.heat decimals=0}}
+        </span>
+      </div>
+    
+      <div class="data-overlay">
+        <i class="fa-solid fa-hand-fist fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.physical'}}"></i>
+        <span class="data-number">
+          {{numberFormat defenses.physical decimals=0}}
+        </span>
+      </div>
+    
+      <div class="data-overlay">
+        <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Defenses.psyche'}}"></i>
+        <span class="data-number">
+          {{numberFormat defenses.psyche decimals=0}}
+        </span>
+      </div>
+    </div>
+ 
+    <div class="flexrow" style="margin-top: 10px; gap: 10px;">
+      
+        <label for="damage">{{localize 'UTOPIA.Descriptions.damage'}}</label>
+        <input type="text" name="damage" id="damage" value="0" />
+      
+    
+      <label for="type">{{localize 'UTOPIA.Descriptions.damageType'}}</label>
+      <select name="type" id="type">
+        <option value="chill">{{localize 'UTOPIA.Defenses.chill'}}</option>
+        <option value="energy">{{localize 'UTOPIA.Defenses.energy'}}</option>
+        <option value="heat">{{localize 'UTOPIA.Defenses.heat'}}</option>
+        <option value="physical">{{localize 'UTOPIA.Defenses.physical'}}</option>
+        <option value="psyche">{{localize 'UTOPIA.Defenses.psyche'}}</option>
+        <option value="kinetic">{{localize 'UTOPIA.Descriptions.kineticForce'}}</option>
+      </select>
+      </div>
+    </div>
+
+    <div class="flexrow data-blocks">
+      <div class="flexcol">
+        <button class="action-button" data-action="force" data-force-action="block">
+          {{localize 'UTOPIA.Actor.block'}}: {{block}}
+        </button>
+      </div>
+      <div class="flexcol">
+        <button class="action-button" data-action="force" data-force-action="dodge">
+          {{localize 'UTOPIA.Actor.dodge'}}: {{dodge}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -10,12 +10,11 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "action-sheet"],
     position: {
-      width: 500,
+      width: 700,
       height: "auto",
     },
     actions: {
       image: this._image,
-      update: this._update,
     },
     form: {
       submitOnChange: true,
@@ -50,13 +49,29 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
 
   async _prepareContext(options) {
     var context = {
-      item: this.document,
-      system: this.document.system,
+      // Validates both permissions and compendium status
+      editable: this.isEditable,
+      owner: this.document.isOwner,
+      limited: this.document.limited,
+      // Add the item document.
+      item: this.item,
+      // Adding system and flags for easier access
+      system: this.item.system,
+      flags: this.item.flags,
+      // Adding a pointer to CONFIG.UTOPIA
+      config: CONFIG.UTOPIA,
+      // You can factor out context construction to helper functions
+      tabs: this._getTabs(options.parts),
+      // Necessary for formInput and formFields helpers
+      fields: this.document.schema.fields,
+      systemFields: this.document.system.schema.fields,
     };
 
     context = foundry.utils.mergeObject(context, {
       tabs: this._getTabs(options.parts),
     });
+
+    console.log(context);
 
     return context;
   }
@@ -114,21 +129,9 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
   }
 
   _onRender(context, options) {
-    let elements = this.element.querySelectorAll('[data-action="update"]')
-    elements.forEach(e => {e.addEventListener('change', this._update.bind(this))});
-    this.element.querySelector('[data-action="image"]').addEventListener('click', this._image.bind(this));
-  }
+    super._onRender(context, options);
 
-  async _update(event) {
-    event.preventDefault();
-    let value = event.target.value;
-    let target = event.target.name;
-    
-    console.log(target, value);
-
-    this.document.update({
-      [target]: event.target.value,
-    })
+    this.element.querySelector('.profile-img').addEventListener('click', this._image.bind(this));
   }
 
   async _image(event) {

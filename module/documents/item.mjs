@@ -1,6 +1,7 @@
 import { UtopiaAttackSheet } from "../sheets/attack-sheet.mjs";
 import rangeTest from '../helpers/rangeTest.mjs';
-import { UtopiaChatMessage } from "../sheets/chat-message.mjs";
+import { UtopiaChatMessage } from "./chat-message.mjs";
+import { UtopiaSpellVariableSheet } from "../sheets/spell-variable-sheet.mjs";
 const { api, sheets } = foundry.applications;
 
 /**
@@ -25,30 +26,6 @@ export class UtopiaItem extends Item {
   prepareDerivedData() {
     const itemData = this;
     const systemData = itemData.system;
-
-    // Placeholder for derived data calculations.
-    // The following code is commented out but demonstrates how parent items might be handled.
-
-    /*
-    if (systemData['parent'] !== undefined && systemData['parent'] !== "") {
-      if (systemData['parent'] === this.uuid) {
-        ui.notifications.error("You cannot assign an item as a parent to itself. You maniac.");
-      } else {
-        let id = systemData.parent.split('.').slice(-1)[0];
-        let parent = foundry.utils.parseUuid(systemData.parent).collection.find(f => f._id == id);
-
-        if (parent === null || parent === undefined) {
-          return;
-        } else {
-          this.update({
-            system: {
-              parentItem: parent
-            }
-          });
-        }
-      }
-    }
-    */
   }
 
   /**
@@ -81,13 +58,6 @@ export class UtopiaItem extends Item {
    * @returns {Promise<Roll|null>} The result of the roll or null if not applicable.
    */
   async roll() {
-    try {
-      this.toMessage(undefined, undefined);
-      return;
-    } catch (error) {
-      console.error(error);
-    }
-
     const item = this;
 
     // If the item is a weapon, handle weapon-specific rolling.
@@ -120,24 +90,20 @@ export class UtopiaItem extends Item {
 
         // Now, check to see if the Stamina formula contains any of these variables.
         if (this.system.stamina.includes('X') || this.system.stamina.includes('Y') || this.system.stamina.includes('Z')) {
+          const template = "systems/utopia/templates/dialogs/spell-variables.hbs";
+          const context = {
+            name: this.name,
+            max: this.actor.system.spellcap,
+            stamina: this.system.stamina,
+            formula: this.system.formula,
+            value: 0,
+          }
+          const html = await renderTemplate(template, context);
+
           // Great, that means that when the spell is cast, we need to prompt the user to input values for the variable.
           // We can do this by creating a new DialogV2 instance.
-          const variable = new api.DialogV2.prompt({
-            window: { title: "Spell Variables" },
-            content: `
-              <form>
-                <div class="form-group">
-                  <label>Variable X: ${this.system.stamina}</label>
-                  <input type="number" name="variableX" value="0" max=${this.owner.system.spellcap}>
-                </div>
-              </form>`,
-            ok: {
-              label: "Cast",
-              callback: async (html) => {
-                variableX = html.find('[name="variableX"]').val();
-              }
-            }
-          }).render({force: true});
+          const variable = new UtopiaSpellVariableSheet({ document: this, parts: ['content'] });
+          variable.render(true);
         }
       }
     } 

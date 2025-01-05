@@ -19,6 +19,9 @@ export const traitShortNames = {
   'lan': 'language',
   'blk': 'block',
   'dod': 'dodge',
+  'con': 'constitution',
+  'end': 'endurance',
+  'eff': 'effervescence',
 }
 
 export const traitLongNames = {
@@ -42,6 +45,9 @@ export const traitLongNames = {
   'language': 'lan',
   'block': 'blk',
   'dodge': 'dod',
+  'constitution': 'con',
+  'endurance': 'end',
+  'effervescence': 'eff',
 }
 
 export const shortToLong = (shortName) => {
