@@ -13,7 +13,7 @@
 @import 'global/flex';
 
 /* Chat override */
-@import 'chat/chat';
+@import 'components/chat/chat';
 
 /* Tagify classes */
 @import 'components/tagify';
@@ -43,6 +43,8 @@
   border: none;
   box-shadow: none;
 }
+
+@import 'components/general/sidebars';
 
 /* Styles limited to utopia sheets */
 .utopia {
@@ -78,6 +80,10 @@
 
   &.crafting-features-sheet {
     @import 'components/other/crafting-features-sheet';
+  }
+
+  &.placeable-hud {
+    @import 'components/hud/token-hud';
   }
 
   //@import 'components/item/spell-sheet';

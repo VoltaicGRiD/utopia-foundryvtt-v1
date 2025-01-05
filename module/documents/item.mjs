@@ -34,7 +34,7 @@ export class UtopiaItem extends Item {
 
     this._prepareSystemEffects(itemData);
     this._prepareDiceOptions(itemData);
-    this._prepareSpellFeatureData(itemData);
+    //this._prepareSpellFeatureData(itemData);
     //this._prepareArtificeFeatureData(itemData);
     //this._prepareSpellData(itemData);
   }
