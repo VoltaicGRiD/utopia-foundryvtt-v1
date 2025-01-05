@@ -123,7 +123,7 @@ export class UtopiaSpellFeatureSheet extends api.HandlebarsApplicationMixin(shee
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.SpellFeatures.Tabs.',
+        label: 'UTOPIA.Item.SpellFeatures.Tabs.',
       };
   
       switch (partId) {

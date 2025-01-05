@@ -10,10 +10,10 @@ export default class UtopiaSpellVariable extends UtopiaItemBase {
     schema.description = new fields.StringField({ required: false, nullable: true, initial: "" });
     schema.character = new fields.StringField({ required: true, nullable: false, initial: "A" });
     schema.kind = new fields.StringField({ required: true, nullable: false, initial: "none", choices: {
-      "none": "UTOPIA.SpellFeatures.Variables.none",
-      "number": "UTOPIA.SpellFeatures.Variables.number",
-      "options": "UTOPIA.SpellFeatures.Variables.options",
-      "dice": "UTOPIA.SpellFeatures.Variables.dice",
+      "none": "UTOPIA.Item.SpellFeatures.Variables.none",
+      "number": "UTOPIA.Item.SpellFeatures.Variables.number",
+      "options": "UTOPIA.Item.SpellFeatures.Variables.options",
+      "dice": "UTOPIA.Item.SpellFeatures.Variables.dice",
     }});
     schema.options = new fields.ArrayField(new fields.StringField());
     schema.description = new fields.StringField({ required: false, nullable: true, initial: "" });

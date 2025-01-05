@@ -1,5 +1,8 @@
 <div class="tab spells {{tab.cssClass}}" data-group="primary" data-tab="spells">
-  <h3 class="spellcap">{{localize 'UTOPIA.Descriptions.spellcap'}}: {{numberFormat system.spellcap decimals=0}}</h3>
+  <div class="spells-header">
+    <h3 class="spellcap">{{localize 'UTOPIA.Descriptions.spellcap'}}: {{numberFormat system.spellcap decimals=0}}</h3>
+    <button data-action="openSpellcraft">Open Spellcrafting</button>
+  </div>
   {{!-- <div class="flexrow">
     <span>Available Artistries: </span>
     {{#each artistry}}
@@ -16,9 +19,9 @@
           <div class="spell-name">{{spell.name}}</div>
           <span class="spell-cost">{{spell.system.cost}}</span>
           <div class="spell-controls" style="display: none">
-            <a data-action="editSpell">{{localize 'UTOPIA.Spells.edit'}}</a>
-            <a data-action="roll" data-roll-type="spell" data-spell="{{spell.id}}">{{localize 'UTOPIA.Spells.cast'}}</a>
-            <a data-action="deleteSpell">{{localize 'UTOPIA.Spells.delete'}}</a>
+            <a data-action="editSpell">{{localize 'UTOPIA.Item.Spells.edit'}}</a>
+            <a data-action="roll" data-roll-type="spell" data-spell="{{spell.id}}">{{localize 'UTOPIA.Item.Spells.cast'}}</a>
+            <a data-action="deleteSpell">{{localize 'UTOPIA.Item.Spells.delete'}}</a>
           </div>
         </div>
       {{/each}}

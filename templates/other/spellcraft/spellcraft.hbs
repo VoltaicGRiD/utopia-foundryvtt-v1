@@ -80,19 +80,19 @@
       </div>
       <div class="spell-attributes grid grid-2col">
         <div class="flexrow">
-          <span class="spell-duration">{{localize 'UTOPIA.Spells.duration'}}</span>
+          <span class="spell-duration">{{localize 'UTOPIA.Item.Spells.duration'}}</span>
           <span class="spell-duration-value">{{duration}}</span>
         </div>
         <div class="flexrow">
-          <span class="spell-range">{{localize 'UTOPIA.Spells.range'}}</span>
+          <span class="spell-range">{{localize 'UTOPIA.Item.Spells.range'}}</span>
           <span class="spell-range-value">{{range}}</span>
         </div>
         <div class="flexrow">
-          <span class="spell-aoe">{{localize 'UTOPIA.Spells.aoeShort'}}</span>
+          <span class="spell-aoe">{{localize 'UTOPIA.Item.Spells.aoeShort'}}</span>
           <span class="spell-aoe-value">{{aoe}}</span>
         </div>
         <div class="flexrow">
-          <span class="spell-cost">{{localize 'UTOPIA.Spells.stamina'}}</span>
+          <span class="spell-cost">{{localize 'UTOPIA.Item.Spells.stamina'}}</span>
           <span class="spell-cost-value">{{cost}}</span>
         </div>
       </div>
@@ -166,24 +166,24 @@
         </ol>
       </div>
       <div class="spell-flavor">
-        <textarea name="flavor" placeholder="{{localize 'UTOPIA.Spells.flavor'}}">{{flavor}}</textarea>
+        <textarea name="flavor" placeholder="{{localize 'UTOPIA.Item.Spells.flavor'}}">{{flavor}}</textarea>
       </div>
       <div class="spell-controls">
-        <button data-action="cast">{{localize 'UTOPIA.Spells.cast'}}</button>
-        <button data-action="saveAndCast" class="btn-primary">{{localize 'UTOPIA.Spells.saveAndCast'}}</button>
-        <button data-action="save">{{localize 'UTOPIA.Spells.save'}}</button>
+        <button data-action="cast">{{localize 'UTOPIA.Item.Spells.cast'}}</button>
+        <button data-action="saveAndCast" class="btn-primary">{{localize 'UTOPIA.Item.Spells.saveAndCast'}}</button>
+        <button data-action="save">{{localize 'UTOPIA.Item.Spells.save'}}</button>
       </div>
     </div>  
     <div class="spell-list">
       <div class="grid grid-2col">
         {{#each worldSpells as |spell uuid|}}
-          <div class="spell" data-id="{{uuid}}" {{{spell.style}}}>
+          <div class="spell" data-id="{{uuid}}" {{{spell.system.style}}}>
             <div class="spell-name">{{spell.name}}</div>
             <span class="spell-cost">{{spell.system.cost}}</span>
             <div class="spell-controls" style="display: none">
-              <a data-action="editSpell">{{localize 'UTOPIA.Spells.edit'}}</a>
-              <a data-action="roll" data-roll-type="spell" data-spell="{{spell.id}}">{{localize 'UTOPIA.Spells.cast'}}</a>
-              <a data-action="deleteSpell">{{localize 'UTOPIA.Spells.delete'}}</a>
+              <a data-action="editSpell">{{localize 'UTOPIA.Item.Spells.edit'}}</a>
+              <a data-action="roll" data-roll-type="spell" data-spell="{{spell.id}}">{{localize 'UTOPIA.Item.Spells.cast'}}</a>
+              <a data-action="deleteSpell">{{localize 'UTOPIA.Item.Spells.delete'}}</a>
             </div>
           </div>
         {{/each}}

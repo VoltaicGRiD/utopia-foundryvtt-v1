@@ -1,9 +1,9 @@
 <div class="grid grid-2col">
   {{#each talents as |talent key|}}
     <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
-      data-tooltip="{{localize 'UTOPIA.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
-                    {{localize 'UTOPIA.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
-                    {{localize 'UTOPIA.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
+      data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
+                    {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
+                    {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
       data-tooltip-position="top">
       <div class="flexrow talent-content">
         <div>

@@ -103,7 +103,7 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Actions.Tabs.',
+        label: 'UTOPIA.Item.Actions.Tabs.',
       };
   
       switch (partId) {

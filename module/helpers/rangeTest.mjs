@@ -35,6 +35,9 @@ export async function rangeTest(item, target) {
   let dexterityCheck;
   let range = item.system.range;
 
+  // Determine the Test Difficulty from the item's parent's `system.rangedTDModifier` attribute.
+  let testDifficulty = item.parent.system.rangedTDModifier || 0;
+   
   if (item.system.ranged) {
     // If the weapon is ranged.
 
@@ -52,10 +55,10 @@ export async function rangeTest(item, target) {
       // Determine the appropriate dexterity check based on distance.
       if (distance <= closeRange) {
         // Within close range, use a favorable roll.
-        dexterityCheck = "4d6 + @actor.traits.agi.subtraits.dex.mod";
+        dexterityCheck = "4d6 + @dex.mod";
       } else if (distance <= farRange) {
         // Within far range, use a standard roll.
-        dexterityCheck = "2d6 + @actor.traits.agi.subtraits.dex.mod";
+        dexterityCheck = "2d6 + @dex.mod";
       } else {
         // Beyond far range, the attack cannot proceed.
         ui.notifications.error("Target is out of range.");
@@ -77,6 +80,18 @@ export async function rangeTest(item, target) {
 
       // Calculate the total of the roll.
       let sum = chat.rolls.reduce((acc, current) => acc + current.total, 0);
+
+      // We also need to modify the distance based on the TD modifier.
+      // If the TD modifier is 0, the distance is unchanged.
+      // For each point below 0, the distance is halved.
+      // For each point above 0, the distance is doubled.
+      for (let i = 0; i < Math.abs(testDifficulty); i++) {
+        if (testDifficulty < 0) {
+          distance /= 2;
+        } else {
+          distance *= 2;
+        }
+      }
 
       if (sum >= distance) {
         // The attack hits.

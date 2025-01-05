@@ -37,6 +37,13 @@
   }
 }
 
+#tooltip:has(.feature-tooltip) {
+  backdrop-filter: blur(5px);
+  background: rgba(0,0,0,0.5);
+  border: none;
+  box-shadow: none;
+}
+
 /* Styles limited to utopia sheets */
 .utopia {
   @import 'components/general/resource';
@@ -57,6 +64,22 @@
     @import 'components/spellcraft/spellcraft';
   }
 
+  &.artifice-feature-sheet {
+    @import 'components/item/artifice-feature-sheet';
+  }
+
+  &.general-item-sheet {
+    @import 'components/item/general-item-sheet';
+  }
+
+  &.gear-sheet {
+    @import 'components/item/gear-sheet';
+  }
+
+  &.crafting-features-sheet {
+    @import 'components/other/crafting-features-sheet';
+  }
+
   //@import 'components/item/spell-sheet';
   @import 'components/item/action-sheet';
   @import 'components/item/spell-tab';
@@ -69,5 +92,7 @@
 
   @import 'components/chat/chat-cards';
   @import 'components/talent-tree/talent-tree';
+
+  @import 'components/general/formula';
 }
 

@@ -131,11 +131,13 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       this.worldSpells = {};
 
       if (Object.keys(this.actor).length > 0) {
-        this.actor.system.items.forEach(i => {
-          if (i.type === "spell") {
-            this.worldSpells[i.uuid] = i;
-          }
-        });
+        if (this.actor.items) {
+          this.actor.items.forEach(i => {
+            if (i.type === "spell") {
+              this.worldSpells[i.uuid] = i;
+            }
+          });
+        }
       } 
       else if (game.user.character !== null) {
         if (game.user.character.items && game.user.character.items.length > 0) {

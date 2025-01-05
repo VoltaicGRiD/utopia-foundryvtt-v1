@@ -1,0 +1,22 @@
+<div class="crafting-features-list">
+  <span class="required-label">{{localize 'UTOPIA.Item.Artifice.Features.required'}}</span>
+  <div class="required-features-list">
+    {{#each requiredFeatures as |feature|}}
+      <div class="feature required-feature" data-drag data-uuid="{{feature.system.uuid}}">
+        <div class="feature-name" data-incompatible="{{feature.incompatible}}" data-chosen="{{feature.chosen}}">
+          <p><span class="cost">[{{feature.cost}}]</span> {{feature.name}}</p>
+          <i class="feature-tagline">{{feature.system.tagline}}</i>
+        </div>
+      </div>
+    {{/each}}
+  </div>  
+
+  {{#each features as |feature|}}
+    <div class="feature" data-drag data-uuid="{{feature.system.uuid}}">
+      <div class="feature-name" data-incompatible="{{feature.incompatible}}" data-chosen="{{feature.chosen}}">
+        <p><span class="cost">[{{feature.cost}}]</span> {{feature.name}}</p>
+        <i class="feature-tagline">{{feature.system.tagline}}</i>
+      </div>
+    </div>
+  {{/each}}
+</div>

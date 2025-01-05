@@ -14,7 +14,11 @@ import {
   UtopiaTalentSheet,
   UtopiaSpellSheet,
   UtopiaSpellFeatureSheet,
-  UtopiaSpecialistTalentSheet
+  UtopiaSpecialistTalentSheet,
+  UtopiaArtificeMaterialSheet,
+  UtopiaArtificeFeatureSheet,
+  UtopiaGeneralItemSheet,
+  UtopiaGearSheet,
 } from "./sheets/item/_module.mjs";
 import { UtopiaTalentTreeSheet } from "./sheets/other/talent-tree-sheet.mjs";
 import { UtopiaOptionsSheet } from "./sheets/other/options-sheet.mjs";
@@ -48,6 +52,8 @@ import * as models from "./data/_module.mjs";
 import { UtopiaUser } from "./documents/user.mjs";
 import { UtopiaActiveEffect } from "./documents/active-effect.mjs";
 import UtopiaActiveEffectSheet from "./sheets/other/active-effect-sheet.mjs";
+import UtopiaDiceTerm from "./other/dice.mjs";
+import UtopiaDie from "./other/die.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -71,6 +77,8 @@ globalThis.utopia = {
     UtopiaSpeciesSheet,
     UtopiaTalentSheet,
     UtopiaSpellFeatureSheet,
+    UtopiaArtificeMaterialSheet,
+    UtopiaArtificeFeatureSheet,
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
     UtopiaTrigger,
@@ -97,6 +105,9 @@ Hooks.once("init", function () {
   game.utopia = {
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
+    UtopiaArtificeMaterialSheet,
+    UtopiaArtificeFeatureSheet,
+    UtopiaGeneralItemSheet,
     UtopiaChatMessage,
     UtopiaUser,
     UtopiaActor,
@@ -143,30 +154,19 @@ Hooks.once("init", function () {
     },
     eq: (a, b) => {
       return a == b;
-    },
+    }
   }
 
   // Store our custom document classes for Actors and Items.
   // We can register our custom [UtopiaChatMessage] class here too, since they are qualified as "Documents".
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
-  //CONFIG.User.documentClass = UtopiaUser;
   CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
-  CONFIG.ActiveEffect.documentClass = UtopiaActiveEffect; 
-
-  DocumentSheetConfig.registerSheet(UtopiaActiveEffect, "utopia", UtopiaActiveEffectSheet, 
-    {
-      types: ["base", "passive", "temporary", "inactive", "specialist", "talent"],
-      makeDefault: true,
-      label: "UTOPIA.SheetLabels.activeEffect",
-    }
-  );
+  CONFIG.Dice.terms.d = UtopiaDie;
+  CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
+  CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
 
   console.log(DocumentSheetConfig);
-
-  // CONFIG.User.dataModels = {
-  //   user: models.UtopiaUser,
-  // }
 
   // Setting up schema handling for the system.
   // This is supposed to replace the default 'Template.json' file.
@@ -179,7 +179,16 @@ Hooks.once("init", function () {
     variable: models.UtopiaSpellVariable,
     specialistTalent: models.UtopiaSpecialistTalent,
     spell: models.UtopiaSpell,
+    artificeMaterial: models.UtopiaArtificeMaterial,
+    artificeFeature: models.UtopiaArtificeFeature,
+    gear: models.UtopiaGear,
+    general: models.UtopiaGeneralItem,
   };
+
+  // CONFIG.Actor.dataModels = {
+  //   character: models.UtopiaCharacter,
+  //   npc: models.UtopiaNPC,
+  // }
 
   // Active Effects are never copied to the Actor,  // but will still apply to the Actor from within the Item
   // if the transfer property on the Active Effect is true.
@@ -231,6 +240,11 @@ function registerItemSheets() {
   //   types: ["spell"],
   //   label: "UTOPIA.SheetLabels.spellcraft",
   // });
+  Items.registerSheet("utopia", UtopiaGeneralItemSheet, {
+    makeDefault: true,
+    types: ["general"],
+    label: "UTOPIA.SheetLabels.generalItem",
+  });
   Items.registerSheet("utopia", UtopiaWeaponSheet, {
     makeDefault: true,
     types: ["weapon"],
@@ -260,6 +274,21 @@ function registerItemSheets() {
     makeDefault: true,
     types: ["spell"],
     label: "UTOPIA.SheetLabels.spell",
+  });
+  Items.registerSheet("utopia", UtopiaArtificeMaterialSheet, {
+    makeDefault: true,
+    types: ["artificeMaterial"],
+    label: "UTOPIA.SheetLabels.artificeMaterial",
+  });
+  Items.registerSheet("utopia", UtopiaArtificeFeatureSheet, {
+    makeDefault: true,
+    types: ["artificeFeature"],
+    label: "UTOPIA.SheetLabels.artificeFeature",
+  });
+  Items.registerSheet("utopia", UtopiaGearSheet, {
+    makeDefault: true,
+    types: ["gear"],
+    label: "UTOPIA.SheetLabels.gear",
   });
 }
 

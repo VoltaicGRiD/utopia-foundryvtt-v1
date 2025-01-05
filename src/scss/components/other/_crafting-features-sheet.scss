@@ -1,0 +1,122 @@
+.crafting-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+  position: relative;
+
+  .feature {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+    border-radius: 5px;
+    height: 24px;
+    border: 1px solid #ce5e1f; 
+    position: relative;
+
+    .cost {
+      width: 55px;
+      display: inline-block;
+      text-align: right;
+      margin-right: 3px;
+      font-weight: 700;
+    }
+
+    .feature-name {
+      height: 24px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-content: center;
+      align-items: center;
+      pointer-events: none;
+      line-height: 24px;
+      
+      &[data-chosen="true"] {
+        text-decoration: line-through;
+        color: #949494;
+      }
+
+      &[data-incompatible="true"] {
+        text-decoration: line-through;
+        color: rgb(173, 84, 84);
+      }
+    }
+
+    .feature-tagline {
+      font-size: 10px;
+    }
+
+    &:hover {
+      .content {
+        visibility: visible;
+        opacity: 1;
+        display: flex;
+      }
+    }
+  }
+
+  .required-label {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: black;
+    color: white;
+    padding: 0 5px;
+    font-size: 14px;
+  }
+
+  .required-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid white;
+    padding: 5px;
+    margin-top: 10px;
+    padding: 12px 5px 5px 5px;
+  }
+
+  .required-feature {
+    border: 1px solid red;
+    gap: 5px;
+  }
+}
+
+.feature-tooltip {
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 1em;
+  height: auto;
+  z-index: 200;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 3px;
+
+  .tag {
+    height: 24px;
+    width: auto;
+    padding: 0 0.5em;
+    text-wrap: none;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    line-height: 24px;
+
+    &.category {
+      border: 1px solid #ce5e1f;
+    }
+
+    &.component {
+      border: 1px solid #c2ce1f;
+    }
+
+    &.stackable {
+      border: 1px solid #1fce5e;
+    }
+
+    &.componentPerStack {
+      border: 1px solid #158b40;
+    }
+  }
+}

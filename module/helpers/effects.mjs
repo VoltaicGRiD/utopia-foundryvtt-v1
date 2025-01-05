@@ -45,37 +45,44 @@ export function prepareActiveEffectCategories(effects, options = {}) {
     inactive: options.inactive ?? true,
     specialist: options.specialist ?? false,
     talent: options.talent ?? false,
+    gear: options.gear ?? false,
   };
 
   const categories = {};
   if (effectOptions.temporary)
     categories.temporary = {
       type: 'temporary',
-      label: game.i18n.localize('UTOPIA.Effects.Temporary'),
+      label: game.i18n.localize('TYPES.ActiveEffect.temporary'),
       effects: [],
     };
   if (effectOptions.passive)
     categories.passive = {
       type: 'passive',
-      label: game.i18n.localize('UTOPIA.Effects.Passive'),
+      label: game.i18n.localize('TYPES.ActiveEffect.passive'),
       effects: [],
     };
   if (effectOptions.inactive)
     categories.inactive = {
       type: 'inactive',
-      label: game.i18n.localize('UTOPIA.Effects.Inactive'),
+      label: game.i18n.localize('TYPES.ActiveEffect.inactive'),
       effects: [],
     };
   if (effectOptions.specialist)
     categories.specialist = {
       type: 'specialist',
-      label: game.i18n.localize('UTOPIA.Effects.Specialist'),
+      label: game.i18n.localize('TYPES.ActiveEffect.specialist'),
       effects: [],
     };
   if (effectOptions.talent)
     categories.talent = {
       type: 'talent',
-      label: game.i18n.localize('UTOPIA.Effects.Talent'),
+      label: game.i18n.localize('TYPES.ActiveEffect.talent'),
+      effects: [],
+    };
+  if (effectOptions.gear)
+    categories.gear = {
+      type: 'gear',
+      label: game.i18n.localize('TYPES.ActiveEffect.gear'),
       effects: [],
     };
 
@@ -84,6 +91,7 @@ export function prepareActiveEffectCategories(effects, options = {}) {
     console.log(e);
     if (e.type === 'specialist') categories.specialist.effects.push(e);
     else if (e.type === 'talent') categories.talent.effects.push(e);
+    else if (e.type === 'gear') categories.gear.effects.push(e);
     else if (e.disabled) categories.inactive.effects.push(e);
     else if (e.isTemporary) categories.temporary.effects.push(e);
     else categories.passive.effects.push(e);

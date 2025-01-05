@@ -14,14 +14,14 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
     schema.art = new fields.StringField({
       label: "Artistry",
       choices: {
-        "array": "UTOPIA.Spells.Arts.array",
-        "alteration": "UTOPIA.Spells.Arts.alteration",
-        "divination": "UTOPIA.Spells.Arts.divination",
-        "enchantment": "UTOPIA.Spells.Arts.enchantment",
-        "evocation": "UTOPIA.Spells.Arts.evocation", 
-        "illusion": "UTOPIA.Spells.Arts.illusion",
-        "necromancy": "UTOPIA.Spells.Arts.necromancy",
-        "wake": "UTOPIA.Spells.Arts.wake",
+        "array": "UTOPIA.Item.Spells.Arts.array",
+        "alteration": "UTOPIA.Item.Spells.Arts.alteration",
+        "divination": "UTOPIA.Item.Spells.Arts.divination",
+        "enchantment": "UTOPIA.Item.Spells.Arts.enchantment",
+        "evocation": "UTOPIA.Item.Spells.Arts.evocation", 
+        "illusion": "UTOPIA.Item.Spells.Arts.illusion",
+        "necromancy": "UTOPIA.Item.Spells.Arts.necromancy",
+        "wake": "UTOPIA.Item.Spells.Arts.wake",
       }
     });
 
@@ -29,10 +29,10 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
     schema.cost = new fields.NumberField({ required: true, nullable: false, initial: 0 })
 
     schema.costMultiplier = new fields.StringField({ required: false, nullable: true, initial: "flat", choices: {
-      "flat": "UTOPIA.SpellFeatures.CostMultiplier.flat",
-      "multiply": "UTOPIA.SpellFeatures.CostMultiplier.multiply",
-      //"divide": "UTOPIA.SpellFeatures.CostMultiplier.divide",
-      //"square": "UTOPIA.SpellFeatures.CostMultiplier.power",
+      "flat": "UTOPIA.Item.SpellFeatures.CostMultiplier.flat",
+      "multiply": "UTOPIA.Item.SpellFeatures.CostMultiplier.multiply",
+      //"divide": "UTOPIA.Item.SpellFeatures.CostMultiplier.divide",
+      //"square": "UTOPIA.Item.SpellFeatures.CostMultiplier.power",
     } });
 
     // Should any dice rolls be allowed to be redistributed? (e.g. 6d4 > 4d6 > 3d8 > 2d12) or (e.g. 50d4 > 25d8 > 20d10 > 10d20 > 2d100)
@@ -49,9 +49,9 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
 
     // Don't even need to bother if the "doesTarget" is false
     schema.targetType = new fields.StringField({ required: false, nullable: false, initial: "point", choices: {
-      "point": "UTOPIA.SpellFeatures.TargetType.point",
-      "template": "UTOPIA.SpellFeatures.TargetType.template",
-      "attach": "UTOPIA.SpellFeatures.TargetType.attach",
+      "point": "UTOPIA.Item.SpellFeatures.TargetType.point",
+      "template": "UTOPIA.Item.SpellFeatures.TargetType.template",
+      "attach": "UTOPIA.Item.SpellFeatures.TargetType.attach",
     } });
 
     // Only shown if the targetType is "template"
@@ -68,29 +68,29 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
     schema.variables = new fields.ObjectField();
 
     schema.modifies = new fields.StringField({ required: false, nullable: true, initial: "none", choices: {
-      "none": "UTOPIA.SpellFeatures.Modifies.none",
-      "range": "UTOPIA.SpellFeatures.Modifies.range",
-      "duration": "UTOPIA.SpellFeatures.Modifies.duration",
-      "aoe": "UTOPIA.SpellFeatures.Modifies.aoe",
-      //"formula": "UTOPIA.SpellFeatures.Modifies.formula",
+      "none": "UTOPIA.Item.SpellFeatures.Modifies.none",
+      "range": "UTOPIA.Item.SpellFeatures.Modifies.range",
+      "duration": "UTOPIA.Item.SpellFeatures.Modifies.duration",
+      "aoe": "UTOPIA.Item.SpellFeatures.Modifies.aoe",
+      //"formula": "UTOPIA.Item.SpellFeatures.Modifies.formula",
     }});
 
     schema.modifiedAoE = new fields.SchemaField({
       value: new fields.NumberField({ required: false, nullable: true, initial: 0 }),
       variable: new fields.StringField({ required: false, nullable: true, initial: "X" }),
       unit: new fields.StringField({ required: false, nullable: true, initial: "meters", choices: {
-        "meters": "UTOPIA.SpellFeatures.AoE.meters",
+        "meters": "UTOPIA.Item.SpellFeatures.AoE.meters",
       }}),
       measured: new fields.StringField({ required: false, nullable: true, initial: "radius", choices: {
-        "radius": "UTOPIA.SpellFeatures.AoE.radius",
-        "diameter": "UTOPIA.SpellFeatures.AoE.diameter",
-        "area": "UTOPIA.SpellFeatures.AoE.area",
-        "volume": "UTOPIA.SpellFeatures.AoE.volume",
+        "radius": "UTOPIA.Item.SpellFeatures.AoE.radius",
+        "diameter": "UTOPIA.Item.SpellFeatures.AoE.diameter",
+        "area": "UTOPIA.Item.SpellFeatures.AoE.area",
+        "volume": "UTOPIA.Item.SpellFeatures.AoE.volume",
       }}),
       type: new fields.StringField({ required: false, nullable: true, initial: "point", choices: {
-        "point": "UTOPIA.SpellFeatures.AoE.point",
-        "template": "UTOPIA.SpellFeatures.AoE.template",
-        "attach": "UTOPIA.SpellFeatures.AoE.attach",
+        "point": "UTOPIA.Item.SpellFeatures.AoE.point",
+        "template": "UTOPIA.Item.SpellFeatures.AoE.template",
+        "attach": "UTOPIA.Item.SpellFeatures.AoE.attach",
       }}),
       shape: new fields.StringField({ required: false, nullable: true, initial: "circle", choices: {
         "circle": "CONTROLS.MeasureCircle",
@@ -103,34 +103,34 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
       value: new fields.NumberField({ required: false, nullable: true, initial: 0 }),
       variable: new fields.StringField({ required: false, nullable: true, initial: "X" }),
       unit: new fields.StringField({ required: false, nullable: true, initial: "meters", choices: {
-        "meters": "UTOPIA.SpellFeatures.Range.meters",
-        "kilometers": "UTOPIA.SpellFeatures.Range.kilometers",
+        "meters": "UTOPIA.Item.SpellFeatures.Range.meters",
+        "kilometers": "UTOPIA.Item.SpellFeatures.Range.kilometers",
       }})
     });
     schema.modifiedDuration = new fields.SchemaField({
       value: new fields.NumberField({ required: false, nullable: true, initial: 0 }),
       variable: new fields.StringField({ required: false, nullable: true, initial: "X" }),
       unit: new fields.StringField({ required: false, nullable: true, initial: "turns", choices: {
-        "turns": "UTOPIA.SpellFeatures.Duration.turns",
-        "minutes": "UTOPIA.SpellFeatures.Duration.minutes",
-        "hours": "UTOPIA.SpellFeatures.Duration.hours",
-        "days": "UTOPIA.SpellFeatures.Duration.days",
-        "months": "UTOPIA.SpellFeatures.Duration.months",
-        "years": "UTOPIA.SpellFeatures.Duration.years",
+        "turns": "UTOPIA.Item.SpellFeatures.Duration.turns",
+        "minutes": "UTOPIA.Item.SpellFeatures.Duration.minutes",
+        "hours": "UTOPIA.Item.SpellFeatures.Duration.hours",
+        "days": "UTOPIA.Item.SpellFeatures.Duration.days",
+        "months": "UTOPIA.Item.SpellFeatures.Duration.months",
+        "years": "UTOPIA.Item.SpellFeatures.Duration.years",
       }}),
       requirements: new fields.StringField({ required: false, nullable: true, initial: "focus", choices: {
-        "none": "UTOPIA.SpellFeatures.DurationRequirements.none",
-        "focus": "UTOPIA.SpellFeatures.DurationRequirements.focus",
-        "concentration": "UTOPIA.SpellFeatures.DurationRequirements.concentration",
+        "none": "UTOPIA.Item.SpellFeatures.DurationRequirements.none",
+        "focus": "UTOPIA.Item.SpellFeatures.DurationRequirements.focus",
+        "concentration": "UTOPIA.Item.SpellFeatures.DurationRequirements.concentration",
       }}),
       dispelInterruptCost: new fields.NumberField({ required: false, nullable: true, initial: 0 }),
       dispelActionCost: new fields.NumberField({ required: false, nullable: true, initial: 0 }),
     });
     schema.modifiedFormula = new fields.SchemaField({
       how: new fields.StringField({ required: false, nullable: true, initial: "add", choices: {
-        "add": "UTOPIA.SpellFeatures.Formula.how.add",
-        "subtract": "UTOPIA.SpellFeatures.Formula.how.subtract",
-        //"replace": "UTOPIA.SpellFeatures.Formula.how.replace",
+        "add": "UTOPIA.Item.SpellFeatures.Formula.how.add",
+        "subtract": "UTOPIA.Item.SpellFeatures.Formula.how.subtract",
+        //"replace": "UTOPIA.Item.SpellFeatures.Formula.how.replace",
       }}),
       value: new fields.StringField({ required: false, nullable: true, initial: "" }),
       replace: new fields.StringField({ required: false, nullable: true, initial: "" }),
@@ -140,11 +140,11 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
     schema.variableDescription = new fields.StringField({ required: false, nullable: true, initial: "" });
     schema.character = new fields.StringField({ required: true, nullable: false, initial: "A" });
     schema.kind = new fields.StringField({ required: true, nullable: false, initial: "none", choices: {
-      "none": "UTOPIA.SpellFeatures.Variables.none",
-      "number": "UTOPIA.SpellFeatures.Variables.number",
-      "text": "UTOPIA.SpellFeatures.Variables.text",
-      "options": "UTOPIA.SpellFeatures.Variables.options",
-      "dice": "UTOPIA.SpellFeatures.Variables.dice",
+      "none": "UTOPIA.Item.SpellFeatures.Variables.none",
+      "number": "UTOPIA.Item.SpellFeatures.Variables.number",
+      "text": "UTOPIA.Item.SpellFeatures.Variables.text",
+      "options": "UTOPIA.Item.SpellFeatures.Variables.options",
+      "dice": "UTOPIA.Item.SpellFeatures.Variables.dice",
     }});
     schema.dice = new fields.StringField({ required: false, nullable: true, initial: "", validate: ((value, options) => {
       console.log("Validating dice", value);

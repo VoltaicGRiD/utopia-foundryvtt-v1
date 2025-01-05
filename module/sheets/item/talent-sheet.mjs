@@ -46,7 +46,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/talent/description.hbs",
     },
     effects: {
-      template: "systems/utopia/templates/item/general/effects.hbs",
+      template: "systems/utopia/templates/item/generic/effects.hbs",
     }
   };
 
@@ -131,7 +131,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Actions.Tabs.',
+        label: 'UTOPIA.Item.Actions.Tabs.',
       };
   
       switch (partId) {
