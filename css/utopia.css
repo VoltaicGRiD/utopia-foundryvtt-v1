@@ -206,8 +206,10 @@
 
 /* Chat override */
 .chat-message {
-  background: rgb(5, 5, 5);
+  background: rgba(30, 30, 30, 0.9);
   color: white;
+  border: none;
+  backdrop-filter: blur(5px);
 }
 
 .chat-message .message-header {
@@ -227,9 +229,13 @@
 }
 
 .chat-message.whisper {
-  background: rgba(82, 2, 148, 0.404);
+  background: rgb(98, 77, 116);
+  background-image: url("../assets/eye-slash-solid.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70px;
   color: white;
-  border: 2px dashed white;
+  border: 1px solid rgba(233, 22, 198, 0.8);
 }
 
 /* Tagify classes */
@@ -288,6 +294,17 @@
   background: rgba(0, 0, 0, 0.5);
   border: none;
   box-shadow: none;
+}
+
+#sidebar {
+  background-image: url("../assets/utopia-logo.webp");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.sidebar-tab {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Styles limited to utopia sheets */
@@ -1782,6 +1799,38 @@
 }
 .utopia.crafting-features-sheet .feature-tooltip .tag.componentPerStack {
   border: 1px solid #158b40;
+}
+.utopia.placeable-hud .attributes {
+  position: absolute;
+  left: -12.5%;
+  top: -45px;
+  align-items: start;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  width: 125%;
+  color: white;
+}
+.utopia.placeable-hud .attributes .shpBar {
+  background-color: rgba(0, 150, 25, 0.5);
+}
+.utopia.placeable-hud .attributes .dhpBar {
+  background-color: rgba(150, 0, 25, 0.5);
+}
+.utopia.placeable-hud .attributes .staminaBar {
+  background-color: rgba(0, 0, 150, 0.5);
+}
+.utopia.placeable-hud .attributes input[type=number] {
+  font-size: 1em;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 0;
+  color: white;
+  pointer-events: all;
+}
+.utopia.placeable-hud .control-icon {
+  margin: 0;
+  border-radius: 0;
 }
 .utopia .action-img {
   width: 30px;

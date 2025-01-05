@@ -351,12 +351,14 @@ export default class UtopiaSpell extends UtopiaItemBase {
    * @private
    */
   _prepareSpellAoE() {
-    let itemData = this.parent;
-    if (itemData.system.aoe.length === 0) {
-      itemData.system.aoeOut = "None";
-    } else {
-      itemData.system.aoeOut = itemData.system.aoe.join(", ");
-    }
+    console.log(this);
+
+    // let itemData = this.parent;
+    // if (itemData.system.aoe.length === 0) {
+    //   itemData.system.aoeOut = "None";
+    // } else {
+    //   itemData.system.aoeOut = itemData.system.aoe.join(", ");
+    // }
   }
 
   /**

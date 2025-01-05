@@ -488,10 +488,28 @@
       "autoRollContestsPrompt": "Prompt",
       "autoRollContestsAuto": "Automatic",
       "displayDamage": "Display damage in chat",
-      "displayDamageHint": "Depending on the setting, one of the following occurs: Either the EXACT damage is displayed, an ESTIMATE is displayed, or the damage is HIDDEN",
+      "displayDamageHint": "Depending on the setting, one of the following occurs: Either the EXACT damage is displayed, an ESTIMATE is displayed, or the damage is HIDDEN, once a roll is complete, the damage is displayed, exactly as it is, in the chat message",
       "displayDamageNone": "Hidden",
       "displayDamageExact": "Exact",
-      "displayDamageEstimate": "Estimate"
+      "displayDamageEstimate": "Estimate",
+      "diceRedistribution": "Allow dice redistribution",
+      "diceRedistributionHint": "When enabled, when artificing or spellcrafting, dice can be redistributed, so long as the max possible outcome is always equal. (Utopia TTRPG pp. ",
+      "autoMaxDice": "Auto-set redistributable dice",
+      "autoMaxDiceHint": "Depending on the setting, the dice that can be redistributed will either be set to the SMALLEST, LARGEST, or MIDDLE dice automatically, but can still be changed manually",
+      "diceRedistributionNone": "Default to middling dice",
+      "diceRedistributionSmallest": "Default to smallest dice",
+      "diceRedistributionHighest": "Default to largest dice",
+      "displayActionsOnToken": "Allow actions to display on tokens",
+      "displayActionsOnTokenHint": "When enabled, and configured on the token, actions will display on the token",
+      "displayActionsOption": "Default action appearance",
+      "displayActionsOptionHint": "Options presented are for [turn actions | interrupt actions], this setting can be configured per token",
+      "displayActionsOptionCircle": "Semi-circle | Bottom middle",
+      "displayActionsOptionVertical": "Vertical left | Vertical right",
+      "displayActionsOptionHorizontal": "Horizontal top | Horizontal bottom",
+      "Buttons": {
+        "twitch": "Twitch Integration",
+        "discord": "Utopia Discord Server"
+      }
     }
   },
 

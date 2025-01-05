@@ -1,5 +1,3 @@
-// import { TokenDocumentPF2e } from "@scene";
-//import { htmlQueryAll, objectHasKey } from "@util";
 import { UtopiaChatMessage } from "../documents/chat-message.mjs";
 
 class UtopiaUserVisibility {

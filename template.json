@@ -22,7 +22,7 @@
     }
   },
   "Actor": {
-    "types": ["character", "npc"],
+    "types": ["character", "npc", "vehicle"],
     "templates": {
       "base": {
         "species": {},

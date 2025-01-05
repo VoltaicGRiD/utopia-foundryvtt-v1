@@ -53,7 +53,10 @@ import { UtopiaUser } from "./documents/user.mjs";
 import { UtopiaActiveEffect } from "./documents/active-effect.mjs";
 import UtopiaActiveEffectSheet from "./sheets/other/active-effect-sheet.mjs";
 import UtopiaDiceTerm from "./other/dice.mjs";
+import UtopiaTokenHUD from "./hud/token-hud.mjs";
 import UtopiaDie from "./other/die.mjs";
+import UtopiaToken from "./hud/token.mjs";
+import UtopiaTokenDocument from "./hud/token-document.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -162,6 +165,9 @@ Hooks.once("init", function () {
   CONFIG.Actor.documentClass = UtopiaActor;
   CONFIG.Item.documentClass = UtopiaItem;
   CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
+  CONFIG.Token.objectClass = UtopiaToken;
+  CONFIG.Token.documentClass = UtopiaTokenDocument;
+  CONFIG.Token.hudClass = UtopiaTokenHUD;
   CONFIG.Dice.terms.d = UtopiaDie;
   CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
   CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
@@ -184,6 +190,12 @@ Hooks.once("init", function () {
     gear: models.UtopiaGear,
     general: models.UtopiaGeneralItem,
   };
+
+  // DocumentSheetConfig.registerSheet("utopia", UtopiaTokenSheet, {
+  //   types: ["base"],
+  //   makeDefault: true,
+  //   label: "UTOPIA.SheetLabels.token",
+  // });
 
   // CONFIG.Actor.dataModels = {
   //   character: models.UtopiaCharacter,
@@ -498,6 +510,47 @@ function registerGameSettings() {
       2: "UTOPIA.Settings.diceRedistributionHighest",
     },
     default: true,
+  });
+
+  game.settings.register('utopia', 'displayActionsOnToken', {
+    name: "UTOPIA.Settings.displayActionsOnToken",
+    hint: "UTOPIA.Settings.displayActionsOnTokenHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+  });
+
+  game.settings.register('utopia', 'displayActionsOption', {
+    name: "UTOPIA.Settings.displayActionsOption",
+    hint: "UTOPIA.Settings.displayActionsOptionHint",
+    scope: "world",
+    config: game.settings.get("utopia", "displayActionsOnToken"),
+    type: Number,
+    choices: {
+      0: "UTOPIA.Settings.displayActionsOptionCircle",
+      1: "UTOPIA.Settings.displayActionsOptionVertical",
+      2: "UTOPIA.Settings.displayActionsOptionHorizontal",
+    },
+    default: 0,
+  });
+
+  game.settings.register('utopia', 'enableTwitchIntegration', {
+    name: "UTOPIA.Settings.enableTwitchIntegration",
+    hint: "UTOPIA.Settings.enableTwitchIntegrationHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
+  game.settings.register('utopia', 'twitchChannel', {
+    name: "UTOPIA.Settings.twitchChannel",
+    hint: "UTOPIA.Settings.twitchChannelHint",
+    scope: "client",
+    config: game.settings.get("utopia", "enableTwitchIntegration"),
+    type: String,
+    default: "",
   });
 }
 
@@ -828,6 +881,75 @@ Hooks.once("ready", function () {
     console.log(effect);
     return effect;
   });
+});
+
+Hooks.on('renderSettings', (settings) =>  {
+  /**
+   * Creates a DOM element with optional attributes and child nodes.
+   * @param {string} tagName - The HTML tag (e.g., "div", "button", "span").
+   * @param {Object} [options] - Element configuration.
+   * @param {Object} [options.attributes] - A set of attributes (e.g., { class: "my-class" }).
+   * @param {(string|Node)[]} [options.children] - Array of text or DOM nodes to append.
+   * @returns {HTMLElement} The newly created element.
+   */
+  function createHTMLElement(tagName, { attributes = {}, children = [] } = {}) {
+    const el = document.createElement(tagName);
+
+    // Set attributes
+    for (const [key, value] of Object.entries(attributes)) {
+      el.setAttribute(key, value);
+    }
+
+    // Append children (strings or DOM nodes)
+    for (const child of children) {
+      if (typeof child === "string") {
+        el.appendChild(document.createTextNode(child));
+      } else {
+        el.appendChild(child);
+      }
+    }
+
+    return el;
+  }
+
+  const header = createHTMLElement("h2", { children: [game.system.title] });
+  const utopiaSettings = createHTMLElement("div");
+  settings.element[0].querySelector("#settings-game")?.after(header, utopiaSettings);
+
+  // Paizo License and remaster information
+  const twitchSettings = document.createElement("button");
+  const twitchIcon = document.createElement("i");
+  twitchIcon.classList.add("fab", "fa-twitch");
+  twitchSettings.type = "button";
+  twitchSettings.append(twitchIcon, game.i18n.localize("UTOPIA.Settings.Buttons.twitch"));
+  twitchSettings.addEventListener("click", () => {
+    // Render the Twitch Integration Settings app
+  });
+
+  const discordButton = document.createElement("button");
+  const discordIcon = document.createElement("i");
+  discordIcon.classList.add("fa-brands", "fa-discord");
+  discordButton.type = "button";
+  discordButton.append(discordIcon, game.i18n.localize("UTOPIA.Settings.Buttons.discord"));
+  discordButton.addEventListener("click", () => {
+    // Open the hyperlink to the Utopia Discord
+    window.open("https://discord.gg/7kxJHtdGfZ", "_blank");
+  });
+
+  utopiaSettings.append(twitchSettings, discordButton);
+  
+
+  // Migration Troubleshooting (if GM)
+  // if (game.user.isGM) {
+  //     const shootButton = document.createElement("button");
+  //     shootButton.type = "button";
+  //     shootButton.append(fontAwesomeIcon("wrench"), game.i18n.localize("PF2E.Migrations.Troubleshooting"));
+  //     shootButton.addEventListener("click", () => {
+  //         new MigrationSummary({ troubleshoot: true }).render(true);
+  //     });
+
+  //     utopiaSettings.append(shootButton);
+  // }
 });
 //#endregion
 
