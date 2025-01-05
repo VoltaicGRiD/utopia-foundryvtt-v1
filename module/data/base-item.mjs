@@ -6,7 +6,9 @@ export default class UtopiaItemBase extends UtopiaDataModel {
     const fields = foundry.data.fields;
     const schema = {};
 
-    schema.description = new fields.StringField({ required: true, blank: true });
+    schema.formula = new fields.StringField({ blank: true });
+    schema.description = new fields.StringField({ blank: true });
+    schema.flavor = new fields.StringField({ blank: true });
 
     return schema;
   }

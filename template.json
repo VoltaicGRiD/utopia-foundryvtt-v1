@@ -1,9 +1,39 @@
 {
+  "User": {
+    "favorites": {
+      "spellFeatures": [],
+      "talents": [],
+      "actions": [],
+      "spells": [],
+      "items": [],
+      "weapons": []
+    }
+  },
+  "ActiveEffect": {
+    "types": ["passive", "temporary", "inactive", "specialist", "talent"],
+    "templates": {
+      "base": {
+        "duration": 0,
+        "source": "",
+        "target": "",
+        "trigger": "",
+        "rules": {}
+      }
+    }
+  },
   "Actor": {
     "types": ["character", "npc"],
     "templates": {
       "base": {
         "species": {},
+        "ta": {
+          "value": 6,
+          "max": 6
+        },
+        "ia": {
+          "value": 2,
+          "max": 2
+        },
         "shp": {
           "value": 0,
           "min": 0
@@ -33,8 +63,15 @@
           "psyche": 1
         },
         "actions": {
-          "turn": 3,
-          "interrupt": 2
+          "held": 0,
+          "turn": {
+            "value": 6,
+            "max": 6
+          },
+          "interrupt": {
+            "value": 2,
+            "max": 2
+          }
         },
         "disfavors": [],
         "favors": [],
@@ -48,13 +85,6 @@
     "character": {
       "templates": ["base"],
       "attributes": {
-        "level": {
-          "value": 10
-        },
-        "experience": {
-          "value": 0,
-          "goal": 1000
-        },
         "constitution": 1,
         "endurance": 1,
         "effervescence": 1
@@ -63,6 +93,7 @@
         "subtrait": 15,
         "gifted": 0,
         "talent": 10,
+        "specialist": 0,
         "body": 0,
         "mind": 0,
         "soul": 0
@@ -166,7 +197,7 @@
     }
   },
   "Item": {
-    "types": ["item", "species", "talent", "spell", "weapon", "action", "spellFeature", "variable"],
+    "types": ["species", "specialistTalent", "talent", "spell", "equipment", "weapon", "action", "spellFeature"],
     "templates": {
       "base": {
         "formula": "",
@@ -193,6 +224,7 @@
       "type": "standard",
       "source": "",
       "cost": 1,
+      "stamina": 0,
       "rules": {},
       "trigger": "",
       "recharge": "",
@@ -222,6 +254,9 @@
         "subtraits": 2,
         "languages": 2
       }
+    },
+    "specialistTalent": {
+      "templates": ["base"]
     },
     "talent": {
       "templates": ["base"],
@@ -260,7 +295,12 @@
       "targetType": "point",
       "templateType": "circle",
       "costMultiplier": "",
-      "templateAngle": 51.33
+      "templateAngle": 90,
+      "variables": {}
+    },
+    "equipment": {
+      "templates": ["gear"]
+      
     }
   }
 }

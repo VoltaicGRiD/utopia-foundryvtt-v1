@@ -1,0 +1,12 @@
+<div class="tab description {{tab.cssClass}}"  data-group="primary" data-tab="description">
+  <div class="flexcol">
+    <label for="system.description">{{localize 'UTOPIA.Descriptions.description'}}</label>
+    {{#if editable}}
+      <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+        {{{enrichedDescription}}}
+      </prose-mirror>
+    {{else}} 
+      {{{enrichedDescription}}}
+    {{/if}}
+  </div>
+</div>

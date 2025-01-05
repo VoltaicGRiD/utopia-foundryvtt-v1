@@ -1,4 +1,4 @@
-export default async function gatherTalents() {
+export async function gatherTalents() {
   let allTalents = [];
 
   let itemPacks = game.packs.filter(pack => pack.metadata.type === 'Item');

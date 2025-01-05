@@ -38,31 +38,56 @@ export function onManageActiveEffect(event, owner) {
  * @param {ActiveEffect[]} effects    A collection or generator of Active Effect documents to prepare sheet data for
  * @return {object}                   Data for rendering
  */
-export function prepareActiveEffectCategories(effects) {
-  // Define effect header categories
-  const categories = {
-    temporary: {
-      type: 'temporary',
-      label: game.i18n.localize('UTOPIA.Effect.Temporary'),
-      effects: [],
-    },
-    passive: {
-      type: 'passive',
-      label: game.i18n.localize('UTOPIA.Effect.Passive'),
-      effects: [],
-    },
-    inactive: {
-      type: 'inactive',
-      label: game.i18n.localize('UTOPIA.Effect.Inactive'),
-      effects: [],
-    }
+export function prepareActiveEffectCategories(effects, options = {}) {
+  const effectOptions = {
+    temporary: options.temporary ?? true,
+    passive: options.passive ?? true,
+    inactive: options.inactive ?? true,
+    specialist: options.specialist ?? false,
+    talent: options.talent ?? false,
   };
+
+  const categories = {};
+  if (effectOptions.temporary)
+    categories.temporary = {
+      type: 'temporary',
+      label: game.i18n.localize('UTOPIA.Effects.Temporary'),
+      effects: [],
+    };
+  if (effectOptions.passive)
+    categories.passive = {
+      type: 'passive',
+      label: game.i18n.localize('UTOPIA.Effects.Passive'),
+      effects: [],
+    };
+  if (effectOptions.inactive)
+    categories.inactive = {
+      type: 'inactive',
+      label: game.i18n.localize('UTOPIA.Effects.Inactive'),
+      effects: [],
+    };
+  if (effectOptions.specialist)
+    categories.specialist = {
+      type: 'specialist',
+      label: game.i18n.localize('UTOPIA.Effects.Specialist'),
+      effects: [],
+    };
+  if (effectOptions.talent)
+    categories.talent = {
+      type: 'talent',
+      label: game.i18n.localize('UTOPIA.Effects.Talent'),
+      effects: [],
+    };
 
   // Iterate over active effects, classifying them into categories
   for (let e of effects) {
-    if (e.disabled) categories.inactive.effects.push(e);
+    console.log(e);
+    if (e.type === 'specialist') categories.specialist.effects.push(e);
+    else if (e.type === 'talent') categories.talent.effects.push(e);
+    else if (e.disabled) categories.inactive.effects.push(e);
     else if (e.isTemporary) categories.temporary.effects.push(e);
     else categories.passive.effects.push(e);
   }
+
   return categories;
 }

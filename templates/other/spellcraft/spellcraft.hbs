@@ -1,0 +1,193 @@
+<div class="tab attributes {{tab.cssClass}} spellcraft">
+  <div class="flexrow built-in-filters">
+    <span class="filter">{{localize 'UTOPIA.Descriptions.filter'}}</span>
+    <button class="filter" data-filter="all">{{localize 'UTOPIA.Descriptions.all'}}</button>
+    <button class="filter" data-filter="favorite">{{localize 'UTOPIA.Descriptions.favorite'}}</button>
+    <button class="filter" data-filter="available">{{localize 'UTOPIA.Descriptions.available'}}</button>
+    <button class="filter" data-filter="locked">{{localize 'UTOPIA.Descriptions.locked'}}</button>
+    
+  </div>
+  <div class="spellcraft-content">
+    <div class="feature-select flexcol">
+      <input type="text" name="filter" class="filter" value="{{filter}}" placeholder="{{localize 'UTOPIA.Descriptions.filter'}}" />
+      <ol class="feature-list">
+        {{#each features as |feature key|}}
+          <li class="feature available-feature {{#if (eq feature.hidden true)}}hidden{{/if}}" data-name="{{feature.name}}" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
+            <img src="{{feature.img}}" class="feature-icon" />
+            <button class="remove-feature hidden">
+              <i class="fa-fw fa-solid fa-times"></i>
+            </button>
+            <button class="favorite-feature hidden {{#if (eq feature.favorite true)}}favorite{{/if}}">
+              <i class="fa-fw fa-solid fa-star"></i>
+            </button>
+            <span class="feature-name">
+              <span data-tooltip="{{feature.system.description}}" data-tooltip-direction="DOWN"><i class="fa-fw fa-solid fa-circle-info"></i></span>
+              {{feature.name}} 
+              (<span id="cost" class="cost">{{feature.cost}}</span>)
+            </span> 
+            <div class="feature-controls">
+              {{#each feature.system.variables as |variable varKey|}}
+                {{#if (eq varKey "stacks")}}
+
+                {{else if (eq variable.kind "number")}}
+                  <div class="feature-variable">
+                    <input type="number" 
+                          min="{{variable.minimum}}" 
+                          max="{{variable.maximum}}" 
+                          value="{{variable.value}}"
+                          data-feature="{{key}}" 
+                          data-variable="{{varKey}}" />
+                    <span class="feature-variable-character">{{variable.character}}</span>
+                  </div>
+                {{else if (eq variable.kind "options")}}
+                  <div class="feature-variable">
+                    <button class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
+                            data-variable="{{varKey}}"
+                            data-feature="{{key}}">
+                      {{#if (or (eq variable.value "") (not variable.value))}}
+                        {{variable.character}}
+                      {{else}}
+                        <i class="fa-fw fa-solid fa-check"></i>
+                      {{/if}}
+                    </button>
+                  </div>
+                {{else if (eq variable.kind "text")}}
+                  <div class="feature-variable">
+                    <input type="text" 
+                          class="feature-variable-text"
+                          value="{{variable.value}}"
+                          placeholder="{{variable.name}}"
+                          data-feature="{{key}}" 
+                          data-variable="{{varKey}}" />
+                    <span class="feature-variable-character" data-tooltip="{{variable.name}}">{{variable.character}}</span>
+                  </div>
+                {{/if}}
+                
+              {{/each}}
+            </div>
+          </li>
+        {{/each}}
+      </ol>
+    </div>
+    <div class="spell-panel grid-span-2">
+      <div class="spell-name">
+        <input
+          name='name'
+          type='text'
+          value='{{name}}'
+          data-action="update"
+          placeholder='Name'/>
+      </div>
+      <div class="spell-attributes grid grid-2col">
+        <div class="flexrow">
+          <span class="spell-duration">{{localize 'UTOPIA.Spells.duration'}}</span>
+          <span class="spell-duration-value">{{duration}}</span>
+        </div>
+        <div class="flexrow">
+          <span class="spell-range">{{localize 'UTOPIA.Spells.range'}}</span>
+          <span class="spell-range-value">{{range}}</span>
+        </div>
+        <div class="flexrow">
+          <span class="spell-aoe">{{localize 'UTOPIA.Spells.aoeShort'}}</span>
+          <span class="spell-aoe-value">{{aoe}}</span>
+        </div>
+        <div class="flexrow">
+          <span class="spell-cost">{{localize 'UTOPIA.Spells.stamina'}}</span>
+          <span class="spell-cost-value">{{cost}}</span>
+        </div>
+      </div>
+      <div class="spell-features">
+        <ol class="selected-feature-list flexcol">
+          {{#each selected as |feature key|}}
+            <li class="feature" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
+              <img src="{{feature.img}}" class="feature-icon" />
+              <button class="remove-feature hidden">
+                <i class="fa-fw fa-solid fa-times"></i>
+              </button>
+              <span class="feature-name">{{feature.name}} (<span id="cost" class="cost">{{feature.cost}}</span>)</span>
+              <div class="feature-controls">
+                {{#if feature.hasFormula}}
+                  {{log feature.currentFormula}}
+                  <div class="formula-select">
+                    {{#if ../allowRedistribution}}<a class="formula-down" data-feature="{{key}}"><i class="fa-solid fa-chevron-left"></i></a>{{/if}}
+                    <div class="formula">{{lookup feature.formulaOptions.[0] feature.currentFormula}}</div>
+                    {{#if ../allowRedistribution}}<a class="formula-up" data-feature="{{key}}"><i class="fa-solid fa-chevron-right"></i></a>{{/if}}
+                  </div>
+                {{/if}}
+
+                {{#each feature.system.variables as |variable varKey|}}
+                  {{#if (eq varKey "stacks")}}
+                    <div class="flexrow feature-variable">
+                      <input type="number" 
+                            min="{{variable.minimum}}" 
+                            max="{{variable.maximum}}" 
+                            value="{{variable.value}}"
+                            data-feature="{{key}}" 
+                            data-variable="{{varKey}}" />
+                      <span class="feature-variable-character"><i class="fa-solid fa-cubes-stacked"></i></span>
+                    </div>
+                  {{else if (eq variable.kind "number")}}
+                    <div class="flexrow feature-variable">
+                      <input type="number" 
+                            min="{{variable.minimum}}" 
+                            max="{{variable.maximum}}" 
+                            value="{{variable.value}}"
+                            data-feature="{{key}}" 
+                            data-variable="{{varKey}}" />
+                      <span class="feature-variable-character">{{variable.character}}</span>
+                    </div>
+                  {{else if (eq variable.kind "options")}}
+                    <div class="feature-variable">
+                      <button class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
+                              data-variable="{{varKey}}"
+                              data-feature="{{key}}">
+                        {{#if (or (eq variable.value "") (not variable.value))}}
+                          {{variable.character}}
+                        {{else}}
+                          &#x2713;
+                        {{/if}}
+                      </button>
+                    </div>
+                  {{else if (eq variable.kind "text")}}
+                    <div class="feature-variable">
+                      <input type="text" 
+                            class="feature-variable-text"
+                            value="{{variable.value}}"
+                            placeholder="{{variable.name}}"
+                            data-feature="{{key}}" 
+                            data-variable="{{varKey}}" />
+                      <span class="feature-variable-character" data-tooltip="{{variable.name}}">{{variable.character}}</span>
+                    </div>
+                  {{/if}}
+                {{/each}}
+              </div>
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+      <div class="spell-flavor">
+        <textarea name="flavor" placeholder="{{localize 'UTOPIA.Spells.flavor'}}">{{flavor}}</textarea>
+      </div>
+      <div class="spell-controls">
+        <button data-action="cast">{{localize 'UTOPIA.Spells.cast'}}</button>
+        <button data-action="saveAndCast" class="btn-primary">{{localize 'UTOPIA.Spells.saveAndCast'}}</button>
+        <button data-action="save">{{localize 'UTOPIA.Spells.save'}}</button>
+      </div>
+    </div>  
+    <div class="spell-list">
+      <div class="grid grid-2col">
+        {{#each worldSpells as |spell uuid|}}
+          <div class="spell" data-id="{{uuid}}" {{{spell.style}}}>
+            <div class="spell-name">{{spell.name}}</div>
+            <span class="spell-cost">{{spell.system.cost}}</span>
+            <div class="spell-controls" style="display: none">
+              <a data-action="editSpell">{{localize 'UTOPIA.Spells.edit'}}</a>
+              <a data-action="roll" data-roll-type="spell" data-spell="{{spell.id}}">{{localize 'UTOPIA.Spells.cast'}}</a>
+              <a data-action="deleteSpell">{{localize 'UTOPIA.Spells.delete'}}</a>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

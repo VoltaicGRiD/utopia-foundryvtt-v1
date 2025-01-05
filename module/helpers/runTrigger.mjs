@@ -4,8 +4,14 @@ import { calculateTraitFavor } from "./favorHandler.mjs";
 export async function runTrigger(name, data, caller) {
   let trigger = new UtopiaTrigger();
   console.log(caller);
-  trigger.caller = caller['func'];
-  trigger.callerData = caller['funcData'];
+  if (!caller || Object.keys(caller).length === 0) {
+    trigger.caller = null;
+    trigger.callerData = null;
+  }
+  else {
+    trigger.caller = caller['func'];
+    trigger.callerData = caller['funcData'];
+  }
   console.log(trigger);
   return await trigger.run(name, data);
 }

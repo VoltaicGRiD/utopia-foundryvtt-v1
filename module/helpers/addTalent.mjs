@@ -98,13 +98,17 @@ export async function checkForChoices(actor, item) {
       // Exclude choices the actor has already taken
       choices: itemChoices.filter((c) => !alreadyChosen.includes(c)),
       alreadyTaken: alreadyChosen,
+      item: item,
+      actor: actor,
     };
+    
+    console.log("Data: ", data);
 
     // Render the choices dialog for the user
     await renderChoices(data);
   } else {
     // Talent does not require choices, create it directly
-    createTalent(actor, item, true);
+    await createTalent(actor, item, true);
   }
 }
 
@@ -139,7 +143,7 @@ export async function renderChoices(data) {
   // Render the HTML content using the specified template and data
   let html = await renderTemplate(template, data);
   // Create a new dialog for choice selection
-  let dialog = new api.DialogV2({
+  let dialog = await new api.DialogV2({
     window: {
       title: "Talent Choices",
     },
@@ -150,13 +154,16 @@ export async function renderChoices(data) {
       icon: 'fas fa-check',
       label: "Make choice (permanent)",
       // Callback to retrieve the selected choice value from the form
-      callback: (event, button, dialog) => button.form.elements.choices.value
+      callback: async (event, button, dialog) => await button.form.elements.choices.value
     }],
     // Handle the submission of the dialog
-    submit: result => {
-      submitChoices(result, data);
+    submit: async result => {
+      console.log(result)
+      await submitChoices(result, data);
     }
-  }).render(true);
+  });
+
+  await dialog.render(true);
 }
 
 /**
@@ -167,6 +174,8 @@ export async function renderChoices(data) {
  */
 export async function submitChoices(choice, data) {
   let item = data.item;
+  console.log("Choice: ", choice); 
+  console.log("Data: ", data);
 
   // Set the selected choice on the item's system data
   item.system.choices = choice;
@@ -175,7 +184,7 @@ export async function submitChoices(choice, data) {
 
   console.log(item);
   // Create the talent item for the actor
-  createTalent(data.actor, item, true);
+  await createTalent(data.actor, item, true);
 }
 
 /**
@@ -184,9 +193,12 @@ export async function submitChoices(choice, data) {
  * @param {Item} item 
  * @param {boolean} createTree
  */
-export function createTalent(actor, item, createTree) {
+export async function createTalent(actor, item, createTree) {
   // Create the talent item
+  console.log(item);[]
+  console.log(actor);
   let data = [item];
+  console.log(data);
   actor.createEmbeddedDocuments('Item', data);
 
   // Deduct the cost of the talent from the actor's talent points
@@ -196,25 +208,40 @@ export function createTalent(actor, item, createTree) {
   let soul = parseInt(points.soul);
   let cost = body + mind + soul;
   let newPoints = actor.system.points.talent - cost;
-  actor.update({ ["system.points.talent"]: newPoints });
+  await actor.update({ ["system.points.talent"]: newPoints });
+
+  // let actorBody = parseInt(actor.system.points.body);
+  // let actorMind = parseInt(actor.system.points.mind);
+  // let actorSoul = parseInt(actor.system.points.soul);
 
   // Update the actor's body, mind, and soul points
-  actor.update({ 
-    ['system.points.body']: actor.system.points.body + body,
-    ['system.points.mind']: actor.system.points.mind + mind,
-    ['system.points.soul']: actor.system.points.soul + soul
-  });
+  // await actor.update({ 
+  //   ['system.points.body']: actorBody + body,
+  //   ['system.points.mind']: actorMind + mind,
+  //   ['system.points.soul']: actorSoul + soul
+  // });
+
+  // console.log("Updated points: ", actor.system.points);
 
   // Update the actor's talent tree if necessary
   if (createTree) {
     let tree = item.system.tree;
     let newTree = { [tree]: 1 };
     let newTrees = { ...actor.system.trees, ...newTree };
-    actor.update({ "system.trees": newTrees });
+    await actor.update({ "system.trees": newTrees });
   }
 
+  // Update the talent tree window
+  // App insances is a Map(), we need to put it into an array to access the keys
+  let appInstances = Array.from(foundry.applications.instances);
+  appInstances.forEach((a) => {
+    if (a[1].constructor.name == "UtopiaTalentTreeSheet") {
+      a[1].render();
+    }
+  });
+
   // Update the actor's talent tree positions
-  updateActorTrees(actor, item);
+  await updateActorTrees(actor, item);
 }
 
 /**
@@ -222,7 +249,7 @@ export function createTalent(actor, item, createTree) {
  * @param {Actor} actor 
  * @param {Item} item 
  */
-function updateActorTrees(actor, item) {
+async function updateActorTrees(actor, item) {
   let tree = item.system.tree;
   let talentPosition = item.system.position;
   let treePosition = actor.system.trees[tree];
@@ -230,7 +257,7 @@ function updateActorTrees(actor, item) {
   if (talentPosition > treePosition) {
     let newTree = { [tree]: talentPosition };
     let newTrees = { ...actor.system.trees, ...newTree };
-    actor.update({ "system.trees": newTrees });
+    await actor.update({ "system.trees": newTrees });
   }
 }
 
@@ -239,16 +266,16 @@ function updateActorTrees(actor, item) {
  * @param {Actor} actor 
  * @param {Talent} item 
  */
-export function createTalentNoCost(actor, item) {
+export async function createTalentNoCost(actor, item) {
   // Create the talent item
   let data = [item];
-  Item.createDocuments(data, { parent: actor });
+  await Item.createDocuments(data, { parent: actor });
 
   // Update the actor's body, mind, and soul points
   let body = item.system.points.body;
   let mind = item.system.points.mind;
   let soul = item.system.points.soul;
-  actor.update({ 
+  await actor.update({ 
     ['system.points.body']: actor.system.points.body + body,
     ['system.points.mind']: actor.system.points.mind + mind,
     ['system.points.soul']: actor.system.points.soul + soul

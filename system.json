@@ -29,8 +29,12 @@
     "minimum": 11,
     "verified": "11.315"
   },
-  "esmodules": ["module/utopia.mjs", "lib/tagify/tagify.esm.js"],
-  "styles": ["css/utopia.css", "lib/tagify/tagify.css"],
+  "esmodules": [
+    "module/utopia.mjs", 
+    "lib/tagify/tagify.esm.js",
+    "lib/ace/src/ace.js"
+  ],
+  "styles": ["css/utopia.css", "lib/tagify/tagify.css", "lib/ace/css/ace.css"],
   "languages": [
     {
       "lang": "en",
@@ -40,7 +44,8 @@
   ],
   "documentTypes": {
     "ChatMessage": {
-      "weapon": {}
+      "default": "ChatMessage",
+      "classes": ["ChatMessage"]
     }
   },
   "packs": [
@@ -71,8 +76,34 @@
       "flags": {}
     },
     {
+      "name": "specialistTalents",
+      "label": "SRD Specialist Talents",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "actions",
       "label": "SRD Actions",
+      "banner": "",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spellFeatures",
+      "label": "SRD Spell Features",
       "banner": "",
       "path": "",
       "type": "Item",
@@ -110,6 +141,18 @@
       "flags": {}
     }
   ],
+  "dependencies": [
+    {
+      "name": "_CodeMirror",
+      "type": "module",
+      "manifest": "https://raw.githubusercontent.com/League-of-Foundry-Developers/codemirror-lib/master/module.json"	
+    }
+  ],
+  "flags": {
+    "hotReload": {
+      "extensions": ["css"]
+    }
+  },
   "packFolders": ["SRD Content"],
   "socket": false,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",

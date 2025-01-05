@@ -1,0 +1,26 @@
+<div>
+  <ol class="feature-list">
+    {{#each features as |feature key|}}
+      <li class="feature" styles="background-color: {{feature.background}}; color: []">
+        <img src="{{feature.img}}" class="feature-icon" />
+        <span class="feature-name">{{feature.name}}</span>
+        <select class="feature-dice"></select>
+        <div class="feature-controls">
+          {{#each feature.variables as |variable key|}}
+            {{#if (eq variable.kind "number")}}
+              <div class="flexrow feature-variable">
+                <input type="number" value="{{variable.content}}" />
+                <span class="feature-variable-character">{{variable.character}}</span>
+              </div>
+            {{else}}
+              <div class="flexrow feature-variable">
+                <button class="feature-variable" tooltip="{{variable.content}}"></button>
+                <span class="feature-variable-character">{{variable.character}}</span>
+              <button class="feature-variable" tooltip="{{variable.content}}"></button>
+            {{/if}}
+          {{/each}}
+        </div>
+      </li>
+    {{/each}}
+  </ol>
+</div>

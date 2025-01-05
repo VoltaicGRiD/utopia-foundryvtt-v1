@@ -1,0 +1,60 @@
+{{! Sheet Body }}
+<div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
+  <div class="action-attributes">
+    <div class="flexcol">
+
+      {{! Action type, source, and cost }}
+      <div class="grid grid-3col">
+        <div class="flexcol">
+          <label for="system.type">{{localize "UTOPIA.Actions.type"}}</label>
+          {{formInput systemFields.type value=system.type name="system.type" localize=true}}
+        </div>
+
+        <div class="flexcol">
+          <label for="system.cost">{{localize "UTOPIA.Actions.cost"}}</label>
+          {{formInput systemFields.cost value=system.cost name="system.cost" localize=true}}
+        </div>
+
+        <div class="flexcol">
+          <label for="system.stamina">{{localize "UTOPIA.Actions.stamina"}}</label>
+          {{formInput systemFields.stamina value=system.stamina name="system.stamina" localize=true}}
+        </div>
+     
+      </div>
+
+      {{! Action trigger, recharge, contested, aid }}
+      <div class="grid grid-8col">
+        <div class="flexcol grid-span-3">
+          <label for="system.trigger">{{localize "UTOPIA.Actions.trigger"}}</label>
+          {{formInput systemFields.triggers value=system.triggers name="system.triggers" localize=true}}
+        </div>
+
+        <div class="flexcol grid-span-3">
+          <label for="system.recharge">{{localize "UTOPIA.Actions.recharge"}}</label>
+          {{formInput systemFields.recharge value=system.recharge name="system.recharge" localize=true}}
+        </div>
+
+        <div class="flexcol grid-span-2">
+          <label for="system.target">{{localize "UTOPIA.Actions.target"}}</label>
+          {{formInput systemFields.target value=system.target name="system.target" localize=true}}
+        </div>
+
+      </div>
+
+      {{! Action formula }}
+      <div class="grid grid-6col">
+
+        <div class="flexcol grid-span-3">
+          <label for="system.formula">{{localize "UTOPIA.Actions.formula"}}</label>
+          {{formInput systemFields.formula value=system.formula name="system.formula" localize=true}}
+        </div>
+
+        <div class="flexcol grid-span-3">
+          <label for="system.source">{{localize "UTOPIA.Actions.source"}}</label>
+          {{formInput systemFields.source value=system.source name="system.source" localize=true}}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
