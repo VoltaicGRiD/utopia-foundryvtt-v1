@@ -1,0 +1,18 @@
+<div class="tab commands {{tab.cssClass}}" data-group="primary" data-tab="commands">
+  <h3>Commands</h3>
+
+  {{#each commands as |command key|}}
+    <div class="command">
+      <div class="command-header">
+        <label for="{{command.name}}">{{command.name}}</label>
+        <label class="switch" for="{{command.name}}">
+          <input type="checkbox" data-command="{{command.key}}" id="{{command.name}}" name="{{command.name}}" {{#if (eq command.value true)}} checked {{/if}} />
+          <div class="slider round"></div>
+        </label>
+      </div>
+      <span class="command-hint">
+        {{command.hint}}
+      </span>
+    </div>
+  {{/each}}
+</div>
