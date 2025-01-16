@@ -21,16 +21,17 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
     },
     actions: {
       onEditImage: this._onEditImage,
-      edit: this._viewEffect,
-      create: this._createEffect,
-      delete: this._deleteEffect,
-      toggle: this._toggleEffect,
+      viewEffect: this._viewEffect,
+      createEffect: this._createEffect,
+      deleteEffect: this._deleteEffect,
+      toggleEffect: this._toggleEffect,
     },
     form: {
       submitOnChange: true,
     },
     window: {
       title: "UTOPIA.SheetLabels.specialistTalent",
+      resizeable: true,
     },
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
   };
@@ -40,11 +41,21 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
       template:
         "systems/utopia/templates/item/specialist-talent/attributes.hbs",
     },
+    tabs: {
+      template: 'templates/generic/tab-navigation.hbs',
+    },
+    effects: {
+      template: "systems/utopia/templates/item/generic/effects.hbs",
+    },
+    description: {
+      template:
+        "systems/utopia/templates/item/generic/description.hbs",
+    }
   };
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    options.parts = ["attributes"];
+    options.parts = ["tabs", "attributes", "effects", "description"];
   }
 
   async _prepareContext(options) {
@@ -74,18 +85,74 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
       }
     );
 
+    // Prepare tabs
+    context.tabs = this._getTabs(options.parts);
+
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.item.effects, {
-      temporary: false,
-      passive: false,
-      inactive: false,
+      temporary: true,
+      passive: true,
+      inactive: true,
       specialist: true,
-      talent: false,
+      talent: true,
     });
 
     console.log(context);
 
     return context;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context) {
+    switch (partId) {
+      case 'attributes': 
+      case 'effects':
+      case 'description':
+        context.tab = context.tabs[partId];
+        break;
+      default:
+    }
+
+    return context;
+  }
+
+  _getTabs(parts) {
+    if (!this.tabGroups['primary']) this.tabGroups['primary'] = 'attributes';
+
+    return parts.reduce((tabs, partId) => {
+      const tab = {
+        cssClass: '',
+        group: 'primary',
+        // Matches tab property to
+        id: '',
+        // FontAwesome Icon, if you so choose
+        icon: '',
+        // Run through localization
+        label: 'UTOPIA.Item.Specialist.Tabs.',
+      };
+      switch (partId) {
+        case 'tabs':
+          return tabs;
+        case "attributes":
+          tab.id = 'attributes';
+          tab.label += 'attributes';
+          break;        
+        case "effects":
+          tab.id = 'effects';
+          tab.label += 'effects';
+          break;        
+        case "description": 
+          tab.id = 'description';
+          tab.label += 'description';
+          break;        
+        default:
+      }
+    
+      if (this.tabGroups['primary'] === tab.id) tab.cssClass = 'active';
+
+      tabs[partId] = tab;
+      return tabs;
+    }, {});
   }
 
   async _onRender() {
@@ -148,7 +215,7 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
     const effectData = {
       name: aeCls.defaultName({
         // defaultName handles an undefined type gracefully
-        type: "specialist",
+        type: "base",
         parent: this.item,
       }),
     };
@@ -162,7 +229,11 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
       foundry.utils.setProperty(effectData, dataKey, value);
     }
 
+    // Get the type from the nearest li dataset 'effectType'
+    effectData.type = target.closest("li").dataset.effectType;
+
     effectData.name = this.item.name;
+    effectData.origin = this.item.uuid;
 
     console.log(effectData);
 

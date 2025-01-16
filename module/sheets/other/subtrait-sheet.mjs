@@ -10,6 +10,8 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
   constructor(options = {}) {
     super(options);
+    this.dockedTo = undefined;
+    this.isDocked = true;
   }
 
   static DEFAULT_OPTIONS = {
@@ -81,6 +83,10 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
     console.log(subtrait, subtraits);
 
+    if (this.actor.system.points.subtrait < 1) {
+      return ui.notifications.error("You do not have enough points to spend on subtraits.");
+    }
+
     let trait = subtraits[subtrait].trait;
     await this.actor.update({
       [`system.traits.${trait}.subtraits.${subtrait}.value`]: subtraits[subtrait].value + 1,
@@ -89,39 +95,4 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
     this.render();
   }
-}
-
-/**
- * Updates the talent selection UI after a talent is added.
- * @param {string} talent - The name of the talent to update.
- */
-async function updateTalents(talent) {
-  // Add the new talent to the list if it's not already included
-  if (!talents.includes(talent)) {
-    talents.push(talent);
-  }
-
-  // Get all polygon elements representing talents
-  let polys = document.getElementsByClassName('cls-1');
-    
-  // Iterate through each polygon element
-  for (let item of polys) {
-    // Get the name attribute of the polygon
-    let name = item.getAttribute("data-name");
-    // If the talent is in the list of talents, mark it as taken
-    if (talents.includes(name)) {
-      if (!item.classList.contains('taken')) {
-        item.classList.add('taken');
-      }
-    }
-  }
-}
-
-/**
- * Handles the selection of a talent by the user.
- * Checks prerequisites and updates the actor's talents accordingly.
- */
-async function select() {
-  addTalentToActor(actor, selected);
-  updateTalents(selected);
 }

@@ -1,0 +1,14 @@
+.utopia.artifice-feature-sheet .crafting-components-table {
+  margin: 0;
+}
+.utopia.artifice-feature-sheet .crafting-components-table td {
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+}
+.utopia.artifice-feature-sheet .crafting-components-table input {
+  width: 35px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+}

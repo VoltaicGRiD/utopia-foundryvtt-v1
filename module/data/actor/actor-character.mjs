@@ -7,130 +7,237 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     const requiredInteger = { required: true, nullable: false, integer: true };
     const schema = super.defineSchema();
 
-    schema.attributes = new fields.SchemaField({
-      constitution: new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 1 })
-      }),
-      endurance: new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 1 })
-      }),
-      effervescence: new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 1 })
-      }),
+    // Turn and Interrupt Actions
+    schema.ta = new fields.SchemaField({
+      value: new fields.NumberField({ ...requiredInteger, initial: 6 }),
+      max: new fields.NumberField({...requiredInteger, initial: 6 }),
+    });
+    schema.ia = new fields.SchemaField({
+      value: new fields.NumberField({ ...requiredInteger, initial: 3 }),
+      max: new fields.NumberField({...requiredInteger, initial: 3 }),
     });
 
-    // Iterate over trait names and create a new SchemaField for each.
-    schema.traits = new fields.SchemaField(Object.keys(CONFIG.UTOPIA.traits).reduce((obj, ability) => {
-      obj[ability] = new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0 }),
-      });
-      return obj;
-    }, {}));
+    // SHP, DHP, and Stamina
+    schema.shp = new fields.SchemaField({
+      value: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      max: new fields.NumberField({...requiredInteger, initial: 0 }),
+    });
+    schema.dhp = new fields.SchemaField({
+      value: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      max: new fields.NumberField({...requiredInteger, initial: 0 }),
+    });
+    schema.stamina = new fields.SchemaField({
+      value: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      max: new fields.NumberField({...requiredInteger, initial: 0 }),
+    });
 
-    // Iterate over subtrait names and create a new SchemaField for each.
-    schema.subtraits = new fields.SchemaField(Object.keys(CONFIG.UTOPIA.subtraits).reduce((obj, ability) => {
-      obj[ability] = new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 10, min: 0 }),
-      });
-      return obj;
-    }, {}));
+    // Block and Dodge
+    schema.block = new fields.SchemaField({
+      quantity: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      size: new fields.NumberField({ ...requiredInteger, initial: 4 }),
+    });
+    schema.dodge = new fields.SchemaField({
+      quantity: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      size: new fields.NumberField({ ...requiredInteger, initial: 12 }),
+    });
 
+    // Defenses
+    schema.defenses = new fields.SchemaField({  
+      chill: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      energy: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      heat: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      physical: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      psyche: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+    });
+
+    // TODO: Add validation that the strings are one of the traits or subtraits
+    // Favors and Disfavors
+    schema.favors = new fields.ArrayField(new fields.StringField());
+    schema.disfavors = new fields.ArrayField(new fields.StringField());
+
+    // Talent Trees
+    schema.trees = new fields.ArrayField(new fields.StringField());
+    
+    // TODO: Add validation that the strings are one of the valid damage types
+    // Resistance, Immunity, and Vulnerability
+    schema.resistances = new fields.ArrayField(new fields.StringField());
+    schema.immunities = new fields.ArrayField(new fields.StringField());
+    schema.vulnerabilities = new fields.ArrayField(new fields.StringField());
+
+    // Spellcap
+    schema.spellcap = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    
+    // Biography
+    schema.biography = new fields.StringField();
+
+    // Attributes
+    schema.attributes = new fields.SchemaField({
+      constitution: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      endurance: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      effervescence: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+    });
+
+    // Points
     schema.points = new fields.SchemaField({
-      subtrait: new fields.NumberField({ ...requiredInteger, initial: 15 }),
-      talent: new fields.NumberField({ ...requiredInteger, initial: 10 }),
-      specialist: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       body: new fields.NumberField({ ...requiredInteger, initial: 0 }),
       mind: new fields.NumberField({ ...requiredInteger, initial: 0 }),
       soul: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      talent: new fields.NumberField({ ...requiredInteger, initial: 10 }),
+      specialist: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      gifted: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      subtrait: new fields.NumberField({ ...requiredInteger, initial: 15 }),
     });
 
-    schema.rangedTDModifier = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.species = new fields.ObjectField({ required: true, nullable: false, initial: {}});
 
-    schema.components = new fields.SchemaField({
-      crude: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+    // Traits
+    schema.traits = new fields.SchemaField({
+      agi: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          spd: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          dex: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-      common: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      str: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          pow: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          for: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-      extraordinary: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      int: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          eng: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          mem: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-      rare: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      wil: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          res: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          awa: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-      legendary: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      dis: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          por: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          stu: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-      mythical: new fields.SchemaField({
-        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      cha: new fields.SchemaField({
+        subtraits: new fields.SchemaField({
+          app: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+          lan: new fields.SchemaField({
+            value: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+            mod: new fields.NumberField({ ...requiredInteger, initial: -3 }),
+            gifted: new fields.BooleanField({ initial: false }),
+          }),
+        }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+        mod: new fields.NumberField({ ...requiredInteger, initial: -2 }),
       }),
-    });
+    })
 
-    //#region Example Crafting Material Table
-  // <table class="crafting-components-table">
-  //   <tr>
-  //     <th></th>
-  //     <th>Material</th>
-  //     <th>Refinement</th>
-  //     <th>Power</th>
-  //   </tr>
-  //   <tr>
-  //     <th>Crude</th>
-  //     <td>{{formInput systemFields.components.fields.crude.fields.material value=system.components.crude.material name='system.components.crude.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.crude.fields.refinement value=system.components.crude.refinement name='system.components.crude.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.crude.fields.power value=system.components.crude.power name='system.components.crude.power' localize=true}}</td>
-  //   </tr>
-  //   <tr>
-  //     <th>Common</th>
-  //     <td>{{formInput systemFields.components.fields.common.fields.material value=system.components.common.material name='system.components.common.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.common.fields.refinement value=system.components.common.refinement name='system.components.common.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.common.fields.power value=system.components.common.power name='system.components.common.power' localize=true}}</td>
-  //   </tr>
-  //   <tr>
-  //     <th>Extraordinary</th>
-  //     <td>{{formInput systemFields.components.fields.extraordinary.fields.material value=system.components.extraordinary.material name='system.components.extraordinary.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.extraordinary.fields.refinement value=system.components.extraordinary.refinement name='system.components.extraordinary.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.extraordinary.fields.power value=system.components.extraordinary.power name='system.components.extraordinary.power' localize=true}}</td>
-  //   </tr>
-  //   <tr>
-  //     <th>Rare</th>
-  //     <td>{{formInput systemFields.components.fields.rare.fields.material value=system.components.rare.material name='system.components.rare.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.rare.fields.refinement value=system.components.rare.refinement name='system.components.rare.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.rare.fields.power value=system.components.rare.power name='system.components.rare.power' localize=true}}</td>
-  //   </tr>
-  //   <tr>
-  //     <th>Legendary</th>
-  //     <td>{{formInput systemFields.components.fields.legendary.fields.material value=system.components.legendary.material name='system.components.legendary.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.legendary.fields.refinement value=system.components.legendary.refinement name='system.components.legendary.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.legendary.fields.power value=system.components.legendary.power name='system.components.legendary.power' localize=true}}</td>
-  //   </tr>
-  //   <tr>
-  //     <th>Mythical</th>
-  //     <td>{{formInput systemFields.components.fields.mythical.fields.material value=system.components.mythical.material name='system.components.mythical.material' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.mythical.fields.refinement value=system.components.mythical.refinement name='system.components.mythical.refinement' localize=true}}</td>
-  //     <td>{{formInput systemFields.components.fields.mythical.fields.power value=system.components.mythical.power name='system.components.mythical.power' localize=true}}</td>
-  //   </tr>
-  // </table>
-    //#endregion
+    schema.enableArtifice = new fields.BooleanField({ initial: false });
+    schema.artificeLevel = new fields.NumberField({ ...requiredInteger, initial: -1 }); // -1 means not enabled
+
+    schema.enableSpellcraft = new fields.BooleanField({ initial: false });
+    schema.spellcraftArtistries = new fields.SetField(new fields.StringField());
 
     return schema;
   }
 
+  /**
+   * @override
+   * Augment the actor source data with additional dynamic data. Typically,
+   * you'll want to handle most of your calculated/derived data in this step.
+   * Data calculated in this step should generally not exist in template.json
+   * (such as ability modifiers rather than ability scores) and should be
+   * available both inside and outside of character sheets (such as if an actor
+   * is queried and has a roll executed directly from it).
+   */
   prepareDerivedData() {
-    const actorData = this.parent;
+    const actorData = this;
+
+    // Make separate methods for each Actor type (character, npc, etc.) to keep
+    // things organized.
+    this._prepareCharacterData(actorData);
+    //this._prepareNpcData(actorData);
+  }
+
+  *allApplicableEffects() {
+    for (const effect of this.effects) {
+      if (effect.type !== "gear") {
+        yield effect;
+      }
+    } if (CONFIG.ActiveEffect.legacyTransferral) return;
+    for (const item of this.items) {
+      for (const effect of item.effects) {
+        if (effect.type !== "gear") {
+          if (effect.transfer) yield effect;
+        }
+      }
+    }
+  }
+
+  /**
+   * Prepare Character type specific data
+   */
+  async _prepareCharacterData(actorData) {    
+    // Make modifications to data here. For example:
+    //sum = sum + systemData.traits[key].subtraits[sub].value;    console.log(systemData);
 
     let bodyScore = 0;
     let mindScore = 0;
@@ -138,7 +245,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
     let artistries = [];
 
-    for (let i of actorData.items) {
+    for (let i of this.parent.items) {
       if (i.type === 'talent') {
         bodyScore += parseInt(i.system.points.body);
         mindScore += parseInt(i.system.points.mind);
@@ -150,11 +257,11 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }
     }
 
-    actorData.system.artistries = artistries;
+    this.artistries = artistries;
 
-    actorData.system.points.body = parseInt(bodyScore);
-    actorData.system.points.mind = parseInt(mindScore);
-    actorData.system.points.soul = parseInt(soulScore);
+    this.points.body = parseInt(bodyScore);
+    this.points.mind = parseInt(mindScore);
+    this.points.soul = parseInt(soulScore);
 
     // Do we calculate the level from the experience,
     // or do we calculate the experience from the level?
@@ -172,23 +279,23 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     // level is equal to the current level * 100.
 
     // Ensure experience and level are initialized
-    if (!actorData.system.experience) {
-      actorData.system.experience = { value: 0 };
+    if (!this.experience) {
+      this.experience = { value: 0 };
     }
 
-    if (typeof actorData.system.level !== 'number') {
-      actorData.system.level = 10;
+    if (typeof this.level !== 'number') {
+      this.level = 10;
     }
 
     // Ensure experience.value is a number
-    actorData.system.experience.value = Number(actorData.system.experience.value) || 0;
+    this.experience.value = Number(this.experience.value) || 0;
 
     // Calculate the current level based on total experience
-    actorData.system.level = calculateLevelFromExperience(actorData.system.experience.value);
+    this.level = calculateLevelFromExperience(this.experience.value);
 
     // Calculate experience thresholds for the current and next levels
-    actorData.system.experience.previous = getTotalExpForLevel(actorData.system.level);
-    actorData.system.experience.next = getTotalExpForLevel(actorData.system.level + 1);
+    this.experience.previous = getTotalExpForLevel(this.level);
+    this.experience.next = getTotalExpForLevel(this.level + 1);
 
     // Functions for experience calculations
     function getTotalExpForLevel(N) {
@@ -206,75 +313,82 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       return Math.floor(N);
     }
 
-    actorData.system.points.talent = actorData.system.level - (actorData.system.points.body + actorData.system.points.mind + actorData.system.points.soul);
+    this.points.talent = this.level - (this.points.body + this.points.mind + this.points.soul);
+    this.points.specialist = this.level % 10 + 1;
 
-    const body = actorData.system.points.body;
-    const mind = actorData.system.points.mind;
-    const soul = actorData.system.points.soul;
-    const con = actorData.system.attributes.constitution;
-    const end = actorData.system.attributes.endurance;
-    const eff = actorData.system.attributes.effervescence;
-    const lvl = actorData.system.level;
+    for (let i of this.parent.items) {
+      if (i.type === 'specialist') {
+        this.points.specialist -= 1;
+      }
+    }
+
+    const body = this.points.body;
+    const mind = this.points.mind;
+    const soul = this.points.soul;
+    const con = this.attributes.constitution;
+    const end = this.attributes.endurance;
+    const eff = this.attributes.effervescence;
+    const lvl = this.level;
 
     // Surface HP (SHP) is calculated from Body points
-    actorData.system.shp.max = body * con + lvl;
-    if (actorData.system.shp.value > actorData.system.shp.max) {
-      actorData.system.shp.value = actorData.system.shp.max;
+    this.shp.max = body * con + lvl;
+    if (this.shp.value > this.shp.max) {
+      this.shp.value = this.shp.max;
     }
     
     // Deep HP (DHP) is calculated from Soul points
-    actorData.system.dhp.max = soul * eff + lvl;
-    if (actorData.system.dhp.value > actorData.system.dhp.max) {
-      actorData.system.dhp.value = actorData.system.dhp.max;
+    this.dhp.max = soul * eff + lvl;
+    if (this.dhp.value > this.dhp.max) {
+      this.dhp.value = this.dhp.max;
     }
 
     // Maximum stamina is calculated from mind
-    actorData.system.stamina.max = mind * end + lvl;
-    if (actorData.system.stamina.value > actorData.system.stamina.max) {
-      actorData.system.stamina.value = actorData.system.stamina.max;
+    this.stamina.max = mind * end + lvl;
+    if (this.stamina.value > this.stamina.max) {
+      this.stamina.value = this.stamina.max;
     }
 
     // Loop through ability scores, and add their modifiers to our sheet output.
-    for (const key in actorData.system.traits) {
-      const parent = actorData.system.traits[key].parent;
+    for (const key in this.traits) {
+      const parent = this.traits[key].parent;
 
-      let subtraits = actorData.system.traits[key].subtraits;
+      let subtraits = this.traits[key].subtraits;
       Object.keys(subtraits).forEach((k) => {
-        actorData.system.traits[key].subtraits[k].mod = subtraits[k].value - 4;
+        this.traits[key].subtraits[k].mod = subtraits[k].value - 4;
 
-        if (actorData.system.traits[key].subtraits[k].gifted === true) {
+        if (this.traits[key].subtraits[k].gifted === true) {
           switch(parent) {
             case "body":
-              actorData.system.traits[key].subtraits[k].max = body * 2;
+              this.traits[key].subtraits[k].max = body * 2;
               break;
             case "mind":
-              actorData.system.traits[key].subtraits[k].max = mind * 2;
+              this.traits[key].subtraits[k].max = mind * 2;
               break;
             case "soul": 
-              actorData.system.traits[key].subtraits[k].max = soul * 2;
+              this.traits[key].subtraits[k].max = soul * 2;
               break;
-            default:
-              actorData.system.traits[key].subtraits[k].max = 99;
+            initial:
+              this.traits[key].subtraits[k].max = 99;
               break;
           }
 
-          if (actorData.system.traits[key].subtraits[k].mod < 0) {
-            actorData.system.traits[key].subtraits[k].mod = 0;
+          if (this.traits[key].subtraits[k].mod < 0) {
+            this.traits[key].subtraits[k].mod = 0;
           }
         }
         else {
           switch(parent) {
             case "body":
-              actorData.system.traits[key].subtraits[k].max = body;
+              this.traits[key].subtraits[k].max = body;
               break;
             case "mind":
-              actorData.system.traits[key].subtraits[k].max = mind;
+              this.traits[key].subtraits[k].max = mind;
               break;
             case "soul": 
-              actorData.system.traits[key].subtraits[k].max = soul;
+              this.traits[key].subtraits[k].max = soul;
               break;
-            default:
-              actorData.system.traits[key].subtraits[k].max = 99;
+            initial:
+              this.traits[key].subtraits[k].max = 99;
               break;
           }
         }
@@ -284,46 +398,55 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       Object.keys(subtraits).forEach((k) => {
         sum += subtraits[k].value;
       });
-      actorData.system.traits[key].value = sum;
+      this.traits[key].value = sum;
 
-      let mod = actorData.system.traits[key].value - 4;
-      actorData.system.traits[key].mod = mod;
+      let mod = this.traits[key].value - 4;
+      this.traits[key].mod = mod;
 
       // Spellcap is calculated from resolve
-      actorData.system.spellcap = actorData.system.traits['wil'].subtraits['res'].value;
+      this.spellcap = this.traits['wil'].subtraits['res'].value;
     }
 
     // Iterate through items, allocating to containers
     for (let i of actorData.items) {
       if (i.type === 'species') {
-        actorData.system.species = i;
+        this.species = i;
       }
     }
+
+    this._processFlags();
+
+    Hooks.callAll("prepareActorData", this.parent, actorData);
   }
 
-  getRollData() {
-    const data = {};
+  async _processFlags() {
+    const flags = this.parent.flags;
+    const utopia = flags.utopia ?? {};
 
-    // Copy the ability scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
-    if (this.traits) {
-      for (let [k,v] of Object.entries(this.traits)) {
-        data[k] = foundry.utils.deepClone(v);
+    Object.keys(utopia).forEach((key) => { 
+      const value = utopia[key] ?? true;
+
+      switch (key) {
+        case "dualWielder":
+          break;
+        case "sageSlayer": 
+          break;
+        case "mageFighter": 
+          break;
+        case "intenseConcentration": 
+          break;
+        case "ironGripped": 
+          break;
+
+        case "enableArtifice": 
+          this.enableArtifice = true;
+        case "enableSpellcraft": 
+          this.enableSpellcraft = true;          
+        case "artificeLevel": 
+          this.artificeLevel = value;
       }
-    }
-
-    if (this.subtraits) {
-      for (let [k,v] of Object.entries(this.subtraits)) {
-        data[k] = foundry.utils.deepClone(v);
-      }
-    }
-
-    data.lvl = this.attributes.level.value;
-    data.shp = this.attributes.shp.value;
-    data.dhp = this.attributes.dhp.value;
-    data.blr = this.attributes.blr.value;
-    data.dor = this.attributes.dor.value;
-
-    return data
+    });
+    
+    Hooks.callAll("processActorFlags", this.parent, flags);
   }
 }

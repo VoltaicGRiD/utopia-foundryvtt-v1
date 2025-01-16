@@ -26,7 +26,7 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/item/action/header.hbs",
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
@@ -35,7 +35,7 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/action/attributes.hbs",
     },
     description: {
-      template: "systems/utopia/templates/item/action/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
     },
     rules: {
       template: "systems/utopia/templates/item/action/rules.hbs",
@@ -136,8 +136,6 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     super._onRender(context, options);
 
-    this.element.querySelector('.profile-img').addEventListener('click', this._image.bind(this));
-
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/dracula");
     editor.session.setMode("ace/mode/json");
@@ -146,7 +144,7 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
     this.element.querySelector('.add-rule').addEventListener('click', this._addRule.bind(this));  
   }
 
-  async _addRule(event) {
+  static async _addRule(event) {
     event.preventDefault();
     let name = this.element.querySelector('input[name="rule-name"]').value;
     let content = this.editor.getValue();
@@ -166,7 +164,7 @@ export class UtopiaActionSheet extends api.HandlebarsApplicationMixin(
     this.render();
   }
 
-  async _image(event) {
+  static async _image(event) {
     event.preventDefault();
     let file = await new FilePicker({
       type: "image",

@@ -28,7 +28,7 @@ export class UtopiaSpellFeatureSheet extends api.HandlebarsApplicationMixin(shee
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/item/spell-feature/header.hbs",
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
@@ -41,7 +41,7 @@ export class UtopiaSpellFeatureSheet extends api.HandlebarsApplicationMixin(shee
       scrollable: ['']
     },
     description: {
-      template: "systems/utopia/templates/item/spell-feature/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
     },
   };
 

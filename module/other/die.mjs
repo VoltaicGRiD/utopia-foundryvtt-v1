@@ -25,18 +25,27 @@ export default class UtopiaDie extends Die {
     return redistributions;
   }
 
-  async roll() {
+  set useRedistribution(index) {
+    this._number = this.redistributions[index]._number;
+    this._faces = this.redistributions[index]._faces;
+  }
+
+  async roll(isRedistribution = false) {
+    console.log(this);
+
+    if (!isRedistribution) return super.roll();
+
     const setting = game.settings.get('utopia', 'diceRedistribution') ? game.settings.get('utopia', 'diceRedistributionSize') : 0;
     switch (setting) {
       // 0 - No redistribution
       case 0:
-        return this.roll();
+        return super.roll();
       // 1 - Always use the smallest dice
       case 1:
-        return this.redistributions[0].roll();
+        return this.redistributions[0].roll(isRedistribution = true);
       // 2 - Always use the largest dice
       case 2:
-        return this.redistributions[this.redistributions.length - 1].roll();
+        return this.redistributions[this.redistributions.length - 1].roll(isRedistribution = true);
     }
   }
 }

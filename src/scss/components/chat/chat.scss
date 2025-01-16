@@ -1,0 +1,36 @@
+.chat-message {
+  background: rgba(30, 30, 30, 0.9);
+  color: white;
+  border: none;
+  backdrop-filter: blur(5px);
+}
+
+.chat-message .message-header {
+  color: white;
+}
+
+.chat-message img {
+  border: 1px solid white;
+  background: rgba(255,255,255,0.8);
+  border-radius: 5px;
+}
+
+#chat-form #chat-message {
+  background: rgba(30, 30, 30, 1);
+  color: white;
+  border: 2px solid #782e22;
+}
+
+.chat-message.whisper {
+  background: rgba(98, 77, 116, 1);
+  background-image: url("../assets/eye-slash-solid.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70px;
+  color: white;
+  border: 1px solid rgba(233, 22, 198, 0.8);
+}
+
+.dice .part-header .part-flavor {
+  color: rgba(194, 194, 194, 0.8)
+}

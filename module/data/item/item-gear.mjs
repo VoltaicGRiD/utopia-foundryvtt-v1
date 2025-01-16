@@ -107,101 +107,35 @@ export default class UtopiaGear extends UtopiaItemBase {
     });
 
     schema.components = new fields.SchemaField({
-      material: new fields.SchemaField({
-        crude: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        common: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        extraordinary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        rare: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        legendary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        mythical: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
+      crude: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
       }),
-      refinement: new fields.SchemaField({
-        crude: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        common: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        extraordinary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        rare: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        legendary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        mythical: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
+      common: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
       }),
-      power: new fields.SchemaField({
-        crude: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        common: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        extraordinary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        rare: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        legendary: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
-        mythical: new fields.NumberField({
-          required: true,
-          nullable: false,
-          initial: 0,
-        }),
+      extraordinary: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
+      rare: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
+      legendary: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
+      mythical: new fields.SchemaField({
+        material: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        refinement: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+        power: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
       }),
     });
 
@@ -371,6 +305,12 @@ export default class UtopiaGear extends UtopiaItemBase {
       initial: false,
     });
 
+    schema.resetFormula = new fields.BooleanField({
+      required: true,
+      nullable: false,
+      initial: false,
+    })
+
     return schema;
   }
 
@@ -380,6 +320,8 @@ export default class UtopiaGear extends UtopiaItemBase {
       refinement: 0,
       power: 0,
     };
+
+    this.cost = 0;
 
     const keys = Object.keys(this.features);
     keys.forEach((k) => {
@@ -406,9 +348,6 @@ export default class UtopiaGear extends UtopiaItemBase {
             };
           }
         }
-       
-
-        console.log("Created cost variable", feature);
       }
 
       if (feature.system.costLimit) {
@@ -501,16 +440,12 @@ export default class UtopiaGear extends UtopiaItemBase {
         }
         // Choices is a SetField, so we need to set the values as an array
         feature.choices = values.map(v => v.value);
-  
-        console.log(feature.choices);
       }
 
       feature.choice = feature.system.choice;
 
       // We need to compile both the Melee and Ranged formulas,
       // Though one or both may be empty
-
-      console.log("Feature Formulas", feature.system.formulas);
 
       // Melee
       if (feature.system.formulas.melee.length > 0) {
@@ -526,77 +461,92 @@ export default class UtopiaGear extends UtopiaItemBase {
         feature.ranged = ranged.formula;      
       }
 
-      console.log("Melee, Ranged", feature.melee, feature.ranged);
-
       this.cost += feature.cost;
     });
 
-    this.formula = Object.values(this.features).filter((v) => v.melee).map((f) => f.melee).join(" + ");
-    if (this.formula.length > 0 && Object.values(this.features).filter((v) => v.ranged).length > 0)
-      this.formula += " + " + Object.values(this.features).filter((v) => v.ranged).map((f) => f.ranged).join(" + ");
-    else if (this.formula.length === 0 && Object.values(this.features).filter((v) => v.ranged).length > 0)
-      this.formula = Object.values(this.features).filter((v) => v.ranged).map((f) => f.ranged).join(" + ");
-    this.parent.system.selfDamage = Math.pow(this.parent.system.thorned, 2);
+    if (this.resetFormula === true) {
+      this.formula = Object.values(this.features).filter((v) => v.melee).map((f) => f.melee).join(" + ");
+      if (this.formula.length > 0 && Object.values(this.features).filter((v) => v.ranged).length > 0)
+        this.formula += " + " + Object.values(this.features).filter((v) => v.ranged).map((f) => f.ranged).join(" + ");
+      else if (this.formula.length === 0 && Object.values(this.features).filter((v) => v.ranged).length > 0)
+        this.formula = Object.values(this.features).filter((v) => v.ranged).map((f) => f.ranged).join(" + ");
+      this.selfDamage = Math.pow(this.thorned, 2);
 
-    console.log(this );
+      this.resetFormula = false;
+    }
+
     // We can extend the functionality of this and other classes with Active Effects
     // We just have to call the AE's method for preparing / updating source data so
     // that this data gets updated based on the AE's changes list
     // this.prepareActiveEffects(); or something like that
 
-    switch (this.parent.system.category) {
+    switch (this.category) {
       case "fastWeapon":
-        this.parent.system.actions = 1;
-        this.parent.system.range = { close: 0, far: 0 };
-        this.parent.system.handling = "oneHanded";
-        this.parent.system.slots = 3;
+        this.actions = 1;
+        this.range = { close: 0, far: 0 };
+        this.handling = "oneHanded";
+        this.slots = 3;
         break;
       case "moderateWeapon":
-        this.parent.system.actions = 2;
-        this.parent.system.range = { close: 0, far: 0 };
-        this.parent.system.handling = "oneHanded";
-        this.parent.system.slots = 3;
+        this.actions = 2;
+        this.range = { close: 0, far: 0 };
+        this.handling = "oneHanded";
+        this.slots = 3;
         break;
       case "slowWeapon":
-        this.parent.system.actions = 3;
-        this.parent.system.range = { close: 0, far: 0 };
-        this.parent.system.handling = "oneHanded";
-        this.parent.system.slots = 3;
+        this.actions = 3;
+        this.range = { close: 0, far: 0 };
+        this.handling = "oneHanded";
+        this.slots = 3;
         break;
       case "shield":
-        this.parent.system.actions = 1;
-        this.parent.system.handling = "oneHanded";
-        this.parent.system.slots = 3;
+        this.actions = 1;
+        this.handling = "oneHanded";
+        this.slots = 3;
         break;
       case "chestArmor":
-        this.parent.system.slot = "chest";
-        this.parent.system.slots = 3;
+        this.slot = "chest";
+        this.slots = 3;
         break;
       case "headArmor":
-        this.parent.system.slot = "head";
-        this.parent.system.slots = 3;
+        this.slot = "head";
+        this.slots = 3;
         break;
       case "handArmor":
-        this.parent.system.slot = "hands";
-        this.parent.system.slots = 3;
+        this.slot = "hands";
+        this.slots = 3;
         break;
       case "footArmor":
-        this.parent.system.slot = "feet";
-        this.parent.system.slots = 3;
+        this.slot = "feet";
+        this.slots = 3;
         break;
       case "consumable":
-        this.parent.system.actions = 2;
-        this.parent.system.handling = "oneHanded";
-        this.parent.system.range = { close: 0, far: 0 };
-        this.parent.system.slots = 3;
+        this.actions = 2;
+        this.handling = "oneHanded";
+        this.range = { close: 0, far: 0 };
+        this.slots = 3;
         break;
       case "artifact":
-        this.parent.system.actions = 1;
+        this.actions = 1;
         break;
     }
 
+    switch (this.handling) {
+      case "oneHanded":
+        this.handlingOut = "1H";
+        break;
+      case "twoHanded":
+        this.handlingOut = "2H";
+        break;
+      case "worn":
+        this.handlingOut = "Worn";
+        break;
+      default:
+        this.handlingOut = "N/A";
+        break;
+    } 
+
     const requirements = {};
-    console.log("Schema", this.schema);
     const choices = this.schema.fields.category.choices;
     Object.keys(choices).forEach((key) => {
       const or = [];
@@ -734,6 +684,11 @@ export default class UtopiaGear extends UtopiaItemBase {
     craftRequirements["or"] = req.or;
     craftRequirements["and"] = req.and;
     this.craftRequirements = craftRequirements;
+
+    this.props = [`${this.range.close}m / ${this.range.far}m`, this.handlingOut, `${this.slots} slots`, `${this.actions} actions`, `${this.category}`, `${this.rarityOut}`];
+    if (this.selfDamage > 0) {
+      this.props.push(`Self Damage: ${this.selfDamage}`);
+    }
 
     [this.valid, this.validMessages] = this.validateRequirements(craftRequirements);
   }

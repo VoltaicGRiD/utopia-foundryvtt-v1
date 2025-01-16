@@ -33,7 +33,7 @@ export class UtopiaItem extends Item {
     }
 
     this._prepareSystemEffects(itemData);
-    this._prepareDiceOptions(itemData);
+    //this._prepareDiceOptions(itemData);
     //this._prepareSpellFeatureData(itemData);
     //this._prepareArtificeFeatureData(itemData);
     //this._prepareSpellData(itemData);
@@ -161,11 +161,19 @@ export class UtopiaItem extends Item {
     else return null;
   }
 
+  async rollFeature(feature) {
+    if (!feature.system.formula) return 0;
+    else {
+      const roll = await new Roll(feature.system.formula, this.getRollData()).evaluate();
+      return roll.total;
+    }
+  }
+
   /**
    * Handle the item being rolled.
    * @returns {Promise<Roll|null>} The result of the roll or null if not applicable.
    */
-  async roll() {
+  async roll(terms = undefined) {
     // Lets find out if the item contains features. If it does, the formula is a 
     // sum of all the features' formulas.
     const total = 0;
@@ -181,21 +189,14 @@ export class UtopiaItem extends Item {
       return null;
     }
 
-    // If there are features, we need to roll each feature and get the formula.
-    if (this.system.features && Object.keys(this.system.features).length > 0) {
-      const features = Object.entries(item.system.features) || [];
-      const featureRolls = [];
-      for (let feature of features) {
-        featureRolls.push(feature[1].roll().formula);
-      }
+    // First, lets find out if the sub-item has its own roll method
+    try {
+      const roll = await this.system.roll(terms);
             
-      const formula = featureRolls.map(roll => roll.formula).join(" + ");
-      const roll = new Roll(formula, this.getRollData());
-
       // Prepare chat message data.
       const speaker = ChatMessage.getSpeaker({ actor: this.actor });
       const rollMode = game.settings.get('core', 'rollMode');
-      const label = `[${item.type}] ${item.name}`;
+      const label = `[${this.type}] ${this.name}`;
 
       // Send the roll result to chat.
       roll.toMessage({
@@ -203,53 +204,59 @@ export class UtopiaItem extends Item {
         rollMode: rollMode,
         flavor: label,
       });
+      
+      return roll;
+    }
+    catch (error) {
+      console.error(error);
+    }
+  
+    // Otherwise, we'll roll the item's formula from here
+    const item = this;
+    const stacks = item.stacks || 1; 
 
-      return roll; 
-    }     
-    else {
-      const item = this;
-      const stacks = item.stacks || 1; 
+    let roll = new Roll(item.system.formula, this.getRollData());
+    roll.terms.forEach(term => {
+      if (term instanceof Die) {
+        term.number = term.number * stacks;
+      }
+    });
 
-      let roll = new Roll(item.system.formula, this.getRollData());
-      roll.terms.forEach(term => {
-        if (term instanceof Die) {
-          term.number = term.number * stacks;
-        }
-      });
+    // If the item is a weapon, handle weapon-specific rolling.
+    if (this.type === "gear" && this.system.category.toLowerCase().includes("weapon")) {
+      // Get the user's targets.
+      const targets = game.user.targets;
 
-      // If the item is a weapon, handle weapon-specific rolling.
-      if (this.type === "weapon") {
-        // Get the user's targets.
-        const targets = game.user.targets;
+      for (let target of targets) {         
+        target.inRange = await rangeTest(item);
+      }
 
-        for (let target of targets) {         
-        }
+      //TODO: Finish the Attack Sheet and range handling
 
-        // Check if the target is within range.
-        let inRange = await rangeTest(item);
+      // Check if the target is within range.
 
-        if (inRange) {
-          // Open the attack sheet for the weapon.
-          const sheet = new UtopiaAttackSheet({ document: this });
-          sheet.render(true);
-          return null;
-        }   
-      } 
+      if (inRange) {
+        // Open the attack sheet for the weapon.
+        const sheet = new UtopiaAttackSheet({ document: this });
+        sheet.render(true);
+        return null;
+      }   
+    } 
 
-      // Prepare chat message data.
-      const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-      const rollMode = game.settings.get('core', 'rollMode');
-      const label = `[${item.type}] ${item.name}`;
+    // Prepare chat message data.
+    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
+    const rollMode = game.settings.get('core', 'rollMode');
+    const label = `[${item.type}] ${item.name}`;
 
-      // Send the roll result to chat.
-      roll.toMessage({
-        speaker: speaker,
-        rollMode: rollMode,
-        flavor: label,
-      });
+    // Send the roll result to chat.
+    roll.toMessage({
+      speaker: speaker,
+      rollMode: rollMode,
+      flavor: label,
+    });
 
-      return roll; 
-    }   
+    return roll; 
+    
   }
 
   async toMessage(event, options) {

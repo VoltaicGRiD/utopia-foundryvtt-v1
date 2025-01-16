@@ -20,6 +20,8 @@ export default class UtopiaTalent extends UtopiaItemBase {
     // Not sure the best way to handle this, should it change this item's name and description, or should it grant a separate item?
     schema.choices = new fields.SetField(new fields.StringField({ required: false, nullable: false }));
     schema.category = new fields.StringField({ required: false, nullable: false });
+
+    schema.grants = new fields.SetField(new fields.DocumentUUIDField({ type: "Item" }), { required: true, nullable: true, initial: [] });
         
     schema.isSpecies = new fields.BooleanField({ required: false, nullable: false, default: true });
 

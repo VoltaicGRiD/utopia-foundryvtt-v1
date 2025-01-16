@@ -29,6 +29,7 @@ export default class UtopiaAction extends UtopiaItemBase {
       "MyTurn": "UTOPIA.Item.Actions.Trigger.myTurn",
       "EnemyTurn": "UTOPIA.Item.Actions.Trigger.enemyTurn",
       "AllyTurn": "UTOPIA.Item.Actions.Trigger.allyTurn",
+      "TokenMovement": "UTOPIA.Item.Actions.Trigger.tokenMovement",
       "StartRound": "UTOPIA.Item.Actions.Trigger.startRound",
       "EndRound": "UTOPIA.Item.Actions.Trigger.endRound",
       "StaminaLost": "UTOPIA.Item.Actions.Trigger.staminaLost",
@@ -48,6 +49,8 @@ export default class UtopiaAction extends UtopiaItemBase {
       "BlindAwareness": "UTOPIA.Item.Actions.Trigger.awareness",
     }});
     schema.triggers = new fields.SetField(trigger);
+    schema.triggerArguments = new fields.StringField({ required: false, nullable: true });
+    schema.triggerPrompt = new fields.BooleanField({ required: false, nullable: false, initial: true });
     schema.recharge = new fields.StringField({ required: false, nullable: false, initial: "Immediate", choices: {
       "Immediate": "UTOPIA.Item.Actions.Recharge.immediate",
       "MyTurn": "UTOPIA.Item.Actions.Recharge.myTurn",

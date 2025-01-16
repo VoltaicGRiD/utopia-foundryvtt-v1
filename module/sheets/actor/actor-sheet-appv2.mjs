@@ -1,5 +1,6 @@
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
 import { gatherSpellFeatures } from '../../helpers/gatherSpells.mjs';
+import { UtopiaActorComponentsSheet } from '../other/components-sheet.mjs';
 import { UtopiaOptionsSheet } from '../other/options-sheet.mjs';
 import { UtopiaSpellcraftSheet } from '../other/spellcraft-sheet.mjs';
 const { api, sheets } = foundry.applications;
@@ -14,6 +15,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    this.children = [];
+    this.dockedLeft = [];
+    this.dockedRight = [];
   }
 
   /** @override */
@@ -41,6 +45,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       castSpell: this._castSpell,
       deleteSpell: this._deleteSpell,
       openSpellcraft: this._openSpellcraft,
+      submitComponents: this._submitComponents,
+      addToStat: this._addToStat,
+      subtractFromStat: this._subtractFromStat,
+      maxStat: this._maxStat,
+      minStat: this._minStat,
+      toggleArtifice: this._toggleArtifice,
+      toggleComponents: this._toggleComponents,
     },
     form: {
       submitOnChange: true,
@@ -75,6 +86,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     effects: {
       template: 'systems/utopia/templates/actor/effects.hbs',
     },
+    talents: {
+      template: 'systems/utopia/templates/actor/talents.hbs',
+    },
   };
 
   /** @override */
@@ -87,10 +101,8 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'character':
-        options.parts.push('details', 'gear',  'actions', 'spells', 'effects');
-        break;
-      case 'npc':
-        options.parts.push('details', 'gear', 'effects');
+        case 'npc':
+        options.parts.push('details', 'talents', 'gear',  'spells', 'actions', 'effects');
         break;
     }
   }
@@ -130,6 +142,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     switch (partId) {
       case 'actions': 
       case 'details':
+      case 'talents':
       case 'gear':
         context.tab = context.tabs[partId];
         break;
@@ -210,6 +223,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           tab.id = 'biography';
           tab.label += 'biography';
           break;
+        case 'talents': 
+          tab.id = 'talents';
+          tab.label += 'talents';
+          break;
         case 'gear':
           tab.id = 'gear';
           tab.label += 'gear';
@@ -283,6 +300,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const gear = [];
     const weapons = [];
     const talents = [];
+    const specialist = [];
     const actions = [];
     const spells = [];
     const misc = [];
@@ -290,22 +308,40 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Iterate through items, allocating to containers
     for (let i of this.document.items) {
       i.img = i.img || Item.DEFAULT_ICON;
-      // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
+      
+      if (i.type === 'gear') {
+        const roll = new Roll(i.system.formula);
+        const terms = roll.terms;
+        // We need to set the term's index to the index of the redistribution we have in the formula
+        terms.forEach((term, index) => {
+          if (!term.redistributions || term.redistributions.length === 0) return;
+          const redistributions = term.redistributions;
+          const formula = term.formula;
+          console.log(term, formula, redistributions);
+          redistributions.forEach((redistribution, index) => {
+            if (redistribution.formula === formula) {
+              term.index = index;
+            }
+          });
+        });
+        i.terms = terms;
+        i.category = game.i18n.localize(`UTOPIA.Item.Artifice.Features.Categories.${i.system.category}`);
+        if (i.system.category.toLowerCase().includes('weapon')) {
+          weapons.push(i);
+        }
+        else {
+          gear.push(i);
+        }
       }
-      // Append to talents.
       else if (i.type === 'talent') {
         talents.push(i);
       }
-      // Append to weapons.
-      else if (i.type === 'weapon') {
-        weapons.push(i);
+      else if (i.type === 'specialist') {
+        specialist.push(i);
       }
       else if (i.type === 'action') {
         actions.push(i);
       }
-      // Append to spells.
       else if (i.type === 'spell') {
         spells.push(i);
       }
@@ -325,12 +361,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Assign and return
     context.weapons = weapons;
     context.talents = talents;
+    context.specialist = specialist;
     context.spells = spells;
     context.actions = actions;
     context.misc = misc;
 
     // Sort then assign
     context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    context.specialist = gear.sort((a, b) => (a.name) - (b.name));
 
     return context;
   }
@@ -356,11 +394,95 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       });
     });
 
+    this.element.querySelectorAll('.redistribution').forEach((redistribution) => {
+      redistribution.addEventListener('update', async (event) => {
+        console.log(event);
+        const itemId = event.target.closest('li[data-document-class]').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        const term = event.target.dataset.termIndex;
+        const options = event.target.options;
+        const redistribution = options.selectedIndex;
+
+        const roll = new Roll(item.system.formula);
+        roll.terms[term] = item.terms[term].redistributions[redistribution];
+        const formula = roll.formula;
+
+        console.log(formula);
+
+        await item.update({
+          ['system.formula']: formula,
+        });      
+      });
+    });
+
+    // this.element.querySelectorAll(".new-resource").forEach((context) => {
+    //   context.addEventListener('mosuseleave', () => {
+    //     context.querySelector('.resource-context').classList.remove('active');
+    //   });
+    //   context.addEventListener('mouseover', () => {
+    //     context.querySelector('.resource-context').classList.add('active');
+    //   });
+    //   context.addEventListener('click', () => {
+    //     context.querySelector('input').select();
+    //   });
+    // });
+
+    this.element.querySelectorAll("input:not(disabled)").forEach((input) => {
+      input.addEventListener('focus', () => {
+        input.select();
+      });
+    });
+
     // Enable the ability to update the actor's image
     // const updateElements = this.element.querySelectorAll('[data-action="update"]')
     // updateElements.forEach(e => 
     //   e.addEventListener('change', this._update.bind(this))
     // );
+  }
+
+  static async _addToStat(event, target) {
+    const stat = target.dataset.stat;
+    const path = stat.split('.');
+    const newValue = target.dataset.value;
+    var oldValue = this.actor;
+    for (const p of path) {
+      oldValue = oldValue[p];
+    }
+    const total = oldValue + newValue;
+    this.actor.update({
+      [stat]: total
+    });
+  }
+  static async _subtractFromStat(event, target) {
+    const stat = target.dataset.stat;
+    const path = stat.split('.');
+    const newValue = target.dataset.value;
+    var oldValue = this.actor;
+    for (const p of path) {
+      oldValue = oldValue[p];
+    }
+    const total = oldValue - newValue;
+    this.actor.update({
+      [stat]: total
+    });
+  }
+  static async _maxStat(event, target) {
+    const stat = target.dataset.stat;
+    const newValue = target.dataset.value;
+    const maxPath = newValue.split('.');
+    var maxValue = this.actor;
+    for (const p of maxPath) {
+      maxValue = maxValue[p];
+    }
+    this.actor.update({
+      [stat]: maxValue
+    });
+  }
+  static async _minStat(event, target) {
+    const stat = target.dataset.stat;
+    this.actor.update({
+      [stat]: 0
+    });
   }
 
   static async _deleteAction(event, target) {
@@ -373,7 +495,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     let species = this.actor.system.species;
 
     // If the actor already has a species, do nothing
-    if (Object.keys(species).length !== 0)
+    if (species && Object.keys(species).length !== 0)
       return;
 
     // Create a new options sheet for species selection
@@ -413,6 +535,88 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const spellId = target.closest('.spell').dataset.id;
     await this.actor.deleteEmbeddedDocuments('Item', [spellId]);
     this.render();
+  }
+
+  static async _toggleArtifice(event, target) {
+    var apostrophe = '';
+    if (this.actor.name.toLowerCase().endsWith('s')) apostrophe = "'";
+    else apostrophe = "'s";
+
+    const name = `${this.actor.name}${apostrophe} Artifice`;
+
+    const data = {
+      type: 'gear',
+      name: name
+    }
+    const artifice = await this.actor.createEmbeddedDocuments('Item', [data]);
+    artifice.sheet.render(true);
+  }
+
+  static async _toggleComponents(event, target) {
+    var sheet = await new UtopiaActorComponentsSheet({
+      document: this.actor,
+    });
+    sheet.isDocked = true;
+    sheet.dockedTo = this;
+
+    this.children.push(sheet);
+    this.dockedRight.push(sheet);
+
+    sheet.render(true);
+  }
+
+  static async _submitComponents(event, target) {
+    const itemId = target.closest('li[data-document-class]').dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    const rarity = item.system.rarity;
+    const requirements = item.system.craftRequirements;
+    const components = item.system.components;
+    const actorComponents = this.actor.system.components;
+
+    const types = ["material", "refinement", "power"];
+    const typeDifference = {
+      material: 0,
+      refinement: 0,
+      power: 0,
+    }
+    types.forEach(type => {
+      const required = requirements[type];
+      const available = components[rarity][type];
+      if (required > available) {
+        // We need to submit components
+        const difference = required - available;
+        if (actorComponents[rarity][type] < difference) {
+          // We don't have enough components, post a whisper to chat, and return
+          typeDifference[type] = difference;
+          return;
+        }
+        else {
+          // We have at least the required amount of components to submit
+          // We'll subtract the difference from the actor's components
+          actorComponents[rarity][type] -= difference;
+          // We'll update the item's components
+          components[rarity][type] = 0;
+          // And update the item
+          item.update({
+            ['system.components']: components,
+          });
+        }
+        return;
+      }
+    });
+
+    const template = 'systems/utopia/templates/chat/components-required.hbs';
+    templateData = {
+      actor: this.actor,
+      item: item,
+      required: typeDifference,
+    }
+
+    UtopiaChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      whisper: [game.user.id],
+      content: await renderTemplate(template, templateData),
+    })
   }
 
   /**************
@@ -539,9 +743,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Handle item rolls.
     if (dataset.rollType) {
       if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
+        const itemId = target.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
+        const terms = item.terms || undefined;
+        if (item) return item.roll(terms);
       }
       else if (dataset.rollType == 'trait') {
         return await this.actor.performCheck(dataset.trait);

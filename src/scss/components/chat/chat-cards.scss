@@ -1,0 +1,100 @@
+.item-card h3 {
+  font-size: 1.8em;
+}
+
+.item-card img {
+  max-width: 15%;
+  width: auto;
+  height: auto;
+}
+
+.item-card .card-header {
+  gap: 0.5em;
+  padding: 0.25em;
+  justify-content: center;
+  align-content: center;
+}
+
+.item-card .dice-flavor {
+  text-align: left;
+  padding: 0.5em 0.25em;
+}
+
+.item-card footer {
+  padding: 0.5em 0.25em;
+}
+
+.item-card .message-buttons {
+  padding: 0.25em 0.1em 0em 0.1em;
+}
+
+.item-card .message-buttons button {
+  background-color: #b8b6ab;
+  border: 1px solid #8c1216;
+}
+
+.success-card {
+  flex: 0 0 100%;
+  position: relative;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  word-break: break-all;
+  margin-top: 5px;
+}
+
+.check-success {
+  background: rgba(80, 167, 8, 0.342);
+}
+
+.check-failure {
+  background: rgba(167, 40, 8, 0.342);
+}
+
+.damage-result {
+  display: flex;
+  flex-direction: column;
+}
+
+.shp-damage {
+  flex: 0 0 100%;
+  position: relative;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  background: rgba(167, 164, 8, 0.342);
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  word-break: break-all;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.dhp-damage {
+  flex: 0 0 100%;
+  position: relative;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  background: rgba(167, 40, 8, 0.342);
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 3px;
+  box-shadow: 0 0 2px #FFF inset;
+  word-break: break-all;
+}
+
+.dice-description {
+  padding: 0.5em 0.25em;
+}
+
+.dice-gifted {
+  position: absolute;
+  left: 0.1em;
+  top: 0.1em;
+  fill: rgba(80, 167, 8, 0.342);
+}

@@ -1,0 +1,16 @@
+.crafting-components-table {
+  margin: 0;
+
+  & td {
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+  }
+
+  & input {
+    width: 35px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+  }
+}

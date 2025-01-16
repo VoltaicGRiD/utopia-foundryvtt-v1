@@ -49,9 +49,24 @@
         "app": { "long": "Appeal", "abbr": "app" },
         "lan": { "long": "Language", "abbr": "lan" }
       },
+      "Stats": {
+        "shpShort": "SHP",
+        "shpLong": "Surface Hit Points",
+        "dhpShort": "DHP", 
+        "dhpLong": "Deep Hit Points",
+        "staShort": "STA",
+        "staLong": "Stamina Points",
+        "expShort": "EXP",
+        "expLong": "Experience Points",
+        "taShort": "TA",
+        "taLong": "Turn Actions",
+        "iaShort": "IA",
+        "iaLong": "Interrupt Actions"
+      },
       "Points": {
         "subtrait": "Subtrait",
         "talent": "Talent",
+        "specialist": "Specialist",
         "gifted": "Gifted",
         "body": "Body",
         "mind": "Mind",
@@ -100,7 +115,9 @@
       "all": "All",
       "favorite": "Favorites",
       "available": "Available",
-      "locked": "Locked"
+      "locked": "Locked",
+      "submitMaterials": "Submit Materials",
+      "artificeDisabled": "You must have a valid talent to be able to artifice"
     },
 
     "Checks": {
@@ -111,6 +128,17 @@
       "formula": "Formula",
       "description": "Description",
       "quantity": "Quantity",
+      "Archetype": {
+        "unknownDepiction": "Unknown depiction",
+        "Color": {
+          "red": "Red",
+          "yellow": "Yellow",
+          "green": "Green",
+          "blue": "Blue",
+          "orange": "Orange",
+          "purple": "Purple"
+        }
+      },
       "Artifice": {
         "Components": {
           "quality": "Quality",
@@ -385,7 +413,7 @@
         "rules": "Rules",
         "trigger": "Trigger",
         "recharge": "Recharge",
-        "stamina": "Stamina Cost",
+        "stamina": "Stamina",
         "requirements": "Requirements",
         "target": "Target",
         "Trigger": {
@@ -400,6 +428,7 @@
           "myTurn": "Beginning of My Turn",
           "enemyTurn": "Beginning of Enemy Turn",
           "allyTurn": "Beginning of Ally Turn",
+          "tokenMovement": "On Token Movement",
           "startRound": "Start of Round",
           "endRound": "End of Round",
           "staminaLost": "On Stamina Lost",
@@ -418,6 +447,8 @@
           "restFinished": "On Rest Finished",
           "awareness": "Blind Awareness Test"
         },
+        "triggerPrompt": "Prompt before running",
+        "triggerArguments": "Trigger arguments",
         "Recharge": {
           "immediate": "Immediately",
           "myTurn": "Start of My Turn",
@@ -445,8 +476,14 @@
         "languages": "Granted languages"
       },
       "Talents": {
+        "Tabs": {
+          "attributes": "Attributes",
+          "description": "Description",
+          "effects": "Effects"
+        },
         "category": "Choice category",
         "choices": "Prompt for choices (comma-separated tags)",
+        "grants": "Grants [Item]",
         "is-species": "Species talent",
         "tree": "Tree",
         "position": "Position",
@@ -457,6 +494,13 @@
         "position-error": {
           "short": "Required (> 0)",
           "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
+        }
+      },
+      "Specialist": {
+        "Tabs": {
+          "attributes": "Attributes",
+          "description": "Description",
+          "effects": "Effects"
         }
       }
     },
@@ -506,6 +550,8 @@
       "displayActionsOptionCircle": "Semi-circle | Bottom middle",
       "displayActionsOptionVertical": "Vertical left | Vertical right",
       "displayActionsOptionHorizontal": "Horizontal top | Horizontal bottom",
+      "allowPlayerArchetypeEdit": "Allow player archetype edits (Default: GM Only)",
+      "allowPlayerArchetypeEditHint": "When enabled, players can edit their own character's archetype, otherwise only the GM can edit the archetype",
       "Buttons": {
         "twitch": "Twitch Integration",
         "discord": "Utopia Discord Server"
@@ -524,6 +570,7 @@
       "spell": "Spell",
       "species": "Species",
       "spellFeature": "Spell Feature",
+      "specialistTalent": "Specialist Talent",
       "action": "Action",
       "artificeFeature": "Artifice Feature",
       "artificeMaterial": "Artifice Material",

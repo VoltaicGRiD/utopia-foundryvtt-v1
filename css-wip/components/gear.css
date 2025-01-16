@@ -1,0 +1,145 @@
+.utopia.gear-sheet .primary {
+  align-items: center;
+  height: 100%;
+}
+.utopia.gear-sheet .primary header {
+  width: 100%;
+  position: relative;
+}
+.utopia.gear-sheet .primary header .valid-indicator {
+  position: absolute;
+  right: 10px;
+  top: inherit;
+  font-size: 3em;
+  top: 10px;
+}
+.utopia.gear-sheet .item-category {
+  height: 36px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.utopia.gear-sheet .item-category select {
+  font-size: 14pt;
+  line-height: 36px;
+  padding-left: 30px;
+}
+.utopia.gear-sheet .item-category i {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  height: 36px;
+  font-size: 13pt;
+  line-height: 36px;
+}
+.utopia.gear-sheet .gear-tags span {
+  border: 1px solid white;
+  text-align: center;
+  line-height: 24px;
+  height: 24px;
+}
+.utopia.gear-sheet .gear-content {
+  height: 100%;
+  width: 100%;
+}
+.utopia.gear-sheet .features {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+}
+.utopia.gear-sheet .features .feature {
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid #ce5e1f;
+  position: relative;
+}
+.utopia.gear-sheet .features .feature .feature-name {
+  height: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  position: relative;
+  align-content: center;
+  align-items: center;
+  line-height: 24px;
+}
+.utopia.gear-sheet .features .feature .feature-name .feature-tagline {
+  position: absolute;
+  right: 0;
+  line-height: 24px;
+}
+.utopia.gear-sheet .features .feature .stacks {
+  font-size: 1.2em;
+  line-height: 24px;
+}
+.utopia.gear-sheet .features .feature .stacks i {
+  font-size: 0.8em;
+  line-height: 24px;
+}
+.utopia.gear-sheet .features .feature .stacks i:hover {
+  color: #ce5e1f;
+}
+.utopia.gear-sheet .features .feature .cost-variable {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  position: absolute;
+  width: 50px;
+  right: 0;
+  line-height: 24px;
+  height: 24px;
+}
+.utopia.gear-sheet .features .feature .cost-variable span {
+  position: absolute;
+  left: 5px;
+  line-height: 24px;
+  height: 24px;
+  z-index: 501;
+}
+.utopia.gear-sheet .features .feature .cost-variable input {
+  width: 50px;
+  padding-left: 20px;
+  text-align: right;
+}
+.utopia.gear-sheet .features .feature .choices {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+.utopia.gear-sheet .features .feature .choices .choice {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.utopia.gear-sheet .features .feature .choices .choice span {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  pointer-events: none;
+  border: 2px solid #aaa;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+}
+.utopia.gear-sheet .features .feature .choices .choice span:hover {
+  background-color: #444;
+}
+.utopia.gear-sheet .features .feature .choices .choice[selected] span {
+  background-color: #ce5e1f;
+  border-color: #ce5e1f;
+}
+.utopia.gear-sheet .crafting-button {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+.utopia.gear-sheet .attributes {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-content: start;
+}

@@ -31,7 +31,7 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/item/species/header.hbs",
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
@@ -40,7 +40,7 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/species/attributes.hbs",
     },
     description: {
-      template: "systems/utopia/templates/item/species/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
     },
   };
 

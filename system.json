@@ -20,8 +20,8 @@
   "media": [
     {
       "type": "setup",
-      "url": "systems/utopia/assets/anvil-impact.png",
-      "thumbnail": "systems/utopia/assets/anvil-impact.png"
+      "url": "systems/utopia/assets/Utopia-Logo.webp",
+      "thumbnail": "systems/utopia/assets/Utopia-Logo.webp"
     }
   ],
   "version": "0.1.0",
@@ -43,8 +43,24 @@
     }
   ],
   "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "action": {},
+      "species": {},
+      "talent": {},
+      "specialistTalent": {},
+      "spell": {},
+      "spellFeature": {},
+      "gear": {},
+      "artificeFeature": {},
+      "archetype": {},
+      "general": {}
+    },
     "ChatMessage": {
-      "default": "ChatMessage",
+      "default": {},
       "classes": ["ChatMessage"]
     }
   },
@@ -167,8 +183,8 @@
       "flags": {}
     },
     {
-      "name": "items",
-      "label": "SRD Items",
+      "name": "archetypes",
+      "label": "SRD Archetypes",
       "banner": "",
       "path": "",
       "type": "Item",
@@ -187,18 +203,14 @@
       "manifest": "https://raw.githubusercontent.com/League-of-Foundry-Developers/codemirror-lib/master/module.json"	
     }
   ],
-  "flags": {
-    "hotReload": {
-      "extensions": ["css"]
-    }
-  },
-  "packFolders": ["SRD Content"],
+  "flags": {},
+  "packFolders": [],
   "socket": false,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
   "download": "This must link to a .zip file of the current version",
-  "background": "systems/utopia/assets/anvil-impact.png",
-  "gridDistance": 5,
-  "gridUnits": "ft",
+  "background": "systems/utopia/assets/Utopia-Logo.webp",
+  "gridDistance": 1,
+  "gridUnits": "m",
   "primaryTokenAttribute": "shp",
   "secondaryTokenAttribute": "dhp"
 }

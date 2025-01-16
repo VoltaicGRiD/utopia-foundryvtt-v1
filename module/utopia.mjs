@@ -160,21 +160,7 @@ Hooks.once("init", function () {
     }
   }
 
-  // Store our custom document classes for Actors and Items.
-  // We can register our custom [UtopiaChatMessage] class here too, since they are qualified as "Documents".
-  CONFIG.Actor.documentClass = UtopiaActor;
-  CONFIG.Item.documentClass = UtopiaItem;
-  CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
-  CONFIG.Token.objectClass = UtopiaToken;
-  CONFIG.Token.documentClass = UtopiaTokenDocument;
-  CONFIG.Token.hudClass = UtopiaTokenHUD;
-  CONFIG.Dice.terms.d = UtopiaDie;
-  CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
-  CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
-
-  console.log(DocumentSheetConfig);
-
-  // Setting up schema handling for the system.
+    // Setting up schema handling for the system.
   // This is supposed to replace the default 'Template.json' file.
   // It's a bit more flexible and allows for more complex data structures and validation.
   CONFIG.Item.dataModels = {
@@ -191,16 +177,30 @@ Hooks.once("init", function () {
     general: models.UtopiaGeneralItem,
   };
 
-  // DocumentSheetConfig.registerSheet("utopia", UtopiaTokenSheet, {
-  //   types: ["base"],
-  //   makeDefault: true,
-  //   label: "UTOPIA.SheetLabels.token",
-  // });
+  // Allow modules to build onto the Item data models.
+  Hooks.callAll("utopiaItemDataModels", CONFIG.Item.dataModels);
 
-  // CONFIG.Actor.dataModels = {
-  //   character: models.UtopiaCharacter,
-  //   npc: models.UtopiaNPC,
-  // }
+  CONFIG.Actor.dataModels = {
+    character: models.UtopiaCharacter,
+    npc: models.UtopiaNPC,
+  }
+
+  // Allow modules to build onto the Actor data models.
+  Hooks.callAll("utopiaActorDataModels", CONFIG.Actor.dataModels);
+
+  // Store our custom document classes for Actors and Items.
+  // We can register our custom [UtopiaChatMessage] class here too, since they are qualified as "Documents".
+  CONFIG.Actor.documentClass = UtopiaActor;
+  CONFIG.Item.documentClass = UtopiaItem;
+  CONFIG.ChatMessage.documentClass = UtopiaChatMessage;
+  CONFIG.Token.objectClass = UtopiaToken;
+  CONFIG.Token.documentClass = UtopiaTokenDocument;
+  CONFIG.Token.hudClass = UtopiaTokenHUD;
+  CONFIG.Dice.terms.d = UtopiaDie;
+  CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
+  CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
+
+  console.log(DocumentSheetConfig);
 
   // Active Effects are never copied to the Actor,  // but will still apply to the Actor from within the Item
   // if the transfer property on the Active Effect is true.
@@ -234,6 +234,9 @@ function registerActorSheets() {
     types: ["character"],
     label: "UTOPIA.SheetLabels.actorV2",
   });
+
+  // Allow modules to build onto the Actor sheets.
+  Hooks.callAll("utopiaActorSheets", Actors);
 }
 
 /* -------------------------------------------- */
@@ -247,11 +250,6 @@ function registerItemSheets() {
     types: ["action"],
     label: "UTOPIA.SheetLabels.action",
   });
-  // Items.registerSheet("utopia", UtopiaSpellcraftSheet, {
-  //   makeDefault: true,
-  //   types: ["spell"],
-  //   label: "UTOPIA.SheetLabels.spellcraft",
-  // });
   Items.registerSheet("utopia", UtopiaGeneralItemSheet, {
     makeDefault: true,
     types: ["general"],
@@ -302,6 +300,9 @@ function registerItemSheets() {
     types: ["gear"],
     label: "UTOPIA.SheetLabels.gear",
   });
+
+  // Allow modules to build onto the Actor sheets.
+  Hooks.callAll("utopiaItemSheets", Items);
 }
 
 /* -------------------------------------------- */
@@ -337,26 +338,26 @@ function registerGameKeybindings() {
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
   });
 
-  // Open Talent Tree for selected Token
-  game.keybindings.register("utopia", "openSubtraitSheet", {
-    name: "UTOPIA.Keybindings.openSubtraitSheet",
-    hint: "UTOPIA.Keybindings.openSubtraitSheetHint",
-    editable: [{ key: "KeyS", modifiers: ["Control"] }, { key: "F2" }],
-    onDown: () => {
-      if (game.canvas.tokens.controlled.length > 0) {
-        game.canvas.tokens.controlled.forEach((token) => {
-          token.actor.openSubtraitSheet();
-        });
-      } else {
-        ui.notifications.warn("No token selected.");
-      }
-    },
-    onUp: () => {},
-    restricted: false,
-    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-  });
+  // Open Subtrait Sheet for selected Token --- DISABLED
+  // game.keybindings.register("utopia", "openSubtraitSheet", {
+  //   name: "UTOPIA.Keybindings.openSubtraitSheet",
+  //   hint: "UTOPIA.Keybindings.openSubtraitSheetHint",
+  //   editable: [{ key: "KeyS", modifiers: ["Control"] }, { key: "F2" }],
+  //   onDown: () => {
+  //     if (game.canvas.tokens.controlled.length > 0) {
+  //       game.canvas.tokens.controlled.forEach((token) => {
+  //         token.actor.openSubtraitSheet();
+  //       });
+  //     } else {
+  //       ui.notifications.warn("No token selected.");
+  //     }
+  //   },
+  //   onUp: () => {},
+  //   restricted: false,
+  //   precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
+  // });
 
-  // Open Talent Tree for selected Token
+  // Deal damage to selected Token
   game.keybindings.register("utopia", "dealDamage", {
     name: "UTOPIA.Keybindings.dealDamage",
     hint: "UTOPIA.Keybindings.dealDamageHint",
@@ -544,21 +545,21 @@ function registerGameSettings() {
     default: false,
   });
 
-  game.settings.register('utopia', 'twitchChannel', {
-    name: "UTOPIA.Settings.twitchChannel",
-    hint: "UTOPIA.Settings.twitchChannelHint",
-    scope: "client",
-    config: game.settings.get("utopia", "enableTwitchIntegration"),
-    type: String,
-    default: "",
-  });
+  game.settings.register('utopia', 'allowPlayerArchetypeEdit', {
+    name: "UTOPIA.Settings.allowPlayerArchetypeEdit",
+    hint: "UTOPIA.Settings.allowPlayerArchetypeEditHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  })
 }
 
 /* -------------------------------------------- */
 /*  Status Effects                              */
 /* -------------------------------------------- */
 
-function registerStatusEffects() {
+async function registerStatusEffects() {
   // Define the status effects
   const statusEffects = [
     {
@@ -598,7 +599,10 @@ function registerStatusEffects() {
     },
   ];
 
-  CONFIG.statusEffects = statusEffects;
+  // Allow modules to build onto the status effects.
+  Hooks.callAll("utopiaStatusEffects", statusEffects);
+
+  CONFIG.statusEffects = statusEffects;  
 }
 //#endregion
 
@@ -745,69 +749,8 @@ Hooks.once("ready", function () {
     });
   });
 
-  // Hooks.on("refreshToken", (token, misc) => {
-  //   let shp = token.actor.system.shp.value;
-  //   let tokenId = token.id;
-
-  //   if (!CONFIG.UTOPIA.trackedTokens) {
-  //     CONFIG.UTOPIA.trackedTokens = [];
-  //   }
-
-  //   if (CONFIG.UTOPIA.trackedTokens.includes(tokenId)) {
-  //     CONFIG.UTOPIA.trackedTokens.append(tokenId);
-
-  //     Hooks.once("modifyTokenAttribute", (update, actorData) => {
-  //       let newShp = update.value;
-
-  //       console.log(shp, newShp);
-
-  //       let index = CONFIG.UTOPIA.trackedTokens.indexOf(tokenId);
-  //       CONFIG.UTOPIA.trackedTokens.splice(index, 1);
-  //     });
-  //   }
-  // });
-
   Hooks.on("preUpdateActor", (actor, data, meta, userId) => {
-    // Actor is the actor being updated
-    // Data is the data that is being updated
-    // Meta is the metadata for the update
-    // UserId is the user that initiated the update
-    // console.log(actor, data, meta, userId);
-    // if (!data.system) return;
-    // const a = actor.toObject().system;
-    // const u = data.system;
-    // if (a.shp.value != u.shp.value || a.dhp.value != u.dhp.value) {
-    //   if (a.shp.value > u.shp.value) {
-    //     let damage = a.shp.value - u.shp.value;
-    //     let type = "Unlisted";
-    //     actor.applyDamage({ damage: damage, type: type });
-    //     return false;
-    //   } else if (a.shp.value < u.shp.value) {
-    //     return true;
-    //     let healing = u.shp.value - a.shp.value;
-    //     let type = "Unlisted";
-    //     actor.applyHealing(healing, type);
-    //     return false;
-    //   } else if (a.dhp.value > u.dhp.value) {
-    //     let damage = a.dhp.value - u.dhp.value;
-    //     let type = "Unlisted";
-    //     actor.applyDamage({ damage: damage, type: type });
-    //     return false;
-    //   } else if (a.dhp.value < u.dhp.value) {
-    //     return true;
-    //     let healing = u.dhp.value - a.dhp.value;
-    //     let type = "Unlisted";
-    //     actor.applyHealing(healing, type);
-    //     return false;
-    //   }
-    // } else {
-    //   try {
-    //     assumeTrigger(data, actor.toObject(), actor);
-    //     return true;
-    //   } catch (error) {
-    //     return true;
-    //   }
-    // };
+
   });
 
   Hooks.on("renderMacroConfig", async (app, html, data) => {
@@ -841,28 +784,6 @@ Hooks.once("ready", function () {
     return true;
   });
 
-  // ------------------
-  // This hook is a fallback for handling damage and healing
-  // I've disabled it since I believe I found a better way to handle it
-  // ------------------
-  //#region Disabled [onTokenModified] Hook (Damage & Healing)
-  // Hooks.on('modifyTokenAttribute', (update, actorData) => {
-  //   console.log(update, actorData);
-
-  //   if (update.attribute === 'shp' || update.attribute === 'dhp') {
-  //     let actorId = actorData._id;
-  //     let actor = game.actors.get(actorId);
-  //     console.log(actor);
-  //     if (actor.statuses) {
-  //       if (actor.statuses.has('concentration')) {
-  //         let formula = "3d6 + @traits.str.subtraits.for.mod";
-  //         let rollData = actor.getRollData();
-  //         let fortitudeTest = new Roll(formula, rollData).roll();
-  //         fortitudeTest.toMessage();
-  //       }
-  //     }
-  //   }
-  // });
   //#endregion
 
   Hooks.on("createActiveEffect", (effect, options, userId) => {
@@ -937,19 +858,6 @@ Hooks.on('renderSettings', (settings) =>  {
   });
 
   utopiaSettings.append(twitchSettings, discordButton);
-  
-
-  // Migration Troubleshooting (if GM)
-  // if (game.user.isGM) {
-  //     const shootButton = document.createElement("button");
-  //     shootButton.type = "button";
-  //     shootButton.append(fontAwesomeIcon("wrench"), game.i18n.localize("PF2E.Migrations.Troubleshooting"));
-  //     shootButton.addEventListener("click", () => {
-  //         new MigrationSummary({ troubleshoot: true }).render(true);
-  //     });
-
-  //     utopiaSettings.append(shootButton);
-  // }
 });
 //#endregion
 

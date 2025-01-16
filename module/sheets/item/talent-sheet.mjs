@@ -18,9 +18,9 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
     },
     actions: {
       image: this._image,
-      viewDoc: this._viewEffect,
-      createDoc: this._createEffect,
-      deleteDoc: this._deleteEffect,
+      viewEffect: this._viewEffect,
+      createEffect: this._createEffect,
+      deleteEffect: this._deleteEffect,
       toggleEffect: this._toggleEffect,
     },
     form: {
@@ -34,7 +34,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/item/talent/header.hbs",
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
@@ -43,7 +43,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/talent/attributes.hbs",
     },
     description: {
-      template: "systems/utopia/templates/item/talent/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
     },
     effects: {
       template: "systems/utopia/templates/item/generic/effects.hbs",
@@ -131,7 +131,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Actions.Tabs.',
+        label: 'UTOPIA.Item.Talents.Tabs.',
       };
   
       switch (partId) {

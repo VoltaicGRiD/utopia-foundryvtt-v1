@@ -15,7 +15,8 @@
             value='{{item.name}}'
             data-action="update"
             placeholder='Name'
-          /></h1>
+          />
+        </h1>
       </div>
     </div>
     <span class="valid-indicator">
@@ -32,7 +33,11 @@
   <div class="gear-content">
 
     <div class="item-category">
-      {{formInput systemFields.category value=system.category name='system.category' localize=true}}
+      {{#if (eq hasFeatures false)}}
+        {{formInput systemFields.category value=system.category name='system.category' localize=true}}
+      {{else}}
+        <input type="text" disabled value="{{localize (concat 'UTOPIA.Item.Artifice.Features.Categories.' system.category)}}">
+      {{/if}}
       <i data-action="categoryDescription" class="fas fa-circle-info"></i>
     </div>
 

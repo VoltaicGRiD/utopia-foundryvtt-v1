@@ -98,7 +98,7 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
 
     // this.schema.fields.ammo.fields.item.choices = ammoTypes;
 
-    if (this.formula.length > 0) {
+    if (this.formula && this.formula.length > 0) {
       if (this.formulas.melee.length === 0)
         this.formulas.melee = this.formula;
     }

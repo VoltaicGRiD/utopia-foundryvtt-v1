@@ -26,7 +26,7 @@ export class UtopiaWeaponSheet extends api.HandlebarsApplicationMixin(
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/item/weapon/header.hbs",
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
@@ -35,7 +35,7 @@ export class UtopiaWeaponSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/weapon/attributes.hbs",
     },
     description: {
-      template: "systems/utopia/templates/item/weapon/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
     },
     rules: {
       template: "systems/utopia/templates/item/weapon/rules.hbs",

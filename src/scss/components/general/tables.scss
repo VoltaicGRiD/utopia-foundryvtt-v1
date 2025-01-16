@@ -1,0 +1,32 @@
+.td-left {
+  text-align: left;
+}
+
+.td-center {
+  text-align: center;
+}
+
+.point-display {
+  border-top: 1px dashed black;
+}
+
+.point-display > td {
+  padding-top: 5px;
+}
+
+.increase {
+  line-height: normal;
+}
+
+.gift {
+  line-height: normal;
+}
+
+tr:hover {
+  background-color: rgb(214, 201, 142) !important;
+  color: black;
+}
+
+.gifted {
+  background-color: rgba(129, 245, 153, 0.2);
+}

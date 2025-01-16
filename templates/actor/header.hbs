@@ -1,8 +1,8 @@
 <header class="sheet-header">
   <img class="profile-img" src="{{actor.img}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
   <div class="header-fields">
-    <div class="flexrow">
-      <h1 class="char-name"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+    <div class="char-header flexrow">
+      <h1 class="char-name"><input name="name" type="text" class="item-name-input" value="{{actor.name}}" placeholder="Name"/></h1>
       <h1 class="species-container">
         <input disabled class="species-input" name="species" placeholder="Species" type="text" value="{{system.species.name}}"/>
         {{#unless system.species.name}}
@@ -10,7 +10,7 @@
         {{/unless}}
       </h1>
     </div>
-    <div class="resources grid grid-6col">
+    <div class="resources">
 
       {{!-- <div class="resource flex-group-center">
         <label for="system.health.value" class="resource-label">SHP</label>
@@ -21,71 +21,67 @@
         </div>
       </div> --}}
 
-      <div class="resource">
-        <div class="resource-value">
-          <label for="system.shp.value" class="resource-label">SHP</label>
-          <input type="text" name="system.shp.value" value="{{system.shp.value}}" data-dtype="Number"/>
+      <div class="new-resource">
+        <div class="resource-context">
+          <div class="add-buttons">
+            <button data-action="addToStat" data-stat="system.shp.value" data-value="1">+1</button>
+            <button data-action="addToStat" data-stat="system.shp.value" data-value="5">+5</button>
+            <button data-action="addToStat" data-stat="system.shp.value" data-value="20">+20</button>
+            <button data-action="maxStat" data-stat="system.shp.value" data-value="system.shp.max">Max</button>
+          </div>
+          <div class="subtract-buttons">
+            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="1">-1</button>
+            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="5">-5</button>
+            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="20">-20</button>
+            <button data-action="minStat" data-stat="system.shp.value" data-value="0">Min</button>
+          </div>
         </div>
-        <div class="resource-max">
-          <label for="system.shp.max" class="resource-label">MAX</label>
-          <input disabled type="text" name="system.shp.max" value="{{system.shp.max}}" data-dtype="Number"/>
-        </div>  
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.shp.value" value="{{system.shp.value}}">
+          <span class="new-resource-max">{{system.shp.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.shpShort'}}</span>
+        </label>
       </div>
 
-      <div class="resource">
-        <div class="resource-value">
-          <label for="system.dhp.value" class="resource-label">DHP</label>
-          <input type="text" name="system.dhp.value" value="{{system.dhp.value}}" data-dtype="Number"/>
-        </div>
-        <div class="resource-max">
-          <label for="system.dhp.max" class="resource-label">MAX</label>
-          <input disabled type="text" name="system.dhp.max" value="{{system.dhp.max}}" data-dtype="Number"/>
-        </div>  
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.dhpLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.dhp.value" value="{{system.dhp.value}}">
+          <span class="new-resource-max">{{system.dhp.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.dhpShort'}}</span>
+        </label>
       </div>
 
-      <div class="resource">
-        <div class="resource-value">
-          <label for="system.stamina.value" class="resource-label">STA</label>
-          <input type="text" name="system.stamina.value" value="{{system.stamina.value}}" data-dtype="Number"/>
-        </div>
-        <div class="resource-max">
-          <label for="system.stamina.max" class="resource-label">MAX</label>
-          <input disabled type="text" name="system.stamina.max" value="{{system.stamina.max}}" data-dtype="Number"/>
-        </div>  
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.staLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.stamina.value" value="{{system.stamina.value}}">
+          <span class="new-resource-max">{{system.stamina.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.staShort'}}</span>
+        </label>
       </div>
 
-            <div class="resource">
-        <div class="resource-value">
-          <label for="system.experience.value" class="resource-label">EXP</label>
-          <input type="text" name="system.experience.value" value="{{system.experience.value}}" data-dtype="Number"/>
-        </div>
-        <div class="resource-max">
-          <label for="system.experience.next" class="resource-label">NEXT</label>
-          <input disabled type="text" name="system.experience.next" value="{{system.experience.next}}" data-dtype="Number"/>
-        </div>  
+      <div class="new-resource large">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.expLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.experience.value" value="{{system.experience.value}}">
+          <span class="new-resource-max">{{system.experience.next}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.expShort'}}</span>
+        </label>
       </div>
 
-      <div class="resource">
-        <div class="resource-value">
-          <label for="system.actions.turn.value" class="resource-label">TA</label>
-          <input type="text" name="system.actions.turn.value" value="{{system.actions.turn.value}}" data-dtype="Number"/>
-        </div>
-        <div class="resource-max">
-          <label for="system.actions.turn.max" class="resource-label">MAX</label>
-          <input disabled type="text" name="system.actions.turn.max" value="{{system.actions.turn.max}}" data-dtype="Number"/>
-        </div>  
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.taLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.ta.value" value="{{system.ta.value}}">
+          <span class="new-resource-max">{{system.ta.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.taShort'}}</span>
+        </label>
       </div>
 
-      <div class="resource">
-        <div class="resource-value">
-          <label for="system.actions.interrupt.value" class="resource-label">IA</label>
-          <input type="text" name="system.actions.interrupt.value" value="{{system.actions.interrupt.value}}" data-dtype="Number"/>
-        </div>
-        <div class="resource-max">
-          <label for="system.actions.interrupt.max" class="resource-label">MAX</label>
-          <input disabled type="text" name="system.actions.interrupt.max" value="{{system.actions.interrupt.max}}" data-dtype="Number"/>
-        </div>  
-      </div>
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.iaLong'}}">
+          <input class="new-resource-value" data-dtype="Number" type="text" name="system.ia.value" value="{{system.ia.value}}">
+          <span class="new-resource-max">{{system.ia.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.iaShort'}}</span>
+        </label>
+      </div>  
 
     </div>
   </div>
