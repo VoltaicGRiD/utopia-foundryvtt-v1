@@ -113,8 +113,15 @@
     {{/if}}
   </div>
 
-  <div class="flexcol">
-    <label for="system.grantsAction">{{localize 'UTOPIA.Item.Artifice.Features.grantsAction'}}</label>
-    {{formInput systemFields.grantsAction value=system.grantsAction name='system.grantsAction' localize=true tabindex="11"}}
+  <div class="grid grid-6col">
+    <div class="flexcol grid-span-4">
+      <label for="system.grantsAction">{{localize 'UTOPIA.Item.Artifice.Features.grantsAction'}}</label>
+      {{formInput systemFields.grantsAction value=system.grantsAction name='system.grantsAction' localize=true tabindex="11"}}
+    </div>
+
+    <div class="flexcol grid-span-2">
+      <label for="system.minimumRarity">{{localize 'UTOPIA.Item.Artifice.Features.minimumRarity'}}</label>
+      {{formInput systemFields.minimumRarity value=system.minimumRarity name='system.minimumRarity' localize=true tabindex="11"}}
+    </div>
   </div>
 </div>

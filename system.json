@@ -30,7 +30,7 @@
     "verified": "11.315"
   },
   "esmodules": [
-    "module/utopia.mjs", 
+    "system/utopia.mjs", 
     "lib/tagify/tagify.esm.js",
     "lib/ace/src/ace.js"
   ],
@@ -59,9 +59,13 @@
       "archetype": {},
       "general": {}
     },
-    "ChatMessage": {
-      "default": {},
-      "classes": ["ChatMessage"]
+    "ActiveEffect": {
+      "passive": {},
+      "temporary": {},
+      "inactive": {},
+      "specialist": {},
+      "talent": {},
+      "gear": {}
     }
   },
   "packs": [

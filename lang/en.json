@@ -67,7 +67,7 @@
         "subtrait": "Subtrait",
         "talent": "Talent",
         "specialist": "Specialist",
-        "gifted": "Gifted",
+        "gifted": "Gifted Subtraits",
         "body": "Body",
         "mind": "Mind",
         "soul": "Soul"
@@ -76,6 +76,66 @@
         "constitution": "Constitution",
         "endurance": "Endurance",
         "effervescence": "Effervescence"
+      },
+      "Actions": {
+        "block": "Block",
+        "dodge": "Dodge",
+        "rest": "Rest",
+        "turnActions": "Turn Actions",
+        "interruptActions": "Interrupt Actions",
+        "browseActions": "Browse Actions"
+      },
+      "Resources": {
+        "resources": "Resources",
+        "add": "Add Resource"
+      },
+      "Biography": {
+        "biographyFields": "Biography Fields",
+        "age": "Age",
+        "pronouns": "Pronouns",
+        "education": "Education",
+        "ethnicity": "Ethnicity",
+        "occupation": "Occupation",
+        "nationality": "Nationality",
+        "upbringing": "Upbringing",
+        "height": "Height",
+        "weight": "Weight",
+        "bodyType": "Body Type",
+        "hairEyesSkin": "Hair, eyes, and skin",
+        "markings": "Markings",
+        "voice": "Voice / Accent",
+        "quirks": "Quirks",
+        "enemies": "Enemies",
+        "allies": "Allies",
+        "rivals": "Rivals",
+        "family": "Family",
+        "friends": "Friends",
+        "partners": "Partners",
+        "strength": "Strength Source",
+        "reputation": "Reputation",
+        "personalSecrets": "Personal Secrets",
+        "gmSecrets": "GM Secrets",
+        "achievements": "Achievements",
+        "coreMemories": "Core Memories",
+        "phobias": "Phobias",
+        "dreams": "Dreams",
+        "nightmares": "Nightmares",
+        "anathema": "Anathema",
+        "edicts": "Edicts",
+        "hobbies": "Hobbies",
+        "interests": "Interests",
+        "ambitions": "Ambitions",
+        "moralAlignment": "Moral Alignment",
+        "philosophicalAlignment": "Philosophical Alignment",
+        "politicalAlignment": "Political Alignment",
+        "motivations": "Motivations",
+        "birthday": "Birthday",
+        "deathday": "Deathday",
+        "generalKnowledgeDivider": "----- General Knowledge -----",
+        "relationshipsDivider": "----- Relationships -----",
+        "personalInformationDivider": "----- Personal Information -----",
+        "alignmentsDivider": "----- Alignments -----",
+        "publicInformationDivider": "----- Public Information -----"
       }
     },   
     "SheetLabels": {
@@ -87,7 +147,10 @@
       "subtrait": "Utopia Subtrait Selection",
       "talent-tree-selector": "Utopia Talent Tree",
       "spellcraft": "Utopia Spellcrafting",
-      "craftingFeatures": "Utopia Artifice Features"
+      "craftingFeatures": "Utopia Artifice Features",
+      "undock": "Undock Window",
+      "dock": "Dock Window",
+      "swapDock": "Swap Docked Side"
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -95,6 +158,8 @@
       "submit": "Submit"
     },
     "Descriptions": {
+      "description": "Description",
+      "gmSecrets": "GM Secrets",
       "attributes": "Attributes",
       "pointsleft": "Points left to spend",
       "points": "Points",
@@ -107,6 +172,7 @@
       "roll": "Roll",
       "tags": "Tags",
       "talents": "Talents",
+      "specialistTalents": "Specialist Talents",
       "unlock": "Make all talents available (GM Only)",
       "filter": "Filter",
       "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
@@ -117,7 +183,8 @@
       "available": "Available",
       "locked": "Locked",
       "submitMaterials": "Submit Materials",
-      "artificeDisabled": "You must have a valid talent to be able to artifice"
+      "artificeDisabled": "You must have a valid talent to be able to artifice",
+      "equipItem": "Equip Item"
     },
 
     "Checks": {
@@ -130,6 +197,7 @@
       "quantity": "Quantity",
       "Archetype": {
         "unknownDepiction": "Unknown depiction",
+        "color": "Color",
         "Color": {
           "red": "Red",
           "yellow": "Yellow",
@@ -137,6 +205,23 @@
           "blue": "Blue",
           "orange": "Orange",
           "purple": "Purple"
+        },
+        "proverb": "Proverb",
+        "unknownProverb": "Unknown proverb",
+        "maturity": "Maturity",
+        "immaturity": "Immaturity",
+        "depiction": "Depiction",
+        "exo": "Exo",
+        "Exo": {
+          "aristocrat": "Aristocrat",
+          "practitioner": "Practitioner",
+          "construct": "Construct"
+        },
+        "endo": "Endo",
+        "Endo": {
+          "tempest": "Tempest",
+          "trickster": "Trickster",
+          "scholar": "Scholar"
         }
       },
       "Artifice": {
@@ -214,7 +299,16 @@
           },
           "grantsAction": "Grants Action to Wielder / Owner",
           "tagline": "Tagline",
-          "required": "Required"
+          "required": "Required",
+          "minimumRarity": "Sets Minimum Rarity",
+          "MinimumRarity": {
+            "none": "None",
+            "common": "Common",
+            "extraordinary": "Extraordinary",
+            "rare": "Rare",
+            "legendary": "Legendary",
+            "mythical": "Mythical"
+          }
         },
         "Gear": {
           "Validity": {
@@ -226,6 +320,10 @@
             "oneHanded": "One-Handed",
             "twoHanded": "Two-Handed",
             "worn": "Worn"
+          },
+          "Tabs": {
+            "primary": "Primary",
+            "description": "Description"
           }
         }
       },
@@ -555,6 +653,36 @@
       "Buttons": {
         "twitch": "Twitch Integration",
         "discord": "Utopia Discord Server"
+      },
+			"Twitch": {
+        "channel": "Twitch Channel",
+        "channelHint": "The channel name for the Twitch integration",
+        "channelId": "Channel ID",
+        "channelIdHint": "The Twitch channel's ID, used for API calls (set automatically)",
+        "clientId": "Client ID",
+        "clientIdHint": "Your Twitch developer application's client ID, must be set manually",
+        "userId": "User ID",
+        "userIdHint": "Your Twitch user ID, or the user ID of the bot account (set automatically)",
+        "oauthToken": "OAuth Token",
+        "oauthTokenHint": "The OAuth token for the bot account, must be set manually, or retrieved from attached Python script",
+        "viewerNames": "Show viewer names",
+        "viewerNamesHint": "When enabled, viewer names will be displayed in the chat, otherwise it will appear as {channel name}'s {chat name}. This setting does not affect existing messages",
+        "viewerBadges": "Show viewer badges",
+        "viewerBadgesHint": "When enabled, viewer badges will be displayed in the chat. This setting does not affect existing messages",
+        "chatName": "Chat Name",
+        "chatNameHint": "The name of your 'viewers'. This is the name that will appear in the chat, if viewer names are hidden",
+        "enableSpellcrafting": "Enable viewer spellcrafting",
+        "enableSpellcraftingHint": "When enabled, viewers can use channel points to craft spells", 
+        "enableArtifice": "Enable viewer artificing",
+        "enableArtificeHint": "When enabled, viewers can use channel points to craft items",
+        "enableTargeting": "Enable viewers to target",
+        "enableTargetingHint": "When enabled, viewers can vote to target a combatant during encounters"
+      }
+    },
+    "TwitchIntegration": {
+      "Tabs": {
+        "settings": "Settings",
+        "commands": "Commands"
       }
     }
   },

@@ -33,20 +33,30 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
     },
     window: {
       title: "UTOPIA.SheetLabels.action",
-    },
+    },  
     dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
   };
 
   static PARTS = {
+    header: {
+      template: "systems/utopia/templates/item/gear/header.hbs",
+    },
+    tabs: {
+      // Foundry-provided generic template
+      template: 'templates/generic/tab-navigation.hbs',
+    },
     primary: {
       template: "systems/utopia/templates/item/gear/primary.hbs",
+    },
+    description: {
+      template: "systems/utopia/templates/item/generic/description.hbs",
     }
   };
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     
-    options.parts = ["primary"];
+    options.parts = ["header", "tabs", "primary", "description"];
   }
 
   async _prepareContext(options) {
@@ -59,6 +69,7 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
+      gm: game.user.isGM,
       // Add the item document.
       item: this.item,
       // Adding system and flags for easier access
@@ -69,6 +80,8 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
+      // Add tabs
+      tabs: this._getTabs(options.parts),
       // Add features to context
       features: this.item.system.features,
       hasFeatures: Object.keys(this.item.system.features).length > 0,
@@ -77,8 +90,82 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
 
     console.log(context);
 
+    console.log(this.item.getRollData());
+
     return context;
   }
+
+/** @override */
+  async _preparePartContext(partId, context) {
+    switch (partId) {
+      case 'primary':
+        context.tab = context.tabs[partId];
+        break;
+      case 'description': 
+        context.tab = context.tabs[partId];
+        context.enrichedDescription = await TextEditor.enrichHTML(
+          this.item.system.description,
+          {
+            secrets: this.document.isOwner,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
+
+        context.enrichedGMNotes = await TextEditor.enrichHTML(
+          this.item.system.gmSecrets,
+          {
+            secrets: game.user.isGM,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
+      default:
+        break;
+    }
+
+    return context;
+  }
+
+  /**
+   * Generates the data for the generic tab navigation template
+   * @param {string[]} parts An array of named template parts to render
+   * @returns {Record<string, Partial<ApplicationTab>>}
+   * @protected
+   */
+  _getTabs(parts) {
+    // Default tab for first time it's rendered this session
+    if (!this.tabGroups['primary']) this.tabGroups['primary'] = 'primary';
+
+    return parts.reduce((tabs, partId) => {
+      const tab = {
+        cssClass: '',
+        group: 'primary',
+        // Matches tab property to
+        id: '',
+        // FontAwesome Icon, if you so choose
+        icon: '',
+        // Run through localization
+        label: 'UTOPIA.Item.Artifice.Gear.Tabs.',
+      };
+      switch (partId) {
+        case 'header':
+        case 'tabs':
+          return tabs;
+        case 'primary':
+        case 'description':
+          tab.id = partId;
+          tab.label += partId;
+          break;
+        default:
+      }
+      
+      if (this.tabGroups['primary'] === tab.id) tab.cssClass = 'active';
+
+      tabs[partId] = tab;
+      return tabs;
+    }, {});
+  }    
 
   async _addFeature(feature) {    
     // We need to validate this is actually a feature, and not just some random data.

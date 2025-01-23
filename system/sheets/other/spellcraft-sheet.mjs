@@ -171,7 +171,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       }
 
       const existingSpells = await gatherSpells();
-      console.log(existingSpells);
       existingSpells.forEach(s => {
         if (s.uuid !== undefined) this.worldSpells[s.uuid] = s;
       });
@@ -204,7 +203,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       let cost = a.system.cost - b.system.cost;
       return features || name || cost;
     })
-    console.log(existingSpells);
     existingSpells.forEach(s => {
       if (s.uuid !== undefined)
         this.worldSpells[s.uuid] = s;
@@ -236,6 +234,7 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     }
 
     console.log(context);
+    console.log(this);
 
     return context;
   }
@@ -356,7 +355,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       else if (data.type === "spell") {
         const id = data.id;
         const spell = this.worldSpells[id];
-        console.log(id, spell);
         if (!spell) return;
         await this.addSpell(spell);
         this.render();
@@ -445,7 +443,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
           submit: result => {
             const feature = selected[featureId];
             const variable = feature.system.variables[variableId];
-            console.log(event);
             event.target.style.backgroundColor = "#90c96b";
             event.target.style.color = "#000";
             event.target.innerHTML = `&#x2713`;
@@ -458,7 +455,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
     const formulaDown = this.element.querySelectorAll(".formula-down");
     formulaDown.forEach(f => {
       f.addEventListener("click", async (event) => {
-        console.log(event);
         const featureId = event.target.dataset.feature;
         const feature = this.selected[featureId];
         let currentFormula = feature.currentFormula;
@@ -677,7 +673,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
   }
 
   static async _save() {
-    console.log("save", this);
     if (Object.keys(this.selected).length === 0) return;
 
     let selected = this.selected;
@@ -701,11 +696,12 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       }
     });
 
+    console.log(this);
+
     if (this.actor && Object.keys(this.actor).length > 0) {
       await this.actor.createEmbeddedDocuments("Item", [spell]);
     }
     else if (this.spells.length === 1) { // We need to update the current spell instead
-      console.log(this.spells[0]);
       await this.spells[0].update({
         name: name,
         system: {
@@ -717,13 +713,11 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
           cost: cost,
         }
       });
-      console.log(this.spells[0]);
     }
     else {
       const doc = await game.utopia.UtopiaItem.create(spell);
       await game.packs.get('utopia.spells').importDocument(doc);
       await doc.delete();
-      console.log(doc);
     }
 
     this.render();
@@ -857,7 +851,9 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       this.selected = spell.system.features;
       this.name = spell.name;
       this.flavor = spell.system.flavor;
-      this.actor = spell.actor;
+      if (!this.actor) this.actor = spell.actor;
+      if (!this.actor) this.actor = game.user.character;
+      if (!this.actor) this.actor = game.canvas.tokens.controlled[0].actor;
       this.render();
     }
     else {
@@ -883,7 +879,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
   async getFavorites() {
     const favorites = game.user.getFlag('utopia', 'favorites') || {};
     const spellFeatures = favorites["spellFeature"] || [];
-    console.log("Favorites", spellFeatures);
     const features = this.features;
     for (let feature of Object.values(features)) {
       feature.favorite = spellFeatures.includes(feature._id);
@@ -964,8 +959,6 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
       if (itemData.currentFormula && itemData.currentFormula > diceOptions[0].length - 1) {
         entry[1].currentFormula = diceOptions[0].length - 1;
       }
-
-      console.log("Prepare formula options", entry[1]);
     });
 
     this.selected = Object.fromEntries(entries);

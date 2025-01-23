@@ -13,10 +13,8 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
       height: 800,
     },
     actions: {
-      image: this._image,
-      saveAndCast: this._saveAndCast,
-      save: this._save,
-      cast: this._cast,
+      authorize: this._authorize,
+      connect: this._connect,
     },
     window: {
       title: "UTOPIA.SheetLabels.twitchIntegration",
@@ -29,6 +27,7 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
     },
     settings: {
       template: "systems/utopia/templates/other/twitch-integration/settings.hbs",
+      scrollable: ['']
     },
     // chat: {
     //   template: "systems/utopia/templates/other/twitch-integration/chat.hbs",
@@ -56,7 +55,7 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
         context.tab = context.tabs[partId];
         const settings = Twitch.SETTINGS.map((setting) => {
           const type = setting.secret ? "secret" : setting.type === Boolean ? "checkbox" : "text";
-
+4
           return {
             key: setting.name,
             name: game.i18n.localize(`UTOPIA.Settings.Twitch.${setting.name}`),
@@ -70,9 +69,9 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
       case "commands":
         context.tab = context.tabs[partId];
         context.commands = {
-          enableSpellcrafting: game.settings.get("utopia", "twitch.enableSpellcrafting"),
-          enableArtifice: game.settings.get("utopia", "twitch.enableArtifice"),
-          enableTargeting: game.settings.get("utopia", "twitch.enableTargeting"),
+          // enableSpellcrafting: game.settings.get("utopia", "twitch.enableSpellcrafting"),
+          // enableArtifice: game.settings.get("utopia", "twitch.enableArtifice"),
+          // enableTargeting: game.settings.get("utopia", "twitch.enableTargeting"),
         };
         break;
     }
@@ -95,7 +94,7 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Actions.Tabs.',
+        label: 'UTOPIA.TwitchIntegration.Tabs.',
       };
   
       switch (partId) {
@@ -137,5 +136,12 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
     const setting = input.dataset.setting;
     const value = input.type === "checkbox" ? input.checked : input.value;
     game.settings.set("utopia", `twitch.${setting}`, value);
+  }
+
+  static async _authorize() {
+    this.twitch = new Twitch();
+    this.twitch.initialize();
+
+    this.render();
   }
 }

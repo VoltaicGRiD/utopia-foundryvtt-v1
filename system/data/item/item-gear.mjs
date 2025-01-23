@@ -6,6 +6,7 @@ export default class UtopiaGear extends UtopiaItemBase {
     const schema = super.defineSchema();
 
     schema.description = new fields.StringField({ blank: true });
+    schema.gmSecrets = new fields.StringField({ required: false, nullable: true, gmOnly: true })
     schema.flavor = new fields.StringField({ blank: true });
     schema.formula = new fields.StringField({
       required: false,
@@ -169,6 +170,27 @@ export default class UtopiaGear extends UtopiaItemBase {
         initial: 0,
       }),
     });
+    schema.accuracy = new fields.SchemaField({
+      trait: new fields.StringField({
+        required: true,
+        nullable: false,
+        initial: "dex"
+      }),
+      // TD is equal to the number of meters away the target is
+      // +1 Favor if in close
+      // +1 Disfavor if in far
+      // If we assume the 'difficulty' field is an array of integers,
+      // We could use '0.5' to indicate a division by 2, and a '2' as a multiplication of 2
+      difficulty: new fields.ArrayField(new fields.NumberField({
+        required: false,
+        nullable: true,
+        initial: 0
+      }), {
+        required: true,
+        nullable: false,
+        initial: []
+      })
+    })
 
     schema.systemVariables = new fields.SchemaField({
       cost: new fields.NumberField({
@@ -461,6 +483,28 @@ export default class UtopiaGear extends UtopiaItemBase {
         feature.ranged = ranged.formula;      
       }
 
+      if (feature.system.minimumRarity) {
+        switch (feature.system.minimumRarity) {
+          case common: 
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 1);
+            break;
+          case extraordinary: 
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 2);
+            break;
+          case rare:
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 3);
+            break;
+          case legendary:
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 4);
+            break;
+          case mythical:
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 5);
+            break;
+          default:
+            this.minimumRarity = Math.max(this.minimumRarity ?? 0, 0);
+        }
+      }
+
       this.cost += feature.cost;
     });
 
@@ -625,22 +669,28 @@ export default class UtopiaGear extends UtopiaItemBase {
 
     const rpCost = this.cost;
     if (rpCost >= 0 && rpCost <= 20) {
-      this.rarity = 0;
+      this.rarity = Math.max(this.minimumRarity, 0);
+      this.featureLimit = 10;
       this.value = rpCost;
     } else if (rpCost >= 21 && rpCost <= 40) {
-      this.rarity = 1;
+      this.rarity = Math.max(this.minimumRarity, 1);
+      this.featureLimit = 20;
       this.value = rpCost * 2;
     } else if (rpCost >= 41 && rpCost <= 70) {
-      this.rarity = 2;
+      this.rarity = Math.max(this.minimumRarity, 2);
+      this.featureLimit = 30;
       this.value = rpCost * 4;
     } else if (rpCost >= 71 && rpCost <= 110) {
-      this.rarity = 3;
+      this.rarity = Math.max(this.minimumRarity, 3);
+      this.featureLimit = 40;
       this.value = rpCost * 8;
     } else if (rpCost >= 111 && rpCost <= 160) {
-      this.rarity = 4;
+      this.rarity = Math.max(this.minimumRarity, 4);
+      this.featureLimit = 50;
       this.value = rpCost * 16;
     } else if (rpCost >= 161 && rpCost <= 220) {
-      this.rarity = 5;
+      this.rarity = Math.max(this.minimumRarity, 5);
+      this.featureLimit = 60;
       this.value = rpCost * 32;
     }
 
@@ -741,6 +791,14 @@ export default class UtopiaGear extends UtopiaItemBase {
         }
       }
     }
+
+    // 3. Maximum Feature check
+    const features = Object.keys(this.features)
+    if (features.length > this.featureLimit) {
+      valid = false;
+      validMessages.push(`Too many features for this rarity of item. Limit: ${this.featureLimit}`);
+    }
+  
 
     // // 3. Check stored components against required components
     // // When we check, if we notice that the RP cost of this item

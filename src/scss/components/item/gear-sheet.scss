@@ -1,19 +1,18 @@
+header {
+  width: 100%;
+  position: relative;
+
+  .valid-indicator {
+    position: absolute;
+    right: 10px;
+    top: inherit;
+    font-size: 3em;
+    top: 10px;
+  }
+}
+
 .primary {
   align-items: center;
-  height: 100%;
-
-  header {
-    width: 100%;
-    position: relative;
-
-    .valid-indicator {
-      position: absolute;
-      right: 10px;
-      top: inherit;
-      font-size: 3em;
-      top: 10px;
-    }
-  }
 }
 
 .item-category {
@@ -53,12 +52,10 @@
 }
 
 .gear-content {
-  height: 100%;
   width: 100%;
 }
 
 .features {
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -164,12 +161,12 @@
 
 .crafting-button {
   position: fixed;
-  left: 0;
-  bottom: 0;
+  left: 5px;
+  bottom: 5px;
+  width: calc(100% - 10px);
 }
 
 .attributes {
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;

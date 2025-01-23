@@ -37,7 +37,7 @@
           </div>
         </div>
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.shp.value" value="{{system.shp.value}}">
+          {{formInput systemFields.shp.fields.value value=system.shp.value name="system.shp.value" localize=true}}
           <span class="new-resource-max">{{system.shp.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.shpShort'}}</span>
         </label>
@@ -45,7 +45,7 @@
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.dhpLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.dhp.value" value="{{system.dhp.value}}">
+          {{formInput systemFields.dhp.fields.value value=system.dhp.value name="system.dhp.value" localize=true}}
           <span class="new-resource-max">{{system.dhp.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.dhpShort'}}</span>
         </label>
@@ -53,7 +53,7 @@
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.staLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.stamina.value" value="{{system.stamina.value}}">
+          {{formInput systemFields.stamina.fields.value value=system.stamina.value name="system.stamina.value" localize=true}}
           <span class="new-resource-max">{{system.stamina.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.staShort'}}</span>
         </label>
@@ -61,7 +61,8 @@
 
       <div class="new-resource large">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.expLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.experience.value" value="{{system.experience.value}}">
+          {{!-- [ --}}
+          {{formInput systemFields.experience.fields.value value=system.experience.value name="system.experience.value" localize=true}}
           <span class="new-resource-max">{{system.experience.next}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.expShort'}}</span>
         </label>
@@ -69,7 +70,7 @@
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.taLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.ta.value" value="{{system.ta.value}}">
+          {{formInput systemFields.ta.fields.value value=system.ta.value name="system.ta.value" localize=true}}
           <span class="new-resource-max">{{system.ta.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.taShort'}}</span>
         </label>
@@ -77,7 +78,7 @@
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.iaLong'}}">
-          <input class="new-resource-value" data-dtype="Number" type="text" name="system.ia.value" value="{{system.ia.value}}">
+          {{formInput systemFields.ia.fields.value value=system.ia.value name="system.ia.value" localize=true}}
           <span class="new-resource-max">{{system.ia.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.iaShort'}}</span>
         </label>

@@ -217,7 +217,7 @@ export class UtopiaActor extends Actor {
       formula: roll.formula,
       total: roll.total,
       result: roll.result,
-      flavor: data.flavor ?? description,
+      //flavor: data.flavor ?? description,
       tooltip: tooltip,
       gifted: gifted,
       toBeat: data.toBeat ?? null,
@@ -294,48 +294,66 @@ export class UtopiaActor extends Actor {
     const system = action.system;
     let formula = system.formula;
 
-    const customTerms = /#([a-z]+)/gi;
-    const matches = formula.matchAll(customTerms);
-    for (const match of matches) {
-      const term = match[1];
-      if (isNumeric(data[term]) || typeof data[term] === 'number') {
-        formula = formula.replace(`#${term}`, data[term]);
-      }
-    }
-
-    if (formula.includes('#')) {
-      const re = /(#[a-z]+[-+*/])/gi;
-      const matches = formula.matchAll(re);
+    if (formula.length > 0) {
+      const customTerms = /#([a-z]+)/gi;
+      const matches = formula.matchAll(customTerms);
       for (const match of matches) {
         const term = match[1];
-        formula = formula.replace(term, '');
+        if (isNumeric(data[term]) || typeof data[term] === 'number') {
+          formula = formula.replace(`#${term}`, data[term]);
+        }
+      }
+
+      if (formula.includes('#')) {
+        const re = /(#[a-z]+[-+*/])/gi;
+        const matches = formula.matchAll(re);
+        for (const match of matches) {
+          const term = match[1];
+          formula = formula.replace(term, '');
+        }
+      }
+
+      let rollData = this.getRollData();
+      let roll = await new Roll(formula, rollData).roll();
+      let tooltip = await roll.getTooltip();
+      roll.tooltip = tooltip;
+
+      if (Object.keys(chatMessage).length !== 0) {
+        const template = "systems/utopia/templates/chat/trigger-card.hbs";
+        const data = {
+          actor: this,
+          formula: formula,
+          tooltip: tooltip,
+          total: roll.total,
+        }
+        await chatMessage.update({
+          content: await renderTemplate(template, data),
+          rollMode: game.settings.get('core', 'rollMode'),
+          sound: CONFIG.sounds.dice,
+        });
+      } else {
+        await roll.toMessage({
+          speaker: ChatMessage.getSpeaker({ actor: this }),
+          flavor: `${this.name} performs ${action.name}!`,
+          rollMode: game.settings.get('core', 'rollMode'),
+        });
       }
     }
 
-    let rollData = this.getRollData();
-    let roll = await new Roll(formula, rollData).roll();
-    let tooltip = await roll.getTooltip();
-    roll.tooltip = tooltip;
-
-    if (Object.keys(chatMessage).length !== 0) {
-      const template = "systems/utopia/templates/chat/trigger-card.hbs";
+    else {
+      const template = "systems/utopia/templates/chat/action-card.hbs";
       const data = {
         actor: this,
-        formula: formula,
-        tooltip: tooltip,
-        total: roll.total,
-      }
-      await chatMessage.update({
-        content: await renderTemplate(template, data),
-        rollMode: game.settings.get('core', 'rollMode'),
-        sound: CONFIG.sounds.dice,
-      });
-    } else {
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this }),
+        action: action,
         flavor: `${this.name} performs ${action.name}!`,
+      }
+      const html = await renderTemplate(template, data);
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: this }),
+        content: html,
         rollMode: game.settings.get('core', 'rollMode'),
-      });
+        sound: CONFIG.sounds.notification
+      })
     }
   }
 

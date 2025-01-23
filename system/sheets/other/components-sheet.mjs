@@ -8,16 +8,18 @@ export class UtopiaActorComponentsSheet extends api.HandlebarsApplicationMixin(s
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
     this.dockedTo = undefined;
+    this.dockedSide = undefined;
     this.isDocked = true;
   }
 
   static DEFAULT_OPTIONS = {
     classes: ['utopia', 'components-sheet'],
     position: {
-      width: 350,
-      height: 500,
+      width: 450,
+      height: "auto",
     },
     actions: {
+      swapDock: this._swapDock,
       dock: this._dock,
     },
     form: {
@@ -28,7 +30,7 @@ export class UtopiaActorComponentsSheet extends api.HandlebarsApplicationMixin(s
       controls: [
         {
           icon: 'fas fa-anchor',
-          label: 'UTOPIA.SheetLabels.dock',
+          label: this.isDocked ? "UTOPIA.SheetLabels.undock" : "UTOPIA.SheetLabels.dock",
           action: 'dock',
           visible: true,
         }
@@ -73,6 +75,9 @@ export class UtopiaActorComponentsSheet extends api.HandlebarsApplicationMixin(s
       systemFields: this.document.system.schema.fields, 
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
+
+      canDock: game.settings.get('utopia', 'dockedWindowPosition') !== 2 && this.dockedTo,
+      docked: this.isDocked,
     };  
 
     console.log(context);
@@ -81,15 +86,64 @@ export class UtopiaActorComponentsSheet extends api.HandlebarsApplicationMixin(s
   }
 
   static async _dock() {
-    console.log("Docking");
     this.isDocked = !this.isDocked;
 
     if (this.isDocked) {
-      this.setPosition({
-        left: this.dockedTo.position.left - this.position.width,
-        top: this.dockedTo.position.top
-      })
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
+      }
     }
+
+    this.render();
+  }
+
+  static async _swapDock() {
+    if (this.dockedSide == 0) 
+    {
+      this.dockedTo.dockedLeft.pop(this);
+      this.dockedTo.dockedRight.push(this);
+      this.dockedSide = 1;
+    }
+    else 
+    {
+      this.dockedTo.dockedRight.pop(this);
+      this.dockedTo.dockedLeft.push(this);
+      this.dockedSide = 0;
+    }
+    
+    if (this.isDocked) {
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
+      }
+    }
+
+    this.render();
   }
 
   async _onRender(options, context) {

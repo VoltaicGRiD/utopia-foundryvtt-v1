@@ -57,6 +57,9 @@ import UtopiaTokenHUD from "./hud/token-hud.mjs";
 import UtopiaDie from "./other/die.mjs";
 import UtopiaToken from "./hud/token.mjs";
 import UtopiaTokenDocument from "./hud/token-document.mjs";
+import { UtopiaArchetypeSheet } from "./sheets/item/archetype-sheet.mjs";
+import UtopiaTwitchIntegrationSheet from "./sheets/other/twitch-integration.mjs";
+import Twitch from "./extensions/twitch.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -167,6 +170,7 @@ Hooks.once("init", function () {
     species: models.UtopiaSpecies,
     talent: models.UtopiaTalent,
     action: models.UtopiaAction,
+    archetype: models.UtopiaArchetype,
     spellFeature: models.UtopiaSpellFeature,
     variable: models.UtopiaSpellVariable,
     specialistTalent: models.UtopiaSpecialistTalent,
@@ -300,6 +304,11 @@ function registerItemSheets() {
     types: ["gear"],
     label: "UTOPIA.SheetLabels.gear",
   });
+  Items.registerSheet("utopia", UtopiaArchetypeSheet, {
+    makeDefault: true,
+    types: ["archetype"],
+    label: "UTOPIA.SheetLabels.archetype"
+  })
 
   // Allow modules to build onto the Actor sheets.
   Hooks.callAll("utopiaItemSheets", Items);
@@ -545,13 +554,36 @@ function registerGameSettings() {
     default: false,
   });
 
-  game.settings.register('utopia', 'allowPlayerArchetypeEdit', {
-    name: "UTOPIA.Settings.allowPlayerArchetypeEdit",
-    hint: "UTOPIA.Settings.allowPlayerArchetypeEditHint",
+  // game.settings.register('utopia', 'allowPlayerArchetypeEdit', {
+  //   name: "UTOPIA.Settings.allowPlayerArchetypeEdit",
+  //   hint: "UTOPIA.Settings.allowPlayerArchetypeEditHint",
+  //   scope: "world",
+  //   config: true,
+  //   type: Boolean,
+  //   default: false,
+  // })
+  
+  game.settings.register('utopia', 'dockedWindowPosition', {
+    name: "UTOPIA.Settings.dockedWindowPosition",
+    hint: "UTOPIA.Settings.dockedWindowPositionHint",
+    scope: "client",
+    config: true,
+    type: Number,
+    default: 0,
+    choices: {
+      0: "UTOPIA.Settings.DockedWindowPosition.right",
+      1: "UTOPIA.Settings.DockedWindowPosition.left",
+      2: "UTOPIA.Settings.DockedWindowPosition.disabled",
+    }
+  })
+
+  game.settings.register('utopia', 'restOnLevelUp', {
+    name: "UTOPIA.Settings.restOnLevelUp",
+    hint: "UTOPIA.Settings.restOnLevelUpHint",
     scope: "world",
     config: true,
     type: Boolean,
-    default: false,
+    default: true,
   })
 }
 
@@ -837,14 +869,17 @@ Hooks.on('renderSettings', (settings) =>  {
   const utopiaSettings = createHTMLElement("div");
   settings.element[0].querySelector("#settings-game")?.after(header, utopiaSettings);
 
-  // Paizo License and remaster information
   const twitchSettings = document.createElement("button");
   const twitchIcon = document.createElement("i");
   twitchIcon.classList.add("fab", "fa-twitch");
   twitchSettings.type = "button";
   twitchSettings.append(twitchIcon, game.i18n.localize("UTOPIA.Settings.Buttons.twitch"));
-  twitchSettings.addEventListener("click", () => {
+  twitchSettings.addEventListener("click", async () => {
+    await Twitch.registerSettings();
+
     // Render the Twitch Integration Settings app
+    const sheet = new UtopiaTwitchIntegrationSheet();
+    sheet.render(true);
   });
 
   const discordButton = document.createElement("button");
@@ -858,6 +893,8 @@ Hooks.on('renderSettings', (settings) =>  {
   });
 
   utopiaSettings.append(twitchSettings, discordButton);
+
+  const ws = new WebSocket("ws://localhost:8765");
 });
 //#endregion
 

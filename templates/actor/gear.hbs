@@ -1,13 +1,14 @@
 <div class="tab gear {{tab.cssClass}}" data-group="primary" data-tab="gear">
-  <div class="artifice-buttons">
+  <div class="tab-buttons">
     <button 
-      class="artifice-button" 
+      class="tab-button" 
       data-action="toggleArtifice" 
-      {{#if (not flags.utopia.enableArtifice)}}
+      {{#if (and (not gm) (not flags.utopia.enableArtifice))}}
         disabled 
         data-tooltip="{{localize 'UTOPIA.Descriptions.artificeDisabled'}}"
       {{/if}}>New Artifice</button>
-    <button class="artifice-button" data-action="toggleComponents">My Components</button>
+    <button class="tab-button" data-action="toggleComponents">My Components</button>
+    <button class="tab-button" data-action="showPaperDoll">Paper Doll</button>
   </div>
 
   <h3 class="gear-list-header">Gear</h3>
@@ -61,6 +62,13 @@
           </div>
         </div>
         <div class='item-controls'>
+          <a 
+            data-action="equipItem"
+            class="item-control item-equip"
+            title="{{localize 'UTOPIA.Descriptions.equipItem'}}"
+          >
+            <i class="fas fa-link"></i>
+          </a>
           <a
             data-action="viewDoc"
             class='item-control item-edit'

@@ -16,6 +16,7 @@ export {default as UtopiaArtificeMaterial} from "./item/item-artifice-material.m
 export {default as UtopiaArtificeFeature} from "./item/item-artifice-feature.mjs";
 export {default as UtopiaGear} from "./item/item-gear.mjs";
 export {default as UtopiaGeneralItem} from "./item/item-general.mjs";
+export {default as UtopiaArchetype} from "./item/item-archetype.mjs";
 
 // Export Users
 export { default as UtopiaUser } from "./user.mjs";

@@ -43,13 +43,13 @@ export default class UtopiaSpell extends UtopiaItemBase {
    */
   prepareDerivedData() {
     // "this.parent" is the item data context from the Foundry Document.
-    let itemData = this.parent;
+    
 
     // Initialize or reset key system fields
-    itemData.system.cost = 0;      // Stamina or resource cost
-    itemData.system.aoe = "None";  // Return string or final AoE representation
-    itemData.system.duration = 0;  // Duration in seconds
-    itemData.system.range = 0;     // Range in meters
+    this.cost = 0;      // Stamina or resource cost
+    this.aoe = [];  // Return string or final AoE representation
+    this.duration = 0;  // Duration in seconds
+    this.range = 0;     // Range in meters
 
     // Private data preparation methods
     this._prepareSpellFeatures();  
@@ -61,19 +61,19 @@ export default class UtopiaSpell extends UtopiaItemBase {
   /**
    * _prepareSpellFeatures
    * -------------------------------------------------------
-   * Interprets itemData.system.features and updates 
+   * Interprets this.features and updates 
    * aggregated cost, range, duration, or area-of-effect.
    * Each feature can modify these stats in different ways.
    * @private
    */
   _prepareSpellFeatures() {
-    let itemData = this.parent;
+    
 
     // If no features, simply return.
-    if (Object.keys(itemData.system.features).length === 0) return;
+    if (Object.keys(this.features).length === 0) return;
 
     // Convert features into an array for iteration
-    const features = Object.entries(itemData.system.features);
+    const features = Object.entries(this.features);
 
     let ppCost = 0;      // Tracks "power point" cost, which converts to stamina
     let staminaCost = 0; // Final stamina cost
@@ -99,7 +99,7 @@ export default class UtopiaSpell extends UtopiaItemBase {
 
     // Convert "power point" cost to stamina cost
     staminaCost = Math.ceil(ppCost / 10);
-    itemData.system.cost = staminaCost;
+    this.cost = staminaCost;
   }
 
   /**
@@ -131,13 +131,13 @@ export default class UtopiaSpell extends UtopiaItemBase {
   /**
    * _handleFeatureRange
    * -------------------------------------------------------
-   * Modifies the itemData.system.range based on the feature's 
+   * Modifies the this.range based on the feature's 
    * stacking or variable references.
    * @param {Object} feature - The feature object with range data.
    * @private
    */
   _handleFeatureRange(feature) {
-    let itemData = this.parent;
+    
     let range = feature.system.modifiedRange.value;
 
     // 0 indicates a fallback minimum
@@ -170,20 +170,20 @@ export default class UtopiaSpell extends UtopiaItemBase {
     range = range * feature.stacks;
 
     // Accumulate into the base range
-    itemData.system.range += range;
+    this.range += range;
   }
 
   /**
    * _handleFeatureDuration
    * -------------------------------------------------------
-   * Modifies the itemData.system.duration based on the feature's 
+   * Modifies the this.duration based on the feature's 
    * stacking or variable references, converting to a unified 
    * second-based system.
    * @param {Object} feature - The feature object with duration data.
    * @private
    */
   _handleFeatureDuration(feature) {
-    let itemData = this.parent;
+    
     let duration = feature.system.modifiedDuration.value;
 
     // 0 indicates a fallback minimum
@@ -222,19 +222,19 @@ export default class UtopiaSpell extends UtopiaItemBase {
     duration = duration * feature.stacks;
 
     // Accumulate into base duration
-    itemData.system.duration += duration;
+    this.duration += duration;
   }
 
   /**
    * _handleFeatureAoE
    * -------------------------------------------------------
    * Interprets the feature's area-of-effect attributes
-   * and appends an AoE description to itemData.system.aoe.
+   * and appends an AoE description to this.aoe.
    * @param {Object} feature - The feature object with AoE data.
    * @private
    */
   _handleFeatureAoE(feature) {
-    let itemData = this.parent;
+    
     let aoe = feature.system.modifiedAoE.value;
 
     // 0 indicates a fallback minimum
@@ -277,69 +277,69 @@ export default class UtopiaSpell extends UtopiaItemBase {
     }
 
     // e.g. "10m radius"
-    itemData.system.aoe.push(`${aoe}m ${output}`);
+    this.aoe.push(`${aoe}m ${output}`);
   }
 
   /**
    * _prepareSpellDuration
    * -------------------------------------------------------
-   * Takes the itemData.system.duration (in seconds) and converts 
+   * Takes the this.duration (in seconds) and converts 
    * it to a more human-readable string (turns, minutes, hours, etc.).
    * @private
    */
   _prepareSpellDuration() {
-    let itemData = this.parent;
+    
 
     // If 0, treat as "Instant"
-    if (itemData.system.duration === 0) {
-      itemData.system.durationOut = "Instant";
+    if (this.duration === 0) {
+      this.durationOut = "Instant";
     } else {
       let unit = "seconds";
 
       // Convert based on thresholds
-      if (itemData.system.duration >= 6 && itemData.system.duration % 6 === 0 && itemData.system.duration < 60) {
-        itemData.system.duration /= 6;
+      if (this.duration >= 6 && this.duration % 6 === 0 && this.duration < 60) {
+        this.duration /= 6;
         unit = "turns";
       }
-      else if (itemData.system.duration >= 60 && itemData.system.duration < 3600) {
-        itemData.system.duration /= 60;
+      else if (this.duration >= 60 && this.duration < 3600) {
+        this.duration /= 60;
         unit = "minutes";
       }
-      else if (itemData.system.duration >= 3600 && itemData.system.duration < 86400) {
-        itemData.system.duration /= 3600;
+      else if (this.duration >= 3600 && this.duration < 86400) {
+        this.duration /= 3600;
         unit = "hours";
       }
-      else if (itemData.system.duration >= 86400 && itemData.system.duration < 2592000) {
-        itemData.system.duration /= 86400;
+      else if (this.duration >= 86400 && this.duration < 2592000) {
+        this.duration /= 86400;
         unit = "days";
       }
-      else if (itemData.system.duration >= 2592000 && itemData.system.duration < 31536000) {
-        itemData.system.duration /= 2592000;
+      else if (this.duration >= 2592000 && this.duration < 31536000) {
+        this.duration /= 2592000;
         unit = "months";
       }
-      else if (itemData.system.duration >= 31536000) {
-        itemData.system.duration /= 31536000;
+      else if (this.duration >= 31536000) {
+        this.duration /= 31536000;
         unit = "years";
       }
 
       // Output the final duration string
-      itemData.system.durationOut = `${itemData.system.duration} ${unit}`;
+      this.durationOut = `${this.duration} ${unit}`;
     }
   }
 
   /**
    * _prepareSpellRange
    * -------------------------------------------------------
-   * Converts itemData.system.range (in meters) into a 
+   * Converts this.range (in meters) into a 
    * rangeOut string. If range is 0, treat it as "Touch".
    * @private
    */
   _prepareSpellRange() {
-    let itemData = this.parent;
-    if (itemData.system.range === 0) {
-      itemData.system.rangeOut = "Touch";
+    
+    if (this.range === 0) {
+      this.rangeOut = "Touch";
     } else {
-      itemData.system.rangeOut = `${itemData.system.range}m`;
+      this.rangeOut = `${this.range}m`;
     }
   }
 
@@ -351,14 +351,12 @@ export default class UtopiaSpell extends UtopiaItemBase {
    * @private
    */
   _prepareSpellAoE() {
-    console.log(this);
-
-    // let itemData = this.parent;
-    // if (itemData.system.aoe.length === 0) {
-    //   itemData.system.aoeOut = "None";
-    // } else {
-    //   itemData.system.aoeOut = itemData.system.aoe.join(", ");
-    // }
+    if (this.aoe.length === 0) {
+      this.aoeOut = "None";
+    }
+    else {
+      this.aoeOut = this.aoe.join(", ");
+    }
   }
 
   /**
@@ -370,10 +368,10 @@ export default class UtopiaSpell extends UtopiaItemBase {
    * @returns {string} style attribute string.
    */
   get style() {
-    let itemData = this.parent;
+    
 
     // Collect background colors from features (sorted by 'art')
-    let colors = Object.entries(itemData.system.features)
+    let colors = Object.entries(this.features)
       .sort((a, b) => a[1].system.art.localeCompare(b[1].system.art))
       .map((f) => f[1].background);
 

@@ -52,6 +52,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       minStat: this._minStat,
       toggleArtifice: this._toggleArtifice,
       toggleComponents: this._toggleComponents,
+      addResource: this._addResource,
+      deleteResource: this._deleteResource,
+      equipItem: this._equipItem,
     },
     form: {
       submitOnChange: true,
@@ -76,6 +79,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     },
     biography: {
       template: 'systems/utopia/templates/actor/biography.hbs',
+      scrollable: ['.biography-data']
     },
     gear: {
       template: 'systems/utopia/templates/actor/gear.hbs',
@@ -117,12 +121,16 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
+      gm: game.user.isGM,
       // Add the actor document.
       actor: this.actor,
       // Add the actor's data to context.data for easier access, as well as flags.
       system: this.actor.system,
       flags: this.actor.flags,
       items: this.actor.items,
+      // Necessary for formInput and formFields helpers
+      fields: this.document.schema.fields,
+      systemFields: this.document.system.schema.fields,
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
       tabs: this._getTabs(options.parts),
@@ -152,19 +160,27 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         break;
       case 'biography':
         context.tab = context.tabs[partId];
+        context.biographyFields = this._getBiographyFields();
         // Enrich biography info for display
         // Enrichment turns text like `[[/r 1d20]]` into buttons
         context.enrichedBiography = await TextEditor.enrichHTML(
-          this.actor.system.biography,
+          this.actor.system.biography.description,
           {
-            // Whether to show secret blocks in the finished html
             secrets: this.document.isOwner,
-            // Data to fill in for inline rolls
             rollData: this.actor.getRollData(),
-            // Relative UUID resolution
             relativeTo: this.actor,
           }
         );
+
+        context.enrichedGMNotes = await TextEditor.enrichHTML(
+          this.actor.system.biography.gmSecrets,
+          {
+            secrets: game.user.isGM,
+            rollData: this.actor.getRollData(),
+            relativeTo: this.actor
+          }
+        );
+
         break;
       case 'effects':
         context.tab = context.tabs[partId];
@@ -214,6 +230,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'details':
           tab.id = 'details';
           tab.label += 'details';
+          if (this.actor.system.points.subtrait > 0 || this.actor.system.points.gifted > 0) 
+            tab.icon = 'fas fa-bell';
+          
           break;
         case 'actions':
           tab.id = 'actions';
@@ -226,6 +245,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'talents': 
           tab.id = 'talents';
           tab.label += 'talents';
+          if (this.actor.system.points.talent > 0 || this.actor.system.points.specialist > 0) 
+            tab.icon = 'fas fa-bell';
+          
           break;
         case 'gear':
           tab.id = 'gear';
@@ -301,12 +323,15 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     const weapons = [];
     const talents = [];
     const specialist = [];
-    const actions = [];
+    const turnActions = [];
+    const interruptActions = [];
     const spells = [];
     const misc = [];
 
     // Iterate through items, allocating to containers
     for (let i of this.document.items) {
+      console.log("Item: ", i);
+
       i.img = i.img || Item.DEFAULT_ICON;
       
       if (i.type === 'gear') {
@@ -336,11 +361,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       else if (i.type === 'talent') {
         talents.push(i);
       }
-      else if (i.type === 'specialist') {
+      else if (i.type === 'specialistTalent') {
         specialist.push(i);
       }
       else if (i.type === 'action') {
-        actions.push(i);
+        if (i.system.type === 'Standard')
+          turnActions.push(i);
+        else 
+          interruptActions.push(i);
       }
       else if (i.type === 'spell') {
         spells.push(i);
@@ -352,23 +380,17 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       }
     }
 
-    actions.forEach((action) => {
-      if (action.system.type == "Interrupt") {
-        action.isReaction = true;
-      }
-    });
-
     // Assign and return
     context.weapons = weapons;
     context.talents = talents;
-    context.specialist = specialist;
     context.spells = spells;
-    context.actions = actions;
+    context.turnActions = turnActions;
+    context.interruptActions = interruptActions;
     context.misc = misc;
 
     // Sort then assign
     context.gear = gear.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    context.specialist = gear.sort((a, b) => (a.name) - (b.name));
+    context.specialist = specialist.sort((a, b) => (a.name) - (b.name));
 
     return context;
   }
@@ -415,29 +437,42 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       });
     });
 
-    // this.element.querySelectorAll(".new-resource").forEach((context) => {
-    //   context.addEventListener('mosuseleave', () => {
-    //     context.querySelector('.resource-context').classList.remove('active');
-    //   });
-    //   context.addEventListener('mouseover', () => {
-    //     context.querySelector('.resource-context').classList.add('active');
-    //   });
-    //   context.addEventListener('click', () => {
-    //     context.querySelector('input').select();
-    //   });
-    // });
+    this.element.querySelectorAll('.action').forEach((action) => {
+      action.addEventListener('contextmenu', async (event) => {
+        console.log(event);
+        const target = action.dataset.target;
+        await this.actor.deleteEmbeddedDocuments('Item', [target]);
+      });
+    });
 
     this.element.querySelectorAll("input:not(disabled)").forEach((input) => {
       input.addEventListener('focus', () => {
         input.select();
       });
     });
+  }
 
-    // Enable the ability to update the actor's image
-    // const updateElements = this.element.querySelectorAll('[data-action="update"]')
-    // updateElements.forEach(e => 
-    //   e.addEventListener('change', this._update.bind(this))
-    // );
+  /**
+   * Constructs a record of valid characteristics and their associated field
+   * @returns {Record<string, {field: NumberField, value: number}>}
+   */
+  _getBiographyFields() {
+    const fields = Object.keys(this.actor.system.schema.getField('biography').fields);
+    const selected = this.actor.system.biographyFields;
+    const biographyFields = {};
+
+    selected.forEach(s => {
+      if (fields.includes(s)) {
+        biographyFields[s] = {
+          label: this.actor.system.schema.getField('biographyFieldOptions').options.choices[s],
+          name: `system.biography.${s}`,
+          field: this.actor.system.schema.getField(['biography', s]),
+          value: foundry.utils.getProperty(this.actor, `system.biography.${s}`)
+        }
+      }
+    })
+
+    return biographyFields
   }
 
   static async _addToStat(event, target) {
@@ -483,6 +518,54 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     this.actor.update({
       [stat]: 0
     });
+  }
+
+  static async _deleteResource(event, target) {
+    const id = target.dataset.target;
+    const resources = this.actor.system.resources;
+
+    this.actor.update({
+      [`system.resources.-=${id}`]: null
+    });
+
+    this.render();
+  }
+
+  static async _addResource(event, target) {
+    const id = foundry.utils.randomID();
+
+    const resource = {
+      name: "New Resource",
+      description: "Description",
+      value: 0,
+    }
+    const resources = this.actor.system.resources;
+    resources[id] = resource;
+
+    this.actor.update({
+      [`system.resources`]: resources
+    });
+
+    console.log(this.actor.system)
+
+    this.render();
+  }
+
+  static async _equipItem(event, target) {
+    const doc = this._getEmbeddedDocument(target);
+
+    if (this.actor.equipmentSlots.head === doc.id) { // This item is equipped
+      this.actor.update({
+        ['system.equipmentSlots.head']: "empty"
+      });
+    }
+    else { // Nothing or something else is equipped
+      this.actor.update({
+        ['system.equipmentSlots.head']: doc.id
+      });
+    }
+
+    this.render();
   }
 
   static async _deleteAction(event, target) {
@@ -553,16 +636,74 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   }
 
   static async _toggleComponents(event, target) {
-    var sheet = await new UtopiaActorComponentsSheet({
-      document: this.actor,
+    const docking = game.settings.get('utopia', 'dockedWindowPosition');
+    switch (docking) {
+      case 0: 
+        var sheet = await new UtopiaActorComponentsSheet({
+          document: this.actor,
+          position: {
+            left: this.position.left + this.position.width,
+            top: this.position.top
+          }
+        });
+        sheet.isDocked = true;
+        sheet.dockedTo = this;
+        sheet.dockedSide = 1;
+
+        this.children.push(sheet);
+        this.dockedRight.push(sheet);
+    
+        sheet.render(true);
+        break;
+      case 1:
+        var sheet = await new UtopiaActorComponentsSheet({
+          document: this.actor,
+          position: {
+            left: this.position.left - 450,
+            top: this.position.top
+          }
+        });
+        sheet.isDocked = true;
+        sheet.dockedTo = this;
+        sheet.dockedSide = 0;
+
+        this.children.push(sheet);
+        this.dockedLeft.push(sheet);
+    
+        sheet.render(true);
+        break;
+      case 2:
+        var sheet = await new UtopiaActorComponentsSheet({
+          document: this.actor,
+        });
+        sheet.isDocked = false;
+        
+        this.children.push(sheet);
+        sheet.render(true);
+        break;
+      default: 
+        break;
+    }
+  }
+
+  _onPosition(position) {
+    this.dockedLeft.forEach(sheet => {
+      if (sheet.isDocked) {
+        sheet.setPosition({
+          left: position.left - sheet.position.width,
+          top: position.top,
+        });
+      }
     });
-    sheet.isDocked = true;
-    sheet.dockedTo = this;
 
-    this.children.push(sheet);
-    this.dockedRight.push(sheet);
-
-    sheet.render(true);
+    this.dockedRight.forEach(sheet => {
+      if (sheet.isDocked) {
+        sheet.setPosition({
+          left: position.left + this.position.width,
+          top: position.top,
+        });
+      }
+    });
   }
 
   static async _submitComponents(event, target) {

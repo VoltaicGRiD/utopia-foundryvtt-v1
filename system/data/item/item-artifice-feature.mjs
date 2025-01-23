@@ -80,6 +80,15 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
     schema.choices = new fields.SetField(new fields.StringField({ required: false, nullable: true, initial: [] }));
     schema.choice = new fields.StringField({ required: false, nullable: true, initial: "none" });
     schema.grantsAction = new fields.DocumentUUIDField({ entityClass: "Item", required: false, nullable: true });
+
+    schema.minimumRarity = new fields.StringField({ required: true, nullable: false, initial: "none", choices: {
+      none: "UTOPIA.Item.Artifice.Features.MinimumRarity.none",
+      common: "UTOPIA.Item.Artifice.Features.MinimumRarity.common",
+      extraoridnary: "UTOPIA.Item.Artifice.Features.MinimumRarity.extraordinary",
+      rare: "UTOPIA.Item.Artifice.Features.MinimumRarity.rare",
+      legendary: "UTOPIA.Item.Artifice.Features.MinimumRarity.legendary",
+      mythical: "UTOPIA.Item.Artifice.Features.MinimumRarity.mythical"
+    }})
     
     return schema;
   }
