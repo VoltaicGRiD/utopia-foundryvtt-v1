@@ -192,6 +192,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           {
             specialist: true,
             talent: true,
+            gear: true,
           }
         );
         break;

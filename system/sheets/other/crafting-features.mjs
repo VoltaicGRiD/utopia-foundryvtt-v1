@@ -212,11 +212,36 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
       f.draggable = true;
       
       f.addEventListener('dragstart', (event) => { 
-        let feature = this.features.find((feature) => feature.system.uuid === event.target.dataset.uuid);
-        if (!feature) 
-          feature = this.requiredFeatures.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        // let feature = this.features.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+        // if (!feature) 
+        //   feature = this.requiredFeatures.find((feature) => feature.system.uuid === event.target.dataset.uuid);
         
-        if (feature.incompatible || feature.chosen) return;
+        // if (feature.incompatible || feature.chosen) return;
+
+        // const clone = feature.clone();
+        // const raw = clone.toObject();
+        // raw.ref = feature.system.uuid;
+
+        // const output = [];
+        // output.push(raw);
+        
+        // if (feature.system.requires.size > 0) {
+        //   for (let req of feature.system.requires) {
+        //     let reqFeature = this.features.find((f) => f.system.uuid === req);
+        //     if (!reqFeature) reqFeature = this.requiredFeatures.find((f) => f.system.uuid === req);
+        //     const reqClone = reqFeature.clone();
+        //     const reqRaw = reqClone.toObject();
+        //     reqRaw.ref = reqFeature.system.uuid;
+        //     output.push(reqRaw);
+        //   }
+        // }
+
+        let feature = this.features.find((feature) => feature.system.uuid === event.target.dataset.uuid);
+
+        if (feature.incompatible || feature.chosen) {
+          ui.notifications.warn("You cannot drag this feature. Its incompatible or already chosen.");
+          return;
+        }
 
         const clone = feature.clone();
         const raw = clone.toObject();
@@ -224,17 +249,6 @@ export class UtopiaCraftingFeaturesSheet extends api.HandlebarsApplicationMixin(
 
         const output = [];
         output.push(raw);
-        
-        if (feature.system.requires.size > 0) {
-          for (let req of feature.system.requires) {
-            let reqFeature = this.features.find((f) => f.system.uuid === req);
-            if (!reqFeature) reqFeature = this.requiredFeatures.find((f) => f.system.uuid === req);
-            const reqClone = reqFeature.clone();
-            const reqRaw = reqClone.toObject();
-            reqRaw.ref = reqFeature.system.uuid;
-            output.push(reqRaw);
-          }
-        }
 
         console.log(output);
 

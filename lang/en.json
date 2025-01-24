@@ -150,7 +150,8 @@
       "craftingFeatures": "Utopia Artifice Features",
       "undock": "Undock Window",
       "dock": "Dock Window",
-      "swapDock": "Swap Docked Side"
+      "swapDock": "Swap Docked Side",
+      "twitchIntegration": "Twitch Integration"
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -676,7 +677,9 @@
         "enableArtifice": "Enable viewer artificing",
         "enableArtificeHint": "When enabled, viewers can use channel points to craft items",
         "enableTargeting": "Enable viewers to target",
-        "enableTargetingHint": "When enabled, viewers can vote to target a combatant during encounters"
+        "enableTargetingHint": "When enabled, viewers can vote to target a combatant during encounters",
+        "pauseOnAdBreak": "Pause the game when ads run",
+        "pauseOnAdBreakHint": "When enabled, the game will be paused when ads run, and unpaused when the ads finish"
       }
     },
     "TwitchIntegration": {

@@ -80,10 +80,10 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
     });
 
     context.effects = prepareActiveEffectCategories(this.item.effects, {
-      temporary: false,
-      passive: false,
-      inactive: false,
-      specialist: false,
+      temporary: true,
+      passive: true,
+      inactive: true,
+      specialist: true,
       talent: true,
     })
 

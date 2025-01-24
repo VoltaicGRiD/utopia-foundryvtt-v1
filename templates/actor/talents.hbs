@@ -39,21 +39,23 @@
 
   <div class="grid grid-3col">
     
-    <div class="flexcol grid-span-2">
+    <div class="actor-talents grid-span-2">
       <h3>{{localize 'UTOPIA.Descriptions.talents'}}</h3>
-      {{#each talents as |talent key|}}
-        <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
-          data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
-                        {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
-                        {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
-          data-tooltip-position="top">
-          <div class="flexrow talent-content">
-            <div>
-              {{talent.name}}
+      <div class="talent-list">
+        {{#each talents as |talent key|}}
+          <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
+            data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
+                          {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
+                          {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
+            data-tooltip-position="top">
+            <div class="flexrow talent-content">
+              <div>
+                {{talent.name}}
+              </div>
             </div>
-          </div>
-        </button>
-      {{/each}}
+          </button>
+        {{/each}}
+      </div>
     </div>
     
     <div class="flexcol">

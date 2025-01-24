@@ -15,6 +15,7 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
     actions: {
       authorize: this._authorize,
       connect: this._connect,
+      testAdBreak: this._testAdBreak,
     },
     window: {
       title: "UTOPIA.SheetLabels.twitchIntegration",
@@ -143,5 +144,9 @@ export default class UtopiaTwitchIntegrationSheet extends api.HandlebarsApplicat
     this.twitch.initialize();
 
     this.render();
+  }
+
+  static async _testAdBreak() {
+    this.twitch.processAdBreak();
   }
 }

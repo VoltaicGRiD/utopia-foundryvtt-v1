@@ -79,6 +79,14 @@ export default class UtopiaTwitchIntegration {
       default: "Viewer",
     },
     {
+      name: "pauseOnAdBreak",
+      hint: "pauseOnAdBreakHint",
+      scope: "client",
+      config: false,
+      type: Boolean,
+      default: true,
+    },
+    {
       name: "enableSpellcrafting",
       hint: "enableSpellcraftingHint",
       scope: "client",
@@ -205,6 +213,29 @@ export default class UtopiaTwitchIntegration {
           break;
       }
     });
+  }
+
+  async processAdBreak(data = {}) {
+    if (game.settings.get("utopia", "twitch.pauseOnAdBreak")) {
+      if (game.user.isGM) {
+        game.socket.emit('system.utopia', {
+          type: "ACTION",
+          payload: "AD_BREAK_PAUSE_SERVER"
+        }, response => {
+          ui.notifications.warn("Ad break in progress...");
+        });
+      }
+      else {
+        new Promise(resolve => {
+          game.socket.emit('system.utopia', {
+            type: "ACTION",
+            payload: "AD_BREAK_PAUSE"
+          }, response => {
+            ui.notifications.warn("Ad break in progress...");
+          });
+        });
+      }
+    }
   }
 
   async processBadges(badges) {

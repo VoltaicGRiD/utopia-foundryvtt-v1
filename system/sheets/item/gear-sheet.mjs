@@ -176,6 +176,11 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
     if (!feature.system.category) return;
     if (feature.type !== "artificeFeature") return;
     
+    if (this.item.system.features[feature.id]) {
+      console.error("You already have that feature!");
+      return;
+    }
+
     console.log(feature);
 
     const features = this.item.system.features;
@@ -297,9 +302,8 @@ export class UtopiaGearSheet extends api.HandlebarsApplicationMixin(
 
   _onRender(context, options) {
     super._onRender(context, options);
-
-    const featuresList = this.element.querySelector('.features');
-    featuresList.addEventListener("drop", (event) => {
+    
+    this.element.addEventListener("drop", (event) => {
       event.preventDefault();
       event.stopPropagation();
       this._onDrop(event);

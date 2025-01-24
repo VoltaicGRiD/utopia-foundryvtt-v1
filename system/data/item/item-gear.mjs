@@ -483,21 +483,23 @@ export default class UtopiaGear extends UtopiaItemBase {
         feature.ranged = ranged.formula;      
       }
 
+      console.log(feature.system.formulas);
+
       if (feature.system.minimumRarity) {
         switch (feature.system.minimumRarity) {
-          case common: 
+          case "common": 
             this.minimumRarity = Math.max(this.minimumRarity ?? 0, 1);
             break;
-          case extraordinary: 
+          case "extraordinary": 
             this.minimumRarity = Math.max(this.minimumRarity ?? 0, 2);
             break;
-          case rare:
+          case "rare":
             this.minimumRarity = Math.max(this.minimumRarity ?? 0, 3);
             break;
-          case legendary:
+          case "legendary":
             this.minimumRarity = Math.max(this.minimumRarity ?? 0, 4);
             break;
-          case mythical:
+          case "mythical":
             this.minimumRarity = Math.max(this.minimumRarity ?? 0, 5);
             break;
           default:
@@ -688,7 +690,7 @@ export default class UtopiaGear extends UtopiaItemBase {
       this.rarity = Math.max(this.minimumRarity, 4);
       this.featureLimit = 50;
       this.value = rpCost * 16;
-    } else if (rpCost >= 161 && rpCost <= 220) {
+    } else if (rpCost >= 161) { // Theoretical maximum is 220
       this.rarity = Math.max(this.minimumRarity, 5);
       this.featureLimit = 60;
       this.value = rpCost * 32;

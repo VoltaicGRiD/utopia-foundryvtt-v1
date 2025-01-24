@@ -94,7 +94,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       talent: new fields.NumberField({ ...requiredInteger, initial: 10 }),
       specialist: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       gifted: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      subtrait: new fields.NumberField({ ...requiredInteger, initial: 15 }),
+      subtrait: new fields.NumberField({ ...requiredInteger, initial: 0 }),
     });
 
     schema.species = new fields.ObjectField({ required: true, nullable: false, initial: {}});
@@ -489,8 +489,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     }
 
     this.points.talent = this.level - (this.points.body + this.points.mind + this.points.soul);
-    this.points.specialist = this.level % 10 + 1;
-
+    this.points.specialist = Math.floor(this.level / 10);
+    
     for (let i of this.parent.items) {
       if (i.type === 'specialist') {
         this.points.specialist -= 1;
@@ -523,6 +523,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       this.stamina.value = this.stamina.max;
     }
 
+    this.points.subtrait = 15 + this.level - 10;
+
     // Loop through ability scores, and add their modifiers to our sheet output.
     for (const key in this.traits) {
       const parent = this.traits[key].parent;
@@ -530,6 +532,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       let subtraits = this.traits[key].subtraits;
       Object.keys(subtraits).forEach((k) => {
         this.traits[key].subtraits[k].mod = subtraits[k].value - 4;
+
+        this.points.subtrait -= subtraits[k].value - 1;
 
         if (this.traits[key].subtraits[k].gifted === true) {
           switch(parent) {
@@ -590,8 +594,23 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     }
 
     this._processFlags();
+    this._processTalentTrees();
 
     Hooks.callAll("prepareActorData", this.parent, actorData);
+  }
+
+  async _processTalentTrees() {
+    const talents = this.parent.items.filter(f => f.type === "talent");
+
+    for (let talent of talents) {
+      const height = talent.system.position;
+      const tree = talent.system.tree;
+
+      if (!this.trees[tree]) 
+        this.trees[tree] = height;
+      else if (this.trees[tree] < height)
+        this.trees[tree] = height
+    }
   }
 
   async _processFlags() {

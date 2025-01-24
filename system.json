@@ -26,8 +26,8 @@
   ],
   "version": "0.1.0",
   "compatibility": {
-    "minimum": 11,
-    "verified": "11.315"
+    "minimum": 12,
+    "verified": "12.331"
   },
   "esmodules": [
     "system/utopia.mjs", 
@@ -72,7 +72,7 @@
     {
       "name": "species",
       "label": "SRD Species",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -85,7 +85,7 @@
     {
       "name": "talents",
       "label": "SRD Talents",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -98,7 +98,7 @@
     {
       "name": "specialistTalents",
       "label": "SRD Specialist Talents",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -111,7 +111,7 @@
     {
       "name": "actions",
       "label": "SRD Actions",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -124,7 +124,7 @@
     {
       "name": "spellFeatures",
       "label": "SRD Spell Features",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -137,7 +137,7 @@
     {
       "name": "spells",
       "label": "SRD Spells",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -150,7 +150,7 @@
     {
       "name": "gear",
       "label": "SRD Gear",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -163,7 +163,7 @@
     {
       "name": "components",
       "label": "SRD Components",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -176,7 +176,7 @@
     {
       "name": "artificeFeatures",
       "label": "SRD Artifice Features",
-      "banner": "",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -188,8 +188,8 @@
     },
     {
       "name": "archetypes",
-      "label": "SRD Archetypes",
-      "banner": "",
+      "label": "SRD Ȃ̵͍̗̺̹̰̝̻̑̇̊̇̓́́̐̽́͋̚͠͠r̵̙͑̎͗̈́̃̒̎̌̈́͆̀͛́̈́̎̑̀̓̋̽̕c̸̡̺̟͇͓̜̓͊͐̋͛̀̈̈́͂͌̈̓́͌̉̃̒͂͒͒̆̚ĥ̸̨̛̳̪͙̬̼̤̟̫͈͉̯͈̗͔̦̗̼̤͆̏̀̑̋̍̒̑̇̏̎͒̒͛̀͠ě̶̡̧̨̺̫͚̟͇̘̤͖̰̯̱̲͈̜̰͖͈̙͓͓͙͗͊̊͒͑̂͋͊͜ţ̶̤͚̻̞̆͌̎͌͛̔̎̏̓̊͑͘͘ý̷̡̨̥̯͙̬̰̳̟̟͙̞̗̼̫̱͖̘̘͈̱̜̯̈́͜ͅp̸̡̢̛͔̮̤̹̰͓͕͓̬͛̀̀͆̀̀̇̕͜͝ę̶̡̛̤̣͚͙͎̲̙͔͖̣̟͖̟̖̞̹̓̑͆͌̎̈́̈́͛̈̃͑̑̃̓̉̔͗̕̚͝͠͝͠͝ṣ̶͎̗̪̰͚̣̣͎̘̝̮̤̾͑͐̈́̄̄̽̐̂͒̈́̀̀̂̾͛͛̏̉͒̃͋͘̚̚͜͠",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
       "system": "utopia",
@@ -209,10 +209,10 @@
   ],
   "flags": {},
   "packFolders": [],
-  "socket": false,
+  "socket": true,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
   "download": "This must link to a .zip file of the current version",
-  "background": "systems/utopia/assets/Utopia-Logo.webp",
+  "background": "systems/utopia/assets/Utopia-Background.webp",
   "gridDistance": 1,
   "gridUnits": "m",
   "primaryTokenAttribute": "shp",

@@ -150,6 +150,17 @@
   margin-top: 10px;
 }
 
+.actor-talents {
+  flex: 2;
+  align-self: start;
+
+  & .talent-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+}
+
 .turn-actions {
   flex: 2;
   align-self: start;
