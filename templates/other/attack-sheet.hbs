@@ -25,7 +25,7 @@
           <td>{{mod.source}}</td>
           <td>{{mod.amount}}</td>
           <td><input type="checkbox" disabled {{#if mod.calculated}}checked{{/if}}></td>
-          <td><button data-action="remove" data-modifier="{{mod}}">-</button></td>
+          <td><button type="button" data-action="remove" data-modifier="{{mod}}">-</button></td>
         </tr>
       {{/each}}
     {{else}}
@@ -35,12 +35,12 @@
     {{/if}}
   </table>
   <div class="flexrow">
-    <button data-action="clear">Clear</button>
-    <button data-action="add">Add</button>
+    <button type="button" data-action="clear">Clear</button>
+    <button type="button" data-action="add">Add</button>
   </div>
   <hr/>
   <div class="flexrow">
-    <button data-action="cancel">Cancel</button>
-    <button data-action="submit">Roll</button>
+    <button type="button" data-action="cancel">Cancel</button>
+    <button type="button" data-action="submit">Roll</button>
   </div>
 </form>

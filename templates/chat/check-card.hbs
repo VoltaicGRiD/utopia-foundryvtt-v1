@@ -1,62 +1,24 @@
 <div class="utopia">
-  <div class="chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-    <header class="card-header flexrow">
-      <img src="{{actor.img}}" alt="{{actor.name}}" />
-      <h3>{{actor.name}}</h3>
-    </header>
+  <div class="chat-card trait-check-card">
+    <hr/>
 
     <div class="tags" data-tooltip-class="utopia">
-
+      <span class="tag">{{trait}}</span>
+      {{#if gifted}}
+        <span class="tag">Gifted <i class="fas fa-gift"></i></span>
+      {{/if}}
     </div>
 
     <div class="card-content">
+      <span class="dice-flavor">{{flavor}}</span>
       <div class="dice-roll" data-tooltip-class="utopia">
-        <div class="flexcol">
-          {{#if flavor~}}
-            <div class="dice-flavor">
-              {{flavor}}
-            </div>
-          {{~/if}}
-          {{#if description~}}
-            <div class="dice-description">
-              {{description}}
-            </div>
-          {{~/if}}
-        </div>
-        <div class="dice-result">
-          <div class="dice-formula">{{formula}}</div>
-          {{{tooltip}}}
-          <h4 class="dice-total
-            {{#if toBeat}}
-              {{#if success}} 
-                check-success
-              {{else}}
-                check-failure
-              {{/if}}
-            {{/if}}
-          ">
-            {{#if gifted}}
-              <i class="fa-solid fa-gift dice-gifted"></i>
-            {{/if}}
-            {{total}}{{#if toBeat}} vs. {{toBeat}}{{/if}}
-          </h4>
-          {{#if toBeat}}
-            <div class="success-card
-              {{#if success}} 
-                check-success
-              {{else}}
-                check-failure
-              {{/if}}
-            ">
-              {{#if success}} 
-                {{localize 'UTOPIA.Checks.success'}}
-              {{else}}
-                {{localize 'UTOPIA.Checks.failure'}}
-              {{/if}}
-            </div>        
-          {{/if}}    
-        </div>
+        <span class="trait-icon"><i class="{{icon}}"></i></span>
+        <span class="dice-formula">{{formula}}</span>
+        <span class="dice-total {{#if success}}dice-success{{/if}}">{{total}}{{#if toBeat}} vs. {{toBeat}}{{/if}}</span>
       </div>
+      <details class="dice-details" data-tooltip-class="utopia">
+        {{{tooltip}}}
+      </details>
     </div>
-</div>
+  </div>
 </div>

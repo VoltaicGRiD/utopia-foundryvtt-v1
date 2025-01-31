@@ -30,7 +30,7 @@
       {{#each system.features as |feature key|}}
         <li class="feature" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
           <img src="{{feature.img}}" class="feature-icon" />
-          <button class="remove-feature hidden">
+          <button type="button" class="remove-feature hidden">
             <i class="fa-fw fa-solid fa-times"></i>
           </button>
           <span class="feature-name">
@@ -62,7 +62,7 @@
                 </div>
               {{else if (eq variable.kind "options")}}
                 <div class="flexrow feature-variable">
-                  <button class="feature-variable-options {{#if (eq feature.value "")}}unset{{/if}}"
+                  <button type="button" class="feature-variable-options {{#if (eq feature.value "")}}unset{{/if}}"
                           data-variable="{{varKey}}"
                           data-feature="{{key}}">
                     <i class="fa-fw fa-solid fa-list"></i>
@@ -79,7 +79,7 @@
     <textarea name="flavor" placeholder="{{localize 'UTOPIA.Item.Spells.flavor'}}">{{system.flavor}}</textarea>
   </div>
   <div class="spell-controls">
-    <button data-action="cast">{{localize 'UTOPIA.Item.Spells.cast'}}</button>
-    <button data-action="edit">{{localize 'UTOPIA.Item.Spells.spellcrafting'}}</button>
+    <button type="button" data-action="cast">{{localize 'UTOPIA.Item.Spells.cast'}}</button>
+    <button type="button" data-action="edit">{{localize 'UTOPIA.Item.Spells.spellcrafting'}}</button>
   </div>
 </div>  

@@ -1,0 +1,131 @@
+.roll-data {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  justify-content: start;
+  gap: 10px;
+
+  .roll-formula {
+    width: 100%;
+    text-align: center;
+    font-size: 2em;
+  }
+
+  .roll-terms {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10px;
+
+    .roll-term {
+      font-size: 2em;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-evenly;
+      gap: 5px;
+      position: relative;
+      min-width: 50px;
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid #f7f3e8;
+      border-radius: 5px;
+      padding: 0 15px;
+
+      .add-favor-button, 
+      .add-disfavor-button {
+        font-size: 0.5em;
+        text-decoration: wavy underline;
+      }
+
+      .add-favor-button {
+        left: 60%;
+      }
+
+      .add-disfavor-button {
+        left: 40%;
+      }
+
+      .disable-term-button {
+        line-height: initial;
+        position: absolute;
+        top: 0;
+        right: 2px;
+        width: 10px;
+        height: 10px;
+        font-size: 0.5em;
+      }
+    }
+
+    .term-disabled {
+      color: #747474;
+    }
+
+    .custom-term {
+      padding: 0 0.5em;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-evenly;
+      align-items: center;
+      align-content: center;
+
+      .custom-term-operator {
+        width: 50px;
+      }
+
+      .parse-custom-term-button,
+      .remove-custom-term-button {
+        border: 1px solid #f7f3e8;
+        line-height: 30px;
+        height: 30px;
+        border-radius: 5px;
+        padding: 0 5px;
+        font-size: 0.5em;
+      }
+    }
+  }
+
+  .roll-favors {
+    line-height: 40px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10px;
+
+    .disfavor,
+    .net-favor,
+    .favor {
+      width: 60px;
+      height: 40px;
+      border: 1px solid #f7f3e8; 
+      font-size: 1.5em;
+      border-radius: 5px;
+      padding: 0 5px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .disfavor {
+      background-color: #531313;
+    }
+
+    .net-favor {
+      background-color: #313153;
+    }
+
+    .favor {
+      background-color: #135313;
+    }
+  }
+}
+

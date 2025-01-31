@@ -1,0 +1,71 @@
+<div class="roll-data">
+  {{#unless (eq type "trait")}} 
+    <div class="targets">
+      <span class="target-label">{{localize "UTOPIA.RollDialog.targets"}}</span>
+      <span class="target-value">{{targets}}</span>
+    </div>
+  {{/unless}}
+
+  <fieldset class="roll-terms">
+    <legend>{{localize "UTOPIA.RollDialog.formula"}}: {{formula}}</legend>
+    {{#each terms as |term|}}
+      <div class="roll-term {{#if term.disabled}}term-disabled{{/if}}" data-term="{{@index}}">
+        {{#if term.favorable}}
+          <a type="button" data-action="addDisfavor" data-tooltip="{{localize "UTOPIA.RollDialog.addDisavor"}}" class="add-disfavor-button" data-term="{{@index}}"><i class="fas fa-minus fa-fw"></i></a>
+        {{/if}}
+
+        <span class="term-label term">{{term.expression}}</span>
+
+        {{#if term.hasRedistributions}}
+          {{#each term.redistributions as |redistribution|}}
+            <span class="term-redistributions">{{redistribution}}</span>
+          {{/each}}
+        {{/if}}
+
+        {{#if term.favorable}}
+          <a type="button" data-action="addFavor" data-tooltip="{{localize "UTOPIA.RollDialog.addFavor"}}" class="add-favor-button" data-term="{{@index}}"><i class="fas fa-plus fa-fw"></i></a>
+        {{/if}}
+
+        {{#if term.removable}}
+          <a type="button" class="disable-term-button" data-action="disableTerm" data-term="{{@index}}"><i class="fas fa-xmark"></i></a>
+        {{/if}}
+      </div>  
+    {{/each}}
+
+    <a type="button" class="add-term-button" data-action="addTerm"><i class="fas fa-plus"></i></a>
+  </fieldset>
+
+  {{#if customTerms}}
+    <fieldset class="roll-terms">
+      {{#each customTerms as |term|}}
+        <div class="roll-term custom-term" data-term="{{@index}}">
+          <select class="custom-term-operator" data-term="{{@index}}">
+            <option value="+" {{#if (eq term.operator "+")}}selected{{/if}}>+</option>
+            <option value="-" {{#if (eq term.operator "-")}}selected{{/if}}>-</option>
+            <option value="*" {{#if (eq term.operator "*")}}selected{{/if}}>*</option>
+            <option value="/" {{#if (eq term.operator "/")}}selected{{/if}}>/</option>
+            <option value="%" {{#if (eq term.operator "%")}}selected{{/if}}>%</option>
+          </select>
+
+          <input type="text" class="custom-term-input" data-term="{{@index}}"/>
+
+          <a type="button" class="parse-custom-term-button" data-action="parseCustomTerm" data-term="{{@index}}"><i class="fas fa-hammer fa-fw"></i></a>
+          <a type="button" class="remove-custom-term-button" data-action="removeCustomTerm" data-term="{{@index}}"><i class="fas fa-xmark fa-fw"></i></a>
+        </div>
+      {{/each}}
+    </fieldset>
+  {{/if}}
+
+  {{#unless (eq favor.net 0)}}
+    <fieldset class="roll-favors">
+      <legend>{{localize "UTOPIA.RollDialog.favors"}}</legend>
+      <span class="disfavor" data-tooltip="{{localize "UTOPIA.RollDialog.totalDisfavor"}}"><i class="fas fa-minus fa-fw"></i> {{favor.disfavor}}</span>
+      <span class="net-favor" data-tooltip="{{localize "UTOPIA.RollDialog.netFavor"}}"><i class="fas fa-equals fa-fw"></i> {{favor.net}}</span>
+      <span class="favor" data-tooltip="{{localize "UTOPIA.RollDialog.totalFavor"}}"><i class="fas fa-plus fa-fw"></i>{{favor.favor}}</span>
+    </fieldset>
+  {{/unless}}
+
+  <div class="roll-dialog-buttons">
+    <button type="button" data-action="roll"><i class="fas fa-dice-d6"></i> {{localize "UTOPIA.Descriptions.roll"}}</button>
+  </div>
+</div>

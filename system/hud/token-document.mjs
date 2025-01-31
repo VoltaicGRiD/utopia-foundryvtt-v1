@@ -25,6 +25,7 @@ export default class UtopiaTokenDocument extends TokenDocument {
     this.name ||= this.actor?.name || "Unknown";
     if ( this.hidden ) this.alpha = Math.min(this.alpha, game.user.isGM ? 0.5 : 0);
     this._prepareDetectionModes();
+    this._prepareUtopiaBars();
   }
 
   /* -------------------------------------------- */
@@ -41,8 +42,6 @@ export default class UtopiaTokenDocument extends TokenDocument {
     if ( this.ring.enabled && !this.ring.subject.texture ) {
       this.ring.subject.texture = this._inferRingSubjectTexture();
     }
-
-    this._prepareUtopiaBars();
   }
 
   /**
@@ -59,7 +58,7 @@ export default class UtopiaTokenDocument extends TokenDocument {
   }
 
   _prepareUtopiaBars() {
-    console.log(this);
+    console.log("Preparing Utopia Bars");
 
     if (!this.actor) return;
     const actorData = this.actor.system;

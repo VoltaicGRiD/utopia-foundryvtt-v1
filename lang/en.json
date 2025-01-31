@@ -139,19 +139,33 @@
       }
     },   
     "SheetLabels": {
-      "actor": "Utopia Actor Sheet",
-      "actorV2": "Utopia Actor Sheet V2",
+      "actorV2": "Utopia Actor Sheet",
+      
       "item": "Utopia Item Sheet",
+      
+      "armor": "Utopia Armor Sheet",
+      "artifact": "Utopia Artifact Sheet",
+      "consumable": "Utopia Consumable Sheet",
+      "trinket": "Utopia Trinket Sheet",
       "weapon": "Utopia Weapon Sheet",
-      "attack": "Utopia Attack Sheet",
+
       "subtrait": "Utopia Subtrait Selection",
       "talent-tree-selector": "Utopia Talent Tree",
       "spellcraft": "Utopia Spellcrafting",
       "craftingFeatures": "Utopia Artifice Features",
+      
       "undock": "Undock Window",
+      "undockShort": "Undock",
       "dock": "Dock Window",
+      "dockShort": "Dock",
       "swapDock": "Swap Docked Side",
-      "twitchIntegration": "Twitch Integration"
+      "swapDockShort": "Swap",
+      
+      "twitchIntegration": "Twitch Integration",
+
+      "openDataOverride": "Override Actor Data",
+
+      "roll": "Roll Dialog"
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -162,15 +176,19 @@
       "description": "Description",
       "gmSecrets": "GM Secrets",
       "attributes": "Attributes",
-      "pointsleft": "Points left to spend",
+      "subtraitPoints": "Subtrait Points",
+      "subtraitGifts": "Subtrait Gifts",
       "points": "Points",
       "defenses": "Defenses",
+      "blocked": "Blocked Damage",
+      "newTotal": "New Damage",
       "damage": "Damage",
       "damageType": "Damage Type",
       "parent": "Parent",
       "spellcap": "Spellcap",
       "keepopen": "Keep open",
       "roll": "Roll",
+      "useItem": "Use Item",
       "tags": "Tags",
       "talents": "Talents",
       "specialistTalents": "Specialist Talents",
@@ -180,12 +198,15 @@
       "kineticForce": "Kinetic",
       "save": "Save",
       "all": "All",
+      "submit": "Submit",
       "favorite": "Favorites",
       "available": "Available",
       "locked": "Locked",
       "submitMaterials": "Submit Materials",
       "artificeDisabled": "You must have a valid talent to be able to artifice",
-      "equipItem": "Equip Item"
+      "equipItem": "Equip Item",
+      "overrideWarning": "Warning! Making any changes here will disable automatic data updates from changes to the document. This should only be done if you know what you're doing! Some changes may even break an actor.",
+      "overrideReEnable": "To re-enable automatic updates, set the 'utopia' 'override' flag to an empty array (square brackets) on the document"
     },
 
     "Checks": {
@@ -194,7 +215,9 @@
     },
     "Item": {
       "formula": "Formula",
+      "flavor": "Item Flavor",
       "description": "Description",
+      "gmSecrets":"GM Secrets",
       "quantity": "Quantity",
       "Archetype": {
         "unknownDepiction": "Unknown depiction",
@@ -225,107 +248,147 @@
           "scholar": "Scholar"
         }
       },
-      "Artifice": {
-        "Components": {
-          "quality": "Quality",
-          "Quality": {
-            "crude": "Crude",
-            "common": "Common",
-            "extraordinary": "Extraordinary",
-            "rare": "Rare",
-            "legendary": "Legendary",
-            "mythical": "Mythical"
+      "Gear": {
+        "add": "Add",
+        "Tabs": {
+          "attributes": "Attributes",
+          "description": "Description",
+          "effects": "Effects"
+        },
+        "quantity": "Quantity",
+        "value": "Value",
+        "Price": {
+          "silver": "Silver",
+          "utianCredits": "Utian Credits"
+        },
+        "slots": "Slots",
+        "slot": "Slot",
+        "Slot": {
+          "head": "Head",
+          "neck": "Neck",
+          "back": "Back",
+          "chest": "Chest",
+          "waist": "Waist",
+          "hands": "Hands",
+          "ring": "Ring",
+          "feet": "Feet"
+        },
+        "equippable": "Equippable",
+        "handheld": "Handheld",
+        "hands": "Hands",
+        "actionCost": "Action Cost",
+        "materialComponents": "Material",
+        "refinementComponents": "Refinement",
+        "powerComponents": "Power",
+        "flavor": "Item Flavor",
+        "addResource": "Add Resource",
+        "deleteResource": "Delete Resource",
+        "resource": "Resource",
+        "Resource": {
+          "attributes": "Resource Attributes",
+          "name": "Name",
+          "max": "Max",
+          "amount": "Amount",
+          "propagateToActor": "Propagate",
+          "recoverAmount": "Recovered",
+          "recoverInterval": "Interval",
+          "RecoverInterval": {
+            "none": "None",
+            "turn": "Turn",
+            "round": "Round",
+            "rest": "Rest",
+            "day": "Day",
+            "session": "Session"
+          }
+        },
+        "addAction": "Add Action",
+        "deleteAction": "Delete Action",
+        "action": "Action",
+        "Action": {
+          "attributes": "Action Attributes",
+          "name": "Name",
+          "category": "Category",
+          "Category": {
+            "trait": "Trait",
+            "damage": "Damage",
+            "macro": "Macro"
           },
           "type": "Type",
-          "Types": {
-            "material": "Material",
-            "refinement": "Refinement",
-            "power": "Power"
-          }
-        },
-        "Features": {
-          "Formulas": {
-            "melee": "Melee Formula",
-            "ranged": "Ranged Formula"
+          "Type": {
+            "turn": "Turn",
+            "interrupt": "Interrupt"
           },
-          "affectsOthers": "Propigate to",
-          "AffectsOthers": {
-            "this": "Only this feature",
-            "all": "All formulas"
-          },
-          "craftingPrompt": "(#Prompt)",
-          "Tabs": {
-            "attributes": "Attributes",
-            "description": "Description",
-            "effects": "Effects"
-          },
-          "category": "Category",
-          "Categories": {
-            "fastWeapon": "Fast Weapon",
-            "moderateWeapon": "Moderate Weapon",
-            "slowWeapon": "Slow Weapon",
-            "shield": "Shield",
-            "chestArmor": "Chest Armor",
-            "headArmor": "Head Armor",
-            "handArmor": "Hand Armor",
-            "footArmor": "Foot Armor",
-            "consumable": "Consumable",
-            "artifact": "Artifact"
-          },
-          "ammo": "Ammunition",
+          "trait": "Trait",
+          "modifier": "Modifier",
           "cost": "Cost",
-          "costLimit": "Limit X",
-          "costModifier": "Cost Modifier",
-          "CostModifier": {
-            "flat": "Flat",
-            "add": "Add",
-            "subtract": "Subtract",
-            "multiply": "Multiply",
-            "divide": "Divide",
-            "square": "Square"
-          },
-          "costBonus": "Cost Bonus Formula",
-          "requires": "Requires",
-          "incompatible": "Incompatible with",
-          "stackable": "Stackable",
-          "Stackable": {
-            "unstackable": "Unstackable",
-            "stackable": "Stackable"
-          },
-          "maxStacks": "Max Stacks",
-          "componentsPerStack": "Components per stack",
-          "ComponentsPerStack": {
-            "all": "Any number of stacks",
-            "one": "Per stack"
-          },
-          "grantsAction": "Grants Action to Wielder / Owner",
-          "tagline": "Tagline",
-          "required": "Required",
-          "minimumRarity": "Sets Minimum Rarity",
-          "MinimumRarity": {
+          "stamina": "Stamina",
+          "formula": "Formula",
+          "flavor": "Flavor",
+          "template": "Template",
+          "Template": {
             "none": "None",
-            "common": "Common",
-            "extraordinary": "Extraordinary",
-            "rare": "Rare",
-            "legendary": "Legendary",
-            "mythical": "Mythical"
+            "sbt": "Small Blast (2m)",
+            "mbt": "Medium Blast (4m)",
+            "lbt": "Large Blast (8m)",
+            "xbt": "Extra-Large Blast (12m)",
+            "cone": "Cone",
+            "line": "Line"
+          },
+          "resource": "Resource",
+          "consumed": "Amount Consumed",
+          "macro": "Macro UUID",
+          "actor": "Macro Target",
+          "Actor": {
+            "default": "Default",
+            "self": "Self",
+            "target": "Target"
           }
         },
-        "Gear": {
-          "Validity": {
-            "valid": "Valid",
-            "invalid": "Invalid"
-          },
-          "Handling": {
+        "addStrike": "Add Strike",
+        "deleteStrike": "Delete Strike",
+        "strike": "Strike",
+        "Strike": {
+          "attributes": "Strike Attributes",
+          "name": "Name",
+          "damage": "Damage Formula",
+          "accuracy": "Accuracy Test",
+          "flavor": "Flavor",
+          "resource": "Resource",
+          "consumed": "Amount Consumed",
+          "template": "Strike Template",
+          "Template": {
             "none": "None",
-            "oneHanded": "One-Handed",
-            "twoHanded": "Two-Handed",
-            "worn": "Worn"
+            "sbt": "Small Blast (2m)",
+            "mbt": "Medium Blast (4m)",
+            "lbt": "Large Blast (8m)",
+            "xbt": "Extra-Large Blast (12m)",
+            "cone": "Cone",
+            "line": "Line"
           },
-          "Tabs": {
-            "primary": "Primary",
-            "description": "Description"
+          "range": "Range",
+          "Range": {
+            "close": "Close Range",
+            "far": "Far Range"
+          },
+          "Contest": {
+            "trait": "Contest Trait",
+            "Trait": {
+              "agi": "Agility",
+              "str": "Strength",
+              "int": "Intelligence",
+              "wil": "Will",
+              "dis": "Display",
+              "cha": "Charm"
+            },
+            "against": "Against Formula"
           }
+        },
+        "Defenses": {
+          "chill": "Chill",
+          "heat": "Heat",
+          "energy": "Energy",
+          "physical": "Physical",
+          "psyche": "Psyche"
         }
       },
       "Spells": {
@@ -479,6 +542,8 @@
         "slots": "Slots",
         "value": "Value",
         "quantity": "Quantity",
+        "consumeOnUse": "Consume on use",
+        "deleteWhenEmpty": "Delete when empty",
         "rarity": "Rarity",
         "Rarity": {
           "crude": "Crude",
@@ -687,6 +752,16 @@
         "settings": "Settings",
         "commands": "Commands"
       }
+    },
+    "RollDialog": {
+      "formula": "Roll formula",
+      "targets": "Current targets",
+      "addFavor": "Add Favor",
+      "addDisfavor": "Add Disfavor",
+      "favors": "System favor / disfavor",
+      "totalDisfavor": "System disfavor",
+      "netFavor": "Net favor",
+      "totalFavor": "System favor"
     }
   },
 
@@ -705,7 +780,13 @@
       "action": "Action",
       "artificeFeature": "Artifice Feature",
       "artificeMaterial": "Artifice Material",
-      "gear": "Gear"
+      "gear": "Gear",
+      "armor": "Armor",
+      "artifact": "Artifact",
+      "consumable": "Consumable",
+      "trinket": "Trinket",
+      "weapon": "Weapon",
+      "general": "General Purpose Item"
     },
     "ActiveEffect": {
       "temporary": "Temporary",

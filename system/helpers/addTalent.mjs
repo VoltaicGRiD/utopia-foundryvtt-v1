@@ -44,7 +44,7 @@ export async function addTalentToActor(actor, selected) {
   // Calculate the cost of the talent based on its point values
   let points = item.system.points;
   let cost = parseInt(points.body) + parseInt(points.mind) + parseInt(points.soul);  
-  let actorPoints = actor.system.points.talent;
+  let actorPoints = actor.system.points.talent.total;
   console.log("Cost: ", cost, "Actor Points: ", actorPoints);
   if (actorPoints < cost) {
     // Not enough talent points to add the talent
@@ -199,37 +199,7 @@ export async function createTalent(actor, item, createTree) {
   console.log(actor);
   let data = [item];
   console.log(data);
-  actor.createEmbeddedDocuments('Item', data);
-
-  // Deduct the cost of the talent from the actor's talent points
-  let points = item.system.points;
-  let body = parseInt(points.body);
-  let mind = parseInt(points.mind);
-  let soul = parseInt(points.soul);
-  let cost = body + mind + soul;
-  let newPoints = actor.system.points.talent - cost;
-  await actor.update({ ["system.points.talent"]: newPoints });
-
-  // let actorBody = parseInt(actor.system.points.body);
-  // let actorMind = parseInt(actor.system.points.mind);
-  // let actorSoul = parseInt(actor.system.points.soul);
-
-  // Update the actor's body, mind, and soul points
-  // await actor.update({ 
-  //   ['system.points.body']: actorBody + body,
-  //   ['system.points.mind']: actorMind + mind,
-  //   ['system.points.soul']: actorSoul + soul
-  // });
-
-  // console.log("Updated points: ", actor.system.points);
-
-  // Update the actor's talent tree if necessary
-  if (createTree) {
-    let tree = item.system.tree;
-    let newTree = { [tree]: 1 };
-    let newTrees = { ...actor.system.trees, ...newTree };
-    await actor.update({ "system.trees": newTrees });
-  }
+  await actor.createEmbeddedDocuments('Item', data);
 
   // Update the talent tree window
   // App insances is a Map(), we need to put it into an array to access the keys
@@ -239,26 +209,6 @@ export async function createTalent(actor, item, createTree) {
       a[1].render();
     }
   });
-
-  // Update the actor's talent tree positions
-  await updateActorTrees(actor, item);
-}
-
-/**
- * Updates the actor's talent tree positions.
- * @param {Actor} actor 
- * @param {Item} item 
- */
-async function updateActorTrees(actor, item) {
-  let tree = item.system.tree;
-  let talentPosition = item.system.position;
-  let treePosition = actor.system.trees[tree];
-
-  if (talentPosition > treePosition) {
-    let newTree = { [tree]: talentPosition };
-    let newTrees = { ...actor.system.trees, ...newTree };
-    await actor.update({ "system.trees": newTrees });
-  }
 }
 
 /**
@@ -269,17 +219,9 @@ async function updateActorTrees(actor, item) {
 export async function createTalentNoCost(actor, item) {
   // Create the talent item
   let data = [item];
-  await Item.createDocuments(data, { parent: actor });
-
-  // Update the actor's body, mind, and soul points
-  let body = item.system.points.body;
-  let mind = item.system.points.mind;
-  let soul = item.system.points.soul;
-  await actor.update({ 
-    ['system.points.body']: actor.system.points.body + body,
-    ['system.points.mind']: actor.system.points.mind + mind,
-    ['system.points.soul']: actor.system.points.soul + soul
-  });
+  
+  // TODO: Implement choice handling for no-cost talents
+  await Actor.createEmbeddedDocuments('Item', data);
 }
 
 function checkAlreadyAcquired(actor, selected) {

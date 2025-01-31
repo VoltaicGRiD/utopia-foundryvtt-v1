@@ -1,4 +1,4 @@
-import { longToShort, shortToLong } from "./traitNames.mjs";
+import { longToShort, shortToLong } from "./actorTraits.mjs";
 
 export async function searchTraits(traits, subtrait) {
   // Get both length versions of the trait

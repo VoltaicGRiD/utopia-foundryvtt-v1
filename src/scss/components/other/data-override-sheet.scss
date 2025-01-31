@@ -1,0 +1,11 @@
+.override-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.override-warning {
+  padding: 5px;
+  border: 1px dashed rgba(255, 167, 167, 0.8);
+  color: rgba(255, 167, 167, 0.8);
+}

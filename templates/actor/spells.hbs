@@ -1,12 +1,12 @@
 <div class="tab spells {{tab.cssClass}}" data-group="primary" data-tab="spells">
   <div class="spells-header">
-    <h3 class="spellcap">{{localize 'UTOPIA.Descriptions.spellcap'}}: {{numberFormat system.spellcap decimals=0}}</h3>
-    <button data-action="openSpellcraft">Open Spellcrafting</button>
+    <h3 class="spellcap">{{localize 'UTOPIA.Descriptions.spellcap'}}: {{numberFormat system.spellcap.total decimals=0}}</h3>
+    <button type="button" data-action="openSpellcraft">Open Spellcrafting</button>
   </div>
   {{!-- <div class="flexrow">
     <span>Available Artistries: </span>
     {{#each artistry}}
-      <button class="artistry">
+      <button type="button" class="artistry">
         {{this}}
       </button>
     {{/each}}

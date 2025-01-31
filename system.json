@@ -49,14 +49,21 @@
     },
     "Item": {
       "action": {},
+      
       "species": {},
+      
       "talent": {},
       "specialistTalent": {},
+      
       "spell": {},
       "spellFeature": {},
-      "gear": {},
-      "artificeFeature": {},
-      "archetype": {},
+      
+      "armor": {},
+      "artifact": {},
+      "consumable": {},
+      "trinket": {},
+      "weapon": {},
+
       "general": {}
     },
     "ActiveEffect": {
@@ -155,8 +162,7 @@
       "type": "Item",
       "system": "utopia",
       "ownership": {
-        "PLAYER": "LIMITED",
-        "ASSISTANT": "OWNER"
+
       },
       "flags": {}
     },
@@ -168,8 +174,7 @@
       "type": "Item",
       "system": "utopia",
       "ownership": {
-        "PLAYER": "LIMITED",
-        "ASSISTANT": "OWNER"
+
       },
       "flags": {}
     },
@@ -181,8 +186,7 @@
       "type": "Item",
       "system": "utopia",
       "ownership": {
-        "PLAYER": "LIMITED",
-        "ASSISTANT": "OWNER"
+
       },
       "flags": {}
     },
@@ -192,6 +196,57 @@
       "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "utianEquipment",
+      "label": "SRD Utian Equipment",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "pianEquipment",
+      "label": "SRD Pian Equipment",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "martialGear",
+      "label": "SRD Martial Gear",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "utopiaMacros",
+      "label": "Utopia System Macros",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Macro",
       "system": "utopia",
       "ownership": {
         "PLAYER": "LIMITED",

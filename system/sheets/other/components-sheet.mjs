@@ -41,7 +41,7 @@ export class UtopiaActorComponentsSheet extends api.HandlebarsApplicationMixin(s
 
   static PARTS = {
     features: {
-      template: 'systems/utopia/templates/other/actor-components-sheet.hbs',
+      template: 'systems/utopia/templates/actor/components.hbs',
       scrollable: [""]
     },
   }

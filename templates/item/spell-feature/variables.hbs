@@ -17,7 +17,7 @@
               {{formInput ../systemFields.dice value=(lookup (lookup ../system.variables key) "dice") name=(concat "system.variables." key ".dice") localize=true}}
             </div>
           {{/if}}
-          <button data-variable="{{key}}">
+          <button type="button" data-variable="{{key}}">
             <a data-action="removeVariable" data-variable="{{key}}">{{localize 'UTOPIA.Item.SpellFeatures.Variables.delete'}}</a>
           </button>
         </div>
@@ -34,7 +34,7 @@
     {{/if}}
   {{/if}}
 
-  <button class="add-variable-button">
+  <button type="button" class="add-variable-button">
     <a data-action="newVariable">{{localize 'UTOPIA.Item.SpellFeatures.Variables.new'}}</a>
   </button>
 </div>
