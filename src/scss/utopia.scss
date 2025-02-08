@@ -54,12 +54,21 @@
   @import 'components/general/tables';
   @import 'components/general/items';
   
+/*   .flexrow {
+    gap: 10px;
+    margin-top: 10px;
+  } */
+
   &.spellcraft-sheet {
     @import 'components/spellcraft/spellcraft';
   }
   
   &.actor-sheet {
     @import 'components/actor/actor-sheet-v2';
+  }
+
+  &.components-sheet {
+    @import 'components/actor/actor-component-sheet.scss';
   }
 
   &.spell-sheet {
@@ -84,6 +93,10 @@
 
   &.placeable-hud {
     @import 'components/hud/token-hud';
+  }
+
+  &.twitch-integration-sheet {
+    @import 'components/other/twitch-integration-sheet';
   }
 
   //@import 'components/item/spell-sheet';

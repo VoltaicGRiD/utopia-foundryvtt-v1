@@ -111,6 +111,8 @@ def twitch_callback():
         if "access_token" not in data:
             return f"Error from Twitch token exchange: {data}", 400
 
+        print(data)
+
         access_token = data["access_token"]
         refresh_token = data["refresh_token"]
         id_token = data["id_token"]

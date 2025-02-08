@@ -1,0 +1,132 @@
+.talent-display {
+  background: rgba(0,0,0,0.9);
+  border: 1px solid purple;
+  margin: -8px;
+}
+
+.talent-tabs {
+  color: white;
+  padding-left: 10px;
+}
+
+  .talent-tabs ol {
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    list-style: none;
+    gap: 5px;
+    padding: 0px;
+    padding: 0;
+  }
+
+  .talent-tabs li {
+    border: 1px solid white !important;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 0.5em;
+    margin-bottom: 10px;
+    font-size: 1.25em;
+  }
+
+  .talent-tabs .active {
+    background-color: rgba(255,255,255,0.2);
+  }
+
+.tier-3 {
+  height: 100%;
+  display: inline-flex;
+}
+
+.tier-4 {
+  height: 100%;
+  display: inline-flex;
+}
+
+.tier-5 {
+  height: 100%;
+  display: inline-flex;
+}
+
+.tree-1 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+
+.tree-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 200;
+}
+
+.tree-3 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 300;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+}
+
+.tab {
+  width: 100%;
+  height: 100%;
+}
+
+.taken {
+  fill: rgba(0,0,0,0.5) !important;
+}
+
+.claimed {
+  fill: #f00;
+}
+
+.taken::before {
+  content: url('/systems/utopia/assets/claimed.png');
+  transform: rotate(-45deg);
+  z-index: 9999;
+}
+
+.cls-1 {
+  fill: transparent;
+}
+
+.taking {
+  fill: url(#warfare-gradient) !important;
+}
+
+.tree-flex {
+  position: relative;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  height: 650px;
+  padding: 10px; 
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.tree-description {
+  text-align: center;
+  color: white;
+  padding-top: 10px;
+}
+
+.talent-tree {
+  position: relative;
+  height: 730px;
+}
+
+  .talent-tree img {
+    height: 100%;
+    border: none;
+  }

@@ -1,14 +1,42 @@
 <div class="tab biography {{tab.cssClass}}" data-group="primary" data-tab="biography">
-  <div class="flexcol">
-    <div class="flexrow">
-      <div>
-        <label for="system.biography.age">{{localize 'UTOPIA.Actor.biography.age'}}</label>
-        <input type="number" class="biography-age" name="system.biography.age" placeholder="{{localize 'UTOPIA.Actor.biography.age'}}" value="{{system.biography.age}}"/>
-      </div>
-      <div>
-        <label for="system.biography.religion">{{localize 'UTOPIA.Actor.biography.religion'}}</label>
-        <input type="text" class="biography-religion" name="system.biography.religion" placeholder="{{localize 'UTOPIA.Actor.biography.religion'}}" value="{{system.biography.religion}}"/>
-      </div>
+  <div class="biography-data">
+    
+    <div class="biography-add-field">
+      <label for="system.biographyFields" class="biography-label"><i class="fas fa-plus"></i> Add Field</label> 
+      {{formInput systemFields.biographyFields value=system.biographyFields name="system.biographyFields" localize=true}}
     </div>
+
+    <fieldset>
+      <legend>{{localize "UTOPIA.Actor.Biography.biographyFields"}}</legend>
+      <div class="grid grid-4col">
+        {{#each biographyFields as |field key|}}
+          <div class="flexcol">
+            {{localize field.label}}
+            {{formInput field.field value=field.value name=field.name}}
+          </div>
+        {{/each}}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "UTOPIA.Descriptions.description"}}</legend>
+      {{#if editable}}
+        <prose-mirror name="system.biography.description" data-document-u-u-i-d="{{actor.uuid}}" value="{{system.biography.description}}" collaborate="true" toggled="true">
+          {{{enrichedBiography}}}
+        </prose-mirror> 
+      {{else}}
+        {{{enrichedBiography}}}
+      {{/if}}
+    </fieldset>
+
+    <fieldset>
+      <legend>{{localize "UTOPIA.Descriptions.gmSecrets"}}</legend>
+      {{#if gm}}
+        <prose-mirror name="system.biography.gmSecrets" data-document-u-u-i-d="{{actor.uuid}}" value="{{system.biography.gmSecrets}}" collaborate="true" toggled="true">
+          {{{enrichedGMNotes}}}
+        </prose-mirror>
+      {{/if}}
+    </fieldset>
+
   </div>
 </div>

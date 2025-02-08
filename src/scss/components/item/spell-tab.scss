@@ -1,0 +1,29 @@
+.spellcap {
+  padding: 0.5em;
+
+}
+
+.spell-tabs .spell-pin {
+  display: none;
+}
+
+.spell-tabs {
+  margin-top: 0.25em;
+}
+
+.spell-tabs .item {
+  width: 100%;
+  padding: 0.5em 1em;
+}
+
+.spell-tabs .item.active {
+  padding: 0.5em 1em;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  border-radius: 10px 10px 0 0;
+}
+
+.spell-tabs .item:not(.active) {
+  border-bottom: 1px solid black;
+}

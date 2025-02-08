@@ -1,0 +1,532 @@
+.ability-table tr td {
+  padding: 0.25em 0.5em;
+}
+
+.char-name input {
+  width: 400px;
+  font-size: 0.6em;
+  font-weight: bold;
+  padding: 0 10px;
+  margin: 0;
+}
+
+.char-header {
+  gap: 10px;
+}
+
+.species-container {
+  position: relative;
+}
+
+.species-container input {
+  font-size: 0.6em;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+.species {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ability-table {
+  margin: 0 !important;
+}
+
+.actor-data {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+  .actor-data h4 {
+    margin-top: 0.5em;
+  }
+
+.actor-talents {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin-top: 0.5em;
+}
+
+  .actor-talents h4 {
+    margin-top: 0.5em;
+  }
+
+.talent-content {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.data-blocks {
+  gap: 0.5em;
+}
+
+.data-overlay {
+  position: relative;
+  align-content: start;
+  justify-content: start;
+  max-width: 50px;
+  height: 40px;
+}
+
+  .data-overlay i {
+    font-size: 2.5rem;
+    color: rgb(107, 107, 107);
+  }
+
+  .data-overlay i:hover {
+    color: rgb(214, 201, 142);
+  }
+
+.data-number {
+  position: absolute;
+  min-width: 50px;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  filter: drop-shadow(0px 0px 3px black);
+  text-shadow: 0px 0px 3px black, 0px 0px 6px black;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.point-blocks {
+  gap: 0.5em;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.point-overlay {
+  position: relative;
+  align-content: start;
+  justify-content: start;
+  max-width: 30px;
+  height: 30px;
+}
+
+  .point-overlay i {
+    font-size: 1.8rem;
+    color: rgb(107, 107, 107);
+  }
+
+  .point-overlay i:hover {
+    color: rgb(214, 201, 142);
+  }
+
+.point-number {
+  position: absolute;
+  min-width: 50px;
+  left: 60%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  filter: drop-shadow(0px 0px 3px black);
+  text-shadow: 0px 0px 3px black, 0px 0px 6px black;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.actions-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: start;
+  align-content: start;
+  margin-top: 10px;
+}
+
+.actor-talents {
+  flex: 2;
+  align-self: start;
+
+  & .talent-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+}
+
+.turn-actions {
+  flex: 2;
+  align-self: start;
+  
+  & .action-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+}
+
+.interrupt-actions {
+  flex: 1;
+  align-self: start;
+}
+
+.action {
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: left;
+  justify-content: space-between;
+  font-size: 0.9em;
+  cursor: pointer;
+  border-radius: 4px;
+  position: relative;
+}
+
+.resource {
+  width: 100px;
+  height: 45px;
+  position: relative;
+  display: flex;
+}
+
+.resource-value {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  z-index: 100;
+  filter: drop-shadow(2px 2px 2px black);
+
+  & label {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    line-height: 30px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    z-index: 110;
+  }
+}
+
+.resource-max {
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  z-index: 0;
+
+  & input {
+    pointer-events: none;
+  }
+
+  & label {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    line-height: 30px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  &:hover {
+    z-index: 1000;
+
+    & label {
+      z-index: 1010;
+    }
+  }
+}
+
+.spells-header {
+  position: relative;
+
+  button {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    z-index: 1000;
+    width: 50%;
+  }
+}
+
+.spell-list > .grid.grid-3col {
+  align-items: start;
+}
+
+.spell {
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 0px 5px 0 5px;
+  flex-wrap: wrap;
+  
+  .spell-name, .spell-cost {
+    position: static;
+    top: 0;
+    line-height: 24px;
+    padding: 0 5px;
+    text-align: left;
+    color: white;
+    filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+  }
+
+  .spell-name {
+    left: 0;
+  }
+  
+  .spell-cost {
+    right: 0;
+  }
+
+  .spell-controls {
+    position: static;
+    left: 0;
+    top: 24px;
+    width: 100%;
+    height: 24px;
+    flex-direction: row;
+
+    & a {
+      width: 100%;
+      text-align: center;
+      line-height: 24px;
+      filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+
+
+      &:hover {
+        background-color: #ff0000;
+        color: white;
+      }
+    }
+  }
+}
+
+.tab-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.gear-list-header {
+  margin: 10px;
+}
+
+.resources {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.new-resource {
+  display: block;
+  flex: 2;
+  background-color: transparent;
+  border: none;
+  position: relative;
+
+  &.large {
+    flex: 4;
+  }
+
+  & .new-resource-container {
+    background-color: black;
+    position: relative;
+    height: 25px;
+    line-height: 25px;
+
+    & .new-resource-value {
+      background-color: #222222;
+      color: #dddddd;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 5px;
+
+      &:hover,
+      &:focus {
+        color: #ffffff;
+      }
+    }
+
+    & input {
+      color: #dddddd;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 5px;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        color: #ffffff;
+      }
+    }
+
+    & .new-resource-max {
+      position: absolute;
+      color: #bbbbbb;
+      right: 0;
+      height: 25px;
+      padding: 0 5px;
+    }
+
+    & .new-resource-label {
+      width: 100%;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      position: absolute;
+      left: 0;
+      top: -15px;
+    }
+
+    & .new-resource-progress {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: -4px;
+      height: 25px;
+      line-height: 25px;
+      border-radius: 5px;
+      border: none;
+      pointer-events: none;
+
+      &::-webkit-progress-bar {
+        background-color: transparent;
+      }
+
+      &::-webkit-progress-value {
+        background: rgba(0,80,0,0.3);
+        z-index: -1;
+        pointer-events: none;
+      }
+    }
+  }
+
+  & .resource-context {
+    background-color: transparent;
+    color: white;
+    height: 85px;
+    width: 200%;
+    position: absolute;
+    pointer-events: none;
+    top: -30px;
+    left: -50%;
+    display: none;
+
+    &.active {
+      display: block;
+    }
+
+    & .add-buttons {
+      display: flex;
+      flex: repeat(4, 1fr);
+      gap: 5px;
+      width: 100%;
+      height: 25px;
+      position: absolute;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+  
+      & button {
+        height: 25px;
+        line-height: 25px;
+        background: rgba(0, 80, 0, 1);
+      }
+    }
+
+    & .subtract-buttons {
+      display: flex;
+      flex: repeat(4, 1fr);
+      gap: 5px;
+      width: 100%;
+      height: 25px;
+      position: absolute;
+      z-index: 9999;
+      left: 0;
+      bottom: 0;
+      pointer-events: all;
+
+      & button {
+        height: 25px;
+        line-height: 25px;
+        background: rgba(80, 0, 0, 1);
+      }
+    }
+  }
+}
+
+.biography-data {
+  overflow-y: scroll;
+  max-height: 500px;
+
+  & .biography-add-field {
+    margin-top: 10px;
+
+    & label {
+      flex: 1;
+    }
+
+    & select {
+      flex: 2;
+    }
+  }
+}
+
+.rest-button {
+  padding-right: 10px;
+}
+
+& fieldset {
+  margin-top: 10px;
+}
+
+.actor-resources {
+
+  & table {
+    padding: 0;
+    margin: 0;
+
+    & .resources-description {
+      width: 50%;
+    }
+
+    & .resources-value {
+      width: 15%;
+    }
+
+    & td,
+    & th {
+      text-align: left;
+      padding: 0.2em;
+
+      & input {
+        height: 25px;
+      }
+
+      & button {
+        height: 25px;
+      }
+    }
+  }
+}
+

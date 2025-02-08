@@ -1,0 +1,210 @@
+.utopia.actor-sheet .ability-table tr td {
+  padding: 0.25em 0.5em;
+}
+.utopia.actor-sheet .char-name input {
+  width: 500px;
+  font-size: 0.6em;
+  font-weight: bold;
+  padding: 0 10px;
+  margin: 0;
+}
+.utopia.actor-sheet .species-container {
+  position: relative;
+}
+.utopia.actor-sheet .species-container input {
+  font-size: 0.6em;
+  font-weight: bold;
+  padding: 0 10px;
+  margin: 0;
+}
+.utopia.actor-sheet .species {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.utopia.actor-sheet .ability-table {
+  margin: 0 !important;
+}
+.utopia.actor-sheet .actor-data {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.utopia.actor-sheet .actor-data h4 {
+  margin-top: 0.5em;
+}
+.utopia.actor-sheet .actor-talents {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin-top: 0.5em;
+}
+.utopia.actor-sheet .actor-talents h4 {
+  margin-top: 0.5em;
+}
+.utopia.actor-sheet .talent-content {
+  width: 100%;
+  justify-content: space-between;
+}
+.utopia.actor-sheet .data-blocks {
+  gap: 0.5em;
+}
+.utopia.actor-sheet .data-overlay {
+  position: relative;
+  align-content: start;
+  justify-content: start;
+  max-width: 50px;
+  height: 40px;
+}
+.utopia.actor-sheet .data-overlay i {
+  font-size: 2.5rem;
+  color: rgb(107, 107, 107);
+}
+.utopia.actor-sheet .data-overlay i:hover {
+  color: rgb(214, 201, 142);
+}
+.utopia.actor-sheet .data-number {
+  position: absolute;
+  min-width: 50px;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  filter: drop-shadow(0px 0px 3px black);
+  text-shadow: 0px 0px 3px black, 0px 0px 6px black;
+  z-index: 1000;
+  pointer-events: none;
+}
+.utopia.actor-sheet .action {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.5em;
+  position: relative;
+}
+.utopia.actor-sheet .action > span {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.utopia.actor-sheet .resource {
+  width: 100px;
+  height: 45px;
+  position: relative;
+  display: flex;
+}
+.utopia.actor-sheet .resource-value {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  z-index: 100;
+  filter: drop-shadow(2px 2px 2px black);
+}
+.utopia.actor-sheet .resource-value label {
+  position: absolute;
+  right: 5px;
+  top: 0;
+  line-height: 30px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 110;
+}
+.utopia.actor-sheet .resource-max {
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  z-index: 0;
+}
+.utopia.actor-sheet .resource-max input {
+  pointer-events: none;
+}
+.utopia.actor-sheet .resource-max label {
+  position: absolute;
+  right: 5px;
+  bottom: 0;
+  line-height: 30px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 10;
+  pointer-events: none;
+}
+.utopia.actor-sheet .resource-max:hover {
+  z-index: 1000;
+}
+.utopia.actor-sheet .resource-max:hover label {
+  z-index: 1010;
+}
+.utopia.actor-sheet .spells-header {
+  position: relative;
+}
+.utopia.actor-sheet .spells-header button {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  z-index: 1000;
+  width: 50%;
+}
+.utopia.actor-sheet .spell-list > .grid.grid-3col {
+  align-items: start;
+}
+.utopia.actor-sheet .spell {
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 0px 5px 0 5px;
+  flex-wrap: wrap;
+}
+.utopia.actor-sheet .spell .spell-name, .utopia.actor-sheet .spell .spell-cost {
+  position: static;
+  top: 0;
+  line-height: 24px;
+  padding: 0 5px;
+  text-align: left;
+  color: white;
+  filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+}
+.utopia.actor-sheet .spell .spell-name {
+  left: 0;
+}
+.utopia.actor-sheet .spell .spell-cost {
+  right: 0;
+}
+.utopia.actor-sheet .spell .spell-controls {
+  position: static;
+  left: 0;
+  top: 24px;
+  width: 100%;
+  height: 24px;
+  flex-direction: row;
+}
+.utopia.actor-sheet .spell .spell-controls a {
+  width: 100%;
+  text-align: center;
+  line-height: 24px;
+  filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+}
+.utopia.actor-sheet .spell .spell-controls a:hover {
+  background-color: #ff0000;
+  color: white;
+}

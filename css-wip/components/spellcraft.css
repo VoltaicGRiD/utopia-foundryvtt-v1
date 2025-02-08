@@ -1,0 +1,346 @@
+.utopia.spellcraft-sheet .spellcraft {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  gap: 10px;
+}
+.utopia.spellcraft-sheet .spellcraft-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: start;
+  gap: 10px;
+}
+.utopia.spellcraft-sheet .artistries {
+  max-height: 30px;
+  gap: 10px;
+}
+.utopia.spellcraft-sheet .artistry-icon {
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  fill: black !important;
+  border: none;
+  position: absolute;
+  left: 0;
+}
+.utopia.spellcraft-sheet .artistry {
+  position: relative;
+  height: 30px;
+  width: 150px;
+  color: white;
+  background-color: black;
+}
+.utopia.spellcraft-sheet .artistry.active {
+  color: black;
+  background-color: white;
+  border: none;
+}
+.utopia.spellcraft-sheet .feature-select {
+  width: 100%;
+}
+.utopia.spellcraft-sheet .feature-list {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+  overflow: auto;
+  height: 90%;
+}
+.utopia.spellcraft-sheet .feature {
+  margin-top: 5px;
+  position: relative;
+  height: 25px;
+  width: 100%;
+  border-radius: 3px;
+}
+.utopia.spellcraft-sheet .feature-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  padding: 2px;
+  fill: black !important;
+  border: none;
+}
+.utopia.spellcraft-sheet .feature-name {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-55%);
+  height: 15px;
+  font-size: 15px;
+}
+.utopia.spellcraft-sheet .feature-controls {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 25px;
+  display: flex;
+}
+.utopia.spellcraft-sheet .feature-controls .formula-select {
+  position: relative;
+  height: 25px;
+  width: 100px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+.utopia.spellcraft-sheet .feature-controls .formula-select .formula-up, .utopia.spellcraft-sheet .feature-controls .formula-select .formula-down {
+  text-align: center;
+  width: 25px;
+  line-height: 25px;
+}
+.utopia.spellcraft-sheet .feature-controls .formula-select .formula-up i, .utopia.spellcraft-sheet .feature-controls .formula-select .formula-down i {
+  pointer-events: none;
+}
+.utopia.spellcraft-sheet .feature-controls .formula-select .formula {
+  position: relative;
+  height: 25px;
+  width: 50px;
+  text-align: center;
+  font-size: 1.2em;
+  padding: 2px;
+  border: none;
+  margin: 0;
+}
+.utopia.spellcraft-sheet .remove-feature, .utopia.spellcraft-sheet .favorite-feature {
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  padding: 2px;
+  border: none;
+  background-color: #ed3f41;
+}
+.utopia.spellcraft-sheet .remove-feature i, .utopia.spellcraft-sheet .favorite-feature i {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 20%;
+  left: 0;
+}
+.utopia.spellcraft-sheet .feature-variable {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  height: 25px;
+  padding: 0;
+  margin: 0;
+}
+.utopia.spellcraft-sheet .feature-variable input[type=number] {
+  background-color: white;
+  color: black;
+  position: relative;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  padding: 2px;
+  border: none;
+  margin: 0;
+}
+.utopia.spellcraft-sheet .feature-variable input[type=text] {
+  background-color: white;
+  color: black;
+  position: relative;
+  height: 25px;
+  width: 25px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  padding: 2px;
+  border: none;
+  margin: 0;
+}
+.utopia.spellcraft-sheet .feature-variable input[type=text]:hover {
+  width: 200px;
+}
+.utopia.spellcraft-sheet .feature-variable input[type=text]:focus {
+  width: 200px;
+}
+.utopia.spellcraft-sheet .feature-variable .feature-variable-character {
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5em;
+  width: 25px;
+}
+.utopia.spellcraft-sheet .feature-variable button {
+  position: relative;
+  height: 25px;
+  width: 25px;
+  text-align: left;
+  padding: 2px;
+  border: none;
+  margin: 0;
+}
+.utopia.spellcraft-sheet .feature-variable button i {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 20%;
+  left: 0;
+}
+@keyframes borderAnimation {
+  0% {
+    border-color: transparent;
+  }
+  12.5% {
+    border-color: #c9593f transparent transparent transparent;
+  }
+  25% {
+    border-color: #c9593f #c9593f transparent transparent;
+  }
+  37.5% {
+    border-color: #c9593f #c9593f #c9593f transparent;
+  }
+  50% {
+    border-color: #c9593f #c9593f #c9593f #c9593f;
+  }
+  62.5% {
+    border-color: transparent #c9593f #c9593f #c9593f;
+  }
+  75% {
+    border-color: transparent transparent #c9593f #c9593f;
+  }
+  87.5% {
+    border-color: transparent transparent transparent #c9593f;
+  }
+  100% {
+    border-color: transparent;
+  }
+}
+.utopia.spellcraft-sheet .spell-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 3px;
+  width: 100%;
+  height: 94%;
+  border: 2px solid transparent;
+}
+.utopia.spellcraft-sheet .spell-panel.dragging {
+  border: 2px dashed white;
+}
+.utopia.spellcraft-sheet .spell-features {
+  width: 100%;
+}
+.utopia.spellcraft-sheet .selected-feature-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0 10px;
+}
+.utopia.spellcraft-sheet .spell-name {
+  width: 100%;
+  height: 30px;
+}
+.utopia.spellcraft-sheet .spell-name input {
+  font-size: 1.5em;
+}
+.utopia.spellcraft-sheet .spell-attributes {
+  width: 100%;
+}
+.utopia.spellcraft-sheet .spell-attributes .flexrow {
+  border: 1px solid rgb(92, 92, 92);
+  padding: 0.5em;
+  height: 100%;
+}
+.utopia.spellcraft-sheet .spell-attributes .spell-duration, .utopia.spellcraft-sheet .spell-attributes .spell-range, .utopia.spellcraft-sheet .spell-attributes .spell-aoe, .utopia.spellcraft-sheet .spell-attributes .spell-cost {
+  font-size: 1em;
+  font-weight: 700;
+  width: 80%;
+}
+.utopia.spellcraft-sheet .spell-attributes .spell-duration-value, .utopia.spellcraft-sheet .spell-attributes .spell-range-value, .utopia.spellcraft-sheet .spell-attributes .spell-aoe-value, .utopia.spellcraft-sheet .spell-attributes .spell-cost-value {
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-left: 1em;
+  width: 120%;
+}
+.utopia.spellcraft-sheet .tooltip-option {
+  background: #403e4e;
+  border: 1px solid #c9593f;
+}
+.utopia.spellcraft-sheet .tooltip-option.active {
+  background: #688b1b;
+  border: 1px solid white;
+}
+.utopia.spellcraft-sheet .spell-flavor {
+  display: block;
+  width: 100%;
+  height: 60px;
+  margin-top: 10px;
+}
+.utopia.spellcraft-sheet .spell-flavor textarea {
+  width: 100%;
+  height: 100%;
+  line-height: 16px;
+  font-size: 12px;
+  padding: 5px;
+}
+.utopia.spellcraft-sheet .spell-controls {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+  justify-content: space-evenly;
+}
+.utopia.spellcraft-sheet .spell-list {
+  width: 100%;
+}
+.utopia.spellcraft-sheet .spell-list > .grid.grid-2col {
+  align-items: start;
+}
+.utopia.spellcraft-sheet .spell {
+  width: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 0px 5px 0 5px;
+  flex-wrap: wrap;
+}
+.utopia.spellcraft-sheet .spell > .spell-name, .utopia.spellcraft-sheet .spell > .spell-cost {
+  width: auto;
+  height: auto;
+  position: static;
+  top: 0;
+  line-height: 24px;
+  padding: 0 5px;
+  text-align: left;
+  color: white;
+  filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+}
+.utopia.spellcraft-sheet .spell .spell-name {
+  left: 0;
+}
+.utopia.spellcraft-sheet .spell .spell-cost {
+  right: 0;
+}
+.utopia.spellcraft-sheet .spell .spell-controls {
+  position: static;
+  left: 0;
+  top: 24px;
+  width: 100%;
+  height: 24px;
+  flex-direction: row;
+}
+.utopia.spellcraft-sheet .spell .spell-controls a {
+  width: 100%;
+  text-align: center;
+  line-height: 24px;
+  filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
+}
+.utopia.spellcraft-sheet .spell .spell-controls a:hover {
+  background-color: #ff0000;
+  color: white;
+}

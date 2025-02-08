@@ -1,0 +1,30 @@
+<header class='sheet-header'>
+  <img
+    class='item-icon'
+    src='{{item.img}}'
+    data-edit='img'
+    data-action="image"
+    title='{{item.name}}'
+  />
+  <div class="flexcol">
+    <div class='header-fields'>
+      <h1 class='item-name'><input
+          name='name'
+          type='text'
+          value='{{item.name}}'
+          data-action="update"
+          placeholder='Name'
+        />
+      </h1>
+    </div>
+  </div>
+  <span class="valid-indicator">
+    {{#if item.system.valid}}
+      <i class="fas fa-check" style="color: green;" 
+          data-tooltip="{{localize 'UTOPIA.Item.Artifice.Gear.Validity.valid'}}"></i>
+    {{else}}
+      <i class="fas fa-times" style="color: rgb(160, 0, 0);"
+          data-tooltip="{{localize 'UTOPIA.Item.Artifice.Gear.Validity.invalid'}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{{#each item.system.validMessages as |message|}}{{message}}{{/each}}"></i>
+    {{/if}}
+  </span>
+</header>

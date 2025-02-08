@@ -1,15 +1,78 @@
-<div class="grid grid-2col">
-  {{#each talents as |talent key|}}
-    <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
-      data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
-                    {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
-                    {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
-      data-tooltip-position="top">
-      <div class="flexrow talent-content">
-        <div>
-          {{talent.name}}
+<div class="tab talents {{tab.cssClass}}" data-group="primary" data-tab="talents">
+
+  <div class="tab-buttons">
+    {{#if editable}}
+      <button class="tab-button" data-action="selectTalents">{{system.points.talent}} Talent Points - Select</button>
+    {{/if}}
+
+    <div class="actor-points">
+      <div class="flexrow point-blocks">
+        <div class="point-overlay">
+          <i class="fa-solid fa-shield fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.body'}}"></i>
+          <span class="point-number">
+            {{numberFormat system.points.body decimals=0}}
+          </span>
+        </div>
+
+        <div class="point-overlay">
+          <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}"></i>
+          <span class="point-number">
+            {{numberFormat system.points.mind decimals=0}}
+          </span>
+        </div>
+
+        <div class="point-overlay">
+          <i class="fa-solid fa-flame fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.soul'}}"></i>
+          <span class="point-number">
+            {{numberFormat system.points.soul decimals=0}}
+          </span>
         </div>
       </div>
-    </button>
-  {{/each}}
+    </div>
+
+    {{#if editable}}
+      <button class="tab-button" data-action="selectSpecialistTalents">{{system.points.specialist}} Specialist Points - Select</button>
+    {{/if}}
+  </div>
+
+
+
+  <div class="grid grid-3col">
+    
+    <div class="actor-talents grid-span-2">
+      <h3>{{localize 'UTOPIA.Descriptions.talents'}}</h3>
+      <div class="talent-list">
+        {{#each talents as |talent key|}}
+          <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
+            data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind decimals=0}} -
+                          {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body decimals=0}} -
+                          {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul decimals=0}}"
+            data-tooltip-position="top">
+            <div class="flexrow talent-content">
+              <div>
+                {{talent.name}}
+              </div>
+            </div>
+          </button>
+        {{/each}}
+      </div>
+    </div>
+    
+    <div class="flexcol">
+      <h3>{{localize 'UTOPIA.Descriptions.specialistTalents'}}</h3>
+      {{#each specialist as |talent key|}}
+        <button class="talent" data-action="openTalent" data-target="{{talent.id}}" 
+          data-tooltip="{{talent.system.description}}"
+          data-tooltip-position="top">
+          <div class="flexrow talent-content">
+            <div>
+              {{talent.name}}
+            </div>
+          </div>
+        </button>
+      {{/each}}
+    </div>
+
+  </div>
+
 </div>
