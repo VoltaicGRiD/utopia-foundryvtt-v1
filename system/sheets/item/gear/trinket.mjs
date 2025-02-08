@@ -57,6 +57,10 @@ export class UtopiaTrinketSheet extends api.HandlebarsApplicationMixin(
     
     options.parts = ["header", "tabs", "attributes", "description", "effects"];
   }
+  
+  _preClose(_options) {
+    super.submit();
+  }
 
   async _prepareContext(options) {
     const roll = new Roll(this.item.system.formula);

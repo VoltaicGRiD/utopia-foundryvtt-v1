@@ -1,9 +1,6 @@
 const { api, sheets } = foundry.applications;
 
-import {
-  onManageActiveEffect,
-  prepareActiveEffectCategories,
-} from "../../helpers/effects.mjs";
+import { prepareActiveEffectCategories } from "../../helpers/_module.mjs";
 
 export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
   sheets.ItemSheetV2
@@ -11,23 +8,27 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    this.openDetails = [];
   }
 
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "specialist-talent-sheet"],
     position: {
       width: 500,
-      height: 500,
+      height: 'auto',
     },
     actions: {
-      onEditImage: this._onEditImage,
+      image: this._image,
       viewEffect: this._viewEffect,
       createEffect: this._createEffect,
       deleteEffect: this._deleteEffect,
       toggleEffect: this._toggleEffect,
+      addItem: this._addItem,
+      deleteResource: this._deleteResource,
+      deleteAction: this._deleteAction,
     },
     form: {
-      submitOnChange: true,
+      submitOnChange: false,
     },
     window: {
       title: "UTOPIA.SheetLabels.specialistTalent",
@@ -37,25 +38,31 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
   };
 
   static PARTS = {
-    attributes: {
-      template:
-        "systems/utopia/templates/item/specialist-talent/attributes.hbs",
+    header: {
+      template: "systems/utopia/templates/item/generic/header.hbs",
     },
     tabs: {
-      template: 'templates/generic/tab-navigation.hbs',
+      template: "templates/generic/tab-navigation.hbs",
     },
-    effects: {
-      template: "systems/utopia/templates/item/generic/effects.hbs",
+    attributes: {
+      template: "systems/utopia/templates/item/specialist-talent/attributes.hbs",
+      scrollable: [""]
     },
     description: {
-      template:
-        "systems/utopia/templates/item/generic/description.hbs",
+      template: "systems/utopia/templates/item/generic/description.hbs",
+    },
+    effects: {
+      template: "systems/utopia/templates/item/generic/effects.hbs"
     }
   };
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    options.parts = ["tabs", "attributes", "effects", "description"];
+    options.parts = ["header", "tabs", "attributes", "description", "effects"];
+  }
+
+  _preClose(_options) {
+    super.submit();
   }
 
   async _prepareContext(options) {
@@ -64,6 +71,7 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
+      gm: game.user.isGM,
       // Add the item document.
       item: this.item,
       // Adding system and flags for easier access
@@ -74,28 +82,11 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
+      // Add tabs
+      tabs: this._getTabs(options.parts),
+      // Add features to context
+      features: this.item.system.features,
     };
-
-    context.enrichedDescription = await TextEditor.enrichHTML(
-      this.item.system.description,
-      {
-        secrets: this.document.isOwner,
-        rollData: this.item.getRollData(),
-        relativeTo: this.item,
-      }
-    );
-
-    // Prepare tabs
-    context.tabs = this._getTabs(options.parts);
-
-    // Prepare active effects
-    context.effects = prepareActiveEffectCategories(this.item.effects, {
-      temporary: true,
-      passive: true,
-      inactive: true,
-      specialist: true,
-      talent: true,
-    });
 
     console.log(context);
 
@@ -105,18 +96,55 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
   /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
-      case 'attributes': 
-      case 'effects':
-      case 'description':
+      case 'attributes':
         context.tab = context.tabs[partId];
+        context.enrichedfFlavor = await TextEditor.enrichHTML(
+          this.item.system.flavor,
+          {
+            secrets: this.document.isOwner,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
+        break;
+      case 'description': 
+        context.tab = context.tabs[partId];
+        context.enrichedDescription = await TextEditor.enrichHTML(
+          this.item.system.description,
+          {
+            secrets: this.document.isOwner,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
+
+        context.enrichedGMNotes = await TextEditor.enrichHTML(
+          this.item.system.gmSecrets,
+          {
+            secrets: game.user.isGM,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
+      case 'effects': 
+        context.tab = context.tabs[partId];
+        context.effects = prepareActiveEffectCategories(this.item.effects, {
+          temporary: true,
+          passive: true,
+          inactive: true,
+          specialist: true,
+          talent: true,
+        });        
         break;
       default:
+        break;
     }
 
     return context;
   }
 
   _getTabs(parts) {
+    // Default tab for first time it's rendered this session
     if (!this.tabGroups['primary']) this.tabGroups['primary'] = 'attributes';
 
     return parts.reduce((tabs, partId) => {
@@ -128,39 +156,68 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Specialist.Tabs.',
+        label: 'UTOPIA.Item.Tabs.',
       };
       switch (partId) {
+        case 'header':
         case 'tabs':
           return tabs;
-        case "attributes":
-          tab.id = 'attributes';
-          tab.label += 'attributes';
-          break;        
-        case "effects":
-          tab.id = 'effects';
-          tab.label += 'effects';
-          break;        
-        case "description": 
-          tab.id = 'description';
-          tab.label += 'description';
-          break;        
+        case 'attributes':
+        case 'description':
+        case 'effects':
+          tab.id = partId;
+          tab.label += partId;
+          break;
         default:
       }
-    
+      
       if (this.tabGroups['primary'] === tab.id) tab.cssClass = 'active';
 
       tabs[partId] = tab;
       return tabs;
     }, {});
+  }    
+
+  _onRender(context, options) {
+    this.element.querySelectorAll(['.strike', '.resource', '.action']).forEach((details, index) => {
+      details.querySelectorAll('select').forEach((select) => {
+        select.addEventListener('change', async (event) => {
+          this.element.querySelectorAll(['.strike', '.resource', '.action']).forEach((details, index) => {
+            if (details.attributes.open) {
+              this.openDetails.push(index);
+            }
+          });
+
+          await super.submit();
+
+          this.render();
+        });
+      });
+    });
+
+    this.element.querySelectorAll('input[type="checkbox"]').forEach((select) => {
+      select.addEventListener('change', async (event) => {
+        this.element.querySelectorAll(['.strike', '.resource', '.action']).forEach((details, index) => {
+          if (details.attributes.open) {
+            this.openDetails.push(index);
+          }
+        });
+
+        await super.submit();
+
+        this.render();
+      });
+    });
+
+
+    this.element.querySelectorAll(['.strike', '.resource', '.action']).forEach((details, index) => {
+      if (this.openDetails.includes(index)) {
+        details.setAttribute('open', '');
+      }
+    });
   }
 
-  async _onRender() {
-    super._onRender();
-    this.#dragDrop.forEach((d) => d.bind(this.element));
-  }
-
-  async _image(event) {
+  static async _image(event) {
     event.preventDefault();
     let file = await new FilePicker({
       type: "image",
@@ -171,6 +228,69 @@ export class UtopiaSpecialistTalentSheet extends api.HandlebarsApplicationMixin(
         });
       },
     }).browse();
+  }
+
+  static async _addItem(event) {
+    const type = this.element.querySelector('#addOptions').selectedOptions[0].value;
+    console.log("Creating ", type);
+    switch (type) {
+      case 'resource':
+        this._addResource();
+        break;
+      case 'action':
+        this._addAction();
+        break;
+    }
+
+    this.render();
+  }
+
+  async _addResource() {
+    const resources = this.item.system.resources;
+    const resource = {
+      name: `New Resource ${resources.length + 1}`,
+    }
+    resources.push(resource);
+
+    await this.item.update({
+      [`system.resources`]: resources,
+    });
+  }
+
+  static async _deleteResource(event) {
+    const index = event.target.dataset.index;
+
+    const resources = this.item.system.resources;
+
+    resources.splice(index, 1);
+
+    await this.item.update({
+      [`system.resources`]: resources,
+    });
+  }
+
+  async _addAction() {
+    const actions = this.item.system.actions;
+    const action = {
+      name: `${this.item.name} ${actions.length === 0 ? '' : actions.length + 1}`,
+    }
+    actions.push(action);
+
+    await this.item.update({
+      [`system.actions`]: actions,
+    });
+  }
+
+  static async _deleteAction(event) {
+    const index = event.target.dataset.index;
+
+    const actions = this.item.system.actions;
+
+    actions.splice(index, 1);
+
+    await this.item.update({
+      [`system.actions`]: actions,
+    });
   }
 
   /**

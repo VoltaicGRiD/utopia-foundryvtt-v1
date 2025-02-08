@@ -1,6 +1,7 @@
 {
   "UTOPIA": {
     "Actor": {
+      "rest": "Rest",
       "Tabs": {
         "details": "Details",
         "actions": "Actions",
@@ -30,7 +31,7 @@
       "Traits": {
         "agi": { "long": "Agility", "abbr": "agi" },
         "str": { "long": "Strength", "abbr": "str" },
-        "int": { "long": "Intelligence", "abbr": "int" },
+        "int": { "long": "Intellect", "abbr": "int" },
         "wil": { "long": "Will", "abbr": "wil" },
         "dis": { "long": "Display", "abbr": "dis" },
         "cha": { "long": "Charm", "abbr": "cha" }
@@ -76,6 +77,11 @@
         "constitution": "Constitution",
         "endurance": "Endurance",
         "effervescence": "Effervescence"
+      },
+      "Travel": {
+        "land": "Land Travel",
+        "water": "Water Travel",
+        "air": "Air Travel"
       },
       "Actions": {
         "block": "Block",
@@ -165,7 +171,21 @@
 
       "openDataOverride": "Override Actor Data",
 
-      "roll": "Roll Dialog"
+      "roll": "Roll Dialog",
+      "compendiumBrowser": "Utopia Compendium Browser"
+    },
+    "CompendiumBrowser": {
+      "dragDropHint": "Drag and Drop onto your Character Sheet to add an item",
+      "Filters": {
+        "category": "Category",
+        "rarity": "Rarity",
+        "value": "Value",
+        "rarityPoints": "Rarity Points",
+        "flavor": "Item Flavor",
+        "description": "Description",
+        "saveFilter": "Save Filter"
+        
+      }
     },
     "Dialog": {
       "dealDamage": "Deal Damage",
@@ -193,6 +213,7 @@
       "talents": "Talents",
       "specialistTalents": "Specialist Talents",
       "unlock": "Make all talents available (GM Only)",
+      "search": "Search",
       "filter": "Filter",
       "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
       "kineticForce": "Kinetic",
@@ -202,11 +223,13 @@
       "favorite": "Favorites",
       "available": "Available",
       "locked": "Locked",
+      "travel": "Travel Speeds",
       "submitMaterials": "Submit Materials",
       "artificeDisabled": "You must have a valid talent to be able to artifice",
       "equipItem": "Equip Item",
       "overrideWarning": "Warning! Making any changes here will disable automatic data updates from changes to the document. This should only be done if you know what you're doing! Some changes may even break an actor.",
-      "overrideReEnable": "To re-enable automatic updates, set the 'utopia' 'override' flag to an empty array (square brackets) on the document"
+      "overrideReEnable": "To re-enable automatic updates, set the 'utopia' 'override' flag to an empty array (square brackets) on the document",
+      "remaining": "Remaining"
     },
 
     "Checks": {
@@ -219,6 +242,13 @@
       "description": "Description",
       "gmSecrets":"GM Secrets",
       "quantity": "Quantity",
+      "Tabs": {
+        "attributes": "Attributes",
+        "description": "Description",
+        "effects": "Effects",
+        "quirks": "Quirks",
+        "paperdoll": "Paper Doll"
+      },
       "Archetype": {
         "unknownDepiction": "Unknown depiction",
         "color": "Color",
@@ -256,6 +286,7 @@
           "effects": "Effects"
         },
         "quantity": "Quantity",
+        "rarityPoints": "Rarity Points",
         "value": "Value",
         "Price": {
           "silver": "Silver",
@@ -309,6 +340,7 @@
           "name": "Name",
           "category": "Category",
           "Category": {
+            "generic": "Generic",
             "trait": "Trait",
             "damage": "Damage",
             "macro": "Macro"
@@ -375,7 +407,7 @@
             "Trait": {
               "agi": "Agility",
               "str": "Strength",
-              "int": "Intelligence",
+              "int": "Intellect",
               "wil": "Will",
               "dis": "Display",
               "cha": "Charm"
@@ -528,6 +560,13 @@
           "variables": "Variables"
         }
       },
+      "SpecialistTalent": {
+        "requirements": "Requirements",
+        "attributeRequirements": "Attribute Requirements",
+        "talentRequirements": "Talent Requirements",
+        "talentTreeRequirements": "Talent Tree Requirements",
+        "speciesRequirements": "Species Requirements"
+      },
       "General": {
         "category": "Category",
         "Categories": {
@@ -555,18 +594,30 @@
         }
       },
       "Actions": {
+        "attributes": "Action Attributes",
         "Tabs": {
           "attributes": "Attributes",
           "description": "Description",
           "rules": "Rules"
         },
         "formula": "Formula",
+        "stamina": "Stamina",
         "type": "Type",
         "Type": {
-          "standard": "Standard",
+          "turn": "Turn",
           "interrupt": "Interrupt",
           "special": "Special",
           "free": "Free"
+        },
+        "category": "Category",
+        "Category": {
+          "attack": "Attack",
+          "utility": "Utility",
+          "defense": "Defense",
+          "healing": "Healing",
+          "movement": "Movement",
+          "special": "Special",
+          "macro": "Macro"
         },
         "source": "Source",
         "cost": "Cost",
@@ -574,70 +625,79 @@
           "inherit": "Inherit from source",
           "double": "Double inherited cost"
         },
-        "rules": "Rules",
-        "trigger": "Trigger",
-        "recharge": "Recharge",
-        "stamina": "Stamina",
-        "requirements": "Requirements",
-        "target": "Target",
-        "Trigger": {
-          "manual": "Manual",
-          "shpDamage": "On SHP Damage",
-          "shpDamageDealt": "On SHP Damage Dealt",
-          "dhpDamage": "On DHP Damage",
-          "dhpDamageDealt": "On DHP Damage Dealt",
-          "heal": "On Heal",
-          "condition": "On Condition Gained",
-          "conditionLost": "On Condition Lost",
-          "myTurn": "Beginning of My Turn",
-          "enemyTurn": "Beginning of Enemy Turn",
-          "allyTurn": "Beginning of Ally Turn",
-          "tokenMovement": "On Token Movement",
-          "startRound": "Start of Round",
-          "endRound": "End of Round",
-          "staminaLost": "On Stamina Lost",
-          "contest": "During Contest",
-          "test": "During Test",
-          "focusLost": "On Focus Lost",
-          "concentrationLost": "On Concentration Lost",
-          "block": "On Block",
-          "dodge": "On Dodge",
-          "spellCast": "When Spell Cast",
-          "craftStarted": "On Craft Started",
-          "craftFinished": "On Craft Finished",
-          "forageStarted": "On Forage Started",
-          "forageFinished": "On Forage Finished",
-          "restStarted": "On Rest Started",
-          "restFinished": "On Rest Finished",
-          "awareness": "Blind Awareness Test"
-        },
-        "triggerPrompt": "Prompt before running",
-        "triggerArguments": "Trigger arguments",
-        "Recharge": {
-          "immediate": "Immediately",
-          "myTurn": "Start of My Turn",
-          "turn": "Start of Every Turn",
-          "round": "Start of Every Round",
-          "minute": "Every Minute",
-          "hour": "Every Hour",
-          "day": "Every Day",
-          "week": "Every Week"
-        },
-        "Target": {
-          "none": "None",
+        "resources": "Resources",
+        "resource": "Resource",
+        "consumed": "Amount Consumed",
+        "macro": "Macro",
+        "actor": "Macro Target",
+        "Actor": {
+          "default": "Default",
           "self": "Self",
-          "ally": "Ally",
-          "enemy": "Enemy",
-          "any": "Any"
+          "target": "Target"
+        },
+        "template": "Template",
+        "Template": {
+          "none": "None",
+          "sbt": "Small Blast (2m)",
+          "mbt": "Medium Blast (4m)",
+          "lbt": "Large Blast (8m)",
+          "xbt": "Extra-Large Blast (12m)",
+          "cone": "Cone",
+          "line": "Line"
         }
       }, 
       "Species": {
-        "blockQuantity": "Block dice quantity",
-        "dodgeQuantity": "Dodge dice quantity",
-        "blockSize": "Block dice size",
-        "dodgeSize": "Dodge dice size",
-        "subtraits": "Granted subtraits",
-        "languages": "Granted languages"
+        "quirkPoints": "Current Quirk Points (QP)",
+        "quirks": "Quirks",
+        "controlledByQuirks": "Use Quirks? (see 'Quirks' tab above)",
+        "notControlledByQuirks": "This species is not currently controlled by quirks",
+        "block": "Block",
+        "dodge": "Dodge",
+        "blockDodge": "Block / Dodge (1 QP per quantity)",
+        "quantity": "#",
+        "size": "Size",
+        "sizeBlockQuirks": "d4",
+        "sizeDodgeQuirks": "d12",
+        "stats": "Stats",
+        "statsQuirks": "Stats (1 QP per 1)",
+        "constitution": "Constitution",
+        "endurance": "Endurance",
+        "effervescence": "Effervescence",
+        "travel": "Travel Speeds",
+        "land": "Land",
+        "water": "Water",
+        "air": "Air",
+        "communication": "Communication",
+        "languageChoices": "Choices (#)",
+        "languages": "Languages",
+        "communicationTypes": "Types",
+        "Subtraits": {
+          "trade": "Trade 3 specific subtraits for 2 choice points",
+          "legend": "Character Subtraits",
+          "legendQuirks": "Character Subtraits (1 QP per subtrait)",
+          "hint": "3 specific subtraits = 2 choice points for a total of 3 QP",
+          "specific": "Specific Subtraits",
+          "points": "Choice Points"
+        },
+        "Communication": {
+          "mute": "Mute",
+          "telepathy": "Telepathy",
+          "speech": "Speech"
+        },
+        "paperDoll": "Paper Doll",
+        "PaperDoll": {
+          "head": "Head",
+          "neck": "Neck",
+          "back": "Back",
+          "chest": "Chest",
+          "waist": "Waist",
+          "hands": "Hands",
+          "ring": "Ring",
+          "feet": "Feet",
+          "toggleAugmentable": "Toggle the ability to augment this slot (red = unaugmentable)",
+          "toggleEquippable": "Toggle the ability to equip any item this slot (red = unequippable)",
+          "toggleSpecialty": "Toggle this slot requiring armor be customized before being able to be equipped (red = requires customized armor)"
+        }
       },
       "Talents": {
         "Tabs": {
@@ -683,7 +743,8 @@
       "paralysis": "Paralysis",
       "unconscious": "Unconscious",
       "concentration": "Concentration",
-      "focus": "Focus"
+      "focus": "Focus",
+      "fatigue": "Fatigue"
     }, 
     "Settings": {
       "autoRollAttacks": "Bypass attack roll dialog",
@@ -718,7 +779,8 @@
       "allowPlayerArchetypeEditHint": "When enabled, players can edit their own character's archetype, otherwise only the GM can edit the archetype",
       "Buttons": {
         "twitch": "Twitch Integration",
-        "discord": "Utopia Discord Server"
+        "discord": "Utopia Discord Server",
+        "compendiumBrowser": "Utopia Compendium Browser"
       },
 			"Twitch": {
         "channel": "Twitch Channel",
@@ -786,7 +848,8 @@
       "consumable": "Consumable",
       "trinket": "Trinket",
       "weapon": "Weapon",
-      "general": "General Purpose Item"
+      "general": "General Purpose Item",
+      "quirk": "Quirk"
     },
     "ActiveEffect": {
       "temporary": "Temporary",

@@ -1,11 +1,11 @@
 import { buildTraitData } from '../../helpers/actorTraits.mjs';
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
-import { gatherSpellFeatures } from '../../helpers/gatherSpells.mjs';
-import { UtopiaActorComponentsSheet } from '../other/components-sheet.mjs';
-import { UtopiaDataOverrideSheet } from '../other/data-override-sheet.mjs';
-import { UtopiaOptionsSheet } from '../other/options-sheet.mjs';
-import { UtopiaSpellcraftSheet } from '../other/spellcraft-sheet.mjs';
-import { UtopiaSubtraitSheetV2 } from '../other/subtrait-sheet.mjs';
+import { UtopiaActorComponentsSheet } from './components-sheet.mjs';
+import { UtopiaDataOverrideSheet } from './data-override-sheet.mjs';
+import { UtopiaTalentTreeSheet } from '../utility/talent-tree-sheet.mjs';
+import { UtopiaCompendiumBrowser } from '../utility/compendium-browser.mjs';
+import { UtopiaSpellcraftSheet } from '../utility/spellcraft-sheet.mjs';
+import { UtopiaSubtraitSheetV2 } from './subtrait-sheet.mjs';
 const { api, sheets } = foundry.applications;
 
 /**
@@ -50,6 +50,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       toggleEffect: this._toggleEffect,
       openTalent: this._openTalent,
       roll: this._onRoll,
+      rest: this._onRest,
       selectTalents: this._selectTalent,
       selectSubtraits: this._selectSubtraits,
       selectSpecies: this._selectSpecies,
@@ -69,6 +70,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       deleteResource: this._deleteResource,
       equipItem: this._equipItem,
       openDataOverride: this._openDataOverride,
+      openCompendium: this._openCompendium,
     },
     form: {
       submitOnChange: true,
@@ -127,6 +129,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       case 'npc':
         options.parts.push('biography', 'npcDetails', 'gear', 'spells', 'actions', 'effects');
         break;
+    }
+  }
+
+  _preClose(options) {
+    for (const child of this.children) {
+      child.close();
     }
   }
 
@@ -353,7 +361,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         specialist.push(i);
       }
       else if (i.type === 'action') {
-        if (i.system.type === 'Standard')
+        if (i.system.type === 'turn')
           turnActions.push(i);
         else 
           interruptActions.push(i);
@@ -580,8 +588,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       return;
 
     // Create a new options sheet for species selection
-    let newSheet = new UtopiaOptionsSheet();
-    newSheet.actor = this.actor;
+    //let newSheet = new UtopiaOptionsSheet();
+    //newSheet.actor = this.actor;
+    let newSheet = new UtopiaCompendiumBrowser();
+    newSheet.render(true);
 
     // Retrieve the species options from the 'utopia.species' compendium
     let pack = game.packs.get('utopia.species');
@@ -599,7 +609,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   }
 
   static async _selectTalent(event, target) {
-    this.actor.openTalentTree();
+    const sheet = new UtopiaTalentTreeSheet();
+    sheet.actor = this.actor;
+    sheet.render(true);
   }
 
   async _dockNewWindow(window, options = {}) {
@@ -670,8 +682,22 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     this._dockNewWindow(UtopiaDataOverrideSheet, {document: this.actor});
   }
 
+  static async _openCompendium(event, target) {
+    const category = target.dataset.category;
+    const sheet = new UtopiaCompendiumBrowser();
+    sheet.render({
+      filter: {}, 
+      category: category,
+      force: true,
+    })
+  }
+
   static async _toggleComponents(event, target) {
-    this._dockNewWindow(UtopiaActorComponentsSheet);
+    this._dockNewWindow(UtopiaActorComponentsSheet, {document: this.actor});
+  }
+
+  static async _togglePaperdoll(event, target) {
+    this._dockNewWindow(UtopiaPaperdollSheet, {document: this.actor});
   }
 
   _onPosition(position) {
@@ -877,6 +903,11 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         const terms = item.terms || undefined;
         if (item) return item.roll(terms);
       }
+      else if (dataset.rollType == 'talent') {
+        const talent = dataset.talent;
+        const item = this.actor.items.get(talent);
+        return item.roll();
+      }
       else if (dataset.rollType == 'trait') {
         return await this.actor.performCheck(dataset.trait);
       }
@@ -910,6 +941,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     return roll;
   }
 
+  static async _onRest(event, target) {
+    this.actor.rest();
+  }
+
   static async _openSpellcraft(event, target) {
     const sheet = new UtopiaSpellcraftSheet();
     sheet.actor = this.actor;
@@ -929,7 +964,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       return this.actor.items.get()
     }
 
-    const docRow = target.closest('li[data-document-class]');
+    const docRow = target.closest('li[data-document-class]') || target.closest('tr');
     if (docRow.dataset.documentClass === 'Item') {
       return this.actor.items.get(docRow.dataset.itemId);
     } else if (docRow.dataset.documentClass === 'ActiveEffect') {
@@ -1120,10 +1155,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
     if (!this.actor.isOwner) return false;
     const item = await Item.implementation.fromDropData(data);
-
-    if (item.type === "species") {
-      this.actor.setSpecies(item);
-    }
 
     // Handle item sorting within the same Actor
     if (this.actor.uuid === item.parent?.uuid)

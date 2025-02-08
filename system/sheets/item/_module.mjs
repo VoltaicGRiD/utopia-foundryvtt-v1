@@ -1,15 +1,13 @@
 export { UtopiaGeneralItemSheet } from "./general-item-sheet.mjs";
-export { UtopiaActionSheet } from "./action-sheet.mjs";
 export { UtopiaSpeciesSheet } from "./species-sheet.mjs";
 
 export { UtopiaSpellSheet } from "./spell-sheet.mjs";
 export { UtopiaSpellFeatureSheet } from "./spell-feature-sheet.mjs";
 
+export { UtopiaActionSheet } from "./action-sheet.mjs";
+
 export { UtopiaTalentSheet } from "./talent-sheet.mjs";
 export { UtopiaSpecialistTalentSheet } from "./specialist-talent-sheet.mjs";
-
-export { UtopiaArtificeMaterialSheet } from "./material-sheet.mjs";
-export { UtopiaArtificeFeatureSheet } from "./feature-sheet.mjs";
 
 export { UtopiaArmorSheet } from "./gear/armor.mjs";
 export { UtopiaArtifactSheet } from "./gear/artifact.mjs";

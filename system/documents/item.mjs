@@ -1,7 +1,4 @@
-import { UtopiaAttackSheet } from "../sheets/other/attack-sheet.mjs";
-import { rangeTest } from '../helpers/rangeTest.mjs';
 import { UtopiaChatMessage } from "./chat-message.mjs";
-import { UtopiaSpellVariableSheet } from "../sheets/item/spell-variable-sheet.mjs";
 
 /**
  * Extend the basic Item with custom modifications specific to the Utopia system.
@@ -53,81 +50,22 @@ export class UtopiaItem extends Item {
     }
   }
 
-  _prepareDiceOptions(itemData) {
-    if (itemData.system.formula === undefined || itemData.system.formula === "") return;
-    const formula = itemData.system.formula;
-    let newFormula = formula;
-    const stacks = itemData.stacks || 1;
-    const variables = Object.entries(itemData.system.variables).map(v => {
-      return {[v[1].name]: v[1].value};
-    });
-    const data = foundry.utils.mergeObject(this.getRollData(), variables);
-    const roll = new Roll(formula, data);
-    const dice = roll.terms.filter(term => term instanceof Die);
-    const diceOptions = {};
-    dice.forEach((die, index) => {
-      const max = die.faces * (die.number * stacks);
-      newFormula = roll.formula.replace(die.formula, `${die.number * stacks}d${die.faces}`);
-      
-      // We only allow dice in the standard array:
-      // 4, 6, 8, 10, 12, 20, 100
-      // We need to calculate the various other options
-      const options = [4, 6, 8, 10, 12, 20, 100].filter(f => max % f === 0);
-      diceOptions[index] = [];
-
-      options.forEach(option => {
-        let count = max / option;
-        diceOptions[index].push(`${count}d${option}`);
-      });
-    });
-
-    itemData.formulaOptions = diceOptions;
-
-    if (itemData.customFormula === false) {
-      if (game.settings.get("utopia", "diceRedistribution")) {
-        let size = game.settings.get("utopia", "diceRedistributionSize");
-        if (size === 1) {
-          itemData.currentFormula = 0;
-        }
-        else if (size === 2) {
-          itemData.currentFormula = diceOptions[0].length - 1;
-        } 
-        else {
-          let min = 0;
-          let max = diceOptions[0] ? diceOptions[0].length - 1 : 0;
-          // Get the middle option
-          itemData.currentFormula = Math.floor((min + max) / 2);
-        }
-      }
-    }
-  }
-
-  _prepareSpellFeatureData(itemData) {
-    if (itemData.type !== "spellFeature") return;
-
-    if (itemData.system.variables["stacks"]) {
-      itemData.stacks = itemData.system.variables["stacks"].value;
-      itemData.variables.stacks.value = itemData.stacks;
-    }
-
-    if (itemData.system.formula !== undefined && itemData.system.formula !== "") {
-      let formula = itemData.system.formula;
-      let roll = new Roll(formula, this.getRollData());
-      itemData.currentFormula = roll.formula;
-      let dice = roll.terms.filter(term => term instanceof Die);
-    }
-  }
-
-  _prepareSpellData(itemData) {
-    
-  }
-
   updateDefaultSpellFeatureIcon() {
     let img = "systems/utopia/assets/icons/artistries/array.svg";
 
     this.update({
       img: img
     })
+  }
+
+  addToContainer(item) {
+    if (this.system.isContainer()) {
+      const totalCapacity = this.system.container.capacity;
+      const containerItems = this.system.container.items;
+      const itemSlots = containerItems.map(i => foundry.utils.parseUuid)
+
+      // TODO: Finish implementation
+    }
   }
 
   /**
@@ -223,7 +161,7 @@ export class UtopiaItem extends Item {
 
       this.actions = actions;
 
-      const template = 'systems/utopia/templates/chat/weapon-card.hbs';
+      const template = 'systems/utopia/templates/chat/item-card.hbs';
 
       const templateData = {
         item: this,
@@ -259,6 +197,41 @@ export class UtopiaItem extends Item {
       });
 
       console.log(this);
+
+      return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+    }
+
+    if (this.type === "specialistTalent" || this.type === "talent") {
+      const description = await TextEditor.enrichHTML(
+        this.system.description,
+        {
+          secrets: this.isOwner,
+          rollData: this.getRollData(),
+          relativeTo: this.actor ?? this,
+        }
+      )
+
+      const template = 'systems/utopia/templates/chat/item-card.hbs';
+      const templateData = {
+        item: this,
+        system: this.system,
+        flavor: description,
+        actor: this.actor || {}
+      }
+
+      const html = await renderTemplate(template, templateData);
+
+      const chatData = await UtopiaChatMessage.applyRollMode({
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        speaker: UtopiaChatMessage.getSpeaker({ actor: this.actor, item: this }),
+        content: html,
+        flags: { utopia: { item: this._id } },
+        system: {
+          item: this,
+          actor: this.actor,
+          templateData: templateData,
+        }
+      });
 
       return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
     }
@@ -319,6 +292,84 @@ export class UtopiaItem extends Item {
     return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
   }
 
+  async performAction(action, message) {
+    console.log("Performing action: ", action, "for message: ", message);
+
+    if (action.resource.length > 0) {
+      var resource = this.system.resources.find(r => r.name === action.resource);
+      if (!resource) {
+        resource = this.actor.resources.find(r => r.name === action.resource);
+      }
+      if (!resource) {
+        ui.notifications.error(`Could not find resource ${action.resource} for action ${action.name}`);
+        return;
+      }
+      const cost = action.consumed;
+      const current = resource.amount;
+      const max = resource.max.total;
+
+      if (current < cost) {
+        ui.notifications.error(`You do not have enough ${resource.name} to perform this action.`);
+        return;
+      }
+      if (cost < 0 && current - cost > max) {
+        ui.notifications.error(`You cannot exceed the maximum ${resource.name} of ${max}.`);
+        return;
+      }
+      
+      resource.amount = current - cost;
+      const resources = this.system.resources.map(r => r.name === resource.name ? resource : r);
+      
+      await this.update({
+        'system.resources': resources
+      })
+    }
+
+    switch (action.category) {
+      case 'damage': 
+        const roll = await new Roll(action.formula, this.getRollData()).evaluate();
+        const terms = roll.terms.map(t => { return {total: t.total, flavor: t.flavor, ...t}});
+        const rarity = this.rarity ?? "common";
+        const total = roll.total;
+        const result = roll.result;
+        const flavor = action.flavor;
+        const tooltip = await roll.getTooltip();
+
+        const template = 'systems/utopia/templates/chat/damage-card.hbs';
+        const templateData = {
+          item: this,
+          flavor: flavor,
+          rarity: rarity,
+          formula: action.formula,
+          total: total,
+          result: result,
+          tooltip: tooltip,
+          action: action,
+          finalized: true
+        }
+
+        const html = await renderTemplate(template, templateData);
+
+        const chatData = await UtopiaChatMessage.applyRollMode({
+          style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+          speaker: UtopiaChatMessage.getSpeaker({ actor: this.actor, item: this }),
+          content: html,
+          flags: { utopia: { item: this._id } },
+          system: {
+            item: this,
+            actor: this.actor,
+            damage: total,
+            action: action,
+            dice: roll.dice,
+            terms: terms,
+            templateData: templateData,
+          }
+        });
+
+        return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false }); 
+    }
+  }
+
   async toMessage(event, options) {
     if (!this.actor) {
       ui.notifications.error(`Cannot create message for unowned item ${this.name}`)
@@ -356,32 +407,5 @@ export class UtopiaItem extends Item {
 
     return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
   }
-
-  async createVariable() {
-    if (this.type === "spellFeature") {
-      const variables = await UtopiaItem.createDocuments([{name: "Variable", type: "variable"}]);
-      variables.forEach(async variable => {
-        console.log(variable);
-        const existing = Object.keys(this.system.variables);
-        if (existing.includes(variable._id)) {
-          return false;
-        }
-        await this.update({
-          [`system.variables.${variable._id}`]: variable,
-        });
-      });
-
-      console.log(this);
-      return true;
-    }
-    return false;
-  }
-
-  async deleteVariable(variableId) {
-    await UtopiaItem.deleteDocuments([variableId]);
-    await this.update({
-      [`system.variables.-=${variableId}`]: null,
-    });
-  } 
 }
 

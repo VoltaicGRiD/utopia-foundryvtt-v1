@@ -45,7 +45,15 @@ export async function rangeTest(item, target) {
       // The range is specified as close/far (e.g., "30/60").
 
       // Split the range into close and far values.
-      let [closeRange, farRange] = range.split('/').map(r => parseInt(r));
+      let [closeRange, farRange] = 0;
+
+      if (range.close && range.far) {
+        closeRange = range.close
+        farRange = range.far
+      }
+      else {
+        [closeRange, farRange] = range.split('/').map(r => parseInt(r));
+      }
 
       // Get the roll data for the item.
       let rollData = item.getRollData();

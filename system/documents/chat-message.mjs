@@ -1,4 +1,3 @@
-import { UtopiaTrigger } from "../helpers/runTrigger.mjs";
 import { UtopiaUserVisibility } from "../helpers/userVisibility.mjs";
 import { UtopiaItem } from "./item.mjs";
 
@@ -11,6 +10,15 @@ export class UtopiaChatMessage extends ChatMessage {
     const $html = await super.getHTML();
     const html = $html[0];
 
+    let openItem = html.querySelectorAll('[data-action="openItem"]');
+    for (let button of openItem) {
+      button.addEventListener('click', async (event) => {
+        const actor = this.getActor();
+        const item = actor.items.get(this.getFlag('utopia', 'item'));
+        item.sheet.render(true);
+      });
+    }
+
     let strikeButtons = html.querySelectorAll('button[data-action="performStrike"]');
     for (let button of strikeButtons) {
       button.addEventListener('click', async (event) => {
@@ -21,11 +29,23 @@ export class UtopiaChatMessage extends ChatMessage {
       });
     }
 
+    let actionButtons = html.querySelectorAll('button[data-action="performAction"]');
+    for (let button of actionButtons) {
+      button.addEventListener('click', async (event) => {
+        const actor = this.getActor();
+        const item = actor.items.get(this.getFlag('utopia', 'item'));
+        const action = this.system.item.system.actions[button.dataset.index] ?? null;
+        item.performAction(action, this);
+      });
+    }
+
     let damageDialog = html.querySelectorAll('button[data-action="damageDialog"]');
     for (let button of damageDialog) {
       button.addEventListener('click', async (event) => {
         const actor = this.getActor();
         const item = actor.items.get(this.getFlag('utopia', 'item'));
+        const targets = game.user.targets;
+        if (targets.size === 0) return ui.notifications.error("You must target a token to deal damage.");
         const target = game.user.targets.values().next().value.actor;
         console.log(this);
 
@@ -91,7 +111,6 @@ export class UtopiaChatMessage extends ChatMessage {
               );
             },
           });
-          dialog.element.querySelectorAll("data-action[")
           await dialog.render(true);
         }
       });
@@ -112,13 +131,20 @@ export class UtopiaChatMessage extends ChatMessage {
       button.addEventListener('click', async (event) => {
         const actor = this.getActor();
         const item = actor.items.get(this.getFlag('utopia', 'item'));
-        const damage = item.system.damage;
-        const source = item;
-        const type = "damage";
+        const terms = this.system.terms;
         const targets = game.user.targets;
+        for (let term of terms) {
+          const data = {
+            actor: actor,
+            item: item,
+            damage: term.total,
+            source: item,
+            type: term.flavor,
+          }
 
-        for (let target of targets) {
-          await target.actor.applyDamage(damage, source, type);
+          for (let target of targets) {
+            await target.actor.applyDamage(data, data.source, data.type);
+          }
         }
       });
     }

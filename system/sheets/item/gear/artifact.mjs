@@ -51,10 +51,15 @@ export class UtopiaArtifactSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/generic/effects.hbs",
     }
   };
+  
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     
     options.parts = ["header", "tabs", "attributes", "description", "effects"];
+  }
+
+  _preClose(_options) {
+    super.submit();
   }
 
   async _prepareContext(options) {

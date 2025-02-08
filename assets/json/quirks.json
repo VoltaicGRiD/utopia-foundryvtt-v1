@@ -1,0 +1,515 @@
+[
+  {
+    "Name": "Talker (Language)",
+    "Sub-Category": "Languages",
+    "Quirk Points": 1,
+    "Description": "This species instead knows 2 simple languages of the player\u2019s choice.",
+    "Attributes": [
+      {
+        "communication.languages.choice": 2
+      }
+    ]
+  },
+  {
+    "Name": "Quiet (Language)",
+    "Sub-Category": "Languages",
+    "Quirk Points": -1,
+    "Description": "This species instead knows any 1 language of the player\u2019s choice.",
+    "Attributes": [
+      {
+        "communication.languages.choice": 1
+      }
+    ]
+  },
+  {
+    "Name": "Mute (Language)",
+    "Sub-Category": "Languages",
+    "Quirk Points": -2,
+    "Description": "This species cannot verbally speak.",
+    "Attributes": [
+      {
+        "communication.types": ["mute"]
+      }
+    ]
+  },
+  {
+    "Name": "Telepathy (Language)",
+    "Sub-Category": "Languages",
+    "Quirk Points": 2,
+    "Description": "This species can communicate telepathically with creatures that share a language with it, a maximum range of 10 meters.",
+    "Attributes": [
+      {
+        "communication.types": ["speech", "telepathy"]
+      }
+    ]
+  },
+  {
+    "Name": "Odd Shape 1(Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -1,
+    "Description": "Armor and/or artifacts worn in 2 specific slot types that it can utilize must be made custom in order for this species to equip. Armor may be customized over 1 hour using a tool set. Only creatures able to craft items of a similar rarity may customize items this way.",
+    "Attributes": []
+  },
+  {
+    "Name": "Odd Shape 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -2,
+    "Description": "Armor and/or artifacts worn in 4 specific slot types that it can utilize must be made custom in order for this species to equip. Armor may be customized over 1 hour using a tool set. Only creatures able to craft items of a similar rarity may customize items this way.",
+    "Attributes": []
+  },
+  {
+    "Name": "Odd Shape 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -3,
+    "Description": "Armor and/or artifacts worn in 8 specific slot types that it can utilize must be made custom in order for this species to equip. Armor may be customized over 1 hour using a tool set. Only creatures able to craft items of a similar rarity may customize items this way.",
+    "Attributes": []
+  },
+  {
+    "Name": "Basic Flight 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 2,
+    "Description": "This species has 2 meters of Air travel. If it\r\nflies for any amount of time during a turn, it\r\nloses 3stamina.",
+    "Attributes": [
+      {
+        "travel.air": 2,
+        "travel.air.stamina": 3
+      }
+    ]
+  },
+  {
+    "Name": "Basic Flight 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 2,
+    "Description": "This species has 3 meters of Air travel. If it flies for any amount of time during a turn, it loses 5 stamina.",
+    "Attributes": [
+      {
+        "travel.air": 3,
+        "travel.air.stamina": 5
+      }
+    ]
+  },
+  {
+    "Name": "Basic Flight 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 2,
+    "Description": "This species has 5 meters of Air travel. If it flies for any amount of time during a turn, it loses 8 stamina.",
+    "Attributes": [
+      {
+        "travel.air": 5,
+        "travel.air.stamina": 8
+      }
+    ]
+  },
+  {
+    "Name": "Advanced Flight 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "This species has an Air travel equal to half its Speed score. If it flies for any amount of time during a turn, it loses 4 stamina.",
+    "Attributes": [
+      {
+        "travel.air": "@travel.speed / 2",
+        "travel.air.stamina": 4
+      }
+    ]
+  },
+  {
+    "Name": "Advanced Flight 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 5,
+    "Description": "This species has an Air travel equal to its Speed score. If it flies for any amount of time during a turn, it loses 4 stamina.",
+    "Attributes": [
+      {
+        "travel.air": "@travel.speed",
+        "travel.air.stamina": 4
+      }
+    ]
+  },
+  {
+    "Name": "Advanced Flight 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 7,
+    "Description": "This species has an Air travel equal to double its Speed score. If it flies for any amount of time during a turn, it loses 4 stamina.",
+    "Attributes": [
+      {
+        "travel.air": "@travel.speed * 2",
+        "travel.air.stamina": 4
+      }
+    ]
+  },
+  {
+    "Name": "Multiheaded 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 2,
+    "Description": "This species has 2 functional heads. You have 2 head slots and 2 neck slots.",
+    "Attributes": [
+      {
+        "travel.air": "travel.speed / 2",
+        "travel.air.stamina": 4
+      }
+    ]
+  },
+  {
+    "Name": "Multiheaded 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 4,
+    "Description": "This species has 3 functional heads. You have 3 head slots and 3 neck slots.",
+    "Attributes": [
+      {
+        "evolution.heads": 3
+      }
+    ]
+  },
+  {
+    "Name": "Multiheaded 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 6,
+    "Description": "This species has 4 functional heads. You have 4 head slots and 4 neck slots.",
+    "Attributes": [
+      {
+        "evolution.heads": 4
+      }
+    ]
+  },
+  {
+    "Name": "Anomalous 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -1,
+    "Description": "One specific armor slot types cannot be augmented on this species.",
+    "Attributes": [
+      {
+        "armors.augmentable.locked.count": 1
+      }
+    ]
+  },
+  {
+    "Name": "Anomalous 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -2,
+    "Description": "Two specific armor slot types cannot be augmented on this species.",
+    "Attributes": [
+      {
+        "armors.unaugmentable.count": 2
+      }
+    ]
+  },
+  {
+    "Name": "Anomalous 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -3,
+    "Description": "Three specific armor slot types cannot be augmented on this species.",
+    "Attributes": [
+      {
+        "armors.unaugmentable.count": 3
+      }
+    ]
+  },
+  {
+    "Name": "Anomalous 4 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -4,
+    "Description": "All specific armor slot types cannot be augmented on this species.",
+    "Attributes": [
+      {
+        "armors.unaugmentable.head": true,
+        "armors.unaugmentable.neck": true,
+        "armors.unaugmentable.back": true,
+        "armors.unaugmentable.chest": true,
+        "armors.unaugmentable.waist": true,
+        "armors.unaugmentable.hands": true,
+        "armors.unaugmentable.ring": true,
+        "armors.unaugmentable.feet": true
+      }
+    ]
+  },
+  {
+    "Name": "Exo Body 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -2,
+    "Description": "Armor cannot be worn in one specific armor slot types on this species. This does not affect augmentable spaces.",
+    "Attributes": [
+      {
+        "armors.unequippable.count": 1
+      }
+    ]
+  },
+  {
+    "Name": "Exobody 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -3,
+    "Description": "Armor cannot be worn in two specific armor slot types on this species. This does not affect augmentable spaces.",
+    "Attributes": [
+      {
+        "armors.unequippable.count": 2
+      }
+    ]
+  },
+  {
+    "Name": "Exo Body 3 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -4,
+    "Description": "Armor cannot be worn in three specific armor slot types on this species. This does not affect augmentable spaces.",
+    "Attributes": [
+      {
+        "armors.unequippable.count": 3
+      }
+    ]
+  },
+  {
+    "Name": "Exo Body 4 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -5,
+    "Description": "Armor cannot be worn in any specific armor slot types on this species. This does not affect augmentable spaces.",
+    "Attributes": [
+      {
+        "armors.unequippable.all": true
+      }
+    ]
+  },
+  {
+    "Name": "Handsy 1 (Evolution)",
+    "Sub-Category": "Hands",
+    "Quirk Points": -6,
+    "Description": "This species has 0 functional hands. You have 0 hand slots and 0 ring slots.",
+    "Attributes": [
+      {
+        "evolution.hands": 0
+      }
+    ]
+  },
+  {
+    "Name": "Handsy 2 (Evolution)",
+    "Sub-Category": "Hands",
+    "Quirk Points": -3,
+    "Description": "This species has 1 functional hands. You have 0 hand slots and 0 ring slots.",
+    "Attributes": [
+      {
+        "evolution.hands": 1
+      }
+    ]
+  },
+  {
+    "Name": "Handsy 3 (Evolution)",
+    "Sub-Category": "Hands",
+    "Quirk Points": 4,
+    "Description": "This species has 4 functional hands. You have 2 hand slots and 2 ring slots.",
+    "Attributes": [
+      {
+        "evolution.hands": 4
+      }
+    ]
+  },
+  {
+    "Name": "Handsy 4 (Evolution)",
+    "Sub-Category": "Hands",
+    "Quirk Points": 8,
+    "Description": "This species has 6 functional hands. You have 3 hand slots and 3 ring slots.",
+    "Attributes": [
+      {
+        "evolution.hands": 6
+      }
+    ]
+  },
+  {
+    "Name": "Bioluminescent (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 0,
+    "Description": "This species naturally glows in the dark.",
+    "Attributes": []
+  },
+  {
+    "Name": "Artificial 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 5,
+    "Description": "This species isn\u2019t considered a Construct and does not need to breathe, eat, drink water, or sleep. It cannot be inflicted with points of Fatigue or Unconsciousness. When resting, it remains conscious but Paralyzed.",
+    "Attributes": []
+  },
+  {
+    "Name": "Artificial 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 6,
+    "Description": "This species is considered a Construct and does not need to breathe, eat, drink water, or sleep. It cannot be inflicted with points of Fatigue or Unconsciousness. When resting, it remains conscious but Paralyzed.",
+    "Attributes": []
+  },
+  {
+    "Name": "Breathless (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -5,
+    "Description": "This species cannot take the Deep Breath action.",
+    "Attributes": []
+  },
+  {
+    "Name": "Bio Core 1 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This species may spend 6 turn actions to convert 1 kilogram of organic material into a Crude Material Component.",
+    "Attributes": []
+  },
+  {
+    "Name": "Bio Core 2 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This species may spend 6 turn actions to convert 1 kilogram of organic material into a Crude Refinement Component.",
+    "Attributes": []
+  },
+  {
+    "Name": "Bio Core 3 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This species may spend 6 turn actions to convert 1 kilogram of organic material into a Crude Power Component.",
+    "Attributes": []
+  },
+  {
+    "Name": "Alternate Power (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 0,
+    "Description": "This species may spend 2 turn actions and consume a Power component of any rarity to regain 1 stamina.",
+    "Attributes": []
+  },
+  {
+    "Name": "Swimmer 1 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This species has a Water travel equal to its Speed score.",
+    "Attributes": [
+      {
+        "travel.water": "@travel.speed"
+      }
+    ]
+  },
+  {
+    "Name": "Swimmer  2 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "This species has a Water travel equal to double its Speed score.",
+    "Attributes": [
+      {
+        "travel.water": "@travel.speed * 2"
+      }
+    ]
+  },
+  {
+    "Name": "Mover 1 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -2,
+    "Description": "This species has a Land travel equal to half its Speed score.",
+    "Attributes": [
+      {
+        "travel.land": "@travel.speed / 2"
+      }
+    ]
+  },
+  {
+    "Name": "Mover 2 (Capability)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 5,
+    "Description": "This species has a Land travel equal to double its Speed score.",
+    "Attributes": [
+      {
+        "travel.land": "@travel.speed * 2"
+      }
+    ]
+  },
+  {
+    "Name": "Sizeable 1 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": -2,
+    "Description": "The number of slots this species can carry is equal to double times its Strength score.\nOptional: You are considered Small",
+    "Attributes": [
+      {
+        "carryCapacity": "@str.total * 2"
+      }
+    ]
+  },
+  {
+    "Name": "Sizeable 2 (Evolution)",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "The number of slots this species can carry is equal to fifteen times its Strength score.\nOptional: You are considered Large.",
+    "Attributes": [
+      {
+        "carryCapacity": "@str.total * 15"
+      }
+    ]
+  },
+  {
+    "Name": "Impressionable",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This species may have talents that copy the talents of another species, costing the same number of talent points plus 1.",
+    "Attributes": [
+      {
+        "talents.copy": "species"
+      }
+    ]
+  },
+  {
+    "Name": "Transform 1",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "This species may spend 6 turn actions to transform to or from its second form for as long as it remains focused. While in its second form it gains the following effects( It loses effects from all equipped items,  Its weaponless attacks deal double damage, each defense is increased by 2, its Block Rating is increased by 2d4, its Dodge Rating is increased by 2d12.)",
+    "Attributes": [
+      {
+        "transform.cost": 6,
+        "transform.type": "wild"
+      }
+    ]
+  },
+  {
+    "Name": "Transform 2",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "This species may spend 6 turn actions to transform to or from its second form for as long as it remains focused. While in its second form, it gains one of these specific effects: It gains up to 3 quirks, minimum 1 negative, worth a total of 4 QP.",
+    "Attributes": [
+      {
+        "transform.cost": 6,
+        "transform.type": "enhanced"
+      }
+    ]
+  },
+  {
+    "Name": "Amphibious",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 1,
+    "Description": "This creature can breathe in both air and water.",
+    "Attributes": []
+  },
+  {
+    "Name": "Substantial 1",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 2,
+    "Description": "This species\u2019 Constitution, Endurance, and Effervescence each have a maximum of 12.",
+    "Attributes": [
+      {
+        "stats.constitution.max": 12,
+        "stats.endurance.max": 12,
+        "stats.effervescence.max": 12
+      }
+    ]
+  },
+  {
+    "Name": "Substantial 2",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 3,
+    "Description": "This species\u2019 Constitution, Endurance, and Effervescence each have a maximum of 15.",
+    "Attributes": [
+      {
+        "stats.constitution.max": 15,
+        "stats.endurance.max": 15,
+        "stats.effervescence.max": 15
+      }
+    ]
+  },
+  {
+    "Name": "Substantial 3",
+    "Sub-Category": "Subtraits",
+    "Quirk Points": 4,
+    "Description": "This species\u2019 Constitution, Endurance, and Effervescence each have a maximum of 18.",
+    "Attributes": [
+      {
+        "stats.constitution.max": 18,
+        "stats.endurance.max": 18,
+        "stats.effervescence.max": 18
+      }
+    ]
+  }
+]

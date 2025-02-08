@@ -35,6 +35,12 @@ export default class UtopiaGeneralItem extends UtopiaItemBase {
       "legendary": "UTOPIA.Item.General.Rarity.legendary",
       "mythical": "UTOPIA.Item.General.Rarity.mythical",
     }});
+
+    
+    schema.container = new fields.SchemaField({
+      capacity: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      items: new fields.ArrayField(new fields.DocumentUUIDField({ entityClass: "Item" })),
+    });
     
     return schema;
   }

@@ -4,6 +4,89 @@
     <button type="button" class="tab-button" data-action="showPaperDoll" disabled>Paper Doll</button>
   </div>
 
+  <h3 class="gear-list-header">Armor</h3>
+  <ol class='items-list'>
+    {{!-- <li class='item flexrow items-header'>
+      <div class='item-name'>{{localize 'Name'}}</div>
+      <div class="item-category">{{localize 'Category'}}</div>
+      <div class='item-formula'>{{localize 'Rollq Formula'}}</div>
+      <div class='item-controls'>
+        <a
+          class='item-control item-create'
+          title='{{localize "DOCUMENT.Create" type='Item'}}'
+          data-type='item'
+        >
+          <i class='fas fa-plus'></i>
+          {{localize 'DOCUMENT.New' type='item'}}
+        </a>
+      </div>
+    </li> --}}
+    {{#each armor as |item id|}}
+      <li class='item flexrow' data-item-id='{{item._id}}' data-document-class="Item" data-document-type="gear" {{#if item.system.rarityColor}}style="border-left: 4px solid {{item.system.rarityColor}};"{{/if}}>
+        <div class='item-name'>
+          <a class='rollable' data-roll-type='item' data-action="roll">
+            <div class='item-image'>
+              <img
+                src='{{item.img}}'
+                title='{{item.name}}'
+                width='24'
+                height='24'
+              />
+            </div>
+            <span>{{item.name}}</span>
+          </a>
+        </div>
+        <div class='item-formula item-prop'>
+          <div class="item-formula">
+            {{#each terms as |term|}}
+              {{#if term.redistributions}}
+                <div class="term" data-type="dice">
+                  <select name="terms.{{term.id}}.redistribution" class="redistribution" data-term-index="{{@index}}">
+                    {{#each term.redistributions as |redistribution|}}
+                      <option value="{{redistribution.expression}}" data-redistribution-index="{{@index}}" {{#if (eq @index ../index)}}selected{{/if}}>{{redistribution.expression}} ({{redistribution.flavor}})</option>
+                    {{/each}}
+                  </select>
+                </div>
+              {{else}}
+                <div class="term" data-type="operator">
+                  <span>{{term.expression}}</span>
+                </div>
+              {{/if}}
+            {{/each}}
+          </div>
+        </div>
+        <div class='item-controls'>
+          <a 
+            data-action="submitComponents"
+            class='item-control item-craft'
+            title='{{localize "UTOPIA.Descriptions.submitMaterials"}}'
+          >
+            <i class="fas fa-hammer"></i>
+          </a>
+          <a
+            data-action="viewDoc"
+            class='item-control item-edit'
+            title='{{localize "DOCUMENT.Update" type='Item'}}'
+          >
+            <i class='fas fa-edit'></i>
+          </a>
+          <a
+            data-action="deleteDoc"
+            class='item-control item-delete'
+            title='{{localize "DOCUMENT.Delete" type='Item'}}'
+          >
+            <i class='fas fa-trash'></i>
+          </a>
+        </div>
+      </li>
+      <li class="item-props" {{#if item.system.rarityColor}}style="border-left: 4px solid {{item.system.rarityColor}};"{{/if}}>
+        {{#each item.system.props as |prop|}}
+          <div class="item-prop">{{prop}}</div>
+        {{/each}}
+      </li>
+    {{/each}}
+  </ol>
+
   <h3 class="gear-list-header">Gear</h3>
   <ol class='items-list'>
     {{!-- <li class='item flexrow items-header'>

@@ -20,6 +20,10 @@ export default class UtopiaCharacter extends UtopiaActorBase {
   }
 
   static defineSchema() {
+    const traitKeys = () => {
+      return ["agi", "str", "int", "wil", "dis", "cha", "spd", "dex", "pow", "for", "eng", "mem", "res", "awa", "por", "stu", "app", "lan"];
+    }
+  
     const fields = foundry.data.fields;
     const requiredInteger = { required: true, nullable: false, integer: true };
     const requiredPositiveInteger = { required: true, nullable: false, integer: true, min: 0 };
@@ -99,8 +103,26 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
     // TODO: Add validation that the strings are one of the traits or subtraits
     // Favors and Disfavors
-    schema.favors = new fields.ArrayField(new fields.StringField());
-    schema.disfavors = new fields.ArrayField(new fields.StringField());
+    schema.favors = new fields.ArrayField(new fields.StringField({
+      validate: (value) => {
+        traitKeys().includes(value);
+      }
+    }));
+    schema.favorLocks = new fields.ArrayField(new fields.StringField({
+      validate: (value) => {
+        traitKeys().includes(value);
+      }
+    }));
+    schema.disfavors = new fields.ArrayField(new fields.StringField({
+      validate: (value) => {
+        traitKeys().includes(value);
+      }
+    }));
+    schema.disfavorLocks = new fields.ArrayField(new fields.StringField({
+      validate: (value) => {
+        traitKeys().includes(value);
+      }
+    }));
 
     // Talent Trees
     schema.trees = new fields.ArrayField(new fields.StringField());
@@ -251,11 +273,13 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       resourceId: new fields.StringField({required: true, nullable: false, initial: foundry.utils.randomID(16)}),
       name: new fields.StringField({required: true, nullable: false}),
       description: new fields.StringField({required: true, nullable: false, initial: ""}),
-      max: new fields.NumberField({...requiredInteger, initial: 0}),
+      max: new fields.SchemaField({
+        formula: new fields.StringField({required: true, nullable: false, initial: "0"})
+      }),
       amount: new fields.NumberField({...requiredInteger, initial: 0}),
       secret: new fields.BooleanField({required: true, initial: false, gmOnly: true}),
-      source: new fields.BooleanField({required: true, initial: false}),
-      propagateToActor: new fields.BooleanField({required: true, initial: true}),
+      source: new fields.BooleanField({required: false, nullable: true}),
+      propagateToActor: new fields.BooleanField({required: true, initial: false}),
       recoverAmount: new fields.NumberField({...requiredInteger, initial: 0}),
       recoverInterval: new fields.StringField({required: true, nullable: false, initial: "none", choices: {
         "none": "UTOPIA.Item.Gear.Resource.RecoverInterval.none",
@@ -266,17 +290,17 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         "session": "UTOPIA.Item.Gear.Resource.RecoverInterval.session",
       }}),
     });
-    schema.resources = new fields.ArrayField(schema.resource);
+    schema.actorResources = new fields.ArrayField(schema.resource);
 
     schema.equipmentSlots = new fields.SchemaField({
-      head: new fields.DocumentIdField({ required: false, nullable: true, }),
-      neck: new fields.DocumentIdField({ required: false, nullable: true, }),
-      back: new fields.DocumentIdField({ required: false, nullable: true, }),
-      chest: new fields.DocumentIdField({ required: false, nullable: true, }),
-      waist: new fields.DocumentIdField({ required: false, nullable: true, }),
-      hands: new fields.DocumentIdField({ required: false, nullable: true, }),
-      ring: new fields.DocumentIdField({ required: false, nullable: true, }),
-      feet: new fields.DocumentIdField({ required: false, nullable: true, }),
+      head: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      neck: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      back: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      chest: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      waist: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      hands: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      ring: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      feet: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
     });
     schema.slotCapacity = new fields.SchemaField({
       bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
@@ -285,12 +309,79 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     schema.slots = new fields.NumberField({ ...requiredInteger, initial: 0 });
 
     schema.travel = new fields.SchemaField({
-      land: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      air: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      water: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      land: new fields.SchemaField({
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      }),
+      air: new fields.SchemaField({
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      }),
+      water: new fields.SchemaField({
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      })
     });
 
+    schema.evolution = new fields.SchemaField({
+      heads: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      feet: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      hands: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+    });
+
+    const armors = () => new fields.SchemaField({
+      count: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      all: new fields.BooleanField({ required: true, initial: false }),
+      head: new fields.BooleanField({ required: true, initial: false }),
+      neck: new fields.BooleanField({ required: true, initial: false }),
+      back: new fields.BooleanField({ required: true, initial: false }),
+      chest: new fields.BooleanField({ required: true, initial: false }),
+      waist: new fields.BooleanField({ required: true, initial: false }),
+      hands: new fields.BooleanField({ required: true, initial: false }),
+      ring: new fields.BooleanField({ required: true, initial: false }),
+      feet: new fields.BooleanField({ required: true, initial: false }),
+    });
+    
+    schema.armors = new fields.SchemaField({
+      unaugmentable: armors(),
+      unequippable: armors(),
+      specialty: armors(),
+    });
+
+    schema.communication = new fields.SchemaField({
+      language: new fields.SchemaField({
+        choices: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        languages: new fields.SetField(new fields.StringField(), { initial: [] }),
+      }),
+      types: new fields.SetField(new fields.StringField({
+        required: true,
+        nullable: false,
+        choices: {
+          "mute": "UTOPIA.Item.Species.Communication.mute",
+          "speech": "UTOPIA.Item.Species.Communication.speech",
+          "telepathy": "UTOPIA.Item.Species.Communication.telepathy",
+        }
+      }, {
+        required: true,
+        nullable: false,
+        initial: new Set(["speech"]),
+      })),
+    });
+    
+    schema.accuracy = new fields.StringField({
+      required: true,
+      nullable: false,
+      initial: "dex",
+      validate: (value) => {
+        traitKeys().includes(value);
+      }
+    })
+
     return schema;
+  }
+
+  migrateData(source) {
+    const resources = source.resources || [];
+    for (let r of resources) {
+      r.source = null;
+    }
   }
 
   /**
@@ -302,7 +393,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
    * available both inside and outside of character sheets (such as if an actor
    * is queried and has a roll executed directly from it).
    */
-  prepareDerivedData() {
+  async prepareDerivedData() {
     const actorData = this;
     const overrideFlags = foundry.utils.flattenObject(this.parent.getFlag('utopia', 'overrides') || {});
 
@@ -353,6 +444,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
     this.species = this.parent.items.filter(i => i.type === "species")[0] ?? null;
 
+    var speciesProcessed = false;
     const species = {
       con: 0,
       end: 0,
@@ -365,7 +457,24 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         size: 0,
         quantity: 0,
       },
-      subtraits: undefined
+      subtraits: undefined,
+      subtraitGifts: 0,
+      armors: {
+        unequippable: {},
+        unaugmentable: {},
+        speciality: {},
+      }
+      travel: {
+        land: {},
+        water: {},
+        air: {}
+      },
+      evolution: {
+        heads: 0,
+        feet: 0,
+        hands: 0
+      },
+      languages: []
     }
 
     this.points.talent.total = this.points.talent.bonus + this.experience.level;
@@ -386,6 +495,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     let artistries = [];
 
     for (let i of this.parent.items) {
+      console.log(i);
+
       if (i.type === 'talent') {
         bodyScore += parseInt(i.system.points.body);
         mindScore += parseInt(i.system.points.mind);
@@ -403,17 +514,31 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }
 
       if (i.type === "species") {
-        species.con += i.system.constitution;
-        species.end += i.system.endurance;
-        species.eff += i.system.effervescence;
-        species.block.quantity += i.system.block.quantity;
-        species.block.size += i.system.block.size;
-        species.dodge.quantity += i.system.dodge.quantity;
-        species.dodge.size += i.system.dodge.size;
-        species.subtraits = i.system.subtraits.map(s => s.length === 3 ? s.toLowerCase() : longToShort(s.toLowerCase()));
+        speciesProcessed = true;
+        species.con = i.system.stats.constitution.total;
+        species.end = i.system.stats.endurance.total;
+        species.eff = i.system.stats.effervescence.total;
+        species.block.quantity = i.system.block.quantity;
+        species.block.size = i.system.block.size;
+        species.dodge.quantity = i.system.dodge.quantity;
+        species.dodge.size = i.system.dodge.size;
+        species.travel.land.value = i.system.travel.land.value;
+        species.travel.land.stamina = i.system.travel.land.stamina;
+        species.travel.water.value = i.system.travel.water.value;
+        species.travel.water.stamina = i.system.travel.water.stamina;
+        species.travel.air.value = i.system.travel.air.value;
+        species.travel.air.stamina = i.system.travel.air.stamina;
+        species.evolution.heads = i.system.evolution.heads;
+        species.evolution.feet = i.system.evolution.feet;
+        species.evolution.hands = i.system.evolution.hands;
+        species.armors.unaugmentable = i.system.armors.unaugmentable;
+        species.armors.unequippable = i.system.armors.unequippable;
+        species.armors.speciality = i.system.armors.speciality;
+        species.subtraits = [...i.system.gifts.subtraits].map(s => s.length === 3 ? s.toLowerCase() : longToShort(s.toLowerCase()));
+        species.subtraitGifts = i.system.gifts.points;
       }
 
-      if (i.type === "armor") {
+      if (i.type === "armor" || i.type === "trinket" || i.type === "artifact") {
         armor.chill += i.system.chill;
         armor.energy += i.system.energy;
         armor.heat += i.system.heat;
@@ -426,6 +551,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }
     }
 
+    console.log(species);
+
     this.points.body.total = bodyScore;
     this.points.mind.total = mindScore;
     this.points.soul.total = soulScore;
@@ -434,7 +561,12 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     this.points.talent.total -= mindScore;
     this.points.talent.total -= soulScore;
 
-    this.points.gifted.value = species.subtraits ?? "" === "[Any 2 Subtraits]" ? 2 : 0;
+    if (species.subtraits === "[Any 2 Subtraits]") {
+      this.points.gifted.value = 2;
+    }
+    else {
+      this.points.gifted.value = 0;
+    }
 
     this.artistries = artistries;
 
@@ -481,6 +613,8 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     const eff = this.attributes.effervescence.total;
     const lvl = this.experience.level;
 
+    console.log(this);
+
     // Surface HP (SHP) is calculated from Body points
     this.shp.max = overrideFlags["system.shp.max"] ?? body * con + lvl;
     if (this.shp.value > this.shp.max) {
@@ -513,7 +647,6 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
       Object.keys(subtraits).forEach((k) => {
         const subtrait = subtraits[k];
-        const gifted = subtrait.gifted;
         if (species.subtraits && Array.isArray(species.subtraits) && species.subtraits.includes(k)) {
           subtrait.gifted = true;
         } 
@@ -521,22 +654,32 @@ export default class UtopiaCharacter extends UtopiaActorBase {
           if (subtrait.gifted)
             this.points.gifted.value -= 1;
         }
+        const gifted = subtrait.gifted;
         subtrait.total = subtrait.value + subtrait.bonus;
         subtrait.mod = subtraits[k].total - 4;
-        this.points.subtrait.total -= (subtrait.total - 1);
+        this.points.subtrait.total -= (subtrait.value - 1);
 
-        switch(parent) {
-          case "body":
+        switch(k) {
+          case "spd":
+          case "dex":
+          case "pow":
+          case "for":
             subtrait.max = gifted ? body * 2 : body;
             break;
-          case "mind":
+          case "eng":
+          case "mem":
+          case "awa":
+          case "res":
             subtrait.max = gifted ? mind * 2 : mind;
             break;
-          case "soul": 
+          case "por":
+          case "stu":
+          case "app":
+          case "lan":
             subtrait.max = gifted ? soul * 2 : soul;
             break;
           default:
-            subtrait.max = 99;
+            subtrait.max = 0;
             break;
         }
 
@@ -588,8 +731,32 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         break;
     }
 
+    console.log(this);
+
+    // Handle travel
+    var landValue = 0;
+    var airValue = 0;
+    var waterValue = 0;
+    
+    if (species.travel?.land?.value?.length ?? "@spd.total" !== 0)
+      landValue = (await new Roll(species.travel.land.value, this.parent.getRollData()).roll()).total;
+    if (species.travel?.air?.value?.length ?? "" !== 0)
+      airValue = (await new Roll(species.travel.air.value, this.parent.getRollData()).roll()).total;
+    if (species.travel?.water?.value?.length ?? "" !== 0)
+      waterValue = (await new Roll(species.travel.water.value, this.parent.getRollData()).roll()).total;
+    
+    this.travel.land.total = landValue + this.travel.land.bonus;
+    this.travel.air.total = airValue + this.travel.air.bonus;
+    this.travel.water.total = waterValue + this.travel.water.bonus;
+
+    // Handle evolution and armors
+    this.evolution.heads = species.evolution.heads;
+    this.evolution.feet = species.evolution.feet;
+    this.evolution.hands = species.evolution.hands;
+
     this._processFlags();
     this._processTalentTrees();
+    this._processResources();
 
     Hooks.callAll("prepareActorData", this.parent, actorData);
   }
@@ -600,6 +767,44 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
   canTake(slots) {
     return this.slotsRemaining >= slots;
+  }
+
+  async _processResources() {
+    console.log("Processing resources for actor: ", this.parent);
+
+    const items = this.parent.items;
+    this.resources = [];
+
+    items.forEach((item) => {
+      if (item.system.resources && item.system.resources.length > 0) {
+        const resources = item.system.resources;
+        resources.forEach(async (resource) => {
+          if (resource.propagateToActor) {
+            const roll = await new Roll(resource.max.formula, this.parent.getRollData()).evaluate();
+            resource.max.total = roll.total;
+          
+            this.resources.push({
+              resourceId: foundry.utils.randomID(16),
+              name: resource.name ?? "Resource",
+              description: resource.description ?? `[${item.name}]`,
+              max: {
+                total: roll.total,
+              },
+              amount: Math.min(resource.amount, roll.total) ?? 0,
+              secret: resource.secret ?? false,
+              source: item.id,
+              propagateToActor: resource.propagateToActor,
+              recoverAmount: resource.recoverAmount ?? 0,
+              recoverInterval: resource.recoverInterval ?? "none",
+            });
+          }
+        });
+      }
+    });
+
+    this.resources.push(...this.actorResources);
+
+    this.resources.sort((a, b) => { return a.name.localeCompare(b.name); });
   }
 
   async _processTalentTrees() {

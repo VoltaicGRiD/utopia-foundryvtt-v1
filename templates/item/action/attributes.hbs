@@ -1,71 +1,65 @@
-{{! Sheet Body }}
 <div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
-  <div class="action-attributes">
-    <div class="flexcol">
-
-      {{! Action type, source, and cost }}
-      <div class="grid grid-7col">
-        <div class="flexcol grid-span-2">
-          <label for="system.type">{{localize "UTOPIA.Item.Actions.type"}}</label>
-          {{formInput systemFields.type value=system.type name="system.type" localize=true}}
-        </div>
-
-        <div class="flexcol">
-          <label for="system.cost">{{localize "UTOPIA.Item.Actions.cost"}}</label>
-          {{formInput systemFields.cost value=system.cost name="system.cost" localize=true}}
-        </div>
-
-        <div class="flexcol">
-          <label for="system.stamina">{{localize "UTOPIA.Item.Actions.stamina"}}</label>
-          {{formInput systemFields.stamina value=system.stamina name="system.stamina" localize=true}}
-        </div>
-
-        <div class="flexcol grid-span-2">
-          <label for="system.recharge">{{localize "UTOPIA.Item.Actions.recharge"}}</label>
-          {{formInput systemFields.recharge value=system.recharge name="system.recharge" localize=true}}
-        </div>
-
-        <div class="flexcol">
-          <label for="system.target">{{localize "UTOPIA.Item.Actions.target"}}</label>
-          {{formInput systemFields.target value=system.target name="system.target" localize=true}}
-        </div>
-
-     
+  <div class="standard-attributes">
+    <fieldset class="attribute-set">
+      <legend>{{localize "UTOPIA.Item.Actions.attributes"}}</legend>
+      
+      <div class="form-group slim">
+        <label for="system.formula">{{localize "UTOPIA.Item.Actions.formula"}}</label>
+        {{formInput systemFields.formula name="system.formula" value=system.formula localize=true}}
       </div>
 
-      {{! Action trigger, recharge, contested, aid }}
-      <div class="grid grid-7col">
-        <div class="flexcol grid-span-3">
-          <label for="system.trigger">{{localize "UTOPIA.Item.Actions.trigger"}}</label>
-          {{formInput systemFields.triggers value=system.triggers name="system.triggers" localize=true}}
-        </div>
-
-        <div class="flexcol grid-span-2">
-          <label for="system.triggerArguments">{{localize "UTOPIA.Item.Actions.triggerArguments"}}</label>
-          {{formInput systemFields.triggerArguments value=system.triggerArguments name="system.triggerArguments" localize=true}}
-        </div>
-
-        <div class="flexcol grid-span-2">
-          <label for="system.triggerPrompt">{{localize "UTOPIA.Item.Actions.triggerPrompt"}}</label>
-          {{formInput systemFields.triggerPrompt value=system.triggerPrompt name="system.triggerPrompt" localize=true}}
-        </div>
-
+      <div class="form-group slim">
+        <label for="system.type">{{localize "UTOPIA.Item.Actions.type"}}</label>
+        {{formInput systemFields.type name="system.type" value=system.type localize=true}}
       </div>
 
-      {{! Action formula }}
-      <div class="grid grid-6col">
-
-        <div class="flexcol grid-span-3">
-          <label for="system.formula">{{localize "UTOPIA.Item.Actions.formula"}}</label>
-          {{formInput systemFields.formula value=system.formula name="system.formula" localize=true}}
-        </div>
-
-        <div class="flexcol grid-span-3">
-          <label for="system.source">{{localize "UTOPIA.Item.Actions.source"}}</label>
-          {{formInput systemFields.source value=system.source name="system.source" localize=true}}
-        </div>
-
+      <div class="form-group slim">
+        <label for="system.cost">{{localize "UTOPIA.Item.Actions.cost"}}</label>
+        {{formInput systemFields.cost name="system.cost" value=system.cost localize=true}}
       </div>
-    </div>
+
+      <div class="form-group slim">
+        <label for="system.stamina">{{localize "UTOPIA.Item.Actions.stamina"}}</label>
+        {{formInput systemFields.stamina name="system.stamina" value=system.stamina localize=true}}
+      </div>
+
+      <div class="form-group slim">
+        <label for="system.category">{{localize "UTOPIA.Item.Actions.category"}}</label>
+        {{formInput systemFields.category name="system.category" value=system.category localize=true}}
+      </div>
+    </fieldset> 
+  
+    <fieldset class="attribute-set">
+      <legend>{{localize "UTOPIA.Item.Actions.resources"}}</legend>
+
+      <div class="form-group slim">
+        <label for="system.resource">{{localize "UTOPIA.Item.Actions.resource"}}</label>
+        {{formInput systemFields.resource name="system.resource" value=system.resource localize=true}}
+      </div>
+
+      <div class="form-group slim">
+        <label for="system.consumed">{{localize "UTOPIA.Item.Actions.consumed"}}</label>
+        {{formInput systemFields.consumed name="system.consumed" value=system.consumed localize=true}}
+      </div>
+    </fieldset>
+
+    <fieldset class="attribute-set">
+      <legend>{{localize "UTOPIA.Item.Actions.macro"}}</legend>
+
+      <div class="form-group slim">
+        <label for="system.macro">{{localize "UTOPIA.Item.Actions.macro"}}</label>
+        {{formInput systemFields.macro name="system.macro" value=system.macro localize=true}}
+      </div>
+
+      <div class="form-group slim">
+        <label for="system.actor">{{localize "UTOPIA.Item.Actions.actor"}}</label>
+        {{formInput systemFields.actor name="system.actor" value=system.actor localize=true}}
+      </div>
+
+      <div class="form-group slim">
+        <label for="system.template">{{localize "UTOPIA.Item.Actions.template"}}</label>
+        {{formInput systemFields.template name="system.template" value=system.template localize=true}}
+      </div>
+    </fieldset>
   </div>
 </div>

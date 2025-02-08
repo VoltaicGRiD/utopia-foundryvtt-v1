@@ -1,4 +1,4 @@
-import { UtopiaSpellcraftSheet } from "../other/spellcraft-sheet.mjs";
+import { UtopiaSpellcraftSheet } from "../utility/spellcraft-sheet.mjs";
 
 const { api, sheets } = foundry.applications;
 
@@ -121,55 +121,14 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
         });
       });
     });
-
-    const optVariables = this.element.querySelectorAll(".feature-variable-options");
-    // optVariables.forEach(v => {
-    //   v.addEventListener("click", async (event) => {
-    //     const featureId = event.target.dataset.feature;
-    //     const variableId = event.target.dataset.variable;
-    //     const selected = this.item.system.features;
-    //     let options = selected[featureId].system.variables[variableId].options;
-    //     if (typeof options === "string") {
-    //       options = options.split(",");
-    //     };
-
-    //     let content = await renderTemplate('systems/utopia/templates/other/spellcraft/tooltip.hbs', { 
-    //       name: selected[featureId].system.variables[variableId].name,
-    //       description: selected[featureId].system.variables[variableId].description,
-    //       options: options,
-    //       selected: selected[featureId].value
-    //     });
-    //     console.log("tooltip render:", options, content);
-    //     let element = document.createElement('div');
-    //     element.innerHTML = content;
-    //     element.classList.add("spellcraft-options-sheet");
-    //     game.tooltip.activate(event.target, { direction: 'UP', cssClass: "utopia spellcraft-options-sheet", content: element });
-    //     tooltip.style.bottom = tooltip.style.bottom - 10 + "px";
-    //     tooltip.style.lineHeight = "0.5em";
-    //     tooltip.querySelectorAll("button").forEach(o => {
-    //       o.addEventListener("click", async (tooltipEvent) => {
-    //         if (!tooltipEvent.target.classList.contains("active")) {
-    //           tooltipEvent.target.classList.add("active");
-    //           tooltipEvent.target.closest("div").querySelectorAll("button").forEach(b => {
-    //             if (b !== tooltipEvent.target) {
-    //               b.classList.remove("active");
-    //             }
-    //           });
-    //           // Get closest list
-    //           const feature = selected[featureId];
-    //           const variable = feature.system.variables[variableId];
-    //           variable.value = tooltipEvent.target.innerHTML;
-    //           console.log(feature);
-    //           this.render();
-    //         }
-    //       });
-    //     });
-    //   });
-    // });
   }
 
   static async _edit(event, target) {
     let spellcraft = await new UtopiaSpellcraftSheet().render(true);
     spellcraft.addSpell(this.item);
+  }
+  
+  static async _save(event, target) {
+    super.submit();
   }
 }

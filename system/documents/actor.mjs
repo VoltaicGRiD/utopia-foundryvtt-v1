@@ -1,7 +1,5 @@
-import { isNumeric, searchTraits, shortToLong, longToShort, calculateTraitFavor, runTrigger, buildTraitData } from "../helpers/_module.mjs";
-import { UtopiaRollDialog } from "../sheets/other/roll-dialog.mjs";
-import { UtopiaSubtraitSheetV2 } from "../sheets/other/subtrait-sheet.mjs";
-import { UtopiaTalentTreeSheet } from "../sheets/other/talent-tree-sheet.mjs";
+import { isNumeric, shortToLong, calculateTraitFavor, buildTraitData } from "../helpers/_module.mjs";
+import { UtopiaRollDialog } from "../sheets/utility/roll-dialog.mjs";
 import { UtopiaChatMessage } from "./chat-message.mjs";
 
 /**
@@ -100,33 +98,48 @@ export class UtopiaActor extends Actor {
     // Process additional NPC data here.
   }
 
-  async openSubtraitSheet() {
-    let newSheet = new UtopiaSubtraitSheetV2();
-    newSheet.actor = this;
-    newSheet.keepOpen = true;
+  async rest() {
+    const resources = this.system.actorResources.filter(r => r.recoverInterval === "rest");
     
-    newSheet.render(true);
-  }
+    resources.forEach(async r => {
+      const recoverAmount = r.recoverAmount;
+      const max = r.max.total;
+      r.amount = Math.min(r.amount + recoverAmount, max);
+    });
 
-  async openTalentTree() {
-    let newSheet = new UtopiaTalentTreeSheet({actor: this});
-    newSheet.actor = this;
+    await this.update({
+      'system.shp.value': this.system.shp.max,
+      'system.stamina.value': this.system.stamina.max,
+      'system.actions.turn.value': this.system.actions.turn.max,
+      'system.actions.interrupt.value': this.system.actions.interrupt.max,
+      'system.actorResources': resources,
+    });
+
+    const items = this.items.filter(i => i.system.resources && i.system.resources.length > 0);
     
-    // Render the talent sheet
-    newSheet.render(true);
-  }
-  
+    for (const item of items) {
+      const resources = item.system.resources.filter(r => r.recoverInterval === "rest");
+      resources.forEach(async r => {
+        const recoverAmount = r.recoverAmount;
+        const max = r.max.total;
+        r.amount = Math.min(r.amount + recoverAmount, max);
+      });
 
-  async setSpecies(item) {   
-    await this.createEmbeddedDocuments("Item", [item]);
+      await item.update({
+        'system.resources': resources
+      });
+    }
   }
 
   async clearSpecies() {
     const species = this.system.species;
-    const speciesItem = this.items.filter(i => i.type === "species")[0];
+    const speciesItem = this.items.filter(i => i.type === "species");
 
-    if (speciesItem)
-      await this.deleteEmbeddedDocuments("Item", [speciesItem._id]);
+    if (speciesItem.length > 0) {
+      for (const item of speciesItem) {
+        await this.deleteEmbeddedDocuments("Item", [item._id]);
+      }
+    }
 
     await this.update({
       'system.traits.agi.subtraits.spd.gifted': false,
@@ -142,17 +155,6 @@ export class UtopiaActor extends Actor {
       'system.traits.cha.subtraits.app.gifted': false,
       'system.traits.cha.subtraits.lan.gifted': false,
     });
-  }
-
-  async levelUp() {
-    console.log("Level up: ", this.system);
-    await this.update({
-      ['system.points.talent']: this.system.points.talent + 1,
-      ['system.points.specialist']: this.system.level % 10 === 0 ? this.system.points.specialist + 1 : this.system.points.specialist,
-      ['system.points.subtrait']: this.system.points.subtrait + 1,
-      ['system.experience.level']: this.system.experience.level + 1
-    });
-    console.log("Post level up: ", this.system);
   }
 
   async finalizeRoll(roll, rollData = {}) {
@@ -323,6 +325,28 @@ export class UtopiaActor extends Actor {
       }
     }
 
+    else if (system.macro.length > 0) {
+      const macro = await fromUuid(system.macro);
+      
+      if (macro) {
+        await macro.execute({restActor: this});
+      }
+
+      const template = "systems/utopia/templates/chat/action-card.hbs";
+      const data = {
+        actor: this,
+        action: action,
+        flavor: `${this.name} performs ${action.name}!`,
+      }
+      const html = await renderTemplate(template, data);
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: this }),
+        content: html,
+        rollMode: game.settings.get('core', 'rollMode'),
+        sound: CONFIG.sounds.notification
+      })
+    }
+
     else {
       const template = "systems/utopia/templates/chat/action-card.hbs";
       const data = {
@@ -465,7 +489,7 @@ export class UtopiaActor extends Actor {
     let roll = new Roll(data.damage, this.getRollData())
     let result = await roll.roll();
     let damage = result.total;
-    let type = data.type;
+    let type = data.type.toLowerCase();
 
     type = type.toLowerCase().trim();
     let total = 0;
@@ -476,9 +500,9 @@ export class UtopiaActor extends Actor {
       total = damage - defense;
     }
 
-    if (total < 0) {
-      total = 0;
-    }
+    // if (total < 0) {
+    //   total = 0;
+    // }
 
     let shp = this.system.shp.value;
     let dhp = this.system.dhp.value;
@@ -520,26 +544,22 @@ export class UtopiaActor extends Actor {
     let shpDamageTaken = data.shpDamageTaken;
     let dhpDamageTaken = data.dhpDamageTaken;
 
-    if (source && source !== this && shpDamageTaken > 0) {
-      triggerRun = await runTrigger('SHPDamageDealt', source, this, shpDamageTaken);
-    }
-    if (source && source !== this && dhpDamageTaken > 0) {
-      triggerRun = await runTrigger('DHPDamageDealt', source, this, dhpDamageTaken);
-    }
+    // if (source && source !== this && shpDamageTaken > 0) {
+    //   triggerRun = await runTrigger('SHPDamageDealt', source, this, shpDamageTaken);
+    // }
+    // if (source && source !== this && dhpDamageTaken > 0) {
+    //   triggerRun = await runTrigger('DHPDamageDealt', source, this, dhpDamageTaken);
+    // }
 
-    if (shpDamageTaken > 0) {
-      triggerRun = await runTrigger('SHPDamageTaken', this, shpDamageTaken);
-    }
-    if (dhpDamageTaken > 0) {
-      triggerRun = await runTrigger('DHPDamageTaken', this, dhpDamageTaken);
-    }
+    // if (shpDamageTaken > 0) {
+    //   triggerRun = await runTrigger('SHPDamageTaken', this, shpDamageTaken);
+    // }
+    // if (dhpDamageTaken > 0) {
+    //   triggerRun = await runTrigger('DHPDamageTaken', this, dhpDamageTaken);
+    // }
   }
 
   async applyDamage(data, noActionResponse = false) {
-    if (data.damage < 0) {
-      this.applyHealing(data.damage, data.type, data.source);
-    }
-
     let calculatedDamage = await this.calculateDamage(data);
     console.log(calculatedDamage);
     if (!noActionResponse) {
@@ -622,7 +642,7 @@ export class UtopiaActor extends Actor {
     const templateData = {
       actor: this,
       data: await this.getRollData(),
-      content: `${this.name} takes ${total} [${data.type.capitalize()}] damage!`,
+      content: `${this.name} ${total < 0 ? 'heals' : 'takes'} ${Math.abs(total)} [${data.type.capitalize()}] damage!`,
       shp: data.shpDamageTaken,
       dhp: data.dhpDamageTaken,
     }
@@ -642,12 +662,6 @@ export class UtopiaActor extends Actor {
     } else {
       await UtopiaChatMessage.create(chatMessage, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false }); 
     }
-  }
-
-  async applyHealing(healing, type, source = undefined) {
-    this.update({
-      ['system.shp.value']: this.system.shp.value + healing
-    });
   }
 
   async performResponse(response, data) {
@@ -685,6 +699,45 @@ export class UtopiaActor extends Actor {
       blocked: true,
       blockedDamage: result.total,
       newTotal: originalData.total - result.total
+    }
+
+    const chatData = UtopiaChatMessage.applyRollMode({
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
+      content: await renderTemplate(template, templateData),
+      flags: { utopia: { item: originalData.item._id } },
+      system: {
+        total: originalData.total - result.total,
+      },
+      sound: CONFIG.sounds.dice,
+    });
+
+    return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+  }
+
+  async performDodge(data) {
+    console.log(data);
+    
+    if (!this.handleCombatActions(1, true)) return;
+
+    const formula = this.system.dodged.quantity.total + 'd' + this.system.dodged.size;
+    const roll = new Roll(formula, this.getRollData());
+    const result = await roll.roll();
+    const tooltip = await roll.getTooltip();
+
+    const originalData = data.system.templateData;
+
+    const template = "systems/utopia/templates/chat/damage-card.hbs";
+    const templateData = {
+      actor: this,
+      item: originalData.item,
+      data: this.getRollData(),
+      formula: originalData.formula,
+      total: originalData.total,
+      result: originalData.result,
+      tooltip: originalData.tooltip,
+      dodgeded: result.total >= originalData.total,
+      dodgededRoll: result.total,
     }
 
     const chatData = UtopiaChatMessage.applyRollMode({

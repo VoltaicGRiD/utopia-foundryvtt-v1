@@ -1,7 +1,7 @@
 export const traits = [
   'agility',
   'strength',
-  'intelligence',
+  'intellect',
   'will',
   'display',
   'charm',
@@ -49,7 +49,7 @@ export const traitShortNames = {
   'str': 'strength',
   'pow': 'power',
   'for': 'fortitude',
-  'int': 'intelligence',
+  'int': 'Intellect',
   'eng': 'engineering',
   'mem': 'memory',
   'wil': 'will',
@@ -75,7 +75,7 @@ export const traitLongNames = {
   'strength': 'str',
   'power': 'pow',
   'fortitude': 'for',
-  'intelligence': 'int',
+  'intellect': 'int',
   'engineering': 'eng',
   'memory': 'mem',
   'will': 'wil',
@@ -165,7 +165,10 @@ data.dex = {
   icon: 'fas fa-hand-sparkles',    // FA Pro (alternative to fa-hand-paper)
   color: '#007A7A',
   mod: actor.system?.traits.agi.subtraits.dex.mod ?? 0,
+  bonus: actor.system?.traits.agi.subtraits.dex.bonus ?? 0,
+  value: actor.system?.traits.agi.subtraits.dex.value ?? 0,
   total: actor.system?.traits.agi.subtraits.dex.total ?? 0,
+  max: actor.system?.traits.agi.subtraits.dex.max ?? 0,
   gifted: actor.system?.traits.agi.subtraits.dex.gifted ?? false,
   trait: data.agi
 };
@@ -177,7 +180,10 @@ data.spd = {
   icon: 'fas fa-tachometer-alt',
   color: '#009999',
   mod: actor.system?.traits.agi.subtraits.spd.mod ?? 0,
+  bonus: actor.system?.traits.agi.subtraits.spd.bonus ?? 0,
+  value: actor.system?.traits.agi.subtraits.spd.value ?? 0,
   total: actor.system?.traits.agi.subtraits.spd.total ?? 0,
+  max: actor.system?.traits.agi.subtraits.spd.max ?? 0,
   gifted: actor.system?.traits.agi.subtraits.spd.gifted ?? false,
   trait: data.agi
 };
@@ -199,7 +205,10 @@ data.pow = {
   icon: 'fas fa-bolt-lightning',
   color: '#AF1C1C',
   mod: actor.system?.traits.str.subtraits.pow.mod ?? 0,
+  bonus: actor.system?.traits.str.subtraits.pow.bonus ?? 0,
+  value: actor.system?.traits.str.subtraits.pow.value ?? 0,
   total: actor.system?.traits.str.subtraits.pow.total ?? 0,
+  max: actor.system?.traits.str.subtraits.pow.max ?? 0,
   gifted: actor.system?.traits.str.subtraits.pow.gifted ?? false,
   trait: data.str
 };
@@ -211,16 +220,19 @@ data.for = {
   icon: 'fas fa-shield-halved',
   color: '#BF3232',
   mod: actor.system?.traits.str.subtraits.for.mod ?? 0,
+  bonus: actor.system?.traits.str.subtraits.for.bonus ?? 0,
+  value: actor.system?.traits.str.subtraits.for.value ?? 0,
   total: actor.system?.traits.str.subtraits.for.total ?? 0,
+  max: actor.system?.traits.str.subtraits.for.max ?? 0,
   gifted: actor.system?.traits.str.subtraits.for.gifted ?? false,
   trait: data.str
 };
 
-// INTELLIGENCE GROUP (Purples)
+// Intellect GROUP (Purples)
 data.int = {
-  name: 'Intelligence',
+  name: 'Intellect',
   short: 'int',
-  // "fa-lightbulb" is fine, but Pro offers "fa-brain-circuit" as a futuristic intelligence symbol
+  // "fa-lightbulb" is fine, but Pro offers "fa-brain-circuit" as a futuristic Intellect symbol
   icon: 'fas fa-brain-circuit',  // FA Pro
   color: '#3D0F4C',
   mod: actor.system?.traits.int.mod ?? 0,
@@ -234,7 +246,10 @@ data.eng = {
   icon: 'fas fa-screwdriver-wrench',  // FA Pro
   color: '#58196E',
   mod: actor.system?.traits.int.subtraits.eng.mod ?? 0,
+  bonus: actor.system?.traits.int.subtraits.eng.bonus ?? 0,
+  value: actor.system?.traits.int.subtraits.eng.value ?? 0,
   total: actor.system?.traits.int.subtraits.eng.total ?? 0,
+  max: actor.system?.traits.int.subtraits.eng.max ?? 0,
   gifted: actor.system?.traits.int.subtraits.eng.gifted ?? false,
   trait: data.int
 };
@@ -245,7 +260,10 @@ data.mem = {
   icon: 'fas fa-brain',  // Distinct from "fa-brain-circuit"
   color: '#722286',
   mod: actor.system?.traits.int.subtraits.mem.mod ?? 0,
+  bonus: actor.system?.traits.int.subtraits.mem.bonus ?? 0,
+  value: actor.system?.traits.int.subtraits.mem.value ?? 0,
   total: actor.system?.traits.int.subtraits.mem.total ?? 0,
+  max: actor.system?.traits.int.subtraits.mem.max ?? 0,
   gifted: actor.system?.traits.int.subtraits.mem.gifted ?? false,
   trait: data.int
 };
@@ -266,7 +284,10 @@ data.res = {
   icon: 'fas fa-bullseye',
   color: '#22661D',
   mod: actor.system?.traits.wil.subtraits.res.mod ?? 0,
+  bonus: actor.system?.traits.wil.subtraits.res.bonus ?? 0,
+  value: actor.system?.traits.wil.subtraits.res.value ?? 0,
   total: actor.system?.traits.wil.subtraits.res.total ?? 0,
+  max: actor.system?.traits.wil.subtraits.res.max ?? 0,
   gifted: actor.system?.traits.wil.subtraits.res.gifted ?? false,
   trait: data.wil
 };
@@ -277,7 +298,10 @@ data.awa = {
   icon: 'fas fa-eye',
   color: '#2F8A28',
   mod: actor.system?.traits.wil.subtraits.awa.mod ?? 0,
+  bonus: actor.system?.traits.wil.subtraits.awa.bonus ?? 0,
+  value: actor.system?.traits.wil.subtraits.awa.value ?? 0,
   total: actor.system?.traits.wil.subtraits.awa.total ?? 0,
+  max: actor.system?.traits.wil.subtraits.awa.max ?? 0,
   gifted: actor.system?.traits.wil.subtraits.awa.gifted ?? false,
   trait: data.wil
 };
@@ -298,7 +322,10 @@ data.por = {
   icon: 'fas fa-theater-masks',
   color: '#224A70',
   mod: actor.system?.traits.dis.subtraits.por.mod ?? 0,
+  bonus: actor.system?.traits.dis.subtraits.por.bonus ?? 0,
+  value: actor.system?.traits.dis.subtraits.por.value ?? 0,
   total: actor.system?.traits.dis.subtraits.por.total ?? 0,
+  max: actor.system?.traits.dis.subtraits.por.max ?? 0,
   gifted: actor.system?.traits.dis.subtraits.por.gifted ?? false,
   trait: data.dis
 };
@@ -309,7 +336,10 @@ data.stu = {
   icon: 'fas fa-user-ninja',
   color: '#2A5C8D',
   mod: actor.system?.traits.dis.subtraits.stu.mod ?? 0,
+  bonus: actor.system?.traits.dis.subtraits.stu.bonus ?? 0,
+  value: actor.system?.traits.dis.subtraits.stu.value ?? 0,
   total: actor.system?.traits.dis.subtraits.stu.total ?? 0,
+  max: actor.system?.traits.dis.subtraits.stu.max ?? 0,
   gifted: actor.system?.traits.dis.subtraits.stu.gifted ?? false,
   trait: data.dis
 };
@@ -331,7 +361,10 @@ data.app = {
   icon: 'fas fa-thumbs-up',
   color: '#9B2E6E',
   mod: actor.system?.traits.cha.subtraits.app.mod ?? 0,
+  bonus: actor.system?.traits.cha.subtraits.app.bonus ?? 0,
+  value: actor.system?.traits.cha.subtraits.app.value ?? 0,
   total: actor.system?.traits.cha.subtraits.app.total ?? 0,
+  max: actor.system?.traits.cha.subtraits.app.max ?? 0,
   gifted: actor.system?.traits.cha.subtraits.app.gifted ?? false,
   trait: data.cha
 };
@@ -342,7 +375,10 @@ data.lan = {
   icon: 'fas fa-language',
   color: '#BD3987',
   mod: actor.system?.traits.cha.subtraits.lan.mod ?? 0,
+  bonus: actor.system?.traits.cha.subtraits.lan.bonus ?? 0,
+  value: actor.system?.traits.cha.subtraits.lan.value ?? 0,
   total: actor.system?.traits.cha.subtraits.lan.total ?? 0,
+  max: actor.system?.traits.cha.subtraits.lan.max ?? 0,
   gifted: actor.system?.traits.cha.subtraits.lan.gifted ?? false,
   trait: data.cha
 };

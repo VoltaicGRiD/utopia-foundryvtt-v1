@@ -1,0 +1,8 @@
+{
+  "todo-tree.tree.scanMode": "open files",
+  "javascript.suggest.completeJSDocs": true,
+  "[javascript]": {
+    "javascript.preferences.importModuleSpecifier": "project-relative",
+    "files.autoSave": "onWindowChange"
+  }
+}
