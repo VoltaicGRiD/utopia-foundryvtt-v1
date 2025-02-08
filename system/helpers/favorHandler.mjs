@@ -1,4 +1,4 @@
-import { shortToLong, longToShort } from "./traitNames.mjs"
+import { shortToLong, longToShort } from "./actorTraits.mjs"
 
 export const calculateTraitFavor = (trait, disfavors, favors) => {
   let short = trait;
@@ -9,30 +9,25 @@ export const calculateTraitFavor = (trait, disfavors, favors) => {
   } else {
     long = shortToLong(trait);
   }
-  
-  let favorKeys = Object.keys(favors);
-  let disfavorKeys = Object.keys(disfavors);
 
   let netFavor = 0;
   let disfavor = 0;
   let favor = 0;
 
-  if (favorKeys.includes(long)) {
-    netFavor += favors[long];
-    favor++;
-  }
-  if (favorKeys.includes(short)) {
-    netFavor += favors[short];
-    favor++;
+  for (let key of favors) {
+    console.log(key, short, long, key == short, key == long);
+    if (key == short || key == long) {
+      netFavor += 1;
+      favor += 1;
+    }
   }
 
-  if (disfavorKeys.includes(long)) {
-    netFavor -= disfavors[long];
-    disfavor++;
-  }
-  if (disfavorKeys.includes(short)) {
-    netFavor -= disfavors[short];
-    disfavor++;
+  for (let key of disfavors) {
+    console.log(key, short, long, key == short, key == long);
+    if (key == short || key == long) {
+      netFavor -= 1;
+      disfavor += 1;
+    }
   }
 
   return [netFavor, disfavor, favor];

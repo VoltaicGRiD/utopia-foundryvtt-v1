@@ -14,7 +14,7 @@
         <h4>{{localize trigger}} - Trigger Response</h4>
       {{/if}}
       {{#each actions as |action|}}
-        <button class="action-button" data-action="action" data-action-id="{{action._id}}" data-actor="{{actor._id}}">
+        <button type="button" class="action-button" data-action="action" data-action-id="{{action._id}}" data-actor="{{actor._id}}">
           {{action.name}}
           {{#if (eq action.system.type "Interrupt")}}
             <span><i class="fa-solid fa-circle-pause"></i>&nbsp;{{action.system.cost}}</span>
@@ -34,10 +34,10 @@
       
       {{#if (eq isGM true)}}
         <div class="card-buttons" data-visibility="gm">
-          <button class="action-button" data-action="edit" data-actor="{{actor._id}}" data-item="{{item._id}}">
+          <button type="button" class="action-button" data-action="edit" data-actor="{{actor._id}}" data-item="{{item._id}}">
             <i class="fas fa-edit"></i> Edit
           </button>
-          <button class="action-button" data-action="delete" data-actor="{{actor._id}}" data-item="{{item._id}}">
+          <button type="button" class="action-button" data-action="delete" data-actor="{{actor._id}}" data-item="{{item._id}}">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>

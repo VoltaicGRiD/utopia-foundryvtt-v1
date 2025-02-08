@@ -22,15 +22,15 @@
     {{/if}}
     {{#if (eq talent.available "locked")}}
       <div class="skill-requirements">
-        <button class="locked" disabled><strong>LOCKED</strong></button>
+        <button type="button" class="locked" disabled><strong>LOCKED</strong></button>
       </div>
     {{else if (eq talent.available "taken")}}
       <div class="skill-requirements">
-        <button class="taken" disabled><strong>TAKEN</strong></button>
+        <button type="button" class="taken" disabled><strong>TAKEN</strong></button>
       </div>
     {{else}}
       <div class="skill-requirements">
-        <button class="unlocked" disabled><strong>AVAILABLE</strong></button>
+        <button type="button" class="unlocked" disabled><strong>AVAILABLE</strong></button>
       </div>
     {{/if}}
   </div>

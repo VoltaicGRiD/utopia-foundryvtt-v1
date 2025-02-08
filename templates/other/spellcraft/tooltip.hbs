@@ -3,6 +3,6 @@
 <div class="grid grid-3col">
   {{#each options as |option|}}
     {{!-- if class includes 'active' button should be lit, otherwise keep standard style --}}
-    <button class="tooltip-option {{#if (eq ../selected option)}}active{{/if}}">{{option}}</button>
+    <button type="button" class="tooltip-option {{#if (eq ../selected option)}}active{{/if}}">{{option}}</button>
   {{/each}}
 </div>

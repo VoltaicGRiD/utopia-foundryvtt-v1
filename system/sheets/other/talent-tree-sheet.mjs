@@ -1,6 +1,6 @@
 const { api } = foundry.applications;
 import { addTalentToActor } from "../../helpers/addTalent.mjs";
-import { traitLongNames, traitShortNames } from "../../helpers/traitNames.mjs";
+import { traitLongNames, traitShortNames } from "../../helpers/actorTraits.mjs";
 
 /**
  * Represents the talent selection sheet for Utopia.

@@ -1,7 +1,7 @@
 <div class="flexrow">
   <nav class="tabs">
     {{#each tabs as |tab|}}
-      <button class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.tab}}" data-action="tabClick">
+      <button type="button" class="tab {{tab.cssClass}}" data-group="{{tab.group}}" data-tab="{{tab.tab}}" data-action="tabClick">
         {{localize tab.label}}
       </button>
     {{/each}}

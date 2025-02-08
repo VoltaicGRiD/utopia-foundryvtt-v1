@@ -4,7 +4,9 @@
  * @return {Promise}
  */
 export const preloadHandlebarsTemplates = async function () {
-  return loadTemplates([
-  ]);
+  return loadTemplates({
+    'actor-trait':
+      'systems/utopia/templates/actor/traits.hbs',
+  });
 };
 

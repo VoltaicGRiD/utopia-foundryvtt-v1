@@ -28,9 +28,9 @@
                 </div>
               {{else}}
                 <div class="flexrow feature-variable">
-                  <button class="feature-variable" tooltip="{{variable.content}}"></button>
+                  <button type="button" class="feature-variable" tooltip="{{variable.content}}"></button>
                   <span class="feature-variable-character">{{variable.character}}</span>
-                <button class="feature-variable" tooltip="{{variable.content}}"></button>
+                <button type="button" class="feature-variable" tooltip="{{variable.content}}"></button>
               {{/if}}
             {{/each}}
           </div>
@@ -39,8 +39,8 @@
     </ol>
   </div>
   <div class="spell-controls">
-    <button data-action="saveAndCast">{{localize UTOPIA.Spellcraft.saveAndCast}}</button>
-    <button data-action="save">{{localize UTOPIA.Spellcraft.save}}</button>
-    <button data-action="cast">{{localize UTOPIA.Spellcraft.cast}}</button>
+    <button type="button" data-action="saveAndCast">{{localize UTOPIA.Spellcraft.saveAndCast}}</button>
+    <button type="button" data-action="save">{{localize UTOPIA.Spellcraft.save}}</button>
+    <button type="button" data-action="cast">{{localize UTOPIA.Spellcraft.cast}}</button>
   </div>
 </div>  

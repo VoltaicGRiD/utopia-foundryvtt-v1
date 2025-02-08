@@ -21,10 +21,12 @@ export default class UtopiaTokenHUD extends TokenHUD {
     let data = super.getData(options);
 
     data = foundry.utils.mergeObject(data, {
-      shpBarData: this.document.shpBar,
-      dhpBarData: this.document.dhpBar,
-      staminaBarData: this.document.staminaBar,
-    });
+      shpBarData: this.document.getBarAttribute("shp", {alternative: "shp"}),
+      dhpBarData: this.document.getBarAttribute("dhp", {alternative: "dhp"}),
+      staminaBarData: this.document.getBarAttribute("stamina", {alternative: "stamina"}),
+    })
+
+    console.log(data);
 
     data.statusEffects = this._getStatusEffectChoices();
     return data;
@@ -38,10 +40,25 @@ export default class UtopiaTokenHUD extends TokenHUD {
 
     super.activateListeners(html);
 
-    html[0].addEventListener("blur", element => {
-      html.find(".attribute input").each((i, el) => {
-        this._updateAttribute(el.name, el.value.trim());
-      });
-    });
+    // Attribute Bars
+    html.find(".attribute input")
+      .click(super._onAttributeClick)
+      .keydown(super._onAttributeKeydown.bind(this))
+      .focusout(this._onAttributeUpdate.bind(this));
+
+    // html[0].addEventListener("blur", element => {
+    //   html.find(".attribute input").each(async (i, el) => {
+    //     await this._onAttributeUpdate(el);
+    //   });
+    // });
+  }
+
+  /** @override */
+  _onAttributeUpdate(event) {
+    event.preventDefault();
+    if ( !this.object ) return;
+    const input = event.currentTarget;
+    super._updateAttribute(input.name, event.currentTarget.value.trim());
+    super._render(true);
   }
 } 

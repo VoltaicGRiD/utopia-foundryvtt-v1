@@ -1,6 +1,6 @@
 import UtopiaItemBase from "../base-item.mjs";
 
-export default class UtopiaGear extends UtopiaItemBase {
+export default class UtopiaGearDeprecated extends UtopiaItemBase {
   static defineSchema() {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();

@@ -5,7 +5,7 @@
       <div class="rule">
         <div class="rule-header">
           <h4>{{name}}</h4>
-          <button class="remove-rule" data-action="remove" data-id="{{rule.id}}">
+          <button type="button" class="remove-rule" data-action="remove" data-id="{{rule.id}}">
             <i class="fas fa-trash"></i>
           </button>
         </div>
@@ -22,7 +22,7 @@
   <div class="editor-container">
     <div id="editor"></div>
   </div>
-  <button class="add-rule" data-action="add">
+  <button type="button" class="add-rule" data-action="add">
     <i class="fas fa-plus"></i>
     {{localize 'UTOPIA.Rules.AddRule'}}
   </button>

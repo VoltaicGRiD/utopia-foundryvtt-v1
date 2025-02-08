@@ -19,7 +19,7 @@ export class UtopiaGeneralItemSheet extends api.HandlebarsApplicationMixin(sheet
       submitOnChange: true,
     },
     window: {
-      title: "UTOPIA.SheetLabels.spellFeature",
+      title: "UTOPIA.SheetLabels.general",
     },
   };
 
@@ -46,6 +46,7 @@ export class UtopiaGeneralItemSheet extends api.HandlebarsApplicationMixin(sheet
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
+      gm: game.user.isGM,
       // Add the item document.
       item: this.item,
       // Adding system and flags for easier access
@@ -59,6 +60,33 @@ export class UtopiaGeneralItemSheet extends api.HandlebarsApplicationMixin(sheet
       // Add the item's parent if it exists
       parent: this.item.parent || null,
     };
+
+    context.enrichedFlavor = await TextEditor.enrichHTML(
+      this.item.system.flavor,
+      {
+        secrets: this.document.isOwner,
+        rollData: this.item.getRollData(),
+        relativeTo: this.item.actor ?? this.item,
+      }
+    );
+
+    context.enrichedDescription = await TextEditor.enrichHTML(
+      this.item.system.description,
+      {
+        secrets: this.document.isOwner,
+        rollData: this.item.getRollData(),
+        relativeTo: this.item.actor ?? this.item,
+      }
+    );
+
+    context.enrichedGMNotes = await TextEditor.enrichHTML(
+      this.item.system.gmSecrets,
+      {
+        secrets: game.user.isGM,
+        rollData: this.item.getRollData(),
+        relativeTo: this.item.actor ?? this.item,
+      }
+    );
 
     console.log(context);
 

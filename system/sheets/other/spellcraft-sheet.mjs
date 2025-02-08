@@ -79,7 +79,9 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
         f.value = "";
         f.stacks = 1;
 
-        if (game.user.flags.favorites["spellFeature"].includes(f._id)) {
+        const userFavorites = game.user.getFlag('utopia', 'favorites');
+
+        if (userFavorites && userFavorites["spellFeature"] && userFavorites["spellFeature"].includes(f._id)) {
           f.favorite = true;
         } else {
           f.favorite = false;

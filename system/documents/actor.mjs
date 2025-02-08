@@ -1,4 +1,5 @@
-import { isNumeric, searchTraits, shortToLong, longToShort, calculateTraitFavor, runTrigger } from "../helpers/_module.mjs";
+import { isNumeric, searchTraits, shortToLong, longToShort, calculateTraitFavor, runTrigger, buildTraitData } from "../helpers/_module.mjs";
+import { UtopiaRollDialog } from "../sheets/other/roll-dialog.mjs";
 import { UtopiaSubtraitSheetV2 } from "../sheets/other/subtrait-sheet.mjs";
 import { UtopiaTalentTreeSheet } from "../sheets/other/talent-tree-sheet.mjs";
 import { UtopiaChatMessage } from "./chat-message.mjs";
@@ -116,115 +117,74 @@ export class UtopiaActor extends Actor {
   }
   
 
-  async setSpecies(item) {
-    let grants = item.system;
-    console.log(grants);
+  async setSpecies(item) {   
+    await this.createEmbeddedDocuments("Item", [item]);
+  }
 
-    // Reset all gifted subtraits
-    for (let key in this.system.traits) {
-      for (let subkey in this.system.traits[key].subtraits) {
-        this.update({
-          [`system.traits.${key}.subtraits.${subkey}.gifted`]: false
-        });
-      }
-    }
-    
-    if (grants.subtraits == '[Any 2 Subtraits]') {
-      let points = this.system.points.gifted;
-      points += 2;
-      this.update({
-        ['system.points.gifted']: points
-      });
-    } else {
-      let subtraits = grants.subtraits;
-        
-      subtraits.forEach(async subtrait => {
-        // Subtraits look like: [{"value": "TRAIT"}]
-        
-        let trait = await searchTraits(this.system.traits, subtrait);
-        let formattedTrait = longToShort(subtrait.toLowerCase());
-  
-        this.update({
-          [`system.traits.${trait}.subtraits.${formattedTrait}.gifted`]: true
-        });
-      }); 
-    }
+  async clearSpecies() {
+    const species = this.system.species;
+    const speciesItem = this.items.filter(i => i.type === "species")[0];
 
-    this.update({
-      system: {
-        species: item,
-        block: {
-          quantity: grants['block'].quantity,
-          size: grants['block'].size
-        },
-        dodge: {
-          quantity: grants['dodge'].quantity,
-          size: grants['dodge'].size
-        },
-        attributes: {
-          constitution: grants['constitution'],
-          endurance: grants['endurance'],
-          effervescence: grants['effervescence']
-        }
-      }
-    })
+    if (speciesItem)
+      await this.deleteEmbeddedDocuments("Item", [speciesItem._id]);
+
+    await this.update({
+      'system.traits.agi.subtraits.spd.gifted': false,
+      'system.traits.agi.subtraits.dex.gifted': false,
+      'system.traits.str.subtraits.pow.gifted': false,
+      'system.traits.str.subtraits.for.gifted': false,
+      'system.traits.int.subtraits.eng.gifted': false,
+      'system.traits.int.subtraits.mem.gifted': false,
+      'system.traits.wil.subtraits.res.gifted': false,
+      'system.traits.wil.subtraits.awa.gifted': false,
+      'system.traits.dis.subtraits.por.gifted': false,
+      'system.traits.dis.subtraits.stu.gifted': false,
+      'system.traits.cha.subtraits.app.gifted': false,
+      'system.traits.cha.subtraits.lan.gifted': false,
+    });
   }
 
   async levelUp() {
     console.log("Level up: ", this.system);
     await this.update({
       ['system.points.talent']: this.system.points.talent + 1,
-      ['system.experience.value']: this.system.experience.value - this.system.experience.next,
-      ['system.level']: this.system.points.talent + this.system.points.body + this.system.points.mind + this.system.points.soul,
-      ['system.experience.next']: this.system.level * 100,
-      ['system.points.specialist']: this.system.level % 10 === 0 ? this.system.points.specialist + 1 : this.system.points.specialist
+      ['system.points.specialist']: this.system.level % 10 === 0 ? this.system.points.specialist + 1 : this.system.points.specialist,
+      ['system.points.subtrait']: this.system.points.subtrait + 1,
+      ['system.experience.level']: this.system.experience.level + 1
     });
     console.log("Post level up: ", this.system);
   }
 
-  async performCheck(trait, data = {}) {
-    let formulaTrait = trait;
+  async finalizeRoll(roll, rollData = {}) {
+    let template = '';
+    let templateData = {};
 
-    if (trait.length === 3) {
-      formulaTrait = shortToLong(trait);
-    }
+    if (rollData.type === "trait") {
+      const trait = rollData.trait;
+      const fullTrait = shortToLong(trait) ?? trait;
+      const gifted = rollData.rollData?.[trait]?.gifted
+        ?? this.getRollData()?.[trait]?.gifted
+        ?? false;
 
-    let defaultCheck = 3;
-    let [netFavor, disfavor, favor] = calculateTraitFavor(trait, this.system.disfavors, this.system.favors);    
-    let totalCheck = defaultCheck + netFavor;
+      console.log(roll);
 
-    let formula = `${totalCheck}d6 + @${formulaTrait}.mod`;
-
-    let rollData = this.getRollData();
-    let roll = await new Roll(formula, rollData).roll();
-    let tooltip = await roll.getTooltip();
-
-    if (data.toBeat) {
-      if (roll.total >= data.toBeat) {
-        data.success = true;
-      } else {
-        data.success = false;
+      template = 'systems/utopia/templates/chat/check-card.hbs';
+      templateData = {
+        actor: this,
+        data: this.getRollData(),
+        formula: roll.formula,
+        icon: buildTraitData(this)[trait].icon,
+        trait: fullTrait.capitalize(),
+        total: roll.total,
+        result: roll.result,
+        flavor: this.name + " performs a " + fullTrait.capitalize() + " check!",
+        tooltip: await roll.getTooltip(),
+        gifted: gifted,
+        toBeat: rollData.toBeat ?? null,
+        success: roll.total >= rollData.toBeat ?? null,
       }
     }
-    
-    let description = `${formulaTrait.capitalize()} check!`;
-    let gifted = rollData[trait].gifted || false;
-
-    const template = 'systems/utopia/templates/chat/check-card.hbs';
-    const templateData = {
-      actor: this,
-      data: rollData,
-      formula: roll.formula,
-      total: roll.total,
-      result: roll.result,
-      //flavor: data.flavor ?? description,
-      tooltip: tooltip,
-      gifted: gifted,
-      toBeat: data.toBeat ?? null,
-      success: data.success ?? null,
-      description: description
-    }
-
+        
     const chatData = UtopiaChatMessage.applyRollMode({
       style: CONST.CHAT_MESSAGE_STYLES.OTHER,
       speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
@@ -234,10 +194,33 @@ export class UtopiaActor extends Actor {
     });
 
     await UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+  }
 
-    if (data.toBeat) {
-      return data.success;
+  async performCheck(trait, data = {}) {
+    const favors = calculateTraitFavor(trait, this.system.disfavors, this.system.favors);
+    const favor = {
+      net: favors[0] ?? 0,
+      disfavor: favors[1] ?? 0,
+      favor: favors[2] ?? 0,
     }
+
+    const roll = await new Roll(`${3 + favor.net}d6 + @${trait}.mod`, this.getRollData()).evaluate();
+
+    if (data?.noDialog === true) {
+      this.finalizeRoll(roll, { type: "trait", trait: trait, toBeat: data.toBeat ?? null, success: data.success ?? null });
+      return;
+    }
+
+    new UtopiaRollDialog({}).render({
+      force: true,
+      parts: ['content'],
+      actor: this,
+      trait: trait,
+      type: 'trait',
+      roll: roll,
+      rollData: this.getRollData(),
+      favor: favor,
+    });
   }
 
   async spendStamina(cost) {
@@ -357,16 +340,42 @@ export class UtopiaActor extends Actor {
     }
   }
 
-  async handleCombatActions(action, data, chatMessage) {
-    const turns = game.combat.turns;
+  async handleCombatActions(cost, isReaction = false) {
+    const turns = game.combat?.turns ?? [];
+    if (turns.length === 0) {
+      if (isReaction) {
+        if (this.system.actions.interrupt.value >= cost) {
+          this.update({
+            ['system.actions.interrupt.value']: this.system.actions.interrupt.value - cost
+          });
+          return true;
+        }
+        else {
+          ui.notifications.error(`${this.name} does not have enough Interrupt Actions to perform this action!`);
+          return false;
+        }
+      }
+      else {
+        if (this.system.actions.turn.value >= cost) {
+          this.update({
+            ['system.actions.turn.value']: this.system.actions.turn.value - cost
+          });
+          return true;
+        }
+        else {
+          ui.notifications.error(`${this.name} does not have enough Turn Actions to perform this action!`);
+          return false;
+        }
+      }
+    }
+
     const turn = game.combat.turn;
     const combatant = turns[turn].actor;
-    const cost = action.system.cost;
 
     console.log(combatant, this, action);
 
     // It is NOT my turn, and the action is an Interrupt Action
-    if (combatant !== this && action.isReaction) {
+    if (combatant !== this && isReaction) {
       // If the actor has 1 IA, they can perform an interrupt
       if (this.system.actions.interrupt.value >= cost) {
         this.update({
@@ -391,7 +400,7 @@ export class UtopiaActor extends Actor {
     }
 
     // It is NOT my turn, and the action is a Turn Action
-    else if (combatant !== this && !action.isReaction) {
+    else if (combatant !== this && !isReaction) {
       // If the actor has 2 IA, they can perform the action
       if (this.system.actions.interrupt.value >= (cost * 2)) {
         this.update({
@@ -408,7 +417,7 @@ export class UtopiaActor extends Actor {
     }
 
     // It is my turn, and the action is a Turn Action
-    else if (combatant === this && !action.isReaction) {
+    else if (combatant === this && !isReaction) {
       // If the actor has enough TA, they can perform the action
       if (this.system.actions.turn.value >= cost) {
         this.update({
@@ -425,7 +434,7 @@ export class UtopiaActor extends Actor {
     }
 
     // It is my turn, and the action is an Interrupt Action
-    else if (combatant === this && action.isReaction) {
+    else if (combatant === this && isReaction) {
       // If the actor has 1 TA, they can perform the action
       if (this.system.actions.turn.value >= cost) {
         this.update({
@@ -463,7 +472,7 @@ export class UtopiaActor extends Actor {
     if (type === "kinetic" || type === "dhp" || type === "shp") {
       total = damage;
     } else {
-      let defense = this.system.defenses[type] || 1;
+      let defense = this.system.defenses[type].total || 1;
       total = damage - defense;
     }
 
@@ -609,7 +618,7 @@ export class UtopiaActor extends Actor {
       ['system.dhp.value']: data.newDhp
     });
 
-    const template = 'systems/utopia/templates/chat/damage-card.hbs';
+    const template = 'systems/utopia/templates/chat/damage-taken-card.hbs';
     const templateData = {
       actor: this,
       data: await this.getRollData(),
@@ -639,5 +648,56 @@ export class UtopiaActor extends Actor {
     this.update({
       ['system.shp.value']: this.system.shp.value + healing
     });
+  }
+
+  async performResponse(response, data) {
+    switch (response) {
+      case "block": 
+        this.performBlock(data);
+        break;
+      case "dodge": 
+        this.performDodge(data);
+        break;
+    }
+  }
+
+  async performBlock(data) {
+    console.log(data);
+    
+    if (!this.handleCombatActions(1, true)) return;
+
+    const formula = this.system.block.quantity.total + 'd' + this.system.block.size;
+    const roll = new Roll(formula, this.getRollData());
+    const result = await roll.roll();
+    const tooltip = await roll.getTooltip();
+
+    const originalData = data.system.templateData;
+
+    const template = "systems/utopia/templates/chat/damage-card.hbs";
+    const templateData = {
+      actor: this,
+      item: originalData.item,
+      data: this.getRollData(),
+      formula: originalData.formula,
+      total: originalData.total,
+      result: originalData.result,
+      tooltip: originalData.tooltip,
+      blocked: true,
+      blockedDamage: result.total,
+      newTotal: originalData.total - result.total
+    }
+
+    const chatData = UtopiaChatMessage.applyRollMode({
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      speaker: UtopiaChatMessage.getSpeaker({ actor: this, undefined }),
+      content: await renderTemplate(template, templateData),
+      flags: { utopia: { item: originalData.item._id } },
+      system: {
+        total: originalData.total - result.total,
+      },
+      sound: CONFIG.sounds.dice,
+    });
+
+    return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
   }
 }

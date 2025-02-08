@@ -1,3 +1,4 @@
+import { UtopiaChatMessage } from "../../documents/chat-message.mjs";
 import UtopiaItemBase from "../base-item.mjs";
   
 export default class UtopiaGeneralItem extends UtopiaItemBase {
@@ -13,6 +14,8 @@ export default class UtopiaGeneralItem extends UtopiaItemBase {
     schema.quantity = new fields.NumberField({ required: true, nullable: false, initial: 1 });
     schema.slots = new fields.NumberField({ required: true, nullable: false, initial: 1 });
     schema.value = new fields.NumberField({ required: true, nullable: false, initial: 0 });
+    schema.consumeOnUse = new fields.BooleanField({ required: true, initial: true });
+    schema.deleteWhenEmpty = new fields.BooleanField({ required: true, initial: false });
 
     schema.category = new fields.StringField({ required: true, nullable: false, initial: "misc", choices: {
       "misc": "UTOPIA.Item.General.Categories.misc",
@@ -36,4 +39,28 @@ export default class UtopiaGeneralItem extends UtopiaItemBase {
     return schema;
   }
 
+  async use() {
+    console.warn("Using item: ", this);
+    
+    if (this.consumeOnUse) {
+      this.parent.update({ "system.quantity": this.quantity - 1 });
+    }
+
+    if (this.quantity <= 0 && this.deleteWhenEmpty) {
+      this.delete();
+    }
+
+    UtopiaChatMessage.create({
+      content: this.name,
+      speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
+      flags: {
+        utopia: {
+          itemId: this.id,
+          itemName: this.name,
+          itemType: this.type,
+          itemAction: "use",
+        }
+      }
+    });
+  }
 }

@@ -1,4 +1,4 @@
-<header class='sheet-header'>
+ <header class='sheet-header'>
   <img
     class='item-icon'
     src='{{item.img}}'
@@ -8,23 +8,24 @@
   />
   <div class="flexcol">
     <div class='header-fields'>
-      <h1 class='item-name'><input
-          name='name'
-          type='text'
-          value='{{item.name}}'
-          data-action="update"
-          placeholder='Name'
-        />
-      </h1>
+      <input
+        name='name'
+        type='text'
+        class="item-name-input"
+        value='{{item.name}}'
+        data-action="update"
+        placeholder='Name'
+      />
+    </div>
+    <div class="gear-materials">
+      <label for="system.material.amount">{{localize "UTOPIA.Item.Gear.materialComponents"}}</label>
+      {{formInput systemFields.material.fields.amount value=system.material.amount name="system.material.amount" localize=true}}
+      
+      <label for="system.refinement.amount">{{localize "UTOPIA.Item.Gear.refinementComponents"}}</label>
+      {{formInput systemFields.refinement.fields.amount value=system.refinement.amount name="system.refinement.amount" localize=true}}
+      
+      <label for="system.power.amount">{{localize "UTOPIA.Item.Gear.powerComponents"}}</label>
+      {{formInput systemFields.power.fields.amount value=system.power.amount name="system.power.amount" localize=true}}
     </div>
   </div>
-  <span class="valid-indicator">
-    {{#if item.system.valid}}
-      <i class="fas fa-check" style="color: green;" 
-          data-tooltip="{{localize 'UTOPIA.Item.Artifice.Gear.Validity.valid'}}"></i>
-    {{else}}
-      <i class="fas fa-times" style="color: rgb(160, 0, 0);"
-          data-tooltip="{{localize 'UTOPIA.Item.Artifice.Gear.Validity.invalid'}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{{#each item.system.validMessages as |message|}}{{message}}{{/each}}"></i>
-    {{/if}}
-  </span>
 </header>

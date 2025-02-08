@@ -1,27 +1,32 @@
+import { buildTraitData } from "../../helpers/actorTraits.mjs";
+
 const { api, sheets } = foundry.applications;
 
 /**
  * Represents the talent selection sheet for Utopia.
  * Extends the base Application class provided by Foundry VTT.
  */
-export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
+export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.DocumentSheetV2) {
   actor = {}; // The actor associated with this sheet
   keepOpen = false; // Determines if the sheet should remain open after actions
 
   constructor(options = {}) {
     super(options);
     this.dockedTo = undefined;
+    this.dockedSide = undefined;
     this.isDocked = true;
   }
 
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "subtrait-sheet"],
     position: {
-      width: 800,
-      height: "auto",
+      width: 300,
     },
     actions: {
       addPoint: this._addPoint,
+      addGift: this._addGift,
+      swapDock: this._swapDock,
+      dock: this._dock,
     },
     form: {
       submitOnChange: true,
@@ -33,7 +38,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
   static PARTS = {
     sheet: {
-      template: `systems/utopia/templates/other/subtrait-sheet.hbs`
+      template: `systems/utopia/templates/actor/subtraits.hbs`
     }
   };
 
@@ -44,33 +49,78 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
   async _prepareContext(options) {
     var context = {
-      actor: this.actor,
-      traits: this.actor.system.traits,
-      subtraits: await this._handleSubtraits()
+      actor: this.document,
+      traits: this.document.system.traits,
+      subtraits: buildTraitData(this.document),
+
+      canDock: game.settings.get('utopia', 'dockedWindowPosition') !== 2 && this.dockedTo,
+      docked: this.isDocked,
     };
+
+    console.log(context);
 
     return context;
   }
 
-  async _handleSubtraits() {
-    const traits = this.actor.system.traits;
-    let subtraits = {};
-    
-    let traitKeys = Object.keys(traits);
-    for (let trait of traitKeys) {
-      let subtraitKeys = Object.keys(traits[trait].subtraits);
-      for (let subtrait of subtraitKeys) {
-        subtraits = foundry.utils.mergeObject(subtraits, {
-          [subtrait]: {
-            trait: trait,
-            mod: traits[trait].subtraits[subtrait].mod,
-            value: traits[trait].subtraits[subtrait].value
-          }
-        });
+  static async _dock() {
+    this.isDocked = !this.isDocked;
+
+    if (this.isDocked) {
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
       }
     }
 
-    return subtraits;
+    this.render();
+  }
+
+  static async _swapDock() {
+    if (this.dockedSide == 0) 
+    {
+      this.dockedTo.dockedLeft.pop(this);
+      this.dockedTo.dockedRight.push(this);
+      this.dockedSide = 1;
+    }
+    else 
+    {
+      this.dockedTo.dockedRight.pop(this);
+      this.dockedTo.dockedLeft.push(this);
+      this.dockedSide = 0;
+    }
+    
+    if (this.isDocked) {
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
+      }
+    }
+
+    this.render();
   }
 
   _onRender(context, options) {
@@ -79,18 +129,42 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Ap
 
   static async _addPoint(event, target) {
     let subtrait = target.dataset.trait;
-    let subtraits = await this._handleSubtraits();
+    let subtraits = await buildTraitData(this.document);
 
     console.log(subtrait, subtraits);
 
-    if (this.actor.system.points.subtrait < 1) {
+    if (this.document.system.points.subtrait.total < 1) {
       return ui.notifications.error("You do not have enough points to spend on subtraits.");
     }
 
+    if (subtraits[subtrait].value < subtraits[subtrait].max) {
+      const trait = subtraits[subtrait].trait;
+      await this.document.update({
+        [`system.traits.${trait.short}.subtraits.${subtrait.short}.value`]: subtraits[subtrait].value + 1,
+      })
+
+      this.render();
+    }
+  }
+
+  static async _addGift(event, target) {
+    let subtrait = target.dataset.trait;
+    let subtraits = await buildTraitData(this.document);
+
+    console.log(subtrait, subtraits);
+
+    if (this.document.system.points.gifted.value < 1) {
+      return ui.notifications.error("You do not have enough points to spend on subtrait gifts.");
+    }
+
+    if (subtraits[subtrait].gifted) {
+      return ui.notifications.error("You have already gifted this subtrait.");
+    }
+
     let trait = subtraits[subtrait].trait;
-    await this.actor.update({
-      [`system.traits.${trait}.subtraits.${subtrait}.value`]: subtraits[subtrait].value + 1,
-      [`system.points.subtrait`]: this.actor.system.points.subtrait - 1
+    await this.document.update({
+      [`system.traits.${trait}.subtraits.${subtrait}.gifted`]: true,
+      [`system.points.gifted.value`]: this.document.system.points.gifted.value - 1
     })
 
     this.render();

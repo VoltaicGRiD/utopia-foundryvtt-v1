@@ -1,10 +1,10 @@
 <div class="tab attributes {{tab.cssClass}} spellcraft">
   <div class="flexrow built-in-filters">
     <span class="filter">{{localize 'UTOPIA.Descriptions.filter'}}</span>
-    <button class="filter" data-filter="all">{{localize 'UTOPIA.Descriptions.all'}}</button>
-    <button class="filter" data-filter="favorite">{{localize 'UTOPIA.Descriptions.favorite'}}</button>
-    <button class="filter" data-filter="available">{{localize 'UTOPIA.Descriptions.available'}}</button>
-    <button class="filter" data-filter="locked">{{localize 'UTOPIA.Descriptions.locked'}}</button>
+    <button type="button" class="filter" data-filter="all">{{localize 'UTOPIA.Descriptions.all'}}</button>
+    <button type="button" class="filter" data-filter="favorite">{{localize 'UTOPIA.Descriptions.favorite'}}</button>
+    <button type="button" class="filter" data-filter="available">{{localize 'UTOPIA.Descriptions.available'}}</button>
+    <button type="button" class="filter" data-filter="locked">{{localize 'UTOPIA.Descriptions.locked'}}</button>
     
   </div>
   <div class="spellcraft-content">
@@ -14,10 +14,10 @@
         {{#each features as |feature key|}}
           <li class="feature available-feature {{#if (eq feature.hidden true)}}hidden{{/if}}" data-name="{{feature.name}}" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
             <img src="{{feature.img}}" class="feature-icon" />
-            <button class="remove-feature hidden">
+            <button type="button" class="remove-feature hidden">
               <i class="fa-fw fa-solid fa-times"></i>
             </button>
-            <button class="favorite-feature hidden {{#if (eq feature.favorite true)}}favorite{{/if}}">
+            <button type="button" class="favorite-feature hidden {{#if (eq feature.favorite true)}}favorite{{/if}}">
               <i class="fa-fw fa-solid fa-star"></i>
             </button>
             <span class="feature-name">
@@ -41,7 +41,7 @@
                   </div>
                 {{else if (eq variable.kind "options")}}
                   <div class="feature-variable">
-                    <button class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
+                    <button type="button" class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
                             data-variable="{{varKey}}"
                             data-feature="{{key}}">
                       {{#if (or (eq variable.value "") (not variable.value))}}
@@ -101,7 +101,7 @@
           {{#each selected as |feature key|}}
             <li class="feature" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
               <img src="{{feature.img}}" class="feature-icon" />
-              <button class="remove-feature hidden">
+              <button type="button" class="remove-feature hidden">
                 <i class="fa-fw fa-solid fa-times"></i>
               </button>
               <span class="feature-name">{{feature.name}} (<span id="cost" class="cost">{{feature.cost}}</span>)</span>
@@ -138,7 +138,7 @@
                     </div>
                   {{else if (eq variable.kind "options")}}
                     <div class="feature-variable">
-                      <button class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
+                      <button type="button" class="feature-variable-options feature-variable-character" style="background-color: #ed3f41; color: white;"
                               data-variable="{{varKey}}"
                               data-feature="{{key}}">
                         {{#if (or (eq variable.value "") (not variable.value))}}
@@ -169,9 +169,9 @@
         <textarea name="flavor" placeholder="{{localize 'UTOPIA.Item.Spells.flavor'}}">{{flavor}}</textarea>
       </div>
       <div class="spell-controls">
-        <button data-action="cast">{{localize 'UTOPIA.Item.Spells.cast'}}</button>
-        <button data-action="saveAndCast" class="btn-primary">{{localize 'UTOPIA.Item.Spells.saveAndCast'}}</button>
-        <button data-action="save">{{localize 'UTOPIA.Item.Spells.save'}}</button>
+        <button type="button" data-action="cast">{{localize 'UTOPIA.Item.Spells.cast'}}</button>
+        <button type="button" data-action="saveAndCast" class="btn-primary">{{localize 'UTOPIA.Item.Spells.saveAndCast'}}</button>
+        <button type="button" data-action="save">{{localize 'UTOPIA.Item.Spells.save'}}</button>
       </div>
     </div>  
     <div class="spell-list">

@@ -20,15 +20,58 @@
       <label>{{localize 'UTOPIA.Item.General.rarity'}}</label>
       {{formInput systemFields.rarity value=system.rarity name='system.rarity' localize=true}}
     </div>
+    <div class="row">
+      <label for="system.consumeOnUse">{{localize "UTOPIA.Item.General.consumeOnUse"}}</label>
+      <label class="switch" for="system.consumeOnUse">
+        <input type="checkbox" id="system.consumeOnUse" name="system.consumeOnUse" {{#if (eq system.consumeOnUse true)}} checked {{/if}} />
+        <div class="slider round"></div>
+      </label>
+    </div>  
+    <div class="row">
+      <label for="system.deleteWhenEmpty">{{localize "UTOPIA.Item.General.deleteWhenEmpty"}}</label>
+      <label class="switch" for="system.deleteWhenEmpty">
+        <input type="checkbox" id="system.deleteWhenEmpty" name="system.deleteWhenEmpty" {{#if (eq system.deleteWhenEmpty true)}} checked {{/if}} />
+        <div class="slider round"></div>
+      </label>
+    </div>
   </div>
   <div class="general-description">
-    <label for="system.description">{{localize 'UTOPIA.Item.description'}}</label>
-    {{#if editable}}
-      <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+    <details open>
+      <summary><i class="fas fa-comment"></i> {{localize "UTOPIA.Item.flavor"}}</summary>
+      
+      {{#if editable}}
+        <prose-mirror name="system.flavor" data-document-u-u-i-d="{{item.uuid}}" value="{{system.flavor}}" collaborate="true" toggled="true">
+          {{{enrichedFlavor}}}
+        </prose-mirror>
+      {{else}} 
+        {{{enrichedFlavor}}}
+      {{/if}}
+    </details>
+
+    <details>
+      <summary><i class="fas fa-info-circle"></i> {{localize "UTOPIA.Item.description"}}</summary>
+
+      {{#if editable}}
+        <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+          {{{enrichedDescription}}}
+        </prose-mirror>
+      {{else}} 
         {{{enrichedDescription}}}
-      </prose-mirror>
-    {{else}} 
-      {{{enrichedDescription}}}
+      {{/if}}
+    </details>
+
+    {{#if gm}}
+      <details>
+        <summary><i class="fas fa-mask"></i> {{localize "UTOPIA.Item.gmSecrets"}}</summary>
+        
+        {{#if editable}}
+          <prose-mirror name="system.gmSecrets" data-document-u-u-i-d="{{item.uuid}}" value="{{system.gmSecrets}}" collaborate="true" toggled="true">
+            {{{enrichedGMNotes}}}
+          </prose-mirror>
+        {{else}} 
+          {{{enrichedGMNotes}}}
+        {{/if}}
+      </details>
     {{/if}}
   </div>
 </div>

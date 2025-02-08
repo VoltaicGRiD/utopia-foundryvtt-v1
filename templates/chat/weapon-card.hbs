@@ -1,34 +1,75 @@
-<div class="pf2e chat-card weapon-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-    <header class="card-header flexrow">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <h3>{{item.name}}</h3>
+<div class="utopia">
+  <div class="chat-card item-card item-rarity-{{rarity}}" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow" data-action="openItem">
+      <img src="{{item.img}}" alt="{{item.name}}" />
+      <h3>{{item.name}}</h3>
     </header>
 
-    <div class="tags paizo-style" data-tooltip-class="pf2e">
-        {{#if (and item.isIdentified data.rarity)}}
-            <span
-                class="tag rarity {{data.rarity.slug}}"
-                data-trait="{{data.rarity-slug}}"
-                data-tooltip="{{data.rarity.description}}"
-            >{{localize data.rarity.label}}</span>
-        {{/if}}
-        {{#each data.traits as |trait|}}
-            {{#unless trait.mystified}}
-                <span class="tag" data-trait="{{trait.name}}" data-tooltip="{{trait.description}}">{{localize trait.label}}</span>
-            {{/unless}}
-        {{/each}}
-        {{#if (and item.isIdentified data.material)}}<span class="tag tag_material">{{data.material}}</span>{{/if}}
+    <div class="tags" data-tooltip-class="utopia">
+
     </div>
 
     <div class="card-content">
-        {{{data.description.value}}}
+      <div class="dice-roll" data-tooltip-class="utopia">
+        {{#if flavor~}}
+            <div class="dice-flavor">
+                {{{flavor}}}
+            </div>
+        {{~/if}}
+      </div>        
     </div>
 
-    <footer{{#unless item.isIdentified}} data-visibility="gm"{{/unless}}>
-        <span>{{localize "PF2E.Item.Physical.LevelLabel" level=item.level}}</span>
-        <span>{{localize "PF2E.Item.Physical.PriceLabel" price=(coinLabel item.price)}}</span>
-        {{#each data.properties as |property|}}
-            <span>{{localize property}}</span>
-        {{/each}}
+    <div class="card-actions">
+      {{#each strikes as |strike|}}
+        <button type="button" class="strike-button" data-action="performStrike" data-index="{{@index}}">
+          <span class="strike-content">
+            <i class="fas fa-fist-raised"></i>
+            {{strike.name}}:  
+            {{#if strike.estimate}} 
+              <i>~{{strike.estimate}}</i>
+            {{else if strike.exact}}
+              <i>={{strike.exact}}</i>
+            {{else}}
+              <i>{{strike.damage}}</i>
+            {{/if}}
+            {{#if strike.accuracy}}
+              - {{strike.range.close}}/{{strike.range.far}}
+            {{/if}}
+            {{#if (ne strike.template "none")}}
+              - {{localize (concat "UTOPIA.Item.Gear.Strike.Template." strike.template)}}
+            {{/if}}
+          </span>
+          <span class="strike-flavor">"{{strike.flavor}}"</span>
+        </button>
+      {{/each}}
+
+      {{#each actions as |action|}}
+        <button type="button" class="action-button" data-action="performAction">
+          <span class="action-content">
+            <i class="fas fa-key"></i>
+            {{action.name}}:  
+            {{#if action.estimate}} 
+              <i>~{{action.estimate}}</i>
+            {{else if action.exact}}
+              <i>={{action.exact}}</i>
+            {{else}}
+              <i>{{action.formula}}</i>
+            {{/if}}
+            - 
+            {{action.cost}} cost
+          </span>
+          <span class="action-flavor">"{{action.flavor}}"</span>
+        </button>
+      {{/each}}
+    </div>
+
+    <footer data-visibility="gm">
+      {{#if hasGMNotes}}
+        <details class="gm-notes">
+          <summary>GM Notes</summary>
+          <span>{{{enrichedGMNotes}}}</span>
+        </details>
+      {{/if}}
     </footer>
+  </div>
 </div>

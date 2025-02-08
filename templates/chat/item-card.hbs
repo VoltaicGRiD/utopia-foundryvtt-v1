@@ -24,7 +24,7 @@
     </div>
         {{#if canRollDamage}}
             <div class="message-buttons" data-identifier="{{identifier}}">
-                <button type="button" class="success" data-action="{{action}}-damage" data-outcome="success">
+                <button type="button" type="button" class="success" data-action="{{action}}-damage" data-outcome="success">
                     {{localize "UTOPIA.DamageLabel"}}
                     {{#if (eq degree 2)}}
                         <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
@@ -32,7 +32,7 @@
                         </span>
                     {{/if}}
                 </button>
-                <button type="button" class="critical-success" data-action="{{action}}-damage" data-outcome="critical-success">
+                <button type="button" type="button" class="critical-success" data-action="{{action}}-damage" data-outcome="critical-success">
                     {{localize "UTOPIA.CriticalDamageLabel"}}
                     {{#if (eq degree 3)}}
                         <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
@@ -47,8 +47,8 @@
     <footer data-visibility="gm">
       <span>GM, damage your targeted creature?</span>
       <div class="grid grid-2col message-buttons">
-        <button type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
-        <button type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
+        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
+        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
       </div>
     </footer>
 </div>

@@ -9,31 +9,29 @@
           <i data-action="selectSpecies" class="fa-solid fa-magnifying-glass species"></i>
         {{/unless}}
       </h1>
+      {{!-- <div class="edit-slider">
+        <label for="overrideDerivedData">{{localize "UTOPIA.Actor.overrideDerivedData"}}</label>
+        <label class="switch" for="overrideDerivedData">
+          <input type="checkbox" id="overrideDerivedData" name="overrideDerivedData" {{#if (eq overrideDerivedData true)}} checked {{/if}} />
+          <div class="slider round"></div>
+        </label>
+      </div> --}}
     </div>
     <div class="resources">
-
-      {{!-- <div class="resource flex-group-center">
-        <label for="system.health.value" class="resource-label">SHP</label>
-        <div class="resource-content flexrow flex-center flex-between">
-        <input type="text" name="system.shp.value" data-action="update" value="{{system.shp.value}}" data-dtype="Number"/>
-        <span> / </span>
-        <input disabled type="text" name="system.shp.max" value="{{system.shp.max}}" data-dtype="Number"/>
-        </div>
-      </div> --}}
 
       <div class="new-resource">
         <div class="resource-context">
           <div class="add-buttons">
-            <button data-action="addToStat" data-stat="system.shp.value" data-value="1">+1</button>
-            <button data-action="addToStat" data-stat="system.shp.value" data-value="5">+5</button>
-            <button data-action="addToStat" data-stat="system.shp.value" data-value="20">+20</button>
-            <button data-action="maxStat" data-stat="system.shp.value" data-value="system.shp.max">Max</button>
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="1">+1</button>
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="5">+5</button>
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="20">+20</button>
+            <button type="button" data-action="maxStat" data-stat="system.shp.value" data-value="system.shp.max">Max</button>
           </div>
           <div class="subtract-buttons">
-            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="1">-1</button>
-            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="5">-5</button>
-            <button data-action="subtractFromStat" data-stat="system.shp.value" data-value="20">-20</button>
-            <button data-action="minStat" data-stat="system.shp.value" data-value="0">Min</button>
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="1">-1</button>
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="5">-5</button>
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="20">-20</button>
+            <button type="button" data-action="minStat" data-stat="system.shp.value" data-value="0">Min</button>
           </div>
         </div>
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}">
@@ -70,16 +68,16 @@
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.taLong'}}">
-          {{formInput systemFields.ta.fields.value value=system.ta.value name="system.ta.value" localize=true}}
-          <span class="new-resource-max">{{system.ta.max}}</span>
+          {{formInput systemFields.actions.fields.turn.fields.value value=system.actions.turn.value name="system.actions.turn.value" localize=true}}
+          <span class="new-resource-max">{{system.actions.turn.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.taShort'}}</span>
         </label>
       </div>
 
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.iaLong'}}">
-          {{formInput systemFields.ia.fields.value value=system.ia.value name="system.ia.value" localize=true}}
-          <span class="new-resource-max">{{system.ia.max}}</span>
+          {{formInput systemFields.actions.fields.interrupt.fields.value value=system.actions.interrupt.value name="system.actions.interrupt.value" localize=true}}
+          <span class="new-resource-max">{{system.actions.interrupt.max}}</span>
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.iaShort'}}</span>
         </label>
       </div>  

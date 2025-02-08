@@ -1,82 +1,122 @@
-# Utopia System
+# Utopia TTRPG System for Foundry VTT
 
-![Foundry v11](https://img.shields.io/badge/foundry-v11-green)
+[![Last Tested](https://img.shields.io/badge/Last_Tested-Jan_2025-brightgreen.svg)](#)  
+[![Tested With Foundry Version](https://img.shields.io/badge/Foundry_Version-v12.331-blue.svg)](https://foundryvtt.com)  
+[![Development Status](https://img.shields.io/badge/Status-In_Development-orange.svg)](#)
 
-This system is a utopia system that you can use as a starting point for building your own custom systems. It's similar to Simple World-building, but has examples of creating attributes in code rather than dynamically through the UI.
+
+## Table of Contents
+
+- [Utopia TTRPG System for Foundry VTT](#utopia-ttrpg-system-for-foundry-vtt)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Legal \& License](#legal--license)
+  - [Development Status](#development-status)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Customization \& Extensions](#customization--extensions)
+  - [Issues \& Contributions](#issues--contributions)
+  - [Contact](#contact)
+
+---
+
+## Introduction
+
+Welcome to the **Utopia TTRPG** system for **Foundry Virtual Tabletop**! This system seamlessly integrates the rules and setting from **Utopia**, created by **Oridont @ Myramyth**, into Foundry VTT.
+
+This repository is **open source**, allowing you to review, learn from, and extend the code. However, as the **sole licensed developer** under contract with Oridont @ Myramyth, I maintain official control of the codebase’s core development. That means:
+
+- **Community macro/module development is encouraged.**  
+- **Forking for personal use is absolutely fine.**  
+- **Official merges of third-party changes won’t be accepted** under this contract.
+
+Please read below for more details on licensing, usage, and how you can tailor this system to your own needs.
+
+---
+
+## Legal & License
+
+- **System Name:** Utopia TTRPG for Foundry VTT  
+- **Developer:** Dustin Conlon (VoltaicGRiD)
+- **IP Owner:** Oridont @ Myramyth
+
+Although the code here is open source, the actual **Utopia TTRPG** intellectual property and assets (rules, lore, etc.) are owned by *Oridont @ Myramyth*. Use of these materials remains subject to the terms specified by *Oridont @ Myramyth*.
+
+**Licensing Terms**  
+- This repository is released under [LICENSE](LICENSE) (insert your specific license text or link here).  
+- **Modifying or redistributing** this system must not violate the proprietary content and trademark rights owned by Oridont @ Myramyth.  
+- **External Pull Requests** are not accepted for the official codebase, in accordance with the contracted development agreement.
+
+---
+
+## Development Status
+
+> **Warning**: This system is **actively in development**. You may encounter bugs, incomplete features, or placeholders as we continue to refine and expand the system for Foundry VTT.
+
+**Planned Features**  
+- Improved automation pipelines for character management.  
+- Expanded gear and artifice management.  
+- Polished UI/UX elements to streamline gameplay.
+- Fully managed action-economy with automated triggers and executions
+
+Check the [Issues](#issues--contributions) or GitHub’s issue tracker to see our latest roadmap and known bugs.
+
+---
+
+## Installation
+
+1. **Download**: Grab the latest release from [GitHub Releases](#) (or your preferred channel).  
+2. **Unzip**: Place the folder into your Foundry VTT `Data/systems` directory.  
+3. **Activate**: In Foundry VTT, go to **Game Systems**, locate **Utopia TTRPG**, and enable it.
+
+Once the system matures, you may install it directly via its manifest URL if desired.
+
+---
 
 ## Usage
 
-There are two ways to get started: using the Utopia system generator command or manually renaming and updating files.
+1. **Create or Open a World**: Choose **Utopia TTRPG** as your system.  
+2. **Build Characters**: Use the (still evolving) character sheets and actor templates.  
+3. **Play!**: Enjoy the Utopia setting within Foundry VTT.
 
-Regardless of which method you choose, think carefully about your system's name. Your system's package name when submitted to Foundry must be formatted like `alphanumeric-lowercase`, and it must be unique. Check the Foundry systems package list for conflicts before committing to a name!
+As development continues, new automation features and quality-of-life updates will roll out to improve the experience.
 
-> **Data Models**
->
-> If you would like to use DataModel classes instead of the older template.json configuration, you'll need to use the `npm run generate` command described below and choose to enable them when asked. DataModels are currently an optional feature, and are only availabe in the generator CLI due to that.
+---
 
-### Generator
+## Customization & Extensions
 
-This system includes a generator CLI in `package.json`. To use it, you must have [node.js](https://nodejs.org) installed, and it's recommended that you install node 20 or later.
+Foundry VTT encourages customization. While official development remains under my purview, you are welcome to:
 
-> **Python Generator**
-> 
-> If you would rather use Python than node, there’s an excellent Python-based generator created by Cussa at https://github.com/Cussa/fvtt-utopia-initializator. Give it a shot!
+- **Create your own macros and external modules** that hook into the Utopia TTRPG system.  
+- **Fork** this repository for private or alternative use cases.
 
-Once you have npm installed, you can run the following in your terminal or command prompt:
+Feel free to share your custom work with the community—just be mindful of the licensing constraints and the IP rights of Oridont @ Myramyth.
 
-```bash
-npm install
-npm run generate
-```
+---
 
-Your terminal should prompt you to name your system. Read the instructions carefully, the letter case and special characters in each question matter for correct system generation.
+## Issues & Contributions
 
-Once the generator completes, it will output your system to `build/<your-system-name>`, where `<your-system-name>` is the package name you supplied during the prompt.
+- **Bug Reports**: Open a GitHub Issue to report bugs or unexpected behavior. We’ll address these as part of our contracted development.  
+- **Pull Requests**:  
+  - **Not Accepted** for merging into the official repository.  
+  - If you have fixes or enhancements to share, please open an issue first to discuss.  
+  - You can maintain your own fork or extension if you want to distribute modifications.
 
-Copy this directory over to your Foundry systems directory and start coding!
+---
 
-### Manual Replacement
+## Contact
 
-Before installing this system, you should rename any files that have `utopia` in their filename to use whatever machine-safe name your system needs, such as `adnd2e` if you were building a system for 2nd edition Advanced Dungeons & Dragons. In addition, you should search through the files for `utopia` and `Utopia` and do the same for those, replacing them with appropriate names for your system.
+- **Developer**: Dustin Conlon (VoltaicGRiD)
+- **Email**: dustin@myramyth.com
+- **TTRPG Owner and Designer**: Oridont @ Myramyth
 
-The `name` property in your `system.json` file is your system's package name. This need to be formatted `alphanumeric-lowercase`, and it must also match the foldername you use for your system.
+For inquiries regarding licensing, usage, or special cases, please reach out via the contact information above.
 
-### Vue 3 Utopia
+---
 
-**NOTE: The Vue 3 version is currently outdated and considered an advanced usage of Foundry due to it being a custom renderer. Only try it out if you _really_ like Vue and are feeling dangerous!**
+> © 2025 Oridont @ Myramyth | [Your Name/Handle Here].  
+> All rights reserved under contract and license.
 
-Alternatively, there's another build of this system that supports using Vue 3 components (ES module build target) for character sheet templates.
+---
 
-Head over to the [Vue3Utopia System](https://gitlab.com/asacolips-projects/foundry-mods/vue3utopia) repo if you're interested in using Vue!
-
-### Getting Help
-
-Check out the [Official Foundry VTT Discord](https://discord.gg/foundryvtt)! The #system-development channel has helpful pins and is a good place to ask questions about any part of the foundry application.
-
-For more static references, the [Knowledge Base](https://foundryvtt.com/kb/) and [API Documentation](https://foundryvtt.com/api/) provide different levels of detail. For the most detail, you can find the client side code in your foundry installation location. Classes are documented in individual files under `resources/app/client` and `resources/app/common`, and the code is collated into a single file at `resources/app/public/scripts/foundry.js`.
-
-#### Tutorial
-
-For much more information on how to use this system as a starting point for making your own, see the [full tutorial on the Foundry Wiki](https://foundryvtt.wiki/en/development/guides/SD-tutorial)!
-
-Note: Tutorial may be out of date, so look out for the Foundry compatibility badge at the top of each page.
-
-## Sheet Layout
-
-This system includes a handful of helper CSS classes to help you lay out your sheets if you're not comfortable diving into CSS fully. Those are:
-
-- `flexcol`: Included by Foundry itself, this lays out the child elements of whatever element you place this on vertically.
-- `flexrow`: Included by Foundry itself, this lays out the child elements of whatever element you place this on horizontally.
-- `flex-center`: When used on something that's using flexrow or flexcol, this will center the items and text.
-- `flex-between`: When used on something that's using flexrow or flexcol, this will attempt to place space between the items. Similar to "justify" in word processors.
-- `flex-group-center`: Add a border, padding, and center all items.
-- `flex-group-left`: Add a border, padding, and left align all items.
-- `flex-group-right`: Add a border, padding, and right align all items.
-- `grid`: When combined with the `grid-Ncol` classes, this will lay out child elements in a grid.
-- `grid-Ncol`: Replace `N` with any number from 1-12, such as `grid-3col`. When combined with `grid`, this will layout child elements in a grid with a number of columns equal to the number specified.
-
-## Compiling the CSS
-
-This repo includes both CSS for the theme and SCSS source files. If you're new to CSS, it's probably easier to just work in those files directly and delete the SCSS directory. If you're interested in using a CSS preprocessor to add support for nesting, variables, and more, you can run `npm install` in this directory to install the dependencies for the scss compiler. After that, just run `npm run build` to compile the SCSS and start a process that watches for new changes.
-
-![image](http://mattsmith.in/images/utopia.png)
+**Thank you** for your interest in the Utopia TTRPG System for Foundry VTT. We hope you find it useful, flexible, and ready to enhance your tabletop sessions. Stay tuned for updates!

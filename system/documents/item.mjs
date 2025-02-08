@@ -174,89 +174,149 @@ export class UtopiaItem extends Item {
    * @returns {Promise<Roll|null>} The result of the roll or null if not applicable.
    */
   async roll(terms = undefined) {
-    // Lets find out if the item contains features. If it does, the formula is a 
-    // sum of all the features' formulas.
-    const total = 0;
+    if (this.type === "weapon") {
+      const strikes = this.system.strikes; 
+      const actions = this.system.actions;
+      const resources = this.system.resources;
+      const rarityPoints = this.system.rarityPoints;
+      const rarity = this.system.rarity;
 
-    // If there are no features, and there isn't a formula, output the item's description.
-    if (!this.system.formula && (Object.keys(this.system.features).length === 0 || !this.system.features)) {
-      ChatMessage.create({
-        speaker: speaker,
-        rollMode: rollMode,
-        flavor: label,
-        content: item.system.description ?? '',
-      });
-      return null;
-    }
+      for (const strike of strikes) {
+        console.log(strike);
 
-    // First, lets find out if the sub-item has its own roll method
-    try {
-      const roll = await this.system.roll(terms);
-            
-      // Prepare chat message data.
-      const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-      const rollMode = game.settings.get('core', 'rollMode');
-      const label = `[${this.type}] ${this.name}`;
+        // 0 = Hide, 1 = Estimate, 2 = Exact
+        if (game.settings.get('utopia', 'displayDamage') == 1)
+        {
+          const type = new Roll(strike.damage, this.getRollData()).options.flavor;
+          const roll = await Roll.simulate(strike.damage, 100);
+          const rollEstimate = Math.round(roll.reduce((partial, value) => partial + value, 0) / roll.length);
+          strike.estimate = rollEstimate;
+        }
 
-      // Send the roll result to chat.
-      roll.toMessage({
-        speaker: speaker,
-        rollMode: rollMode,
-        flavor: label,
-      });
+        if (game.settings.get('utopia', 'displayDamage') == 2)
+        {
+          const roll = await new Roll(strike.damage, this.getRollData()).evaluate();
+          strike.exact = roll.total;
+        }
+      }
+
+      this.strikes = strikes;
       
-      return roll;
-    }
-    catch (error) {
-      console.error(error);
-    }
-  
-    // Otherwise, we'll roll the item's formula from here
-    const item = this;
-    const stacks = item.stacks || 1; 
+      for (const action of actions) {
+        if (action.type === "damage") {
+          // 0 = Hide, 1 = Estimate, 2 = Exact
+          if (game.settings.get('utopia', 'displayDamage') == 1)
+          {
+            const roll = await Roll.simulate(action.formula, 100);
+            const rollEstimate = Math.round(roll.map(r => r).reduce((a, b) => a + b, 0) / 100);
+            const estimate = await new Roll(`${rollEstimate} + ${action.formula}`, this.getRollData()).evaluate();
+            action.estimate = estimate.total;
+          }
 
-    let roll = new Roll(item.system.formula, this.getRollData());
-    roll.terms.forEach(term => {
-      if (term instanceof Die) {
-        term.number = term.number * stacks;
-      }
-    });
-
-    // If the item is a weapon, handle weapon-specific rolling.
-    if (this.type === "gear" && this.system.category.toLowerCase().includes("weapon")) {
-      // Get the user's targets.
-      const targets = game.user.targets;
-
-      for (let target of targets) {         
-        target.inRange = await rangeTest(item);
+          if (game.settings.get('utopia', 'displayDamage') == 2)
+          {
+            const roll = await new Roll(action.formula, this.getRollData()).evaluate();
+            action.exact = roll.total;
+          }
+        }
       }
 
-      //TODO: Finish the Attack Sheet and range handling
+      this.actions = actions;
 
-      // Check if the target is within range.
+      const template = 'systems/utopia/templates/chat/weapon-card.hbs';
 
-      if (inRange) {
-        // Open the attack sheet for the weapon.
-        const sheet = new UtopiaAttackSheet({ document: this });
-        sheet.render(true);
-        return null;
-      }   
-    } 
+      const templateData = {
+        item: this,
+        flavor: this.getFlavor(),
+        strikes: strikes,
+        actions: actions,
+        resources: resources,
+        rarityPoints: rarityPoints,
+        rarity: rarity,
+        hasGMNotes: this.system.gmSecrets !== "",
+        enrichedGMNotes: await TextEditor.enrichHTML(
+          this.system.gmSecrets,
+          {
+            secrets: game.user.isGM,
+            rollData: this.getRollData(),
+            relativeTo: this.actor ?? this.item,
+          }
+        )
+      }
+      
+      const html = await renderTemplate(template, templateData);
 
-    // Prepare chat message data.
-    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-    const rollMode = game.settings.get('core', 'rollMode');
-    const label = `[${item.type}] ${item.name}`;
+      const chatData = await UtopiaChatMessage.applyRollMode({
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        speaker: UtopiaChatMessage.getSpeaker({ actor: this.actor, item: this }),
+        content: html,
+        flags: { utopia: { item: this._id } },
+        system: {
+          item: this,
+          actor: this.actor,
+          templateData: templateData,
+        }
+      });
 
-    // Send the roll result to chat.
-    roll.toMessage({
-      speaker: speaker,
-      rollMode: rollMode,
-      flavor: label,
-    });
+      console.log(this);
 
-    return roll; 
+      return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
+    }
+  }
     
+  async performStrike(strike, message) {
+    console.log("Performing strike: ", strike, "for message: ", message);
+
+    // TODO: Implement 'requireTarget' game rule
+
+    const roll = await new Roll(strike.damage, this.getRollData()).evaluate();
+    const rarity = this.rarity;
+    const total = roll.total;
+    const result = roll.result;
+    const flavor = strike.flavor;
+    const tooltip = await roll.getTooltip();
+
+    const template = 'systems/utopia/templates/chat/damage-card.hbs';
+
+    const finalized = game.settings.get('utopia', 'displayDamage') == 2 ? true : false;
+    if (game.settings.get('utopia', 'displayDamage') == 1 && strike.estimate === 0) {
+      const simulation = await Roll.simulate(strike.damage, 100);
+      strike.estimate = simulation.reduce((partial, value) => partial + value, 0) / simulation.length;
+    }
+
+    const templateData = {
+      item: this,
+      flavor: flavor,
+      rarity: rarity,
+      formula: strike.damage,
+      total: total,
+      result: result,
+      tooltip: tooltip,
+      estimate: strike.estimate,
+      finalized: finalized,
+      strike: strike,
+    }
+    
+    const html = await renderTemplate(template, templateData);
+
+    const chatData = await UtopiaChatMessage.applyRollMode({
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+      speaker: UtopiaChatMessage.getSpeaker({ actor: this.actor, item: this }),
+      content: html,
+      flags: { utopia: { item: this._id } },
+      system: {
+        item: this,
+        actor: this.actor,
+        damage: total,
+        strike: strike,
+        dice: roll.dice,
+        templateData: templateData,
+      }
+    });
+
+    console.log(this);
+
+    return UtopiaChatMessage.create(chatData, { rollMode: CONST.DICE_ROLL_MODES.PUBLIC, renderSheet: false });
   }
 
   async toMessage(event, options) {

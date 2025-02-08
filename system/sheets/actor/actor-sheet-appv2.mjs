@@ -1,8 +1,11 @@
+import { buildTraitData } from '../../helpers/actorTraits.mjs';
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
 import { gatherSpellFeatures } from '../../helpers/gatherSpells.mjs';
 import { UtopiaActorComponentsSheet } from '../other/components-sheet.mjs';
+import { UtopiaDataOverrideSheet } from '../other/data-override-sheet.mjs';
 import { UtopiaOptionsSheet } from '../other/options-sheet.mjs';
 import { UtopiaSpellcraftSheet } from '../other/spellcraft-sheet.mjs';
+import { UtopiaSubtraitSheetV2 } from '../other/subtrait-sheet.mjs';
 const { api, sheets } = foundry.applications;
 
 /**
@@ -25,12 +28,22 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     classes: ['utopia', 'actor-sheet'],
     window: {
       resizeable: true,
+      controls: [
+        ...super.DEFAULT_OPTIONS.window.controls,
+        {
+          icon: 'fas fa-pen-to-square',
+          label: 'UTOPIA.SheetLabels.openDataOverride',
+          action: 'openDataOverride',
+          visible: true,
+        }
+      ]
     },
     position: {
       width: 800,
     },
     actions: {
       onEditImage: this._onEditImage,
+      useItem: this._useItem,
       viewDoc: this._viewDoc,
       createDoc: this._createDoc,
       deleteDoc: this._deleteDoc,
@@ -55,6 +68,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       addResource: this._addResource,
       deleteResource: this._deleteResource,
       equipItem: this._equipItem,
+      openDataOverride: this._openDataOverride,
     },
     form: {
       submitOnChange: true,
@@ -71,8 +85,11 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       // Foundry-provided generic template
       template: 'templates/generic/tab-navigation.hbs',
     },
-    details: {
-      template: 'systems/utopia/templates/actor/details.hbs',
+    characterDetails: {
+      template: 'systems/utopia/templates/actor/details-character.hbs',
+    },
+    npcDetails: {
+      template: 'systems/utopia/templates/actor/details-npc.hbs',
     },
     actions: {
       template: 'systems/utopia/templates/actor/actions.hbs',
@@ -99,14 +116,16 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     // Not all parts always render
-    options.parts = ['header', 'tabs', 'biography'];
+    options.parts = ['header', 'tabs'];
     // Don't show the other tabs if only limited view
     if (this.document.limited) return;
     // Control which parts show based on document subtype
     switch (this.document.type) {
       case 'character':
-        case 'npc':
-        options.parts.push('details', 'talents', 'gear',  'spells', 'actions', 'effects');
+        options.parts.push('biography', 'characterDetails', 'talents', 'gear',  'spells', 'actions', 'effects');
+        break;
+      case 'npc':
+        options.parts.push('biography', 'npcDetails', 'gear', 'spells', 'actions', 'effects');
         break;
     }
   }
@@ -131,10 +150,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
+      traits: buildTraitData(this.actor),
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
       tabs: this._getTabs(options.parts),
-      spellTabs: this._getTabs(['alteration', 'array', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'wake']),
+      // Check for the "overrideDerivedData" flag
+      overrideDerivedData: this.actor.getFlag('utopia', 'overrideDerivedData') ?? false,
     };
 
     // Offloading context prep to a helper function
@@ -149,13 +170,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   async _preparePartContext(partId, context) {
     switch (partId) {
       case 'actions': 
-      case 'details':
+      case 'characterDetails':
+      case 'npcDetails':
       case 'talents':
       case 'gear':
         context.tab = context.tabs[partId];
         break;
       case 'spells':  
-        context.spellTab = context.spellTabs[0];
         context.tab = context.tabs[partId];
         break;
       case 'biography':
@@ -211,7 +232,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   _getTabs(parts) {
     // Default tab for first time it's rendered this session
     if (!this.tabGroups['primary']) this.tabGroups['primary'] = 'details';
-    if (!this.tabGroups['spells']) this.tabGroups['spells'] = 'alteration';
 
     return parts.reduce((tabs, partId) => {
       const tab = {
@@ -228,11 +248,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'header':
         case 'tabs':
           return tabs;
-        case 'details':
+        case 'characterDetails':
+        case 'npcDetails':
           tab.id = 'details';
           tab.label += 'details';
-          if (this.actor.system.points.subtrait > 0 || this.actor.system.points.gifted > 0) 
-            tab.icon = 'fas fa-bell';
+          if (this.actor.type == "character") {
+            if (this.actor.system.points.subtrait > 0 || this.actor.system.points.gifted > 0) 
+              tab.icon = 'fas fa-bell';
+          }
           
           break;
         case 'actions':
@@ -246,8 +269,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         case 'talents': 
           tab.id = 'talents';
           tab.label += 'talents';
-          if (this.actor.system.points.talent > 0 || this.actor.system.points.specialist > 0) 
-            tab.icon = 'fas fa-bell';
+          if (this.actor.type == "character") {
+            if (this.actor.system.points.talent > 0 || this.actor.system.points.specialist > 0) 
+              tab.icon = 'fas fa-bell';
+          }
           
           break;
         case 'gear':
@@ -262,51 +287,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           tab.id = 'effects';
           tab.label += 'effects';
           break;
-        case 'alteration': 
-          tab.group = 'spells';
-          tab.id = 'alteration';
-          tab.label += 'alteration';
-          break;
-        case 'array':
-          tab.group = 'spells';
-          tab.id = 'array';
-          tab.label += 'array';
-          break;
-        case 'divination':
-          tab.group = 'spells';
-          tab.id = 'divination';
-          tab.label += 'divination';
-          break;
-        case 'enchantment':
-          tab.group = 'spells';
-          tab.id = 'enchantment';
-          tab.label += 'enchantment';
-          break;
-        case 'evocation':
-          tab.group = 'spells';
-          tab.id = 'evocation';
-          tab.label += 'evocation';
-          break;
-        case 'illusion':
-          tab.group = 'spells';
-          tab.id = 'illusion';
-          tab.label += 'illusion';
-          break;
-        case 'necromancy':
-          tab.group = 'spells';
-          tab.id = 'necromancy';
-          tab.label += 'necromancy';
-          break;
-        case 'wake':
-          tab.group = 'spells';
-          tab.id = 'wake';
-          tab.label += 'wake';
-          break;
         default:
       }
       
       if (this.tabGroups['primary'] === tab.id) tab.cssClass = 'active';
-      if (this.tabGroups['spells'] === tab.id) tab.cssClass = 'active';
 
       tabs[partId] = tab;
       return tabs;
@@ -359,6 +343,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           gear.push(i);
         }
       }
+      else if (i.type === 'weapon') {
+        weapons.push(i);
+      }
       else if (i.type === 'talent') {
         talents.push(i);
       }
@@ -373,6 +360,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       }
       else if (i.type === 'spell') {
         spells.push(i);
+      }
+      else if (i.type === 'species') {
+        continue;
       }
 
       // Else, append to misc.
@@ -451,6 +441,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         input.select();
       });
     });
+
+    this.element.querySelector("#overrideDerivedData").addEventListener('change', async (event) => {
+      await this.actor.setFlag('utopia', 'overrideDerivedData', event.target.checked);
+    });
   }
 
   /**
@@ -474,6 +468,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     })
 
     return biographyFields
+  }
+
+  static async _useItem(event, target) {
+    const doc = this._getEmbeddedDocument(target);
+    console.log(doc);
+
+    doc.system.use();
   }
 
   static async _addToStat(event, target) {
@@ -522,34 +523,30 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   }
 
   static async _deleteResource(event, target) {
-    const id = target.dataset.target;
+    const index = event.target.dataset.index;
+
     const resources = this.actor.system.resources;
 
-    this.actor.update({
-      [`system.resources.-=${id}`]: null
-    });
+    resources.splice(index, 1);
 
-    this.render();
+    await this.actor.update({
+      [`system.resources`]: resources,
+    });
   }
 
   static async _addResource(event, target) {
-    const id = foundry.utils.randomID();
-
-    const resource = {
-      name: "New Resource",
-      description: "Description",
-      value: 0,
-    }
     const resources = this.actor.system.resources;
-    resources[id] = resource;
+    const resource = {
+      name: `New Resource ${resources.length + 1}`,
+      source: true
+    }
+    resources.push(resource);
 
-    this.actor.update({
-      [`system.resources`]: resources
+    await this.actor.update({
+      [`system.resources`]: resources,
     });
 
-    console.log(this.actor.system)
-
-    this.render();
+    console.log(this.actor);
   }
 
   static async _equipItem(event, target) {
@@ -605,8 +602,56 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     this.actor.openTalentTree();
   }
 
+  async _dockNewWindow(window, options = {}) {
+    const docking = game.settings.get('utopia', 'dockedWindowPosition');
+    switch (docking) {
+      case 0: 
+        var sheet = await new window(foundry.utils.mergeObject(options, {
+          position: {
+            left: this.position.left + this.position.width,
+            top: this.position.top
+          }
+        }));
+        sheet.isDocked = true;
+        sheet.dockedTo = this;
+        sheet.dockedSide = 1;
+
+        this.children.push(sheet);
+        this.dockedRight.push(sheet);
+    
+        sheet.render(true);
+        break;
+      case 1:
+        var sheet = await new window(foundry.utils.mergeObject(options, {
+          position: {
+            left: this.position.left - 450,
+            top: this.position.top
+          }
+        }));
+        sheet.isDocked = true;
+        sheet.dockedTo = this;
+        sheet.dockedSide = 0;
+
+        this.children.push(sheet);
+        this.dockedLeft.push(sheet);
+    
+        sheet.render(true);
+        break;
+      case 2:
+        var sheet = await new window(foundry.utils.mergeObject(options, {
+        }));
+        sheet.isDocked = false;
+        
+        this.children.push(sheet);
+        sheet.render(true);
+        break;
+      default: 
+        break;
+    }  
+  }
+
   static async _selectSubtraits(event, target) {
-    this.actor.openSubtraitSheet();
+    this._dockNewWindow(UtopiaSubtraitSheetV2, {document: this.actor})
   }
 
   static async _editSpell(event, target) {
@@ -621,70 +666,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     this.render();
   }
 
-  static async _toggleArtifice(event, target) {
-    var apostrophe = '';
-    if (this.actor.name.toLowerCase().endsWith('s')) apostrophe = "'";
-    else apostrophe = "'s";
-
-    const name = `${this.actor.name}${apostrophe} Artifice`;
-
-    const data = {
-      type: 'gear',
-      name: name
-    }
-    const artifice = await this.actor.createEmbeddedDocuments('Item', [data]);
-    artifice.sheet.render(true);
+  static async _openDataOverride(event, target) {
+    this._dockNewWindow(UtopiaDataOverrideSheet, {document: this.actor});
   }
 
   static async _toggleComponents(event, target) {
-    const docking = game.settings.get('utopia', 'dockedWindowPosition');
-    switch (docking) {
-      case 0: 
-        var sheet = await new UtopiaActorComponentsSheet({
-          document: this.actor,
-          position: {
-            left: this.position.left + this.position.width,
-            top: this.position.top
-          }
-        });
-        sheet.isDocked = true;
-        sheet.dockedTo = this;
-        sheet.dockedSide = 1;
-
-        this.children.push(sheet);
-        this.dockedRight.push(sheet);
-    
-        sheet.render(true);
-        break;
-      case 1:
-        var sheet = await new UtopiaActorComponentsSheet({
-          document: this.actor,
-          position: {
-            left: this.position.left - 450,
-            top: this.position.top
-          }
-        });
-        sheet.isDocked = true;
-        sheet.dockedTo = this;
-        sheet.dockedSide = 0;
-
-        this.children.push(sheet);
-        this.dockedLeft.push(sheet);
-    
-        sheet.render(true);
-        break;
-      case 2:
-        var sheet = await new UtopiaActorComponentsSheet({
-          document: this.actor,
-        });
-        sheet.isDocked = false;
-        
-        this.children.push(sheet);
-        sheet.render(true);
-        break;
-      default: 
-        break;
-    }
+    this._dockNewWindow(UtopiaActorComponentsSheet);
   }
 
   _onPosition(position) {
@@ -938,6 +925,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    * @returns {Item | ActiveEffect} The embedded Item or ActiveEffect
    */
   _getEmbeddedDocument(target) {
+    if (target.dataset.document) {
+      return this.actor.items.get()
+    }
+
     const docRow = target.closest('li[data-document-class]');
     if (docRow.dataset.documentClass === 'Item') {
       return this.actor.items.get(docRow.dataset.itemId);
@@ -1129,6 +1120,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
     if (!this.actor.isOwner) return false;
     const item = await Item.implementation.fromDropData(data);
+
+    if (item.type === "species") {
+      this.actor.setSpecies(item);
+    }
 
     // Handle item sorting within the same Actor
     if (this.actor.uuid === item.parent?.uuid)
