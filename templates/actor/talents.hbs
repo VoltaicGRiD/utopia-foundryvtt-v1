@@ -31,7 +31,7 @@
     </div>
 
     {{#if editable}}
-      <button type="button" class="tab-button" data-action="selectSpecialistTalents">{{system.points.specialist.total}} Specialist Points - Select</button>
+      <button type="button" class="tab-button"  data-action="openCompendium" data-category="specialistTalent">{{system.points.specialist.total}} Specialist Points - Select</button>
     {{/if}}
   </div>
 
@@ -43,10 +43,8 @@
       <h3>{{localize 'UTOPIA.Descriptions.talents'}}</h3>
       <div class="talent-list">
         {{#each talents as |talent key|}}
-          <button type="button" class="talent" data-action="openTalent" data-target="{{talent.id}}" 
-            data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}: {{numberFormat talent.system.points.mind.total decimals=0}} -
-                          {{localize 'UTOPIA.Actor.Points.body'}}: {{numberFormat talent.system.points.body.total decimals=0}} -
-                          {{localize 'UTOPIA.Actor.Points.soul'}}: {{numberFormat talent.system.points.soul.total decimals=0}}"
+          <button type="button" class="talent" data-action="roll" data-roll-type="talent" data-talent="{{talent.id}}" 
+            data-tooltip="{{talent.system.description}}"
             data-tooltip-position="top">
             <div class="flexrow talent-content">
               <div>
@@ -62,7 +60,7 @@
       <h3>{{localize 'UTOPIA.Descriptions.specialistTalents'}}</h3>
       <div class="talent-list">
         {{#each specialist as |talent key|}}
-          <button type="button" class="talent" data-action="openTalent" data-target="{{talent.id}}" 
+          <button type="button" class="talent" data-action="roll" data-roll-type="talent" data-talent="{{talent.id}}" 
             data-tooltip="{{talent.system.description}}"
             data-tooltip-position="top">
             <div class="flexrow talent-content">

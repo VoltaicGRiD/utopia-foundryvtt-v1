@@ -45,7 +45,7 @@
 }
 
 .data-blocks {
-  gap: 0.5em;
+  //gap: 0.5em;
 }
 
 .data-overlay {
@@ -57,7 +57,7 @@
 }
 
   .data-overlay i {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     color: rgb(107, 107, 107);
   }
 
@@ -81,11 +81,10 @@
 }
 
 .point-blocks {
-  gap: 0.5em;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .point-overlay {
@@ -495,7 +494,8 @@
 }
 
 .rest-button {
-  padding-right: 10px;
+  height: 24px;
+  line-height: 24px;
 }
 
 & fieldset {
@@ -512,8 +512,9 @@
       width: 40%;
     }
 
-    & .resources-value {
-      width: 15%;
+    & .resources-value,
+    & .resources-max {
+      width: 10%;
     }
 
     & td,

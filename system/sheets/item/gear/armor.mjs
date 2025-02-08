@@ -57,6 +57,10 @@ export class UtopiaArmorSheet extends api.HandlebarsApplicationMixin(
     options.parts = ["header", "tabs", "attributes", "description", "effects"];
   }
 
+  _preClose(_options) {
+    super.submit();
+  }
+
   async _prepareContext(options) {
     const roll = new Roll(this.item.system.formula);
     const terms = roll.terms;
@@ -89,7 +93,7 @@ export class UtopiaArmorSheet extends api.HandlebarsApplicationMixin(
     return context;
   }
 
-/** @override */
+  /** @override */
   async _preparePartContext(partId, context) {
     switch (partId) {
       case 'attributes':

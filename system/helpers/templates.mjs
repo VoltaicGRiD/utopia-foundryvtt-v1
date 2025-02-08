@@ -7,6 +7,9 @@ export const preloadHandlebarsTemplates = async function () {
   return loadTemplates({
     'actor-trait':
       'systems/utopia/templates/actor/traits.hbs',
+
+    'paper-doll': 
+      'systems/utopia/templates/item/species/paperdoll-attributes.hbs',
   });
 };
 

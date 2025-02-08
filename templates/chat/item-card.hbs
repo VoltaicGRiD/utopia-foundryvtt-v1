@@ -1,8 +1,8 @@
 <div class="utopia">
-<div class="chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-    <header class="card-header flexrow">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <h3>{{item.name}}</h3>
+  <div class="chat-card item-card item-rarity-{{rarity}}" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow" data-action="openItem">
+      <img src="{{item.img}}" alt="{{item.name}}" />
+      <h3>{{item.name}}</h3>
     </header>
 
     <div class="tags" data-tooltip-class="utopia">
@@ -10,46 +10,68 @@
     </div>
 
     <div class="card-content">
-      <div class="dice-roll" data-tooltip-class="utopia">
-        {{#if flavor~}}
-            <div class="dice-flavor">
-                {{flavor}}
-            </div>
-        {{~/if}}
-        <div class="dice-result">
-            <div class="dice-formula">{{formula}}</div>
-            {{{tooltip}}}
-            <h4 class="dice-total">{{total}}</h4>
+      {{{item.system.description}}}
+
+      <div class="dice-roll" data-tooltip-class="utopia">     
+        <div class="dice-flavor">
+      
         </div>
+      </div>        
     </div>
-        {{#if canRollDamage}}
-            <div class="message-buttons" data-identifier="{{identifier}}">
-                <button type="button" type="button" class="success" data-action="{{action}}-damage" data-outcome="success">
-                    {{localize "UTOPIA.DamageLabel"}}
-                    {{#if (eq degree 2)}}
-                        <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
-                            <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-                        </span>
-                    {{/if}}
-                </button>
-                <button type="button" type="button" class="critical-success" data-action="{{action}}-damage" data-outcome="critical-success">
-                    {{localize "UTOPIA.CriticalDamageLabel"}}
-                    {{#if (eq degree 3)}}
-                        <span class="cue"{{#unless showDamageCue}} data-visibility="owner" data-whose="opposer"{{/unless}}>
-                            <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-                        </span>
-                    {{/if}}
-                </button>
-            </div>
-        {{/if}}
+
+    <div class="card-actions">
+      {{#each system.strikes as |strike|}}
+        <button type="button" class="strike-button" data-action="performStrike" data-index="{{@index}}">
+          <span class="strike-content">
+            <i class="fas fa-fist-raised"></i>
+            {{strike.name}}:  
+            {{#if strike.estimate}} 
+              <i>~{{strike.estimate}}</i>
+            {{else if strike.exact}}
+              <i>={{strike.exact}}</i>
+            {{else}}P
+              <i>{{strike.damage}}</i>
+            {{/if}}
+            {{#if strike.accuracy}}
+              - {{strike.range.close}}/{{strike.range.far}}
+            {{/if}}
+            {{#if (ne strike.template "none")}}
+              - {{localize (concat "UTOPIA.Item.Gear.Strike.Template." strike.template)}}
+            {{/if}}
+          </span>
+          <span class="strike-flavor">"{{strike.flavor}}"</span>
+        </button>
+      {{/each}}
+
+      {{#each system.actions as |action|}}
+        <button type="button" class="action-button" data-action="performAction" data-index="{{@index}}">
+          <span class="action-content">
+            <i class="fas fa-key"></i>
+            {{action.name}}:  
+            {{#if action.estimate}} 
+              <i>~{{action.estimate}}</i>
+            {{else if action.exact}}
+              <i>={{action.exact}}</i>
+            {{else}}
+              <i>{{action.formula}}</i>
+            {{/if}}
+            - 
+            {{action.cost}} cost
+          </span>
+          {{#if action.flavor}}
+            <span class="action-flavor">"{{action.flavor}}"</span>
+          {{/if}}
+        </button>
+      {{/each}}
     </div>
 
     <footer data-visibility="gm">
-      <span>GM, damage your targeted creature?</span>
-      <div class="grid grid-2col message-buttons">
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
-      </div>
+      {{#if system.hasGMNotes}}
+        <details class="gm-notes">
+          <summary>GM Notes</summary>
+          <span>{{{system.enrichedGMNotes}}}</span>
+        </details>
+      {{/if}}
     </footer>
-</div>
+  </div>
 </div>

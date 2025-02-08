@@ -67,6 +67,34 @@
     </fieldset>
 
     <fieldset>
+      <legend>{{localize 'UTOPIA.Descriptions.travel'}}</legend>
+      <div class="flexrow data-blocks">
+        
+        <div class="data-overlay">
+        <i class="fa-solid fa-mountain fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.land'}}"></i>
+          <span class="data-number">
+            {{numberFormat system.travel.land.total decimals=0}}
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <i class="fa-solid fa-person-swimming fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.water'}}"></i>
+          <span class="data-number">
+            {{numberFormat system.travel.water.total decimals=0}}
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <i class="fa-solid fa-person-fairy fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.air'}}"></i>
+          <span class="data-number">
+            {{numberFormat system.travel.air.total decimals=0}}
+          </span>
+        </div>
+      
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>{{localize 'UTOPIA.Descriptions.defenses'}}</legend>
 
       <div class="flexrow data-blocks">
@@ -122,30 +150,36 @@
           <th class="resources-name">Name</th>
           <th class="resources-description">Description</th>
           <th class="resources-value">Value</th>
+          <th class="resources-max">Max</th>
           <th class="resources-source">Source</th>
           <th class="resources-controls"></th>
         </tr>
 
         {{#each system.resources as |resource|}}
-          <tr>
+          <tr data-document-class="Item" data-item-id="{{resource.source}}">
             <th>
-              {{formInput ../systemFields.resource.fields.name value=resource.name name=(concat "system.resources." @index ".name") localize=true}}
+              {{formInput ../systemFields.resource.fields.name value=resource.name name=(concat "system.resources." @index ".name") localize=true disabled=(ne resource.source null)}}
             </th>
             <td>
-              {{formInput ../systemFields.resource.fields.description value=resource.description name=(concat "system.resources." @index ".description") localize=true}}
+              {{formInput ../systemFields.resource.fields.description value=resource.description name=(concat "system.resources." @index ".description") localize=true disabled=(ne resource.source null)}}
             </td>
             <td>
-              {{formInput ../systemFields.resource.fields.amount value=resource.amount name=(concat "system.resources." @index ".amount") localize=true}}
+              {{formInput ../systemFields.resource.fields.amount value=resource.amount name=(concat "system.resources." @index ".amount") localize=true disabled=(ne resource.source null)}}
             </td>
             <td>
-              {{#if resource.source}}
-                <i class="fas fa-arrow-down-to-line"></i>
+              {{formInput ../systemFields.resource.fields.max.fields.formula value=resource.max.total name=(concat "system.resources." @index ".max.total") localize=true disabled=(ne resource.source null)}}
+            </td>
+            <td>
+              {{#if (ne resource.source null)}}
+                <a data-action="viewDoc" data-target="{{resource.source}}">
+                  <i class="fas fa-up-right-from-square"></i>
+                </a>
               {{else}}
-                <i class="fas fa-up-right-from-square"></i>
+                <i class="fas fa-arrow-down-to-line"></i>
               {{/if}}
             </td>
             <td>
-              <button type="button" data-action="deleteResource" data-index="{{@index}}">
+              <button type="button" data-action="deleteResource" data-index="{{@index}}" {{#if resource.source}}disabled{{/if}}>
                 <i class="fas fa-trash"></i>
               </button>
             </td>

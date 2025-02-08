@@ -23,6 +23,8 @@
   background: transparent;
   border: none;
   box-shadow: none;
+  
+  @import 'components/talent-tree/talent-tree';
 }
 
 #tooltip:has(.spellcraft-options-sheet) {
@@ -54,11 +56,15 @@
   @import 'components/general/effects';
   @import 'components/general/tables';
   @import 'components/general/items';
-  
-/*   .flexrow {
-    gap: 10px;
-    margin-top: 10px;
-  } */
+
+  &.actor-sheet,
+  &.species-sheet {
+    @import 'components/other/paper-doll';
+  }
+
+  &.species-sheet {
+    @import 'components/item/species-sheet';
+  }
 
   &.spellcraft-sheet {
     @import 'components/spellcraft/spellcraft';
@@ -116,11 +122,24 @@
     @import 'components/other/roll-dialog';
   }
 
+  &.compendium-browser {
+    @import 'components/other/compendium-browser';
+  }
+
+  // &.specialist-talent-sheet {
+  //   @import 'components/item/specialist-talent-sheet';
+  // }
+
+  .form-group.slim .form-fields {
+    input[type="text"] {
+      flex: 0 0 150px;
+    }
+  }
+
   //@import 'components/item/spell-sheet';
   @import 'components/item/action-sheet';
   @import 'components/item/spell-tab';
   @import 'components/item/spell-feature-sheet';
-  @import 'components/item/specialist-talent-sheet';
   
   @import 'components/other/options-sheet';
   @import 'components/other/attack-sheet';

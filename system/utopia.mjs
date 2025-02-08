@@ -8,30 +8,26 @@ import { UtopiaChatMessage } from "./documents/chat-message.mjs";
 // Import sheet classes.
 import { UtopiaActorSheetV2 } from "./sheets/actor/actor-sheet-appv2.mjs";
 import {
-  UtopiaActionSheet,
   UtopiaGeneralItemSheet,
   UtopiaSpeciesSheet,
   
   UtopiaSpellSheet,
   UtopiaSpellFeatureSheet,
   
+  UtopiaActionSheet,
+
   UtopiaTalentSheet,
   UtopiaSpecialistTalentSheet,
-  
-  UtopiaArtificeMaterialSheet,
-  UtopiaArtificeFeatureSheet,
-  
+    
   UtopiaArmorSheet,
   UtopiaArtifactSheet,
   UtopiaConsumableSheet,
   UtopiaTrinketSheet,
   UtopiaWeaponSheet,
 } from "./sheets/item/_module.mjs";
-import { UtopiaTalentTreeSheet } from "./sheets/other/talent-tree-sheet.mjs";
-import { UtopiaOptionsSheet } from "./sheets/other/options-sheet.mjs";
-import { UtopiaSubtraitSheetV2 } from "./sheets/other/subtrait-sheet.mjs";
-import { UtopiaSpellcraftSheet } from "./sheets/other/spellcraft-sheet.mjs";
-
+import { UtopiaTalentTreeSheet } from "./sheets/utility/talent-tree-sheet.mjs";
+import { UtopiaSpellcraftSheet } from "./sheets/utility/spellcraft-sheet.mjs";
+import { UtopiaCompendiumBrowser } from "./sheets/utility/compendium-browser.mjs";
 
 // Import utility classes.
 import {
@@ -44,28 +40,18 @@ import {
   traitLongNames,
   calculateTraitFavor,
   addTalentToActor,
-  USER_VISIBILITIES,
-  UtopiaUserVisibility,
   gatherTalents,
-  runTrigger,
-  UtopiaTrigger,
-  triggers,
   rangeTest,
   preloadHandlebarsTemplates,
 } from "./helpers/_module.mjs";
-import { UTOPIA } from "./helpers/config.mjs";
 
 // Import models.
 import * as models from "./data/_module.mjs";
-import { UtopiaActiveEffect } from "./documents/active-effect.mjs";
-import UtopiaActiveEffectSheet from "./sheets/other/active-effect-sheet.mjs";
-import UtopiaDiceTerm from "./other/dice.mjs";
 import UtopiaTokenHUD from "./hud/token-hud.mjs";
 import UtopiaDie from "./other/die.mjs";
 import UtopiaToken from "./hud/token.mjs";
 import UtopiaTokenDocument from "./hud/token-document.mjs";
-import { UtopiaArchetypeSheet } from "./sheets/item/archetype-sheet.mjs";
-import UtopiaTwitchIntegrationSheet from "./sheets/other/twitch-integration.mjs";
+import UtopiaTwitchIntegrationSheet from "./sheets/extensions/twitch-integration.mjs";
 import Twitch from "./extensions/twitch.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
@@ -83,18 +69,13 @@ globalThis.utopia = {
   },
   applications: {
     UtopiaWeaponSheet,
-    UtopiaActionSheet,
     UtopiaActorSheetV2,
-    UtopiaOptionsSheet,
-    UtopiaSubtraitSheetV2,
     UtopiaSpeciesSheet,
     UtopiaTalentSheet,
+    UtopiaSpecialistTalentSheet,
     UtopiaSpellFeatureSheet,
-    UtopiaArtificeMaterialSheet,
-    UtopiaArtificeFeatureSheet,
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
-    UtopiaTrigger,
   },
   utils: {
     rollItemMacro,
@@ -104,8 +85,6 @@ globalThis.utopia = {
     longToShort,
     rangeTest,
     calculateTraitFavor,
-    runTrigger,
-    triggers,
     traitShortNames,
     traitLongNames,
   },
@@ -118,8 +97,6 @@ Hooks.once("init", function () {
   game.utopia = {
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
-    UtopiaArtificeMaterialSheet,
-    UtopiaArtificeFeatureSheet,
     UtopiaGeneralItemSheet,
     UtopiaChatMessage,
     UtopiaActor,
@@ -132,13 +109,9 @@ Hooks.once("init", function () {
     longToShort,
     rangeTest,
     calculateTraitFavor,
-    triggers,
     traitShortNames,
     traitLongNames,
   };
-
-  // Add custom constants for configuration.
-  CONFIG.UTOPIA = UTOPIA;
 
   // This is how we configure initiative in the system, it has to be done in the init hook.
   CONFIG.Combat.initiative = {
@@ -176,19 +149,16 @@ Hooks.once("init", function () {
   // This is supposed to replace the default 'Template.json' file.
   // It's a bit more flexible and allows for more complex data structures and validation.
   CONFIG.Item.dataModels = {
+    action: models.UtopiaAction,
+
     talent: models.UtopiaTalent,
     specialistTalent: models.UtopiaSpecialistTalent,
 
-    action: models.UtopiaAction,
     species: models.UtopiaSpecies,
 
     spell: models.UtopiaSpell,
     spellFeature: models.UtopiaSpellFeature,
-    variable: models.UtopiaSpellVariable,
     
-    artificeMaterial: models.UtopiaArtificeMaterial,
-    artificeFeature: models.UtopiaArtificeFeature,
-
     general: models.UtopiaGeneralItem,
 
     gear: models.UtopiaGear,
@@ -274,15 +244,16 @@ function registerItemSheets() {
     types: ["general"],
     label: "UTOPIA.SheetLabels.generalItem",
   });
-  Items.registerSheet("utopia", UtopiaActionSheet, {
-    makeDefault: true,
-    types: ["action"],
-    label: "UTOPIA.SheetLabels.action",
-  });
   Items.registerSheet("utopia", UtopiaSpeciesSheet, {
     makeDefault: true,
     types: ["species"],
     label: "UTOPIA.SheetLabels.species",
+  });
+  
+  Items.registerSheet("utopia", UtopiaActionSheet, {
+    makeDefault: true,
+    types: ["action"],
+    label: "UTOPIA.SheetLabels.action",
   });
 
   Items.registerSheet("utopia", UtopiaTalentSheet, {
@@ -395,44 +366,6 @@ function registerSocketHandling() {
 /* -------------------------------------------- */
 
 function registerGameKeybindings() {
-  // Open Talent Tree for selected Token
-  game.keybindings.register("utopia", "openTalentTree", {
-    name: "UTOPIA.Keybindings.openTalentTree",
-    hint: "UTOPIA.Keybindings.openTalentTreeHint",
-    editable: [{ key: "KeyT", modifiers: ["Control"] }, { key: "F1" }],
-    onDown: () => {
-      if (game.canvas.tokens.controlled.length > 0) {
-        game.canvas.tokens.controlled.forEach((token) => {
-          token.actor.openTalentTree();
-        });
-      } else {
-        ui.notifications.warn("No token selected.");
-      }
-    },
-    onUp: () => {},
-    restricted: false,
-    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-  });
-
-  // Open Subtrait Sheet for selected Token --- DISABLED
-  // game.keybindings.register("utopia", "openSubtraitSheet", {
-  //   name: "UTOPIA.Keybindings.openSubtraitSheet",
-  //   hint: "UTOPIA.Keybindings.openSubtraitSheetHint",
-  //   editable: [{ key: "KeyS", modifiers: ["Control"] }, { key: "F2" }],
-  //   onDown: () => {
-  //     if (game.canvas.tokens.controlled.length > 0) {
-  //       game.canvas.tokens.controlled.forEach((token) => {
-  //         token.actor.openSubtraitSheet();
-  //       });
-  //     } else {
-  //       ui.notifications.warn("No token selected.");
-  //     }
-  //   },
-  //   onUp: () => {},
-  //   restricted: false,
-  //   precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL,
-  // });
-
   // Deal damage to selected Token
   game.keybindings.register("utopia", "dealDamage", {
     name: "UTOPIA.Keybindings.dealDamage",
@@ -696,6 +629,11 @@ async function registerStatusEffects() {
       img: "icons/svg/daze.svg",
       label: "UTOPIA.StatusEffects.focus",
     },
+    {
+      id: "fatigue",
+      img: "icons/svg/degen.svg",
+      label: "UTOPIA.StatusEffects.fatigue",
+    }
   ];
 
   // Allow modules to build onto the status effects.
@@ -861,9 +799,9 @@ Hooks.once("ready", function () {
     const actor = effect.target;
     const condition = effect.statuses[0];
 
-    runTrigger("Condition", 
-      { actor: actor, condition: condition }
-    );
+    // runTrigger("Condition", 
+    //   { actor: actor, condition: condition }
+    // );
 
     return true;
   });
@@ -872,13 +810,13 @@ Hooks.once("ready", function () {
     const actor = effect.target;
     const condition = effect.statuses[0];
 
-    if (condition === "focus") {
-      runTrigger("FocusLost", actor, condition);
-    } else if (condition === "concentration") {
-      runTrigger("ConcentrationLost", actor, condition);
-    } else {
-      runTrigger("ConditionLost", actor, condition);
-    }
+    // if (condition === "focus") {
+    //   runTrigger("FocusLost", actor, condition);
+    // } else if (condition === "concentration") {
+    //   runTrigger("ConcentrationLost", actor, condition);
+    // } else {
+    //   runTrigger("ConditionLost", actor, condition);
+    // }
 
     return true;
   });
@@ -995,6 +933,26 @@ Hooks.on('renderSettings', (settings) =>  {
   utopiaSettings.append(twitchSettings, discordButton, vaultButton);
 
   const ws = new WebSocket("ws://localhost:8765");
+});
+
+Hooks.on("renderSidebarTab", (tab) => {
+  if (tab.tabName !== "compendium") return;
+
+  const browserButton = document.createElement("button");
+  const browserIcon = document.createElement("i");
+  browserIcon.classList.add("fas", "fa-globe");
+  browserButton.type = "button";
+  browserButton.style.height = "28px";
+  browserButton.style.lineHeight = "26px";
+  browserButton.style.margin = "4px";
+  browserButton.append(browserIcon, game.i18n.localize("UTOPIA.Settings.Buttons.compendiumBrowser"));
+  browserButton.addEventListener("click", () => {
+    // Open the hyperlink to the Utopia Discord
+    const browser = new UtopiaCompendiumBrowser();
+    browser.render(true);
+  });  
+
+  tab.element[0].querySelector(".directory-footer.action-buttons")?.append(browserButton);
 });
 //#endregion
 

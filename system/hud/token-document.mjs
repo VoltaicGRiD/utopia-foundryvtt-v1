@@ -58,8 +58,6 @@ export default class UtopiaTokenDocument extends TokenDocument {
   }
 
   _prepareUtopiaBars() {
-    console.log("Preparing Utopia Bars");
-
     if (!this.actor) return;
     const actorData = this.actor.system;
     if (!actorData) return;

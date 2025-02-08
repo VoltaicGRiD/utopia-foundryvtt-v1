@@ -10,65 +10,41 @@ export default class UtopiaAction extends UtopiaItemBase {
     schema.description = new fields.StringField({ blank: true });
     schema.flavor = new fields.StringField({ blank: true });
 
-    schema.rules = new fields.JSONField({ initial: JSON.stringify({}) });
-    schema.type = new fields.StringField({ required: false, nullable: false, initial: "Standard", choices: {
-      "Standard": "UTOPIA.Item.Actions.Type.standard",
-      "Interrupt": "UTOPIA.Item.Actions.Type.interrupt",
-      "Special": "UTOPIA.Item.Actions.Type.special",
-      "Free": "UTOPIA.Item.Actions.Type.free",
+    schema.type = new fields.StringField({ required: false, nullable: false, initial: "turn", choices: {
+      "turn": "UTOPIA.Item.Actions.Type.turn",
+      "interrupt": "UTOPIA.Item.Actions.Type.interrupt",
+      "special": "UTOPIA.Item.Actions.Type.special",
+      "free": "UTOPIA.Item.Actions.Type.free",
     }});
-    const trigger = new fields.StringField({ required: false, nullable: false, initial: "Manual", choices: {
-      "Manual": "UTOPIA.Item.Actions.Trigger.manual",
-      "SHPDamageTaken": "UTOPIA.Item.Actions.Trigger.shpDamage",
-      "SHPDamageDealt": "UTOPIA.Item.Actions.Trigger.shpDamageDealt",
-      "DHPDamageTaken": "UTOPIA.Item.Actions.Trigger.dhpDamage",
-      "DHPDamageDealt": "UTOPIA.Item.Actions.Trigger.dhpDamageDealt",
-      "Heal": "UTOPIA.Item.Actions.Trigger.heal",
-      "Condition": "UTOPIA.Item.Actions.Trigger.condition",
-      "ConditionLost": "UTOPIA.Item.Actions.Trigger.conditionLost",
-      "MyTurn": "UTOPIA.Item.Actions.Trigger.myTurn",
-      "EnemyTurn": "UTOPIA.Item.Actions.Trigger.enemyTurn",
-      "AllyTurn": "UTOPIA.Item.Actions.Trigger.allyTurn",
-      "TokenMovement": "UTOPIA.Item.Actions.Trigger.tokenMovement",
-      "StartRound": "UTOPIA.Item.Actions.Trigger.startRound",
-      "EndRound": "UTOPIA.Item.Actions.Trigger.endRound",
-      "StaminaLost": "UTOPIA.Item.Actions.Trigger.staminaLost",
-      "Contest": "UTOPIA.Item.Actions.Trigger.contest",
-      "Test": "UTOPIA.Item.Actions.Trigger.test",
-      "FocusLost": "UTOPIA.Item.Actions.Trigger.focusLost",
-      "ConcentrationLost": "UTOPIA.Item.Actions.Trigger.concentrationLost",
-      "Block": "UTOPIA.Item.Actions.Trigger.block",
-      "Dodge": "UTOPIA.Item.Actions.Trigger.dodge",
-      "SpellCast": "UTOPIA.Item.Actions.Trigger.spellCast",
-      "CraftStarted": "UTOPIA.Item.Actions.Trigger.craftStarted",
-      "CraftFinished": "UTOPIA.Item.Actions.Trigger.craftFinished",
-      "ForageStarted": "UTOPIA.Item.Actions.Trigger.forageStarted",
-      "ForageFinished": "UTOPIA.Item.Actions.Trigger.forageFinished",
-      "RestStarted": "UTOPIA.Item.Actions.Trigger.restStarted",
-      "RestFinished": "UTOPIA.Item.Actions.Trigger.restFinished",
-      "BlindAwareness": "UTOPIA.Item.Actions.Trigger.awareness",
+
+    schema.category = new fields.StringField({ required: false, nullable: false, initial: "attack", choices: {
+      "attack": "UTOPIA.Item.Actions.Category.attack",
+      "utility": "UTOPIA.Item.Actions.Category.utility",
+      "defense": "UTOPIA.Item.Actions.Category.defense",
+      "healing": "UTOPIA.Item.Actions.Category.healing",
+      "movement": "UTOPIA.Item.Actions.Category.movement",
+      "special": "UTOPIA.Item.Actions.Category.special",
+      "macro": "UTOPIA.Item.Actions.Category.macro",
     }});
-    schema.triggers = new fields.SetField(trigger);
-    schema.triggerArguments = new fields.StringField({ required: false, nullable: true });
-    schema.triggerPrompt = new fields.BooleanField({ required: false, nullable: false, initial: true });
-    schema.recharge = new fields.StringField({ required: false, nullable: false, initial: "Immediate", choices: {
-      "Immediate": "UTOPIA.Item.Actions.Recharge.immediate",
-      "MyTurn": "UTOPIA.Item.Actions.Recharge.myTurn",
-      "Turn": "UTOPIA.Item.Actions.Recharge.turn",
-      "Round": "UTOPIA.Item.Actions.Recharge.round",
-      "Minute": "UTOPIA.Item.Actions.Recharge.minute",
-      "Hour": "UTOPIA.Item.Actions.Recharge.hour",
-      "Day": "UTOPIA.Item.Actions.Recharge.day",
-      "Week": "UTOPIA.Item.Actions.Recharge.week",
+
+    schema.resource = new fields.StringField({ required: false, nullable: false });
+    schema.consumed = new fields.NumberField({ required: false, nullable: false, initial: 0 });
+    schema.macro = new fields.DocumentUUIDField({ required: false, nullable: true });
+    schema.actor = new fields.StringField({ required: false, nullable: false, initial: "default", choices: {
+      "default": "UTOPIA.Item.Actions.Actor.default",
+      "self": "UTOPIA.Item.Actions.Actor.self",
+      "target": "UTOPIA.Item.Actions.Actor.target",
     }});
-    schema.target = new fields.StringField({ required: false, nullable: false, initial: "None", choices: {
-      "None": "UTOPIA.Item.Actions.Target.none",
-      "Self": "UTOPIA.Item.Actions.Target.self",
-      "Ally": "UTOPIA.Item.Actions.Target.ally",
-      "Enemy": "UTOPIA.Item.Actions.Target.enemy",
-      "Any": "UTOPIA.Item.Actions.Target.any",
+    schema.template = new fields.StringField({ required: false, nullable: false, initial: "none", choices: {
+      "none": "UTOPIA.Item.Actions.Template.none",
+      "sbt": "UTOPIA.Item.Actions.Template.sbt",
+      "mbt": "UTOPIA.Item.Actions.Template.mbt",
+      "lbt": "UTOPIA.Item.Actions.Template.lbt",
+      "xbt": "UTOPIA.Item.Actions.Template.xbt",
+      "cone": "UTOPIA.Item.Actions.Template.cone",
+      "line": "UTOPIA.Item.Actions.Template.line",
     }});
-    //schema.cost = new fields.NumberField({ required: true, nullable: false, initial: 1 });
+
     schema.cost = new fields.StringField({ required: false, nullable: true, initial: "1", choices: {
       "0": "0",
       "1": "1",
@@ -81,10 +57,8 @@ export default class UtopiaAction extends UtopiaItemBase {
       "double": "UTOPIA.Item.Actions.Cost.double",
     }});
     schema.stamina = new fields.NumberField({ required: false, nullable: false, initial: 0 });
-
-    schema.source = new fields.DocumentUUIDField({ required: false, nullable: true });
-    schema.rules = new fields.ObjectField({ required: false, nullable: false, initial: {} });
-
+    schema.secret = new fields.BooleanField({ required: true, initial: false });
+    
     return schema;
   }
 

@@ -15,7 +15,6 @@ class UtopiaUserVisibility {
 
     // Process all other visibility elements according to originating document ownership
     const message = options.message;
-    console.log(message);
     const document =
       options.document ??
       message?.actor ??

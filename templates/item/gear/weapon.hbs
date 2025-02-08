@@ -257,7 +257,7 @@
             <div class="flexcol">
               <label for="resource.{{@index}}.propagateToActor">{{localize "UTOPIA.Item.Gear.Resource.propagateToActor"}}</label>
               <label class="switch" for="resource.propagateToActor">
-                <input type="checkbox" id="resource.propagateToActor" name={{concat "system.resources." @index ".max"}} {{#if (eq resource.propagateToActor true)}} checked {{/if}} />
+                <input type="checkbox" id="resource.propagateToActor" name={{concat "system.resources." @index ".propagateToActor"}} {{#if (eq resource.propagateToActor true)}} checked {{/if}} />
                 <div class="slider round"></div>
               </label>
             </div>

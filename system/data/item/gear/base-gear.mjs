@@ -130,6 +130,11 @@ export default class UtopiaGearBase extends UtopiaDataModel {
       // TODO: Add power quality
     })
 
+    schema.container = new fields.SchemaField({
+      capacity: new fields.NumberField({...requiredInteger}),
+      items: new fields.ArrayField(new fields.DocumentUUIDField({ entityClass: "Item" })),
+    });
+
     schema.formula = new fields.StringField({...requiredString});
     schema.flavor = new fields.StringField({...requiredString});
     schema.description = new fields.StringField({...requiredString});
@@ -138,9 +143,15 @@ export default class UtopiaGearBase extends UtopiaDataModel {
     return schema;
   }
 
-  prepareDerivedData() {
-    console.warn("preparing derived data: ", this);
+  get isContainer() {
+    return this.container.capacity > 0;
+  }
 
+  get hasGmNotes() { 
+    if (this.gmSecrets) return true 
+  }
+
+  prepareDerivedData() {
     this.price.silver = this.value;
     this.price.utian = this.value * 100;
 
