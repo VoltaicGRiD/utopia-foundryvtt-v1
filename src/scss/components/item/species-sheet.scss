@@ -29,6 +29,10 @@
   }
 }
 
+.custom-quirks {
+  margin-top: 10px;
+}
+
 .quirks {
   padding: 0;
   margin: 0;
@@ -40,6 +44,7 @@
     
     .quirk {
       flex: 4 4;
+      margin-top: 10px;
       padding: 0 0.5em;
 
       .name {
@@ -52,7 +57,20 @@
     }
 
     button {
+      margin-top: 10px;
       flex: 1 1;
     }
+  }
+}
+
+.talents {
+  .talent-column {
+    height: 360px;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }

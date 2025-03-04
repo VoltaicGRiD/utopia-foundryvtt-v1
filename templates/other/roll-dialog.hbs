@@ -4,10 +4,15 @@
       <span class="target-label">{{localize "UTOPIA.RollDialog.targets"}}</span>
       <span class="target-value">{{targets}}</span>
     </div>
+  {{else}}
+    <div class="flexcol">
+      {{!-- <span class="description-label">{{localize "UTOPIA.RollDialog.description"}}</span> --}}
+      <span class="description-value">{{description}}</span>
+    </div>
   {{/unless}}
 
   <fieldset class="roll-terms">
-    <legend>{{localize "UTOPIA.RollDialog.formula"}}: {{formula}}</legend>
+    <legend>{{localize "UTOPIA.CommonTerms.formula"}}: {{formula}}</legend>
     {{#each terms as |term|}}
       <div class="roll-term {{#if term.disabled}}term-disabled{{/if}}" data-term="{{@index}}">
         {{#if term.favorable}}
@@ -65,7 +70,43 @@
     </fieldset>
   {{/unless}}
 
+  {{#if hasSpecialFavors}}
+    <div class="flexrow" style="gap: 10px;">
+      <div class="flexcol">
+        <label for="optionalFavors">{{localize "UTOPIA.Actor.SpecialFavors.specialFavors"}}</label>
+        <ul name="optionalFavors">
+          {{#each specialFavors as |favor|}}
+            <li>
+              <label for="{{favor.value}}">{{favor.name}}</label>
+              <input type="checkbox" data-amount="{{favor.amount}}" data-type="favor" data-favor="{{favor.value}}" id="{{favor.value}}" name="{{favor.value}}" {{#if (eq favor.selected true)}} checked {{/if}} />
+              {{!-- <label class="switch" for="{{favor.value}}">
+                <input type="checkbox" data-amount="{{favor.amount}}" data-type="favor" data-favor="{{favor.value}}" id="{{favor.value}}" name="{{favor.value}}" {{#if (eq favor.selected true)}} checked {{/if}} />
+                <div class="slider round"></div>
+              </label> --}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="flexcol">
+        <label for="optionalFavors">{{localize "UTOPIA.Actor.SpecialFavors.specialDisfavors"}}</label>
+        <ul name="optionalFavors">
+          {{#each specialDisfavors as |favor|}}
+            <li>
+              <label for="{{favor.value}}">{{favor.name}}</label>
+              <input type="checkbox" data-amount="{{favor.amount}}" data-type="favor" data-favor="{{favor.value}}" id="{{favor.value}}" name="{{favor.value}}" {{#if (eq favor.selected true)}} checked {{/if}} />
+              {{!-- <label class="switch" for="{{favor.value}}">
+                <input type="checkbox" data-amount="{{favor.amount}}" data-type="favor" data-favor="{{favor.value}}" id="{{favor.value}}" name="{{favor.value}}" {{#if (eq favor.selected true)}} checked {{/if}} />
+                <div class="slider round"></div>
+              </label> --}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  {{/if}}
+
   <div class="roll-dialog-buttons">
-    <button type="button" data-action="roll"><i class="fas fa-dice-d6"></i> {{localize "UTOPIA.Descriptions.roll"}}</button>
+    <button type="button" data-action="roll"><i class="fas fa-dice-d6"></i> {{localize "UTOPIA.CommonTerms.roll"}}</button>
   </div>
 </div>

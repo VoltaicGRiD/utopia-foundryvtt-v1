@@ -31,10 +31,10 @@ export default class UtopiaArtificeFeature extends UtopiaItemBase {
     schema.cost = new fields.NumberField({ required: true, nullable: false, initial: 0 });
     schema.costModifier = new fields.StringField({ required: true, nullable: false, initial: "flat", choices: {
       "flat": "UTOPIA.Item.Artifice.Features.CostModifier.flat",
-      "add": "UTOPIA.Item.Artifice.Features.CostModifier.add",
-      "subtract": "UTOPIA.Item.Artifice.Features.CostModifier.subtract",
-      "multiply": "UTOPIA.Item.Artifice.Features.CostModifier.multiply",
-      "divide": "UTOPIA.Item.Artifice.Features.CostModifier.divide",
+      "add": "UTOPIA.Math.add",
+      "subtract": "UTOPIA.Math.subtract",
+      "multiply": "UTOPIA.Math.multiply",
+      "divide": "UTOPIA.Math.divide",
     } });
     schema.costLimit = new fields.NumberField({ required: true, nullable: false, initial: 0 });
     schema.costBonus = new fields.StringField({ required: false, nullable: true });

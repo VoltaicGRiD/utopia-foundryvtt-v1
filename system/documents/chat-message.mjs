@@ -1,3 +1,4 @@
+import UtopiaTemplates from "../helpers/canvasTemplates.mjs";
 import { UtopiaUserVisibility } from "../helpers/userVisibility.mjs";
 import { UtopiaItem } from "./item.mjs";
 
@@ -25,7 +26,8 @@ export class UtopiaChatMessage extends ChatMessage {
         const actor = this.getActor();
         const item = actor.items.get(this.getFlag('utopia', 'item'));
         const strike = this.system.item.system.strikes[button.dataset.index] ?? null;
-        item.performStrike(strike, this);        
+        const user = game.user;
+        item.performStrike(strike, this, user);        
       });
     }
 
@@ -36,6 +38,31 @@ export class UtopiaChatMessage extends ChatMessage {
         const item = actor.items.get(this.getFlag('utopia', 'item'));
         const action = this.system.item.system.actions[button.dataset.index] ?? null;
         item.performAction(action, this);
+      });
+    }
+
+    let templateButtons = html.querySelectorAll('button[data-action="template"]'); 
+    for (let button of templateButtons) {
+      button.addEventListener('click', async (event) => {
+        const actor = this.getActor();
+        const item = actor.items.get(this.getFlag('utopia', 'item'));
+        const template = button.dataset.template;
+        UtopiaTemplates.fromPreset(template, item);
+        button.disabled = false;
+        return null;
+      });
+    }
+
+    let deleteTemplateButtons = html.querySelectorAll('button[data-action="deleteTemplate"]');
+    for (let button of deleteTemplateButtons) {
+      button.addEventListener('click', async (event) => {
+        const actor = this.getActor();
+        const item = actor.items.get(this.getFlag('utopia', 'item'));
+        const templates = item.getActiveTemplates() ?? this.system.itemTemplates ?? null;
+        if (templates.length === 0) return ui.notifications.error("There are no templates to delete.");
+        else {
+          await game.canvas.scene.deleteEmbeddedDocuments("MeasuredTemplate", templates.map(t => t.id));
+        }
       });
     }
 
@@ -66,11 +93,11 @@ export class UtopiaChatMessage extends ChatMessage {
           const html = await renderTemplate(template, data);
           const dialog = new api.DialogV2({
             window: {
-              title: `${game.i18n.localize("UTOPIA.Dialog.dealDamage")} - ${
+              title: `${game.i18n.localize("UTOPIA.CommonTerms.dealDamage")} - ${
                 actor.name
               }`,
             },
-            classes: ["utopia", "utopia-dialog"],
+            classes: ["utopia", "utopia.commonterms"],
             content: html,
             buttons: [
               {
@@ -78,7 +105,7 @@ export class UtopiaChatMessage extends ChatMessage {
                 action: "submit",
                 icon: "fas fa-check",
                 id: "submit-button",
-                label: "UTOPIA.Dialog.submit",
+                label: "UTOPIA.CommonTerms.submit",
                 // Callback to retrieve the selected choice value from the form
                 callback: (event, button, dialog) => {
                   return {
@@ -92,7 +119,7 @@ export class UtopiaChatMessage extends ChatMessage {
                 action: "submit",
                 icon: "fas fa-check",
                 id: "submit-button",
-                label: "UTOPIA.Dialog.submit",
+                label: "UTOPIA.CommonTerms.submit",
                 // Callback to retrieve the selected choice value from the form
                 callback: (event, button, dialog) => {
                   return {
@@ -120,7 +147,7 @@ export class UtopiaChatMessage extends ChatMessage {
     for (let button of responseButtons) {
       button.addEventListener('click', async (event) => {
         const response = button.dataset.response;
-        const actor = this.getActor();
+        const actor = game.user.character ?? game.canvas.tokens.controlled[0].actor ?? this.getActor();
                 
         actor.performResponse(response, this);
       });
@@ -132,18 +159,55 @@ export class UtopiaChatMessage extends ChatMessage {
         const actor = this.getActor();
         const item = actor.items.get(this.getFlag('utopia', 'item'));
         const terms = this.system.terms;
-        const targets = game.user.targets;
-        for (let term of terms) {
-          const data = {
-            actor: actor,
-            item: item,
-            damage: term.total,
-            source: item,
-            type: term.flavor,
-          }
+        var total = this.system.total ?? this.system.damage ?? this.system.value ?? 0;
 
-          for (let target of targets) {
-            await target.actor.applyDamage(data, data.source, data.type);
+        const type = event.target.dataset.type;
+        var targets = [];
+        if (type === "original") {
+          targets = [...this.system.targets] ?? [];
+        }
+        else if (type === "mine") {
+          targets = [...game.user.targets] ?? []
+        }
+
+        if (targets.length === 0) 
+          return ui.notifications.error("Either there must be an original target, or you must have targeted a token to damage")
+
+        for (let term of terms) {
+          const termTotal = term.total;
+          if (termTotal < total) {
+            const data = {
+              actor: actor,
+              item: item,
+              damage: term.total,
+              source: item,
+              type: term.flavor,
+            }
+  
+            for (let target of targets) {
+              await target.actor.applyDamage(data, data.source, data.type);
+            }
+
+            total -= termTotal;
+          }  
+
+          else if (termTotal >= total) {
+            const data = {
+              actor: actor,
+              item: item,
+              damage: total,
+              source: item,
+              type: term.flavor,
+            }
+  
+            for (let target of targets) {
+              if (!target.actor) {
+                await game.canvas.scene.tokens.get(target._id).actor.applyDamage(data, data.source, data.type);
+              }
+              else {
+                await target.actor.applyDamage(data, data.source, data.type);
+              }
+            }
           }
         }
       });

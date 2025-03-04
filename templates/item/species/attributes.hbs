@@ -1,38 +1,8 @@
 <div class="tab attributes {{tab.cssClass}}" data-group="primary" data-tab="attributes">
-  <div>
-    <!-- <aside class="common-attributes">
-      <div class="form-group slim">
-        <div class="form-fields">
-          <label for="system.controlledByQuirks">{{localize "UTOPIA.Item.Species.controlledByQuirks"}}</label>
-          {{formInput systemFields.controlledByQuirks name="system.controlledByQuirks" value=system.controlledByQuirks}}
-        </div>
-      </div>
-
-      {{#if (eq system.controlledByQuirks false)}}
-        <div class="form-group slim">
-          <label>{{localize "UTOPIA.Item.Species.block"}}</label>
-          <div class="form-fields">
-            <label>{{localize "UTOPIA.Item.Species.quantity"}}</label>
-            {{formInput systemFields.block.fields.quantity name="system.block.quantity" value=system.block.quantity}}
-            <label>{{localize "UTOPIA.Item.Species.size"}}</label>
-            {{formInput systemFields.block.fields.size name="system.block.size" value=system.block.size}}
-          </div>
-          <span class="notes"><i class="fas fa-dice"></i>&nbsp;{{concat system.block.quantity 'd' system.block.size}}</span>
-        </div>
-
-        <div class="form-group slim">
-          <label>{{localize "UTOPIA.Item.Species.dodge"}}</label>
-          <div class="form-fields">
-            <label>{{localize "UTOPIA.Item.Species.quantity"}}</label>
-            {{formInput systemFields.dodge.fields.quantity name="system.dodge.quantity" value=system.dodge.quantity}}
-            <label>{{localize "UTOPIA.Item.Species.size"}}</label>
-            {{formInput systemFields.dodge.fields.size name="system.dodge.size" value=system.dodge.size}}
-          </div>
-          <span class="notes"><i class="fas fa-dice"></i>&nbsp;{{concat system.dodge.quantity 'd' system.dodge.size}}</span>
-        </div>
-      {{/if}}
-
-    </aside> -->
+  <div class="flexrow">
+    <aside class="common-attributes">
+      <img src="{{system.fullBodyPortrait}}" class="full-body-portrait" data-action="image" data-type="full-body" alt="{{localize "UTOPIA.Item.Species.fullBodyPortrait"}}"/>
+    </aside>
 
     <div class="standard-attributes" style="height: 415px">
       <fieldset class="attribute-set">
@@ -44,7 +14,7 @@
       </fieldset>
       
       {{#if (eq system.controlledByQuirks false)}}
-        <fieldset class="attribute-set">
+        <fieldset class="attribute-set-row">
           <legend>{{localize "UTOPIA.Item.Species.stats"}}</legend>
           <div class="form-group-stacked">
             <label for="system.stats.constitution.value">{{localize "UTOPIA.Item.Species.constitution"}}</label>
@@ -68,7 +38,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="attribute-set">
+        <fieldset class="attribute-set-row">
           <datalist id="speeds">
             {{#each speeds as |speed|}}
               <option value="{{speed}}">{{speed}}</option>
@@ -99,7 +69,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="attribute-set">
+        <fieldset class="attribute-set-row">
           <legend>{{localize "UTOPIA.Item.Species.Subtraits.legend"}}</legend>
 
           <datalist id="subtraits">
@@ -109,7 +79,7 @@
           </datalist>
 
           <div class="form-group-stacked">
-            <label for="system.dodge.quantity">{{localize "UTOPIA.Item.Species.Subtraits.specific"}} ({{localize "UTOPIA.Descriptions.remaining"}}: {{system.gifts.subtraitsLeft}})</label>
+            <label for="system.dodge.quantity">{{localize "UTOPIA.Item.Species.Subtraits.specific"}} ({{localize "UTOPIA.CommonTerms.remaining"}}: {{system.gifts.subtraitsLeft}})</label>
             {{formInput systemFields.gifts.fields.subtraits name="system.gifts.subtraits" value=system.gifts.subtraits}}
             <span class="hint">{{localize "UTOPIA.Item.Species.Subtraits.hint"}}</span>
           </div>

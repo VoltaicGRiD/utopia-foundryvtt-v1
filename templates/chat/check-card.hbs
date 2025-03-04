@@ -1,24 +1,56 @@
 <div class="utopia">
-  <div class="chat-card trait-check-card">
-    <hr/>
+  <div class="chat-card item-card   trait-check-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+    <header class="card-header flexrow">
+      <img src="{{actor.img}}" alt="{{actor.name}}" />
+      <h3>{{actor.name}}</h3>
+    </header>
 
-    <div class="tags" data-tooltip-class="utopia">
+    {{!-- <div class="tags" data-tooltip-class="utopia">
       <span class="tag">{{trait}}</span>
       {{#if gifted}}
         <span class="tag">Gifted <i class="fas fa-gift"></i></span>
       {{/if}}
-    </div>
+    </div> --}}
 
     <div class="card-content">
-      <span class="dice-flavor">{{flavor}}</span>
-      <div class="dice-roll" data-tooltip-class="utopia">
-        <span class="trait-icon"><i class="{{icon}}"></i></span>
-        <span class="dice-formula">{{formula}}</span>
-        <span class="dice-total {{#if success}}dice-success{{/if}}">{{total}}{{#if toBeat}} vs. {{toBeat}}{{/if}}</span>
-      </div>
-      <details class="dice-details" data-tooltip-class="utopia">
-        {{{tooltip}}}
-      </details>
+      {{#if focus}}
+        <div class="focus">
+          <span><i class="fa-solid fa-arrows-to-eye"></i>&nbsp;&nbsp;{{actor.name}} {{localize "UTOPIA.StatusEffects.isFocusing"}}. {{localize "UTOPIA.CommonTerms.stacks"}}: {{focusAmount}}</span>
+        </div>
+      {{/if}}
+
+      {{#if concentration}}
+        <div class="concentration">
+          <span><i class="fa-solid fa-arrows-to-circle"></i>&nbsp;&nbsp;{{actor.name}} {{localize "UTOPIA.StatusEffects.isConcentrating"}}</span>
+        </div>
+      {{/if}}
+      
+      {{#if automate}} 
+        <div class="automate">
+          <span><i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp;&nbsp;{{localize "UTOPIA.CommonTerms.automated"}}</span>
+        </div>
+      {{/if}}
+
+      {{#if request}}
+        <div class="response-buttons" data-whose="opposer">
+          <button type="button" class="response-button" data-action="responseAction" data-response="check">
+            <i class="fas fa-check-double"></i>&nbsp;&nbsp;{{localize "UTOPIA.Actor.check"}}
+          </button>
+          <button type="button" class="response-button" data-action="responseAction" data-response="fail">
+            <i class="fas fa-xmarks-lines"></i>&nbsp;&nbsp;{{localize "UTOPIA.Actor.fail"}}
+          </button>
+        </div>
+      {{else}}
+        <span class="dice-flavor">{{flavor}}</span>
+        <div class="dice-roll" data-tooltip-class="utopia">
+          <span class="trait-icon"><i class="{{icon}}"></i></span>
+          <span class="dice-formula">{{formula}}</span>
+          <span class="dice-total {{#if success}}dice-success{{/if}}">{{total}}{{#if toBeat}} vs. {{toBeat}}{{/if}}</span>
+        </div>
+        <details class="dice-details" data-tooltip-class="utopia">
+          {{{tooltip}}}
+        </details>
+      {{/if}}
     </div>
   </div>
 </div>

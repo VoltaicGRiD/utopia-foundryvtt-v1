@@ -5,15 +5,15 @@
       {{formInput systemFields.category value=system.category name='system.category' localize=true}}
     </div>
     <div class="row">
-      <label>{{localize 'UTOPIA.Item.General.slots'}}</label>
+      <label>{{localize 'UTOPIA.CommonTerms.slots'}}</label>
       {{formInput systemFields.slots value=system.slots name='system.slots' localize=true}}
     </div>
     <div class="row">
-      <label>{{localize 'UTOPIA.Item.General.value'}}</label>
+      <label>{{localize 'UTOPIA.Item.value'}}</label>
       {{formInput systemFields.value value=system.value name='system.value' localize=true}}
     </div>
     <div class="row">
-      <label>{{localize 'UTOPIA.Item.General.quantity'}}</label>
+      <label>{{localize 'UTOPIA.Item.quantity'}}</label>
       {{formInput systemFields.quantity value=system.quantity name='system.quantity' localize=true}}
     </div>
     <div class="row">
@@ -49,7 +49,7 @@
     </details>
 
     <details>
-      <summary><i class="fas fa-info-circle"></i> {{localize "UTOPIA.Item.description"}}</summary>
+      <summary><i class="fas fa-info-circle"></i> {{localize "UTOPIA.CommonTerms.description"}}</summary>
 
       {{#if editable}}
         <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">

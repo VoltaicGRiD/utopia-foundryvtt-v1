@@ -1,3 +1,5 @@
+import { gatherTalents } from "../../helpers/gatherTalents.mjs";
+import { isNumeric } from "../../helpers/numeric.mjs";
 import UtopiaItemBase from "../base-item.mjs";
 
 export default class UtopiaSpecialistTalent extends UtopiaItemBase {
@@ -34,14 +36,14 @@ export default class UtopiaSpecialistTalent extends UtopiaItemBase {
       actionId: new fields.StringField({...requiredString, initial: foundry.utils.randomID(16)}),
       name: new fields.StringField({...requiredString, initial: "New Action"}),
       category: new fields.StringField({required: true, nullable: false, initial: "trait", choices: {
-        "generic": "UTOPIA.Item.Gear.Action.Category.generic",
-        "trait": "UTOPIA.Item.Gear.Action.Category.trait",
-        "damage": "UTOPIA.Item.Gear.Action.Category.damage",
-        "macro": "UTOPIA.Item.Gear.Action.Category.macro",
+        "generic": "UTOPIA.Item.Action.Category.generic",
+        "trait": "UTOPIA.Item.Action.Category.trait",
+        "damage": "UTOPIA.Item.Action.Category.damage",
+        "macro": "UTOPIA.Item.Action.Category.macro",
       }}),
       type: new fields.StringField({required: true, nullable: false, initial: "turn", choices: {
-        "turn": "UTOPIA.Item.Gear.Action.Type.turn",
-        "interrupt": "UTOPIA.Item.Gear.Action.Type.interrupt",
+        "turn": "UTOPIA.Item.Action.Type.turn",
+        "interrupt": "UTOPIA.Item.Action.Type.interrupt",
       }}),
       trait: new fields.StringField({required: true, nullable: false, initial: "agi", choices: {
         "agi": "UTOPIA.Actor.Traits.agi.long",
@@ -69,38 +71,149 @@ export default class UtopiaSpecialistTalent extends UtopiaItemBase {
       formula: new fields.StringField({...requiredString, initial: ""}),
       flavor: new fields.StringField({...requiredString, initial: ""}),
       template: new fields.StringField({required: true, nullable: false, initial: "none", choices: {
-        "none": "UTOPIA.Item.Gear.Action.Template.none",
-        "sbt": "UTOPIA.Item.Gear.Action.Template.sbt",
-        "mbt": "UTOPIA.Item.Gear.Action.Template.mbt",
-        "lbt": "UTOPIA.Item.Gear.Action.Template.lbt",
-        "xbt": "UTOPIA.Item.Gear.Action.Template.xbt",
-        "cone": "UTOPIA.Item.Gear.Action.Template.cone",
-        "line": "UTOPIA.Item.Gear.Action.Template.line",
+        "none": "UTOPIA.Item.Action.Template.none",
+        "sbt": "UTOPIA.Item.Action.Template.sbt",
+        "mbt": "UTOPIA.Item.Action.Template.mbt",
+        "lbt": "UTOPIA.Item.Action.Template.lbt",
+        "xbt": "UTOPIA.Item.Action.Template.xbt",
+        "cone": "UTOPIA.Item.Action.Template.cone",
+        "line": "UTOPIA.Item.Action.Template.line",
       }}),
       resource: new fields.StringField({required: true, nullable: false}),
       consumed: new fields.NumberField({...requiredInteger, initial: 0}),
       macro: new fields.DocumentUUIDField({required: false, nullable: true}),
       actor: new fields.StringField({required: true, nullable: false, initial: "default", choices: {
-        "default": "UTOPIA.Item.Gear.Action.Actor.default",
-        "self": "UTOPIA.Item.Gear.Action.Actor.self",
-        "target": "UTOPIA.Item.Gear.Action.Actor.target", 
+        "default": "UTOPIA.Item.Action.Actor.default",
+        "self": "UTOPIA.Item.Action.Actor.self",
+        "target": "UTOPIA.Item.Action.Actor.target", 
       }}),
     })
     schema.actions = new fields.ArrayField(schema.action, {required: true, nullable: false, initial: []});
 
     schema.attributeRequirements = new fields.SetField(new fields.StringField(), { required: true, nullable: true, initial: [] });
-    schema.speciesRequirements = new fields.StringField({ required: true, nullable: false, initial: "none" });
-    schema.talentRequirements = new fields.StringField({ required: true, nullable: false, initial: "none" });
-    schema.talentTreeRequirements = new fields.StringField({ required: true, nullable: false, initial: "none" });
+    schema.speciesRequirements = new fields.StringField({ required: true, nullable: false });
+    schema.talentRequirements = new fields.StringField({ required: true, nullable: false });
+    schema.talentTreeRequirements = new fields.StringField({ required: true, nullable: false });
+    schema.artistryRequirements = new fields.StringField({ required: true, nullable: false });
     schema.grants = new fields.SetField(new fields.DocumentUUIDField({ type: "Item" }), { required: true, nullable: true, initial: [] });
 
     return schema;
+  }
+
+  _evaluateComparison = (value1, operator, value2) => {
+    if (String(isNumeric(value1)) && String(isNumeric(value2))) {
+      value1 = parseFloat(value1);
+      value2 = parseFloat(value2);
+    }
+    else {
+      value1 = String(value1).toLowerCase();
+      value2 = String(value2).toLowerCase();
+    }
+    
+    switch (operator) {
+      case '<': return value1 < value2;
+      case '<=': return value1 <= value2;
+      case '>': return value1 > value2;
+      case '>=': return value1 >= value2;
+      case '=': 
+      case '==':
+      case '===': 
+        return value1 === value2;
+      case '!=':
+      case '!==': 
+        return value1 !== value2;
+      default: return false;
+    }
+  }
+
+  canActorAccept(actor) {
+    var acceptable = true;
+
+    this.attributeRequirements.forEach(a => {
+      const parts = a.split(' ');
+      const attr = parts[0];
+      const comparison = parts[1];
+      const value = parts[2];
+
+      const actorValue = foundry.utils.getProperty(actor, attr);
+      if (!this._evaluateComparison(actorValue, comparison, value))
+        acceptable = false;
+    });
+
+    if (this.speciesRequirements.length > 0) {
+      this.speciesRequirements.split(',').forEach(r => {
+        if (!this._evaluateComparison(actor.species.name, "===", r.trim()))
+          acceptable = false;
+      });
+    }
+
+    if (this.talentRequirements.length > 0) {
+      this.talentRequirements.split(',').forEach(r => {
+        const actorTalents = actor.items.filter(i => i.type === "talent" || i.type === "specialistTalent")?.map(t => t.name.toLowerCase().trim()) ?? [];
+  
+        if (actorTalents.length === 0) {
+          acceptable = false;
+        }
+        else { 
+          if (!actorTalents.includes(r.toLowerCase().trim())) {
+            acceptable = false;
+          }
+        }
+      });
+    }
+
+    if (this.talentTreeRequirements.length > 0) {
+      this.talentTreeRequirements.split(',').forEach(async r => {
+        const talents = await gatherTalents();
+        const actorTalents = actor.items.filter(i => i.type === "talent")?.map(t => t.system.tree.toLowerCase().trim().split('-')[0]) ?? [];
+        talents.filter(t => t.folder.name.toLowerCase().trim()).localeCompare(r.toLowerCase().trim())
+        var matches = 0;         
+  
+        talents.forEach(t => {
+          if (actorTalents.includes(t.name)) {
+            matches++;
+          }
+        })
+  
+        if (isNumeric(r.split(' ')[0])) {
+          if (matches < parseFloat(r.split(' ')[0])) {
+            acceptable = false;
+          }
+        } 
+        else {
+          if (matches !== talents.length) {
+            acceptable = false;
+          }
+        }
+      });
+    }
+
+    if (this.artistryRequirements.length > 0) {
+      this.artistryRequirements.split(',').forEach(r => {
+        const artistries = actor.system.artistries;
+        if (!artistries.includes(r.toLowerCase().trim()))
+          acceptable = false;
+      });
+    }
+
+    return acceptable;
   }
 
   migrateData(source) {
     if (source.requirements) {
       source.attributeRequirements = source.requirements;
     }
+
+    if (source.talentRequirements === "none") 
+      source.talentRequirements = null;
+    if (source.talentTreeRequirements === "none") 
+      source.talentTreeRequirements = null;
+    if (source.attributeRequirements === "none") 
+      source.attributeRequirements = null;
+    if (source.artistryRequirements === "none") 
+      source.artistryRequirements = null;
+    if (source.speciesRequirements === "none") 
+      source.speciesRequirements = null;
   }
 
   prepareDerivedData() {

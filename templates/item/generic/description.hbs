@@ -1,6 +1,6 @@
 <div class="tab description {{tab.cssClass}}"  data-group="primary" data-tab="description">
   <fieldset>
-    <legend>{{localize "UTOPIA.Descriptions.description"}}</legend>
+    <legend>{{localize "UTOPIA.CommonTerms.description"}}</legend>
 
     {{#if editable}}
       <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
@@ -11,12 +11,12 @@
     {{/if}}
   </fieldset>
 
-  <fieldset>
-    <legend>{{localize "UTOPIA.Descriptions.gmSecrets"}}</legend>
+  {{!-- <fieldset>
+    <legend>{{localize "UTOPIA.CommonTerms.gmSecrets"}}</legend>
     {{#if gm}}
       <prose-mirror name="system.gmSecrets" data-document-u-u-i-d="{{actor.uuid}}" value="{{system.gmSecrets}}" collaborate="true" toggled="true">
         {{{enrichedGMNotes}}}
       </prose-mirror>
     {{/if}}
-  </fieldset>
+  </fieldset> --}}
 </div>

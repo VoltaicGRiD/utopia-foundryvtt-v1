@@ -27,7 +27,7 @@
       </div>
       {{#if (eq system.modifies "range")}}
         <div class="flexcol">
-          <label for="system.modifiedRange.value">{{localize 'UTOPIA.Item.SpellFeatures.Modifications.value'}}</label>
+          <label for="system.modifiedRange.value">{{localize 'UTOPIA.Item.value'}}</label>
           {{formInput systemFields.modifiedRange.fields.value value=system.modifiedRange.value name='system.modifiedRange.value' localize=true}}
         </div>
         <div class="flexcol">
@@ -41,7 +41,7 @@
       {{/if}}
       {{#if (eq system.modifies "duration")}}
         <div class="flexcol">
-          <label for="system.modifiedDuration.value">{{localize 'UTOPIA.Item.SpellFeatures.Modifications.value'}}</label>
+          <label for="system.modifiedDuration.value">{{localize 'UTOPIA.Item.value'}}</label>
           {{formInput systemFields.modifiedDuration.fields.value value=system.modifiedDuration.value name='system.modifiedDuration.value' localize=true}}
         </div>
         <div class="flexcol">
@@ -69,7 +69,7 @@
       {{/if}}
       {{#if (eq system.modifies "aoe")}}
         <div class="flexcol">
-          <label for="system.modifiedAoE.value">{{localize 'UTOPIA.Item.SpellFeatures.Modifications.value'}}</label>
+          <label for="system.modifiedAoE.value">{{localize 'UTOPIA.Item.value'}}</label>
           {{formInput systemFields.modifiedAoE.fields.value value=system.modifiedAoE.value name='system.modifiedAoE.value' localize=true}}
         </div>
         <div class="flexcol">
@@ -110,7 +110,7 @@
 
     <div class="grid grid-2col">
       <div class="flexcol grid-span-2">
-        <label for="system.formula">{{localize 'UTOPIA.Item.formula'}}</label>
+        <label for="system.formula">{{localize 'UTOPIA.CommonTerms.formula'}}</label>
         {{formInput systemFields.formula value=system.formula name='system.formula' localize=true}}
       </div>
     </div>

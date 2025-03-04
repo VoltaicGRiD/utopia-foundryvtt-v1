@@ -1,43 +1,40 @@
 const { api, sheets } = foundry.applications;
 
-import { buildTraitData } from "../../helpers/actorTraits.mjs";
-import Quirks from "../../other/quirks.mjs";
-
-export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
+export class UtopiaPaperdollSheet extends api.HandlebarsApplicationMixin(
   sheets.ActorSheetV2
 ) {
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    this.dockedTo = undefined;
+    this.dockedSide = undefined;
+    this.isDocked = true;
   }
 
   static DEFAULT_OPTIONS = {
-    classes: ["utopia", "paperdoll-sheet"],
+    classes: ["utopia", "actor-sheet"],
     position: {
-      width: 700,
-      height: 600,
+      width: 550,
+      height: "auto",
     },
     actions: {
-      image: this._image,
-      addQuirk: this._addQuirk,
-      removeQuirk: this._removeQuirk,
-      togglePaperdoll: this._togglePaperdoll,
-      tradeSubtraits: this._tradeSubtraits,
+      viewItem: this._viewItem,
+      swapDock: this._swapDock,
+      dock: this._dock,
     },
     form: {
       submitOnChange: true,
-      closeOnSubmit: false,
     },
     tag: "form",
     window: {
-      title: "UTOPIA.SheetLabels.species",
+      title: "UTOPIA.SheetLabels.paperDoll",
     },
-    dragDrop: [{ dragSelector: '[data-drag]', dropSelector: null }],
+    dragDrop: [{ dragSelector: '[data-drag]', dropSelector: ['.item-slot', '.augment-slot'] }],
   };
 
   static PARTS = {
     paperdoll: {
-      template: "systems/utopia/templates/item/species/paperdoll.hbs",
+      template: "systems/utopia/templates/actor/paperdoll.hbs",
     },
   };
 
@@ -47,28 +44,25 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
   };
 
   async _prepareContext(options) {
-    const subtraits = buildTraitData();
-
     var context = {
       // Validates both permissions and compendium status
       editable: this.isEditable,
       owner: this.document.isOwner,
       limited: this.document.limited,
       // Add the item document.
-      item: this.item,
+      actor: this.actor,
       // Adding system and flags for easier access
-      system: this.item.system,
-      flags: this.item.flags,
+      system: this.actor.system,
+      flags: this.actor.flags,
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
-      // You can factor out context construction to helper functions
-      tabs: this._getTabs(options.parts),
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
+      
+      canDock: game.settings.get('utopia', 'dockedWindowPosition') !== 2 && this.dockedTo,
+      docked: this.isDocked,
     };
-
-
 
     return context;
   }
@@ -76,52 +70,72 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
   async _preparePartContext(partId, context) {
     switch (partId) {      
       case 'paperdoll': 
-        context.paperdoll = this.item.system.getPaperDoll()
-        context.tab = context.tabs[partId];
+        context.paperdoll = this.actor.system.getPaperDoll()
         break;
       default:
     }
     return context;
   }
 
-  _getTabs(parts) {
-    const tabGroup = 'primary';
-  
-    // Default tab for first time it's rendered this session
-    if (!this.tabGroups[tabGroup]) this.tabGroups[tabGroup] = 'attributes';
-  
-    return parts.reduce((tabs, partId) => {
-      const tab = {
-        cssClass: '',
-        group: tabGroup,
-        // Matches tab property to
-        id: '',
-        // FontAwesome Icon, if you so choose
-        icon: '',
-        // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
-      };
-  
-      switch (partId) {
-        case 'header':
-        case 'tabs':
-          return tabs;
-        case 'attributes':
-        case 'paperdoll':
-        case 'quirks':
-        case 'description':
-          tab.id = partId;
-          tab.label += partId;
+  static async _dock() {
+    this.isDocked = !this.isDocked;
+
+    if (this.isDocked) {
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
           break;
-        default:
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
       }
-  
-      // This is what turns on a single tab
-      if (this.tabGroups[tabGroup] === tab.id) tab.cssClass = 'active';
-  
-      tabs[partId] = tab;
-      return tabs;
-    }, {});
+    }
+
+    this.render();
+  }
+
+  static async _swapDock() {
+    if (this.dockedSide == 0) 
+    {
+      this.dockedTo.dockedLeft.pop(this);
+      this.dockedTo.dockedRight.push(this);
+      this.dockedSide = 1;
+    }
+    else 
+    {
+      this.dockedTo.dockedRight.pop(this);
+      this.dockedTo.dockedLeft.push(this);
+      this.dockedSide = 0;
+    }
+    
+    if (this.isDocked) {
+      switch (this.dockedSide) {
+        case 0: // left
+          this.setPosition({
+            left: this.dockedTo.position.left - this.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        case 1: // right
+          this.setPosition({
+            left: this.dockedTo.position.left + this.dockedTo.position.width,
+            top: this.dockedTo.position.top
+          });
+          break;
+        default: 
+          break;
+      }
+    }
+
+    this.render();
   }
 
   /**
@@ -135,51 +149,19 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     super._onRender(context, options);
     this.#dragDrop.forEach((d) => d.bind(this.element));
-  }
 
-  static async _image(event) {
-    event.preventDefault();
-    let file = await new FilePicker({
-      type: "image",
-      current: this.document.img,
-      callback: (path) => {
-        this.document.update({
-          img: path,
-        });
-      },
-    }).browse();
-  }
+    this.element.querySelectorAll('.filled').forEach((item) => {
+      item.addEventListener('contextmenu', async (event) => {
+        const id = event.target.dataset.id;
+        const slot = event.target.dataset.slot;
+        const type = event.target.className.includes('item-slot') ? 'equipmentSlots' : 'augments';
+        const equipment = foundry.utils.getProperty(this.actor, `system.${type}.${slot}`);
+        const updated = equipment.filter(i => i !== id);
 
-  static async _addQuirk(event, target) {
-    const value = this.element.querySelector('#add-quirk').selectedOptions[0].value;
-
-    const quirk = Quirks.filter(q => q.name === value);
-    const quirks = this.item.system.quirks;
-    if (quirks.length > 4) {
-      ui.notifications.warn("You can only have up to 5 quirks.");
-      return;
-    }
-    quirks.push(quirk[0]);
-
-    console.log(quirk, quirks);
-
-    await this.item.update({
-      system: {
-        quirks: quirks
-      }
-    });
-  }
-
-  static async _removeQuirk(event, target) {
-    const index = target.dataset.quirk;
-    
-    const quirks = this.item.system.quirks;
-    quirks.splice(index, 1);
-    
-    await this.item.update({
-      system: {
-        quirks: quirks
-      }
+        await this.actor.update({
+          [`system.${type}.${slot}`]: updated
+        })
+      });
     });
   }
 
@@ -207,128 +189,10 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
     }
   }
 
-  static async _tradeSubtraits(event, target) {
-    const points = this.item.system.gifts.points;
-
-    // Points == 2 - Subtract 2 points
-    if (points === 2) {
-      await this.item.update({
-        [`system.gifts.points`]: 0,
-      });
-    }
-    else {
-      await this.item.update({
-        [`system.gifts.points`]: 2,
-      });
-    }
-  }
-
-  async _onDropQuirk(event, data) {
-    console.log(event, data);
-
-    const quirk = Quirks.find(q => q.name === data.name);
-    const quirks = this.item.system.quirks;
-    quirks.push(quirk);
-
-    await this.item.update({
-      system: {
-        quirks: quirks
-      }
-    });
-  }
-
-  /**
-   * Renders an embedded document's sheet
-   *
-   * @this BoilerplateItemSheet
-   * @param {PointerEvent} event   The originating click event
-   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
-   * @protected
-   */
-  static async _viewEffect(event, target) {
-    const effect = this._getEffect(target);
-    effect.sheet.render(true, {typeLocked: true});
-  }
-
-  /**
-   * Handles item deletion
-   *
-   * @this BoilerplateItemSheet
-   * @param {PointerEvent} event   The originating click event
-   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
-   * @protected
-   */
-  static async _deleteEffect(event, target) {
-    const effect = this._getEffect(target);
-    await effect.delete();
-  }
-
-  /**
-   * Handle creating a new Owned Item or ActiveEffect for the actor using initial data defined in the HTML dataset
-   *
-   * @this BoilerplateItemSheet
-   * @param {PointerEvent} event   The originating click event
-   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
-   * @private
-   */
-  static async _createEffect(event, target) {
-    // Retrieve the configured document class for ActiveEffect
-    const aeCls = getDocumentClass("ActiveEffect");
-    // Prepare the document creation data by initializing it a default name.
-    // As of v12, you can define custom Active Effect subtypes just like Item subtypes if you want
-    const effectData = {
-      name: aeCls.defaultName({
-        // defaultName handles an undefined type gracefully
-        type: "base",
-        parent: this.item,
-      }),
-    };
-    // Loop through the dataset and add it to our effectData
-    for (const [dataKey, value] of Object.entries(target.dataset)) {
-      // These data attributes are reserved for the action handling
-      if (["action", "documentClass"].includes(dataKey)) continue;
-      // Nested properties require dot notation in the HTML, e.g. anything with `system`
-      // An example exists in spells.hbs, with `data-system.spell-level`
-      // which turns into the dataKey 'system.spellLevel'
-      foundry.utils.setProperty(effectData, dataKey, value);
-    }
-
-    // Get the type from the nearest li dataset 'effectType'
-    effectData.type = target.closest("li").dataset.effectType;
-
-    effectData.name = this.item.name;
-    effectData.origin = this.item.uuid;
-
-    console.log(effectData);
-
-    // Finally, create the embedded document!
-    await aeCls.create(effectData, { parent: this.item });
-  }
-
-  /**
-   * Determines effect parent to pass to helper
-   *
-   * @this BoilerplateItemSheet
-   * @param {PointerEvent} event   The originating click event
-   * @param {HTMLElement} target   The capturing HTML element which defined a [data-action]
-   * @private
-   */
-  static async _toggleEffect(event, target) {
-    const effect = this._getEffect(target);
-    await effect.update({ disabled: !effect.disabled });
-  }
-
-  /** Helper Functions */
-
-  /**
-   * Fetches the row with the data for the rendered embedded document
-   *
-   * @param {HTMLElement} target  The element with the action
-   * @returns {HTMLLIElement} The document's row
-   */
-  _getEffect(target) {
-    const li = target.closest(".effect");
-    return this.item.effects.get(li?.dataset?.effectId);
+  static async _viewItem(event, target) {
+    const id = target.dataset.id;
+    const item = this.actor.items.get(id);
+    item.sheet.render(true);
   }
 
   /**
@@ -404,91 +268,10 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
 
     // Handle different data types
     switch (data.type) {
-      case "Quirk": 
-        return this._onDropQuirk(event, data);
-      case "ActiveEffect":
-        return this._onDropActiveEffect(event, data);
-      case "Actor":
-        return this._onDropActor(event, data);
       case "Item":
         return this._onDropItem(event, data);
-      case "Folder":
-        return this._onDropFolder(event, data);
     }
   }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle the dropping of ActiveEffect data onto an Actor Sheet
-   * @param {DragEvent} event                  The concluding DragEvent which contains drop data
-   * @param {object} data                      The data transfer extracted from the event
-   * @returns {Promise<ActiveEffect|boolean>}  The created ActiveEffect object or false if it couldn't be created.
-   * @protected
-   */
-  async _onDropActiveEffect(event, data) {
-    const aeCls = getDocumentClass("ActiveEffect");
-    const effect = await aeCls.fromDropData(data);
-    if (!this.item.isOwner || !effect) return false;
-
-    if (this.item.uuid === effect.parent?.uuid)
-      return this._onEffectSort(event, effect);
-    return aeCls.create(effect, { parent: this.item });
-  }
-
-  /**
-   * Sorts an Active Effect based on its surrounding attributes
-   *
-   * @param {DragEvent} event
-   * @param {ActiveEffect} effect
-   */
-  _onEffectSort(event, effect) {
-    const effects = this.item.effects;
-    const dropTarget = event.target.closest("[data-effect-id]");
-    if (!dropTarget) return;
-    const target = effects.get(dropTarget.dataset.effectId);
-
-    // Don't sort on yourself
-    if (effect.id === target.id) return;
-
-    // Identify sibling items based on adjacent HTML elements
-    const siblings = [];
-    for (let el of dropTarget.parentElement.children) {
-      const siblingId = el.dataset.effectId;
-      if (siblingId && siblingId !== effect.id)
-        siblings.push(effects.get(el.dataset.effectId));
-    }
-
-    // Perform the sort
-    const sortUpdates = SortingHelpers.performIntegerSort(effect, {
-      target,
-      siblings,
-    });
-    const updateData = sortUpdates.map((u) => {
-      const update = u.update;
-      update._id = u.target._id;
-      return update;
-    });
-
-    // Perform the update
-    return this.item.updateEmbeddedDocuments("ActiveEffect", updateData);
-  }
-
-  /* -------------------------------------------- */
-
-  /**
-   * Handle dropping of an Actor data onto another Actor sheet
-   * @param {DragEvent} event            The concluding DragEvent which contains drop data
-   * @param {object} data                The data transfer extracted from the event
-   * @returns {Promise<object|boolean>}  A data object which describes the result of the drop, or false if the drop was
-   *                                     not permitted.
-   * @protected
-   */
-  async _onDropActor(event, data) {
-    if (!this.item.isOwner) return false;
-  }
-
-  /* -------------------------------------------- */
 
   /**
    * Handle dropping of an item reference or item data onto an Actor Sheet
@@ -498,21 +281,30 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
    * @protected
    */
   async _onDropItem(event, data) {
-    if (!this.item.isOwner) return false;
-  }
+    if (!this.actor.isOwner) return false;
+    const item = await Item.implementation.fromDropData(data);
 
-  /* -------------------------------------------- */
+    const dropClass = event.target.className;
+    if (dropClass === "item-slot") {
+      const dropTarget = event.target.dataset.slot;
+      if (!item.system.equippable || item.system.slot !== dropTarget)
+        return ui.notifications.error("This item can't be equipped in this slot");
 
-  /**
-   * Handle dropping of a Folder on an Actor Sheet.
-   * The core sheet currently supports dropping a Folder of Items to create all items as owned items.
-   * @param {DragEvent} event     The concluding DragEvent which contains drop data
-   * @param {object} data         The data transfer extracted from the event
-   * @returns {Promise<Item[]>}
-   * @protected
-   */
-  async _onDropFolder(event, data) {
-    if (!this.item.isOwner) return [];
+      const equipment = [item.id];
+      await this.actor.update({
+        [`system.equipmentSlots.${dropTarget}`]: equipment
+      })
+    }
+    else if (dropClass === "augment-slot") {
+      const dropTarget = event.target.dataset.slot;
+      if (!item.system.equippable || item.system.slot !== dropTarget)
+        return ui.notifications.error("This slot cannot be augmented by this item");
+
+      const equipment = [item.id];
+      await this.actor.update({
+        [`system.augments.${dropTarget}`]: equipment
+      })
+    }
   }
 
   /** The following pieces set up drag handling and are unlikely to need modification  */

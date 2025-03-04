@@ -1,6 +1,22 @@
 // Add custom fonts by visiting and search https://fonts.google.com
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,87.5,100..900;1,87.5,100..900&display=swap');
+:root {
+  --font-primary-family: "Orbitron", sans-serif;
+  --font-primary-optical-sizing: auto;
+  --font-primary-weight: 400;
+  --font-primary-style: normal;
+
+  --font-primary: 
+    font-family: (--font-primary-family),
+    font-optical-sizing: var(--font-primary-optical-sizing),
+    font-weight: var(--font-primary-weight),
+    font-style: var(--font-primary-style);
+
+  font: var(--font-primary);
+}
+
 // Import utilities.
 @import 'utils/typography';
 @import 'utils/colors';
@@ -51,6 +67,13 @@
 
 /* Styles limited to utopia sheets */
 .utopia {
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 87.5;
+
   @import 'components/general/resource';
   @import 'components/general/forms';
   @import 'components/general/effects';
@@ -58,7 +81,8 @@
   @import 'components/general/items';
 
   &.actor-sheet,
-  &.species-sheet {
+  &.species-sheet,
+  &.character-creator {
     @import 'components/other/paper-doll';
   }
 
@@ -114,8 +138,12 @@
     @import 'components/other/subtrait-sheet';
   }
 
-  &.talent-tree-sheet {
+  &.talent-tree-sheet{
     @import 'components/talent-tree/talent-tree';
+  }
+
+  &.talent-tree-fullscreen-sheet {
+    @import 'components/talent-tree/talent-tree-fullscreen';
   }
 
   &.roll-dialog {
@@ -124,6 +152,14 @@
 
   &.compendium-browser {
     @import 'components/other/compendium-browser';
+  }
+
+  &.feature-builder {
+    @import 'components/other/feature-builder';
+  }
+
+  &.character-creator {
+    @import 'components/other/character-creator';
   }
 
   // &.specialist-talent-sheet {

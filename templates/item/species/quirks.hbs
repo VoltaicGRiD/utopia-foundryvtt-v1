@@ -3,7 +3,73 @@
     {{#if (eq system.controlledByQuirks true)}}
       <span class="quirk-points">{{localize "UTOPIA.Item.Species.quirkPoints"}}: {{system.quirkPoints}}</span>
       
-      <fieldset class="attribute-set">
+      <fieldset>
+        <legend>{{localize "UTOPIA.Item.Species.quirks"}}</legend>
+        <div class="quirk-select">
+          <select id="add-quirk" class="add-quirkq">
+            <option value="">Add Quirk</option>
+            {{#each quirks as |quirk|}}
+              <option value="{{quirk.name}}">
+                <span class="quirk-option-points">[{{quirk.qp}}]</span> 
+                <span class="name">{{quirk.name}}</span>
+                <span class="description">{{quirk.description}}</span>
+              </option>
+            {{/each}}
+          </select>
+          
+          <button type="button"  data-action="addQuirk">{{localize "UTOPIA.CommonTerms.add"}}</button>
+          {{#if allowCustomQuirks}}
+            <button type="button"  data-action="addCustomQuirk">{{localize "UTOPIA.CommonTerms.addCustom"}}</button>
+          {{/if}}
+        </div>
+
+        {{#if hasCustomQuirks}}
+        <fieldset class="attribute-set custom-quirks">
+          <legend>{{localize "UTOPIA.Item.Species.customQuirks"}}</legend>
+          {{#each system.customQuirks as |quirk|}}
+            <button type="button" data-action="removeCustomQuirk" data-quirk="{{@index}}">Remove</button>
+
+            <div class="flexrow">
+              <div class="form-group-dual">
+                <label for="system.customQuirks.{{@index}}.name">{{localize "UTOPIA.CommonTerms.name"}}</label>
+                <div class="form-fields sm-right">
+                    {{formInput ../systemFields.quirk.fields.name name=(concat "system.customQuirks." @index ".name") value=quirk.name}}
+                    {{formInput ../systemFields.quirk.fields.qp name=(concat "system.customQuirks." @index ".qp") value=quirk.qp}}
+                </div> 
+              </div>
+
+              <div class="form-group-stacked">
+                <label for="system.customQuirks.{{@index}}.description">{{localize "UTOPIA.CommonTerms.description"}}</label>
+                {{formInput ../systemFields.quirk.fields.description name=(concat "system.customQuirks." @index ".description") value=quirk.description}}
+              </div>
+            </div>
+
+            <div id="editor" data-quirk="{{@index}}">{{quirk.attributes}}</div>
+            
+            <button type="submit" class="save-quirk" data-action="saveQuirk" data-quirk="{{@index}}">{{localize "UTOPIA.CommonTerms.save"}}</button>
+
+            {{!-- <div class="form-group-stacked">
+              <label for="system.customQuirks.{{@index}}.description">{{localize "UTOPIA.Item.Species.quirkDescription"}}</label>
+              {{formInput systemFields.quirk.fields.description name="system.customQuirks.{{@index}}.description" value=quirk.description}}
+            </div> --}}
+          {{/each}}
+        </fieldset>
+        {{/if}}
+          
+        <ul class="quirks">
+          {{#each system.quirks as |quirk|}}
+            <li>
+              <button type="button"  data-action="removeQuirk" data-quirk="{{@index}}">Remove</button>
+              <div class="quirk">
+                <span class="name">{{quirk.name}}</span>
+                <span class="description">{{quirk.description}}</span>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+      </fieldset>
+
+      <fieldset class="attribute-set-row">
         <legend>{{localize "UTOPIA.Item.Species.statsQuirks"}}</legend>
         <div class="form-group-stacked">
           <label for="system.stats.constitution.value">{{localize "UTOPIA.Item.Species.constitution"}}</label>
@@ -27,8 +93,28 @@
         </div>
       </fieldset>
 
-      <fieldset class="attribute-set">
+      <fieldset class="attribute-set-row">
+        <legend>{{localize "UTOPIA.Item.Species.Subtraits.legend"}}</legend>
 
+        <datalist id="subtraits">
+          {{#each subtraits as |subtrait|}}
+            <option value="{{subtrait.short}}">{{subtrait.name}}</option>
+          {{/each}}
+        </datalist>
+
+        <div class="form-group-stacked">
+          <label for="system.dodge.quantity">{{localize "UTOPIA.Item.Species.Subtraits.specific"}} ({{localize "UTOPIA.CommonTerms.remaining"}}: {{system.gifts.subtraitsLeft}})</label>
+          {{formInput systemFields.gifts.fields.subtraits name="system.gifts.subtraits" value=system.gifts.subtraits}}
+          <span class="hint">{{localize "UTOPIA.Item.Species.Subtraits.hint"}}</span>
+        </div>
+        <div class="form-group-stacked">
+          <label for="system.gifts.points">{{localize "UTOPIA.Item.Species.Subtraits.points"}}</label>
+          <button type="button"  type="button" data-action="tradeSubtraits"><i class="fas fa-arrows-cross"></i>&nbsp;{{localize "UTOPIA.Item.Species.Subtraits.trade"}}</button>
+          {{formInput systemFields.gifts.fields.points name="system.gifts.points" value=system.gifts.points disabled=true}}
+        </div>
+      </fieldset>
+
+      <fieldset class="attribute-set-row">
         <datalist id="speeds">
           {{#each speeds as |speed|}}
             <option value="{{speed}}">{{speed}}</option>
@@ -58,55 +144,6 @@
           </div> 
         </div>
       </fieldset>
-
-      <fieldset class="attribute-set">
-        <legend>{{localize "UTOPIA.Item.Species.Subtraits.legend"}}</legend>
-
-        <datalist id="subtraits">
-          {{#each subtraits as |subtrait|}}
-            <option value="{{subtrait.short}}">{{subtrait.name}}</option>
-          {{/each}}
-        </datalist>
-
-        <div class="form-group-stacked">
-          <label for="system.dodge.quantity">{{localize "UTOPIA.Item.Species.Subtraits.specific"}} ({{localize "UTOPIA.Descriptions.remaining"}}: {{system.gifts.subtraitsLeft}})</label>
-          {{formInput systemFields.gifts.fields.subtraits name="system.gifts.subtraits" value=system.gifts.subtraits}}
-          <span class="hint">{{localize "UTOPIA.Item.Species.Subtraits.hint"}}</span>
-        </div>
-        <div class="form-group-stacked">
-          <label for="system.gifts.points">{{localize "UTOPIA.Item.Species.Subtraits.points"}}</label>
-          <button type="button" data-action="tradeSubtraits"><i class="fas fa-arrows-cross"></i>&nbsp;{{localize "UTOPIA.Item.Species.Subtraits.trade"}}</button>
-          {{formInput systemFields.gifts.fields.points name="system.gifts.points" value=system.gifts.points disabled=true}}
-        </div>
-
-      </fieldset>
-
-      <div class="quirk-select">
-        <select id="add-quirk" class="add-quirkq">
-          <option value="">Add Quirk</option>
-          {{#each quirks as |quirk|}}
-            <option value="{{quirk.name}}">
-              <span class="quirk-option-points">[{{quirk.qp}}]</span> 
-              <span class="name">{{quirk.name}}</span>
-              <span class="description">{{quirk.description}}</span>
-            </option>
-          {{/each}}
-        </select>
-        
-        <button data-action="addQuirk">Add</button>
-      </div>
-        
-      <ul class="quirks">
-        {{#each system.quirks as |quirk|}}
-          <li>
-            <button data-action="removeQuirk" data-quirk="{{@index}}">Remove</button>
-            <div class="quirk">
-              <span class="name">{{quirk.name}}</span>
-              <span class="description">{{quirk.description}}</span>
-            </div>
-          </li>
-        {{/each}}
-      </ul>
     {{else}}
       <span class="quirk-points">{{localize "UTOPIA.Item.Species.notControlledByQuirks"}}</span>
     {{/if}}

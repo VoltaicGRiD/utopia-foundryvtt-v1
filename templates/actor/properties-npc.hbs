@@ -1,0 +1,25 @@
+<div class="tab properties {{tab.cssClass}}" data-group="primary" data-tab="properties">
+  <input type="text" class="search" id="properties-search" placeholder="{{localize "UTOPIA.CommonTerms.search"}}"/>
+  <div class="properties-table-container">
+    <table class="properties-table">
+      <tr>
+        <th>
+          {{localize "UTOPIA.CommonTerms.name"}}
+        </th>
+        <th>
+          {{localize "UTOPIA.CommonTerms.value"}}
+        </th>
+      </tr>
+      {{#each actorProperties as |property key|}}
+        <tr class="property" data-name="{{key}}">
+          <td>
+            <span class="property-key">{{key}}</span>
+          </td>
+          <td>
+            <input type="text" class="property-value" data-property="{{key}}" value="{{property}}" />
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+</div>

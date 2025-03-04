@@ -9,6 +9,8 @@ export default class UtopiaSpecies extends UtopiaItemBase {
 
     const schema = super.defineSchema();
 
+    schema.fullBodyPortrait = new fields.StringField({ required: false, nullable: true });
+
     const evolution = () => new fields.SchemaField({
       head: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       neck: new fields.NumberField({ ...requiredInteger, initial: 1 }),
@@ -95,28 +97,76 @@ export default class UtopiaSpecies extends UtopiaItemBase {
     })
 
     schema.talents = new fields.SchemaField({
-      copy: new fields.StringField({
-        required: true,
-        nullable: false,
-        choices: {
-          "none": "UTOPIA.Item.Species.Talent.Copy.none",
-          "species": "UTOPIA.Item.Species.Talent.Copy.species",
-        },
-        initial: "none"
-      }),
       first: new fields.SchemaField({
+        copy: new fields.StringField({
+          required: true,
+          nullable: false,
+          choices: {
+            "none": "UTOPIA.Item.Species.Talent.none",
+            "species": "UTOPIA.Item.Species.Talent.species",
+          },
+          initial: "none"
+        }),
+        copySpecies: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "human"
+        }),
+        copyBranch: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "1"
+        }),
         first: new fields.DocumentUUIDField(),
         second: new fields.DocumentUUIDField(),
         third: new fields.DocumentUUIDField(),
         fourth: new fields.DocumentUUIDField(),
       }),
       second: new fields.SchemaField({
+        copy: new fields.StringField({
+          required: true,
+          nullable: false,
+          choices: {
+            "none": "UTOPIA.Item.Species.Talent.none",
+            "species": "UTOPIA.Item.Species.Talent.species",
+          },
+          initial: "none"
+        }),
+        copySpecies: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "human"
+        }),
+        copyBranch: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "2"
+        }),
         first: new fields.DocumentUUIDField(),
         second: new fields.DocumentUUIDField(),
         third: new fields.DocumentUUIDField(),
         fourth: new fields.DocumentUUIDField(),
       }),
       third: new fields.SchemaField({
+        copy: new fields.StringField({
+          required: true,
+          nullable: false,
+          choices: {
+            "none": "UTOPIA.Item.Species.Talent.none",
+            "species": "UTOPIA.Item.Species.Talent.species",
+          },
+          initial: "none"
+        }),
+        copySpecies: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "human"
+        }),
+        copyBranch: new fields.StringField({
+          required: true, 
+          nullable: false,
+          initial: "3"
+        }),
         first: new fields.DocumentUUIDField(),
         second: new fields.DocumentUUIDField(),
         third: new fields.DocumentUUIDField(),
@@ -171,33 +221,38 @@ export default class UtopiaSpecies extends UtopiaItemBase {
     // TODO: Handle Bio Core & species action grants
     // TODO: Handle breath and senses types
 
+    schema.quirk = new fields.SchemaField({
+      name: new fields.StringField({ required: true, nullable: false, initial: "" }),
+      qp: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      description: new fields.StringField({ required: true, nullable: false, initial: "" }),
+      attributes: new fields.StringField({ required: false, nullable: false }),
+    })
+    schema.customQuirks = new fields.ArrayField(schema.quirk);
     schema.quirks = new fields.ArrayField(new fields.ObjectField());
 
     return schema;
   }
 
   static migrateData(source) {
-    console.warn(source);
-
-    if (!source.stats) {
-      source.stats = {
-        constitution: {
-          value: 0,
-          bonus: 0,
-          max: 0,
-        },
-        endurance: {
-          value: 0,
-          bonus: 0,
-          max: 0,
-        },
-        effervescence: {
-          value: 0,
-          bonus: 0,
-          max: 0,
-        },
-      };
-    }
+    // if (!source.stats) {
+    //   source.stats = {
+    //     constitution: {
+    //       value: 0,
+    //       bonus: 0,
+    //       max: 0,
+    //     },
+    //     endurance: {
+    //       value: 0,
+    //       bonus: 0,
+    //       max: 0,
+    //     },
+    //     effervescence: {
+    //       value: 0,
+    //       bonus: 0,
+    //       max: 0,
+    //     },
+    //   };
+    // }
 
     if (source.constitution) 
       source.stats.constitution.value = source.constitution;
@@ -215,15 +270,15 @@ export default class UtopiaSpecies extends UtopiaItemBase {
       }
     }
 
-    if (source.subtraits && source.subtraits.length > 0) {
-      if (source.subtraits[0] === "[Any 2 Subtraits]") {
-        source.gifts.points = 2;
-        source.subtraits = source.subtraits.slice(1);
-      }
-      else {
-        source.gifts.subtraits = new Set(source.subtraits);
-      }
-    }
+    // if (source.subtraits && source.subtraits.length > 0) {
+    //   if (source.subtraits[0] === "[Any 2 Subtraits]") {
+    //     source.gifts.points = 2;
+    //     source.subtraits = source.subtraits.slice(1);
+    //   }
+    //   else {
+    //     source.gifts.subtraits = new Set(source.subtraits);
+    //   }
+    // }
 
     return super.migrateData(source);
   }
@@ -279,13 +334,22 @@ export default class UtopiaSpecies extends UtopiaItemBase {
     context.feet.unequippable = this.armors.unequippable.feet
     context.feet.specialty = this.armors.specialty.feet;
 
-    console.log(context);
-
     return context;
   }
 
   prepareDerivedData() {
     super.prepareDerivedData();
+
+//     this.customQuirks.forEach(quirk => {
+//       if (quirk.attributes.length === 0) {
+//         quirk.attributes = 
+// `[
+//   {
+//     "[path]": "[value]"
+//   }
+// ]`
+//       }
+//     })
 
     // Quirks have the following:
     // Name
@@ -297,24 +361,26 @@ export default class UtopiaSpecies extends UtopiaItemBase {
     // Some attributes need to be specially parsed, due to the complexity
     // These are, so far,
 
-    console.log(this);
-
     this.stats.constitution.total = this.stats.constitution.value + this.stats.constitution.bonus;
     this.stats.endurance.total = this.stats.endurance.value + this.stats.endurance.bonus;
     this.stats.effervescence.total = this.stats.effervescence.value + this.stats.effervescence.bonus;
 
     if (this.controlledByQuirks) {
-    const quirks = this.quirks;
+      const quirks = [...this.quirks, ...this.customQuirks];
 
       // Since we're storing quirks in a Set, we need to convert it to an array before we can iterate over it
       Array.from(quirks).forEach(quirk => {
-        console.warn(quirk);
-
         // Get our points
         this.quirkPoints += quirk.qp;
 
         // Now we need to parse the attributes
-        const attributes = quirk.attributes;
+        let attributes = [];
+        if (typeof quirk.attributes === "string" && quirk.attributes.length > 0) 
+          attributes = JSON.parse(quirk.attributes);
+        else
+          attributes = quirk.attributes;
+
+        if (attributes.length === 0) return;
         attributes.forEach(attribute => {
           // The key for the attribute is the path to the value to update
           // The value is the new value to set
@@ -328,6 +394,21 @@ export default class UtopiaSpecies extends UtopiaItemBase {
           });
         }); 
       });
+
+      this.quirkPoints += this.stats.constitution.total;
+      this.quirkPoints += this.stats.endurance.total;
+      this.quirkPoints += this.stats.effervescence.total;
+  
+      this.quirkPoints += this.block.quantity;
+      this.quirkPoints += this.dodge.quantity;
+  
+      this.gifts.subtraitsLeft = 4 - this.gifts.subtraits.size - (this.gifts.points === 2 ? 3 : 0);
+  
+      this.quirkPoints += this.gifts.subtraits.size;
+  
+      if (this.gifts.points === 2) {
+        this.quirkPoints += 3;
+      }
     }
 
     // if (this.stats.constitution.value < 2 || this.stats.constitution.value > this.stats.constitution.max) 
@@ -337,20 +418,7 @@ export default class UtopiaSpecies extends UtopiaItemBase {
     // if (this.stats.effervescence.value < 2 || this.stats.effervescence.value > this.stats.effervescence.max)
     //   this.invalid.effervescence = `Invalid effervescence value: ${this.stats.effervescence.value}`;
 
-    this.quirkPoints += this.stats.constitution.total;
-    this.quirkPoints += this.stats.endurance.total;
-    this.quirkPoints += this.stats.effervescence.total;
 
-    this.quirkPoints += this.block.quantity;
-    this.quirkPoints += this.dodge.quantity;
-
-    this.gifts.subtraitsLeft = 4 - this.gifts.subtraits.size - (this.gifts.points === 2 ? 3 : 0);
-
-    this.quirkPoints += this.gifts.subtraits.size;
-
-    if (this.gifts.points === 2) {
-      this.quirkPoints += 3;
-    }
 
     // if (this.quirkPoints < 18 || this.quirkPoints > 23) {
     //   this.invalid = {}

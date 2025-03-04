@@ -1,0 +1,199 @@
+* {
+  --button-gray: #3c3c3c;
+  --border-gray: #888888;
+  --button-error: #b8704f;
+  --border-error: #ff9b6d;
+  --button-active: #a8c7fa;
+  --border-active: #748aad;
+}
+
+header {
+  display: none;
+}
+
+.window-content {
+  padding: 0;
+  margin: 0;
+}
+
+.content {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: black;
+}
+
+.close-button {
+  position: fixed;
+  right: 30px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  height: 50px;
+  width: 50px;
+  font-size: 2em;
+  flex-wrap: nowrap;
+  background-color: var(--button-gray);
+  border: 2px solid var(--border-gray);
+  border-radius: 10px;
+}
+
+  .close-button:hover {
+    background-color: var(--button-active);
+    border-color: var(--border-active);
+    text-shadow: none;
+    color: black;
+  }
+
+.trees {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: flex-start;
+  height: 100%;
+  gap: 10px;
+}
+
+.tree-header {
+  width: 100%;
+  text-align: center;
+  font-size: 2em;
+  font-weight: 900;
+}
+
+.branches {
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: nowrap;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.branch {
+  position: relative;
+}
+
+.branch-header {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: 900;
+}
+
+.talents {
+  width: 220px;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+  height: 100%;
+}
+
+  .talent:not(:first-child) {
+    padding-top: 50px;
+  }
+
+.talent {
+  position: relative;
+  padding: 1em 0.5em;
+  height: 220px;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  background-color: var(--button-gray);
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+}
+
+  .talent::after {
+    content: "";
+    position: relative;
+    top: -4px;    /* how thick you want the “border” */
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background-color: red; /* or whatever “border” color */
+    z-index: -1;           /* behind the main element */
+    clip-path: polygon(…); /* same shape, possibly scaled up */
+  }
+
+.talent-name {
+  width: 100%;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.talent-description {
+  justify-self: center;
+  align-self: center;
+  
+}
+
+.talent-points {
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+
+.talent-points i {
+  color: black;
+  z-index: 5;
+}
+
+.body, .mind, .soul {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.body i, .mind i, .soul i {
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 2em;
+  transform: translate(-50%, -50%);
+}
+
+.body span, .mind span, .soul span {
+  font-weight: bold;
+  color: black;
+  position: relative;
+  font-size: 2em;
+  z-index: 999;
+}
+
+.body {
+  transform: translate(-10px, -20px);
+}
+
+.mind {
+  transform: translate(0, -10px);
+}
+
+.soul {
+  transform: translate(10px, -20px);
+}
+
+.talent-automated {
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+}

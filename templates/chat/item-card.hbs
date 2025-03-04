@@ -10,6 +10,51 @@
     </div>
 
     <div class="card-content">
+      <span class="item-flavor">
+        {{{item.system.flavor}}}
+      </span>
+
+      {{#if system.defenses}}
+        <span class="item-defenses">
+          <div class="flexrow data-blocks">
+            <div class="data-overlay">
+              <i class="fa-solid fa-snowflake fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.chill'}}"></i>
+              <span class="data-number">
+                {{numberFormat system.defenses.chill decimals=0}}
+              </span>
+            </div>
+
+            <div class="data-overlay">
+              <i class="fa-solid fa-bolt fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.energy'}}"></i>
+              <span class="data-number">
+                {{numberFormat system.defenses.energy decimals=0}}
+              </span>
+            </div>
+
+            <div class="data-overlay">
+              <i class="fa-solid fa-fire fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.heat'}}"></i>
+              <span class="data-number">
+                {{numberFormat system.defenses.heat decimals=0}}
+              </span>
+            </div>
+          
+            <div class="data-overlay">
+              <i class="fa-solid fa-hand-fist fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.physical'}}"></i>
+              <span class="data-number">
+                {{numberFormat system.defenses.physical decimals=0}}
+              </span>
+            </div>
+          
+            <div class="data-overlay">
+              <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.psyche'}}"></i>
+              <span class="data-number">
+                {{numberFormat system.defenses.psyche decimals=0}}
+              </span>
+            </div>
+          </div>
+        </span>
+      {{/if}}
+
       {{{item.system.description}}}
 
       <div class="dice-roll" data-tooltip-class="utopia">     
@@ -21,57 +66,69 @@
 
     <div class="card-actions">
       {{#each system.strikes as |strike|}}
-        <button type="button" class="strike-button" data-action="performStrike" data-index="{{@index}}">
-          <span class="strike-content">
-            <i class="fas fa-fist-raised"></i>
-            {{strike.name}}:  
-            {{#if strike.estimate}} 
-              <i>~{{strike.estimate}}</i>
-            {{else if strike.exact}}
-              <i>={{strike.exact}}</i>
-            {{else}}P
-              <i>{{strike.damage}}</i>
-            {{/if}}
-            {{#if strike.accuracy}}
-              - {{strike.range.close}}/{{strike.range.far}}
-            {{/if}}
-            {{#if (ne strike.template "none")}}
-              - {{localize (concat "UTOPIA.Item.Gear.Strike.Template." strike.template)}}
-            {{/if}}
-          </span>
-          <span class="strike-flavor">"{{strike.flavor}}"</span>
-        </button>
+        <div class="card-action">
+          <button type="button" class="strike-button" data-action="performStrike" data-index="{{@index}}">
+            <span class="strike-content">
+              <i class="fas fa-fist-raised"></i>
+              {{strike.name}}:  
+              {{#if strike.estimate}} 
+                <i>~{{strike.estimate}}</i>
+              {{else if strike.exact}}
+                <i>={{strike.exact}}</i>
+              {{else}}P
+                <i>{{strike.damage}}</i>
+              {{/if}}
+              {{#if strike.accuracy}}
+                - {{strike.range.close}}/{{strike.range.far}}
+              {{/if}}
+              <span class="strike-flavor">"{{strike.flavor}}"</span>
+            </span>
+          </button>
+          {{#if (ne strike.template "none")}}
+            <span class="action-template">
+              <button data-action="template" data-template="{{strike.template}}"><i class='fa-solid fa-bullseye'></i></button>
+              {{!-- {{localize (concat "UTOPIA.Templates." action.template)}} --}}
+            </span>
+          {{/if}}
+        </div>
       {{/each}}
 
       {{#each system.actions as |action|}}
-        <button type="button" class="action-button" data-action="performAction" data-index="{{@index}}">
-          <span class="action-content">
-            <i class="fas fa-key"></i>
-            {{action.name}}:  
-            {{#if action.estimate}} 
-              <i>~{{action.estimate}}</i>
-            {{else if action.exact}}
-              <i>={{action.exact}}</i>
-            {{else}}
-              <i>{{action.formula}}</i>
+        <div class="card-action">
+          <button type="button" class="action-button" data-action="performAction" data-index="{{@index}}">
+            <span class="action-content">
+              <i class="fas fa-key"></i>
+              {{action.name}}:  
+              {{#if action.estimate}} 
+                <i>~{{action.estimate}}</i>
+              {{else if action.exact}}
+                <i>={{action.exact}}</i>
+              {{else}}
+                <i>{{action.formula}}</i>
+              {{/if}}
+              - 
+              {{action.cost}} cost
+            </span>
+            {{#if action.flavor}}
+              <span class="action-flavor">"{{action.flavor}}"</span>
             {{/if}}
-            - 
-            {{action.cost}} cost
-          </span>
-          {{#if action.flavor}}
-            <span class="action-flavor">"{{action.flavor}}"</span>
+          </button>
+          {{#if (ne action.template "none")}}
+            <span class="action-template">
+              <button data-action="template" data-template="{{action.template}}"><i class='fa-solid fa-bullseye'></i></button>
+              {{!-- {{localize (concat "UTOPIA.Templates." action.template)}} --}}
+            </span>
           {{/if}}
-        </button>
+        </div>
       {{/each}}
     </div>
 
     <footer data-visibility="gm">
-      {{#if system.hasGMNotes}}
-        <details class="gm-notes">
-          <summary>GM Notes</summary>
-          <span>{{{system.enrichedGMNotes}}}</span>
-        </details>
-      {{/if}}
+      <div class="targets">
+        {{#each targets as |target|}}
+          <img src="{{target.img}}" alt="{{target.name}}" data-tooltip="{{target.name}}" />
+        {{/each}}
+      </div>
     </footer>
   </div>
 </div>

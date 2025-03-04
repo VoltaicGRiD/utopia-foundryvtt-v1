@@ -1,0 +1,162 @@
+<div class="tab {{tab.cssClass}}" data-group="primary" data-tab="step1">
+  <div class="options">
+    {{#each species as |species|}}
+      <a class="option {{#if (eq currentSpecies.name species.name)}}active{{/if}}" data-action="selectSpecies" data-species="{{species.name}}"/>
+        <span class="name">{{species.name}}</span>
+      </a>
+    {{/each}}
+  </div>
+
+  <div class="details">
+    <div class="full-portrait">
+      <img class="profile-img" src="systems/utopia/assets/species/{{currentSpecies.name}}.Png" title="{{currentSpecies.name}}"/>
+    </div>
+
+    <div class="details-container">
+      <div class="details-set">
+        <span class="details-label">
+          <i class="fas fa-fw fa-heart-crack"></i>
+          {{localize 'UTOPIA.CharacterCreator.constitution'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat currentSpecies.system.stats.constitution.total decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.constitution'}}"></i>
+          </span>
+        </div>
+      
+        <span class="details-label">
+          <i class="fas fa-fw fa-heartbeat"></i>
+          {{localize 'UTOPIA.CharacterCreator.endurance'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat currentSpecies.system.stats.endurance.total decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.endurance'}}"></i>
+          </span>
+        </div>
+      
+        <span class="details-label">
+          <i class="fas fa-fw fa-atom"></i>
+          {{localize 'UTOPIA.CharacterCreator.effervescence'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat currentSpecies.system.stats.effervescence.total decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.effervescence'}}"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="details-set">
+        <span class="details-label">
+          <i class="fas fa-fw fa-person-running"></i>
+          {{localize 'UTOPIA.CharacterCreator.land'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat speeds.land decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.land'}}"></i>
+          </span>
+        </div>
+
+        <span class="details-label">
+          <i class="fas fa-fw fa-person-swimming"></i>
+          {{localize 'UTOPIA.CharacterCreator.water'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat speeds.water decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.water'}}"></i>
+          </span>
+        </div>
+
+        <span class="details-label">
+          <i class="fas fa-fw fa-person-fairy"></i>
+          {{localize 'UTOPIA.CharacterCreator.air'}}
+        </span>
+    
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat speeds.air decimals=0}}
+            <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.air'}}"></i>
+          </span>
+        </div>
+      </div>
+
+      <hr/>
+
+      <details open>
+        <summary>{{localize 'UTOPIA.CharacterCreator.subtraits'}}</summary>
+        <div class="details-set">
+          <span class="details-label">
+            <i class="fas fa-fw fa-wand-sparkles"></i>
+            {{localize 'UTOPIA.CharacterCreator.subtraitPoints'}}
+          </span>
+        
+          <div class="data-overlay">
+            <span class="data-number">
+              {{numberFormat actor.system.points.subtrait.total decimals=0}}
+              <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.CharacterCreator.subtraitPoints'}}"></i>
+            </span>
+          </div>
+        </div>
+    
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.dex.icon total=utopiaTraits.dex.total mod=utopiaTraits.dex.mod color=utopiaTraits.dex.color trait='dex' }}
+          {{> 'creator-trait' icon=utopiaTraits.spd.icon total=utopiaTraits.spd.total mod=utopiaTraits.spd.mod color=utopiaTraits.spd.color trait='spd' }}
+        </div>
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.pow.icon total=utopiaTraits.pow.total mod=utopiaTraits.pow.mod color=utopiaTraits.pow.color trait='pow' }}
+          {{> 'creator-trait' icon=utopiaTraits.for.icon total=utopiaTraits.for.total mod=utopiaTraits.for.mod color=utopiaTraits.for.color trait='for' }}
+        </div>
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.eng.icon total=utopiaTraits.eng.total mod=utopiaTraits.eng.mod color=utopiaTraits.eng.color trait='eng' }}
+          {{> 'creator-trait' icon=utopiaTraits.mem.icon total=utopiaTraits.mem.total mod=utopiaTraits.mem.mod color=utopiaTraits.mem.color trait='mem' }}
+        </div>
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.res.icon total=utopiaTraits.res.total mod=utopiaTraits.res.mod color=utopiaTraits.res.color trait='res' }}
+          {{> 'creator-trait' icon=utopiaTraits.awa.icon total=utopiaTraits.awa.total mod=utopiaTraits.awa.mod color=utopiaTraits.awa.color trait='awa' }}
+        </div>
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.por.icon total=utopiaTraits.por.total mod=utopiaTraits.por.mod color=utopiaTraits.por.color trait='por' }}
+          {{> 'creator-trait' icon=utopiaTraits.stu.icon total=utopiaTraits.stu.total mod=utopiaTraits.stu.mod color=utopiaTraits.stu.color trait='stu' }}
+        </div>
+        <div class="trait-set">
+          {{> 'creator-trait' icon=utopiaTraits.app.icon total=utopiaTraits.app.total mod=utopiaTraits.app.mod color=utopiaTraits.app.color trait='app' }}
+          {{> 'creator-trait' icon=utopiaTraits.lan.icon total=utopiaTraits.lan.total mod=utopiaTraits.lan.mod color=utopiaTraits.lan.color trait='lan' }}
+        </div>
+      </details>
+
+      <details closed>
+        <summary>{{localize 'UTOPIA.CharacterCreator.paperdoll'}}</summary>
+        <div class="paper-doll">
+          <i class="fa-solid fa-person"></i>
+          <div class="head">{{> "paper-doll" evolution=true slot=paperdoll.head key='head' dir="right"}}</div>
+          <div class="neck">{{> "paper-doll" evolution=false slot=paperdoll.neck key='neck' dir="right"}}</div>
+          <div class="chest">{{> "paper-doll" evolution=false slot=paperdoll.chest key='chest' dir="left"}}</div>
+          <div class="back">{{> "paper-doll" evolution=false slot=paperdoll.back key='back' dir="left"}}</div>
+          <div class="waist">{{> "paper-doll" evolution=false slot=paperdoll.waist key='waist' dir="left"}}</div>
+          <div class="hands">{{> "paper-doll" evolution=true slot=paperdoll.hands key='hands' dir="left"}}</div>
+          <div class="ring">{{> "paper-doll" evolution=false slot=paperdoll.ring key='ring' dir="left"}}</div>
+          <div class="feet">{{> "paper-doll" evolution=true slot=paperdoll.feet key='feet' dir="right"}}</div>
+        </div> 
+      </details>
+    </div>
+
+    <div class="content-description">
+      {{{currentSpecies.enrichedDescription}}}
+    </div>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="previous-button" data-action="previousStep" data-step="step1" disabled>{{localize "UTOPIA.CharacterCreator.previous"}}</button>
+    <button type="button" class="close-button" data-action="close">{{localize "UTOPIA.CharacterCreator.close"}}</button>
+    <button type="submit" class="next-button"  data-action="nextStep" data-step="step1">{{localize "UTOPIA.CharacterCreator.next"}}</button>
+  </div>
+</div>

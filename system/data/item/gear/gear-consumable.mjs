@@ -45,14 +45,13 @@ export default class UtopiaConsumable extends UtopiaGearBase {
     schema.strikes = new fields.ArrayField(schema.strike, { required: true, nullable: false, initial: [schema.strike.getInitialValue()] });  
     
     schema.quantity = new fields.NumberField({...requiredInteger, min: 0, max: 10000});
+    schema.deleteOnEmpty = new fields.BooleanField({ required: true, nullable: false, initial: false })
 
     return schema;
   }
 
   prepareDerivedData() {
-    this.price = {
-      silver: this.system.value,
-      utian: this.system.value * 100
-    };
+    super.prepareDerivedData();
   }
+
 }

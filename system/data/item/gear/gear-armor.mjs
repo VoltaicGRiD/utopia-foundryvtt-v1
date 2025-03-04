@@ -20,11 +20,10 @@ export default class UtopiaArmor extends UtopiaGearBase {
       psyche: new fields.NumberField({...requiredInteger}),
     });
 
-
     return schema;
   }
 
   prepareDerivedData() {
-
+    super.prepareDerivedData();
   }
 }

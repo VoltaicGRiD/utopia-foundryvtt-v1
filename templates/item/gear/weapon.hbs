@@ -19,13 +19,13 @@
         <label for="system.rarityPoints">{{localize "UTOPIA.Item.Gear.rarityPoints"}}</label>
         {{formInput systemFields.rarityPoints value=system.rarityPoints name="system.rarityPoints" localize=true}}
 
-        <label for="system.value">{{localize "UTOPIA.Item.Gear.value"}}</label>
+        <label for="system.value">{{localize "UTOPIA.Item.value"}}</label>
         {{formInput systemFields.value value=system.value name="system.value" localize=true}}
         
         <span class="derived-data">{{system.price.silver}} {{localize 'UTOPIA.Item.Gear.Price.silver'}}</span>
         <span class="derived-data">{{system.price.utian}} {{localize 'UTOPIA.Item.Gear.Price.utianCredits'}}</span>
 
-        <label for="system.slots">{{localize "UTOPIA.Item.Gear.slots"}}</label>
+        <label for="system.slots">{{localize "UTOPIA.CommonTerms.slots"}}</label>
         {{formInput systemFields.slots value=system.slots name="system.slots" localize=true}}
 
         {{#if (not system.handheld)}}
@@ -61,12 +61,12 @@
       <div class="flexrow">
         <select class="add-options" name="addOptions" id="addOptions" data-action="addOptions">
           <option value="strike">{{localize "UTOPIA.Item.Gear.strike"}}</option>
-          <option value="action">{{localize "UTOPIA.Item.Gear.action"}}</option>
+          <option value="action">{{localize "UTOPIA.Item.action"}}</option>
           <option value="resource">{{localize "UTOPIA.Item.Gear.resource"}}</option>
         </select>
         <button type="button" class="add-item" data-action="addItem">
           <i class="fas fa-plus"></i>
-          {{localize "UTOPIA.Item.Gear.add"}}
+          {{localize "UTOPIA.Math.add"}}
         </button>
       </div>
 
@@ -123,7 +123,7 @@
             </div>
 
             <div class="flexcol grid-span-3">
-              <label for="strikes.{{@index}}.flavor">{{localize "UTOPIA.Item.Gear.Strike.flavor"}}</label>
+              <label for="strikes.{{@index}}.flavor">{{localize "UTOPIA.Item.flavor"}}</label>
               {{formInput ../systemFields.strike.fields.flavor value=strike.flavor name=(concat "system.strikes." @index ".flavor") localize=true}}
             </div>
 
@@ -135,90 +135,90 @@
 
       {{#each system.actions as |action|}}
         <details class="action">
-          <summary><i class="fas fa-wand"></i> <b>{{localize "UTOPIA.Item.Gear.action"}}:</b> {{action.name}}</summary>
+          <summary><i class="fas fa-wand"></i> <b>{{localize "UTOPIA.Item.action"}}:</b> {{action.name}}</summary>
           
           <fieldset class="action-attributes">
-            <legend><i class="fas fa-wand-magic-sparkles"></i> {{localize "UTOPIA.Item.Gear.Action.attributes"}}</legend>
+            <legend><i class="fas fa-wand-magic-sparkles"></i> {{localize "UTOPIA.Item.Action.attributes"}}</legend>
 
             <div class="flexcol grid-span-2">
-              <label for="actions.{{@index}}.name">{{localize "UTOPIA.Item.Gear.Action.name"}}</label>
+              <label for="actions.{{@index}}.name">{{localize "UTOPIA.Item.Action.name"}}</label>
               {{formInput ../systemFields.action.fields.name value=action.name name=(concat "system.actions." @index ".name") localize=true}}
             </div>
 
             <div class="flexcol">
-              <label for="actions.{{@index}}.category">{{localize "UTOPIA.Item.Gear.Action.category"}}</label>
+              <label for="actions.{{@index}}.category">{{localize "UTOPIA.Item.Action.category"}}</label>
               {{formInput ../systemFields.action.fields.category value=action.category name=(concat "system.actions." @index ".category") localize=true}}
             </div>
 
             <div class="flexcol">
-              <label for="actions.{{@index}}.type">{{localize "UTOPIA.Item.Gear.Action.type"}}</label>
+              <label for="actions.{{@index}}.type">{{localize "UTOPIA.Item.Action.type"}}</label>
               {{formInput ../systemFields.action.fields.type value=action.type name=(concat "system.actions." @index ".type") localize=true}}
             </div>
 
             <div class="flexcol">
-              <label for="actions.{{@index}}.cost">{{localize "UTOPIA.Item.Gear.Action.cost"}}</label>
+              <label for="actions.{{@index}}.cost">{{localize "UTOPIA.Item.Action.cost"}}</label>
               {{formInput ../systemFields.action.fields.cost value=action.cost name=(concat "system.actions." @index ".cost") localize=true}}
             </div>
 
             <div class="flexcol">
-              <label for="actions.{{@index}}.stamina">{{localize "UTOPIA.Item.Gear.Action.stamina"}}</label>
+              <label for="actions.{{@index}}.stamina">{{localize "UTOPIA.Item.Action.stamina"}}</label>
               {{formInput ../systemFields.action.fields.stamina value=action.stamina name=(concat "system.actions." @index ".stamina") localize=true}}
             </div>
             
             {{#if (eq action.category "trait")}}
               <div class="flexcol">
-                <label for="actions.{{@index}}.trait">{{localize "UTOPIA.Item.Gear.Action.trait"}}</label>
+                <label for="actions.{{@index}}.trait">{{localize "UTOPIA.Item.Action.trait"}}</label>
                 {{formInput ../systemFields.action.fields.trait value=action.trait name=(concat "system.actions." @index ".trait") localize=true}}
               </div>
 
               <div class="flexcol grid-span-2">
-                <label for="actions.{{@index}}.modifier">{{localize "UTOPIA.Item.Gear.Action.modifier"}}</label>
+                <label for="actions.{{@index}}.modifier">{{localize "UTOPIA.Item.Action.modifier"}}</label>
                 {{formInput ../systemFields.action.fields.modifier value=action.modifier name=(concat "system.actions." @index ".modifier") localize=true}}
               </div>
             {{/if}}
 
             {{#if (eq action.category "damage")}}
               <div class="flexcol grid-span-2">
-                <label for="actions.{{@index}}.formula">{{localize "UTOPIA.Item.Gear.Action.formula"}}</label>
+                <label for="actions.{{@index}}.formula">{{localize "UTOPIA.CommonTerms.formula"}}</label>
                 {{formInput ../systemFields.action.fields.formula value=action.formula name=(concat "system.actions." @index ".formula") localize=true}}
               </div>
 
               <div class="flexcol">
-                <label for="actions.{{@index}}.template">{{localize "UTOPIA.Item.Gear.Action.template"}}</label>
+                <label for="actions.{{@index}}.template">{{localize "UTOPIA.Item.Action.template"}}</label>
                 {{formInput ../systemFields.action.fields.template value=action.template name=(concat "system.actions." @index ".template") localize=true}}
               </div>
             {{/if}}
 
             {{#if (eq action.category "macro")}}
               <div class="flexcol grid-span-2">
-                <label for="actions.{{@index}}.macro">{{localize "UTOPIA.Item.Gear.Action.macro"}}</label>
+                <label for="actions.{{@index}}.macro">{{localize "UTOPIA.Item.Action.macro"}}</label>
                 {{formInput ../systemFields.action.fields.macro value=action.macro name=(concat "system.actions." @index ".macro") localize=true}}
               </div>
 
               <div class="flexcol">
-                <label for="actions.{{@index}}.actor">{{localize "UTOPIA.Item.Gear.Action.actor"}}</label>
+                <label for="actions.{{@index}}.actor">{{localize "UTOPIA.Item.Action.actor"}}</label>
                 {{formInput ../systemFields.action.fields.actor value=action.actor name=(concat "system.actions." @index ".actor") localize=true}}
               </div>
             {{/if}}
 
             <div class="flexcol grid-span-2">
-              <label for="actions.{{@index}}.resource">{{localize "UTOPIA.Item.Gear.Action.resource"}}</label>
+              <label for="actions.{{@index}}.resource">{{localize "UTOPIA.Item.Action.resource"}}</label>
               {{formInput ../systemFields.action.fields.resource value=action.resource name=(concat "system.actions." @index ".resource") localize=true}}
             </div>
 
             <div class="flexcol">
-              <label for="actions.{{@index}}.consumed">{{localize "UTOPIA.Item.Gear.Action.consumed"}}</label>
+              <label for="actions.{{@index}}.consumed">{{localize "UTOPIA.Item.Action.consumed"}}</label>
               {{formInput ../systemFields.action.fields.consumed value=action.consumed name=(concat "system.actions." @index ".consumed") localize=true}}
             </div>
 
             <div class="flexcol grid-span-3">
-              <label for="actions.{{@index}}.flavor">{{localize "UTOPIA.Item.Gear.Action.flavor"}}</label>
+              <label for="actions.{{@index}}.flavor">{{localize "UTOPIA.Item.flavor"}}</label>
               {{formInput ../systemFields.action.fields.flavor value=action.flavor name=(concat "system.actions." @index ".flavor") localize=true}}
             </div>
 
           </fieldset>
 
-          <button type="button" class="grid-span-2" data-action="deleteAction" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.Item.Gear.deleteAction"}}</button>
+          <button type="button" class="grid-span-2" data-action="deleteAction" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.Item.deleteAction"}}</button>
         </details>
       {{/each}}
 
@@ -264,14 +264,14 @@
 
           </fieldset>
 
-          <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.Item.Gear.deleteResource"}}</button>
+          <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.CommonTerms.deleteResource"}}</button>
         </details>
       {{/each}}
 
       <hr/>
 
       <div class="flexcol">
-        <label for="system.flavor"><i class="fas fa-utensils"></i>&nbsp;&nbsp;{{localize "UTOPIA.Item.Gear.flavor"}}</label>
+        <label for="system.flavor"><i class="fas fa-utensils"></i>&nbsp;&nbsp;{{localize "UTOPIA.Item.flavor"}}</label>
         {{#if editable}}
           <prose-mirror name="system.flavor" data-document-u-u-i-d="{{item.uuid}}" value="{{system.flavor}}" collaborate="true" toggled="true">
             {{{enrichedFlavor}}}

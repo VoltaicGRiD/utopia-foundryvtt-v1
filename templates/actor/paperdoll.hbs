@@ -1,0 +1,30 @@
+<div class="paper-doll">
+    {{#if canDock}}
+        <div class="dock-buttons">
+        <button type="button" class="dock-button" data-action="dock">
+            <i class="fas fa-anchor"></i>
+            {{#if docked}}
+            {{localize "UTOPIA.SheetLabels.undock"}}
+            {{else}}
+            {{localize "UTOPIA.SheetLabels.dock"}}
+            {{/if}}
+        </button>
+        <button type="button" class="swap-dock-side-button" data-action="swapDock">
+            <i class="fas fa-left-right"></i>
+            {{localize "UTOPIA.SheetLabels.swapDock"}}
+        </button>
+        </div>
+    {{/if}}
+
+  <i class="fa-solid fa-person"></i>
+  <div class="head">{{> "actor-paper-doll" evolution=true slot=paperdoll.head key='head' dir="right"}}</div>
+  <div class="neck">{{> "actor-paper-doll" evolution=false slot=paperdoll.neck key='neck' dir="right"}}</div>
+  <div class="back">{{> "actor-paper-doll" evolution=false slot=paperdoll.back key='back' dir="left"}}</div>
+  <div class="chest">{{> "actor-paper-doll" evolution=false slot=paperdoll.chest key='chest' dir="right"}}</div>
+  <div class="waist">{{> "actor-paper-doll" evolution=false slot=paperdoll.waist key='waist' dir="left"}}</div>
+  <div class="hands">{{> "actor-paper-doll" evolution=true slot=paperdoll.hands key='hands' dir="right"}}</div>
+  <div class="ring">{{> "actor-paper-doll" evolution=false slot=paperdoll.ring key='ring' dir="left"}}</div>
+  <div class="feet">{{> "actor-paper-doll" evolution=true slot=paperdoll.feet key='feet' dir="right"}}</div>
+
+  <span class="key">{{localize "UTOPIA.Actor.PaperDoll.key"}}</span>
+</div> 

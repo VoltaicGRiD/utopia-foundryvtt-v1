@@ -1,7 +1,144 @@
 {
   "UTOPIA": {
+    "CharacterCreator": {
+      "builder": "Builder",
+      "paperdoll":"Paper Doll",
+      "subtraits": "Subtraits",
+      "subtraitPoints":"Subtrait Points",
+      "constitution": "Constitution",
+      "endurance": "Endurance",
+      "effervescence": "Effervescence",
+      "land": "Land Speed",
+      "water": "Water Speed",
+      "air": "Air Speed",
+      "next": "Next Step",
+      "close": "Close Character Creator",
+      "previous": "Previous Step",
+      "step1": "Step 1 - Species",
+      "step2": "Step 2 - Talents",
+      "step3": "Step 3 - Specialist Talents"
+    },
+    "FeatureBuilder": {
+      "editableTooltip": "Ctrl + Left Click to share / unshare<br/>Right Click to remove",
+      "optionsTooltip": "Drag and Drop to attach to a classification<br/>Ctrl + Drag and Drop to attach to all automatically<br/>Alt + Drag and Drop to attach only to selected automatically",
+      "dropToAll": "Press yes to attach to all<br/>Press no to attach only to selected",
+      "Labels": {
+        "weapon": "Weapon",
+        "shield": "Shield",
+        "armor": "Armor",
+        "other": "Other",
+        "fastWeapon":"Fast Weapon",
+        "moderateWeapon": "Moderate Weapon",
+        "slowWeapon": "Slow Weapon",
+        "shields": "Shields",
+        "headArmor": "Head Armor",
+        "chestArmor": "Chest Armor",
+        "waistArmor": "Waist Armor",
+        "handsArmor": "Hands Armor",
+        "feetArmor": "Feet Armor",
+        "consumable": "Consumable",
+        "artifacts": "Artifacts",
+        "material": "Material",
+        "refinement": "Refinement",
+        "power": "Power",
+        "componentsPerStack": "Components per stack",
+        "incompatibleWith": "Incompatible",
+        "requires": "Requires",
+        "maxStacks": "Max Stacks",
+        "shared": "Shared Properties",
+        "costFormula": "Cost Formula",
+        "shareAttribute": "Share Attribute",
+        "unshareAttribute": "Unshare Attribute",
+        "simulation1": "Assuming",
+        "simulation2": "stacks: ",
+        "name": "Feature Name",
+        "saveFeature": "Save Feature"
+      },
+      "Attributes": {
+        "fastWeapon": "Fast",
+        "moderateWeapon": "Moderate",
+        "slowWeapon": "Slow",
+        "shields": "Shields",
+        "headArmor": "Head",
+        "chestArmor": "Chest",
+        "waistArmor": "Waist",
+        "handsArmor": "Hands",
+        "feetArmor": "Feet",
+        "consumable":  "Consumable",
+        "equippableArtifact": "Equippable",
+        "handheldArtifact": "Handheld",
+        "ammunitionArtifact": "Ammunition"
+      }
+    },
+    "Biography": {
+      "biographyFields": "Biography Fields",
+      "age": "Age",
+      "pronouns": "Pronouns",
+      "education": "Education",
+      "ethnicity": "Ethnicity",
+      "occupation": "Occupation",
+      "nationality": "Nationality",
+      "upbringing": "Upbringing",
+      "height": "Height",
+      "weight": "Weight",
+      "bodyType": "Body Type",
+      "hairEyesSkin": "Hair, eyes, and skin",
+      "markings": "Markings",
+      "voice": "Voice / Accent",
+      "quirks": "Quirks",
+      "enemies": "Enemies",
+      "allies": "Allies",
+      "rivals": "Rivals",
+      "family": "Family",
+      "friends": "Friends",
+      "partners": "Partners",
+      "strength": "Strength Source",
+      "reputation": "Reputation",
+      "personalSecrets": "Personal Secrets",
+      "gmSecrets": "GM Secrets",
+      "achievements": "Achievements",
+      "coreMemories": "Core Memories",
+      "phobias": "Phobias",
+      "dreams": "Dreams",
+      "nightmares": "Nightmares",
+      "anathema": "Anathema",
+      "edicts": "Edicts",
+      "hobbies": "Hobbies",
+      "interests": "Interests",
+      "ambitions": "Ambitions",
+      "moralAlignment": "Moral Alignment",
+      "philosophicalAlignment": "Philosophical Alignment",
+      "politicalAlignment": "Political Alignment",
+      "motivations": "Motivations",
+      "birthday": "Birthday",
+      "deathday": "Deathday",
+      "generalKnowledgeDivider": "----- General Knowledge -----",
+      "relationshipsDivider": "----- Relationships -----",
+      "personalInformationDivider": "----- Personal Information -----",
+      "alignmentsDivider": "----- Alignments -----",
+      "publicInformationDivider": "----- Public Information -----"
+    },
+    "Math": {
+      "flat": "None / Flat",
+      "add": "Add",
+      "subtract": "Subtract",
+      "multiply": "Multiply",
+      "divide": "Divide"
+    },
+    "DamageTypes": {
+      "chill": "Chill",
+      "energy": "Energy",
+      "heat": "Heat",
+      "physical": "Physical",
+      "psyche": "Psyche"
+    },
     "Actor": {
       "rest": "Rest",
+      "check": "Check",
+      "fail": "Fail by Choice",
+      "toggleAutomation": "Toggle Automation",
+      "block": "Block",
+      "dodge": "Dodge",
       "Tabs": {
         "details": "Details",
         "actions": "Actions",
@@ -10,50 +147,88 @@
         "talents": "Talents",
         "biography": "Biography",
         "effects": "Effects",
-        "alteration": "Alteration",
-        "array": "Array",
-        "divination": "Divination",
-        "enchantment": "Enchantment",
-        "evocation": "Evocation",
-        "illusion": "Illusion",
-        "necromancy": "Necromancy",
-        "wake": "Wake"
-      },
-      "block": "Block",
-      "dodge": "Dodge",
-      "Defenses": {
-        "chill": "Chill",
-        "energy": "Energy",
-        "heat": "Heat",
-        "physical": "Physical",
-        "psyche": "Psyche"
+        "species": "Species"
       },
       "Traits": {
-        "agi": { "long": "Agility", "abbr": "agi" },
-        "str": { "long": "Strength", "abbr": "str" },
-        "int": { "long": "Intellect", "abbr": "int" },
-        "wil": { "long": "Will", "abbr": "wil" },
-        "dis": { "long": "Display", "abbr": "dis" },
-        "cha": { "long": "Charm", "abbr": "cha" }
+        "agi": {
+          "long": "Agility",
+          "abbr": "agi"
+        },
+        "str": {
+          "long": "Strength",
+          "abbr": "str"
+        },
+        "int": {
+          "long": "Intellect",
+          "abbr": "int"
+        },
+        "wil": {
+          "long": "Will",
+          "abbr": "wil"
+        },
+        "dis": {
+          "long": "Display",
+          "abbr": "dis"
+        },
+        "cha": {
+          "long": "Charm",
+          "abbr": "cha"
+        }
       },
       "Subtraits": {
-        "spd": { "long": "Speed", "abbr": "spd" },
-        "dex": { "long": "Dexterity", "abbr": "dex" },
-        "pow": { "long": "Power", "abbr": "pow" },
-        "for": { "long": "Fortitude", "abbr": "for" },
-        "eng": { "long": "Engineering", "abbr": "eng" },
-        "mem": { "long": "Memory", "abbr": "mem" },
-        "res": { "long": "Resolve", "abbr": "res" },
-        "awa": { "long": "Awareness", "abbr": "awa" },
-        "por": { "long": "Portrayal", "abbr": "por" },
-        "stu": { "long": "Stunt", "abbr": "stu" },
-        "app": { "long": "Appeal", "abbr": "app" },
-        "lan": { "long": "Language", "abbr": "lan" }
+        "spd": {
+          "long": "Speed",
+          "abbr": "spd"
+        },
+        "dex": {
+          "long": "Dexterity",
+          "abbr": "dex"
+        },
+        "pow": {
+          "long": "Power",
+          "abbr": "pow"
+        },
+        "for": {
+          "long": "Fortitude",
+          "abbr": "for"
+        },
+        "eng": {
+          "long": "Engineering",
+          "abbr": "eng"
+        },
+        "mem": {
+          "long": "Memory",
+          "abbr": "mem"
+        },
+        "res": {
+          "long": "Resolve",
+          "abbr": "res"
+        },
+        "awa": {
+          "long": "Awareness",
+          "abbr": "awa"
+        },
+        "por": {
+          "long": "Portrayal",
+          "abbr": "por"
+        },
+        "stu": {
+          "long": "Stunt",
+          "abbr": "stu"
+        },
+        "app": {
+          "long": "Appeal",
+          "abbr": "app"
+        },
+        "lan": {
+          "long": "Language",
+          "abbr": "lan"
+        }
       },
       "Stats": {
         "shpShort": "SHP",
         "shpLong": "Surface Hit Points",
-        "dhpShort": "DHP", 
+        "dhpShort": "DHP",
         "dhpLong": "Deep Hit Points",
         "staShort": "STA",
         "staLong": "Stamina Points",
@@ -84,93 +259,53 @@
         "air": "Air Travel"
       },
       "Actions": {
-        "block": "Block",
-        "dodge": "Dodge",
-        "rest": "Rest",
         "turnActions": "Turn Actions",
         "interruptActions": "Interrupt Actions",
+        "otherActions": "Other Actions",
         "browseActions": "Browse Actions"
       },
       "Resources": {
         "resources": "Resources",
         "add": "Add Resource"
       },
-      "Biography": {
-        "biographyFields": "Biography Fields",
-        "age": "Age",
-        "pronouns": "Pronouns",
-        "education": "Education",
-        "ethnicity": "Ethnicity",
-        "occupation": "Occupation",
-        "nationality": "Nationality",
-        "upbringing": "Upbringing",
-        "height": "Height",
-        "weight": "Weight",
-        "bodyType": "Body Type",
-        "hairEyesSkin": "Hair, eyes, and skin",
-        "markings": "Markings",
-        "voice": "Voice / Accent",
-        "quirks": "Quirks",
-        "enemies": "Enemies",
-        "allies": "Allies",
-        "rivals": "Rivals",
-        "family": "Family",
-        "friends": "Friends",
-        "partners": "Partners",
-        "strength": "Strength Source",
-        "reputation": "Reputation",
-        "personalSecrets": "Personal Secrets",
-        "gmSecrets": "GM Secrets",
-        "achievements": "Achievements",
-        "coreMemories": "Core Memories",
-        "phobias": "Phobias",
-        "dreams": "Dreams",
-        "nightmares": "Nightmares",
-        "anathema": "Anathema",
-        "edicts": "Edicts",
-        "hobbies": "Hobbies",
-        "interests": "Interests",
-        "ambitions": "Ambitions",
-        "moralAlignment": "Moral Alignment",
-        "philosophicalAlignment": "Philosophical Alignment",
-        "politicalAlignment": "Political Alignment",
-        "motivations": "Motivations",
-        "birthday": "Birthday",
-        "deathday": "Deathday",
-        "generalKnowledgeDivider": "----- General Knowledge -----",
-        "relationshipsDivider": "----- Relationships -----",
-        "personalInformationDivider": "----- Personal Information -----",
-        "alignmentsDivider": "----- Alignments -----",
-        "publicInformationDivider": "----- Public Information -----"
+      "PaperDoll": {
+        "key": "Blue slots are augment slots | Drag equipment to a slot to fill it | Right-click to clear a slot"
+      },
+      "SpecialFavors": {
+        "specialFavors": "Special-type Favors",
+        "specialDisfavors": "Special-type Disfavors",
+        "inconspicuous": "Remain inconspicuous",
+        "maintainFocus": "Maintain Focus",
+        "maintainConcentration": "Maintain Concentration",
+        "devices": "Manipulate devices",
+        "difficultTerrain": "Navigate difficult terrain",
+        "traversal": "Traverse terrain, creatures, or objects",
+        "accuracy": "Accuracy",
+        "multitasking": "Multitasking (focus on multiple)",
+        "resistInfluence": "Resist influcence",
+        "resistSpellEffects": "Resist spell effects"
       }
-    },   
+    },
     "SheetLabels": {
       "actorV2": "Utopia Actor Sheet",
-      
       "item": "Utopia Item Sheet",
-      
       "armor": "Utopia Armor Sheet",
       "artifact": "Utopia Artifact Sheet",
       "consumable": "Utopia Consumable Sheet",
       "trinket": "Utopia Trinket Sheet",
       "weapon": "Utopia Weapon Sheet",
-
       "subtrait": "Utopia Subtrait Selection",
       "talent-tree-selector": "Utopia Talent Tree",
       "spellcraft": "Utopia Spellcrafting",
       "craftingFeatures": "Utopia Artifice Features",
-      
       "undock": "Undock Window",
       "undockShort": "Undock",
       "dock": "Dock Window",
       "dockShort": "Dock",
       "swapDock": "Swap Docked Side",
       "swapDockShort": "Swap",
-      
       "twitchIntegration": "Twitch Integration",
-
       "openDataOverride": "Override Actor Data",
-
       "roll": "Roll Dialog",
       "compendiumBrowser": "Utopia Compendium Browser"
     },
@@ -184,42 +319,49 @@
         "flavor": "Item Flavor",
         "description": "Description",
         "saveFilter": "Save Filter"
-        
       }
     },
-    "Dialog": {
+    "CommonTerms": {
+      "name": "Name",
       "dealDamage": "Deal Damage",
       "applyHealing": "Apply Healing",
-      "submit": "Submit"
-    },
-    "Descriptions": {
+      "submit": "Submit",
       "description": "Description",
       "gmSecrets": "GM Secrets",
       "attributes": "Attributes",
+      "sharedAttributes": "Shared Attributes",
       "subtraitPoints": "Subtrait Points",
       "subtraitGifts": "Subtrait Gifts",
       "points": "Points",
       "defenses": "Defenses",
       "blocked": "Blocked Damage",
+      "dodged": "Dodged",
+      "failure": "Failure",
+      "success": "Success",
       "newTotal": "New Damage",
       "damage": "Damage",
       "damageType": "Damage Type",
+      "perform": "Perform",
+      "delete": "Delete",
       "parent": "Parent",
       "spellcap": "Spellcap",
       "keepopen": "Keep open",
       "roll": "Roll",
       "useItem": "Use Item",
+      "misc": "Miscellaneous",
       "tags": "Tags",
+      "automated": "Automated Checks Enabled",
       "talents": "Talents",
       "specialistTalents": "Specialist Talents",
       "unlock": "Make all talents available (GM Only)",
       "search": "Search",
+      "stacks": "Stacks",
       "filter": "Filter",
       "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
       "kineticForce": "Kinetic",
+      "reset": "Reset",
       "save": "Save",
       "all": "All",
-      "submit": "Submit",
       "favorite": "Favorites",
       "available": "Available",
       "locked": "Locked",
@@ -229,25 +371,76 @@
       "equipItem": "Equip Item",
       "overrideWarning": "Warning! Making any changes here will disable automatic data updates from changes to the document. This should only be done if you know what you're doing! Some changes may even break an actor.",
       "overrideReEnable": "To re-enable automatic updates, set the 'utopia' 'override' flag to an empty array (square brackets) on the document",
-      "remaining": "Remaining"
-    },
-
-    "Checks": {
-      "failure": "Check Failed!",
-      "success": "Check Succeeded!"
+      "remaining": "Remaining",
+      "formula": "Formula",
+      "slots": "Slots",
+      "slotCapacity": "Slot Capacity",
+      "checkFailure": "Check Failed!",
+      "checkSuccess": "Check Succeeded!",
+      "addResource": "Add Resource",
+      "deleteResource": "Delete Resource",
+      "add": "Add",
+      "addCustom": "Add Custom"
     },
     "Item": {
-      "formula": "Formula",
       "flavor": "Item Flavor",
-      "description": "Description",
-      "gmSecrets":"GM Secrets",
+      "gmSecrets": "GM Secrets",
       "quantity": "Quantity",
+      "attributes": "Attributes",
+      "value": "Value",
+      "category": "Category",
       "Tabs": {
         "attributes": "Attributes",
         "description": "Description",
         "effects": "Effects",
         "quirks": "Quirks",
-        "paperdoll": "Paper Doll"
+        "talents": "Talents",
+        "paperdoll": "Paper Doll",
+        "variables": "Variables"
+      },
+      "addAction": "Add Action",
+      "deleteAction": "Delete Action",
+      "action": "Action",
+      "Action": {
+        "attributes": "Action Attributes",
+        "name": "Name",
+        "category": "Category",
+        "Category": {
+          "generic": "Generic",
+          "trait": "Trait",
+          "damage": "Damage",
+          "macro": "Macro"
+        },
+        "type": "Type",
+        "Type": {
+          "turn": "Turn",
+          "interrupt": "Interrupt"
+        },
+        "trait": "Trait",
+        "modifier": "Modifier",
+        "cost": "Cost",
+        "stamina": "Stamina",
+        "formula": "Formula",
+        "flavor": "Flavor",
+        "template": "Template",
+        "Template": {
+          "none": "None",
+          "sbt": "Small Blast (2m)",
+          "mbt": "Medium Blast (4m)",
+          "lbt": "Large Blast (8m)",
+          "xbt": "Extra-Large Blast (12m)",
+          "cone": "Cone",
+          "line": "Line"
+        },
+        "resource": "Resource",
+        "consumed": "Amount Consumed",
+        "macro": "Macro UUID",
+        "actor": "Macro Target",
+        "Actor": {
+          "default": "Default",
+          "self": "Self",
+          "target": "Target"
+        }
       },
       "Archetype": {
         "unknownDepiction": "Unknown depiction",
@@ -280,21 +473,13 @@
       },
       "Gear": {
         "add": "Add",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
-        },
-        "quantity": "Quantity",
         "rarityPoints": "Rarity Points",
-        "value": "Value",
         "Price": {
           "silver": "Silver",
           "utianCredits": "Utian Credits"
         },
-        "slots": "Slots",
         "slot": "Slot",
-        "Slot": {
+        "Slot": { 
           "head": "Head",
           "neck": "Neck",
           "back": "Back",
@@ -305,15 +490,14 @@
           "feet": "Feet"
         },
         "equippable": "Equippable",
+        "augmentable": "Augmentable",
         "handheld": "Handheld",
         "hands": "Hands",
         "actionCost": "Action Cost",
         "materialComponents": "Material",
         "refinementComponents": "Refinement",
         "powerComponents": "Power",
-        "flavor": "Item Flavor",
-        "addResource": "Add Resource",
-        "deleteResource": "Delete Resource",
+        "controlledByFeatures": "Use Features",
         "resource": "Resource",
         "Resource": {
           "attributes": "Resource Attributes",
@@ -330,50 +514,6 @@
             "rest": "Rest",
             "day": "Day",
             "session": "Session"
-          }
-        },
-        "addAction": "Add Action",
-        "deleteAction": "Delete Action",
-        "action": "Action",
-        "Action": {
-          "attributes": "Action Attributes",
-          "name": "Name",
-          "category": "Category",
-          "Category": {
-            "generic": "Generic",
-            "trait": "Trait",
-            "damage": "Damage",
-            "macro": "Macro"
-          },
-          "type": "Type",
-          "Type": {
-            "turn": "Turn",
-            "interrupt": "Interrupt"
-          },
-          "trait": "Trait",
-          "modifier": "Modifier",
-          "cost": "Cost",
-          "stamina": "Stamina",
-          "formula": "Formula",
-          "flavor": "Flavor",
-          "template": "Template",
-          "Template": {
-            "none": "None",
-            "sbt": "Small Blast (2m)",
-            "mbt": "Medium Blast (4m)",
-            "lbt": "Large Blast (8m)",
-            "xbt": "Extra-Large Blast (12m)",
-            "cone": "Cone",
-            "line": "Line"
-          },
-          "resource": "Resource",
-          "consumed": "Amount Consumed",
-          "macro": "Macro UUID",
-          "actor": "Macro Target",
-          "Actor": {
-            "default": "Default",
-            "self": "Self",
-            "target": "Target"
           }
         },
         "addStrike": "Add Strike",
@@ -414,13 +554,6 @@
             },
             "against": "Against Formula"
           }
-        },
-        "Defenses": {
-          "chill": "Chill",
-          "heat": "Heat",
-          "energy": "Energy",
-          "physical": "Physical",
-          "psyche": "Psyche"
         }
       },
       "Spells": {
@@ -553,22 +686,17 @@
           "attach": "Attach"
         },
         "templateType": "Template",
-        "templateAngle": "Cone Angle",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "variables": "Variables"
-        }
+        "templateAngle": "Cone Angle"
       },
       "SpecialistTalent": {
         "requirements": "Requirements",
         "attributeRequirements": "Attribute Requirements",
         "talentRequirements": "Talent Requirements",
         "talentTreeRequirements": "Talent Tree Requirements",
-        "speciesRequirements": "Species Requirements"
+        "speciesRequirements": "Species Requirements",
+        "artistryRequirements": "Artistry Requirements"
       },
       "General": {
-        "category": "Category",
         "Categories": {
           "misc": "Miscellaneous",
           "consumable": "Consumable",
@@ -578,9 +706,6 @@
           "ammunition": "Ammunition",
           "valuable": "Valuable"
         },
-        "slots": "Slots",
-        "value": "Value",
-        "quantity": "Quantity",
         "consumeOnUse": "Consume on use",
         "deleteWhenEmpty": "Delete when empty",
         "rarity": "Rarity",
@@ -595,11 +720,6 @@
       },
       "Actions": {
         "attributes": "Action Attributes",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "rules": "Rules"
-        },
         "formula": "Formula",
         "stamina": "Stamina",
         "type": "Type",
@@ -612,13 +732,13 @@
         "category": "Category",
         "Category": {
           "attack": "Attack",
-          "utility": "Utility",
           "defense": "Defense",
+          "utility": "Utility",
           "healing": "Healing",
           "movement": "Movement",
           "special": "Special",
           "macro": "Macro"
-        },
+        }, 
         "source": "Source",
         "cost": "Cost",
         "Cost": {
@@ -645,7 +765,7 @@
           "cone": "Cone",
           "line": "Line"
         }
-      }, 
+      },
       "Species": {
         "quirkPoints": "Current Quirk Points (QP)",
         "quirks": "Quirks",
@@ -671,6 +791,14 @@
         "languageChoices": "Choices (#)",
         "languages": "Languages",
         "communicationTypes": "Types",
+        "customQuirks": "Custom Quirks",
+        "Talent": {
+          "copy": "Copy branch?",
+          "copySpecies": "Species to copy",
+          "copyBranch": "Branch to copy",
+          "none": "Do not copy",
+          "species": "Copy from species"
+        },
         "Subtraits": {
           "trade": "Trade 3 specific subtraits for 2 choice points",
           "legend": "Character Subtraits",
@@ -686,45 +814,50 @@
         },
         "paperDoll": "Paper Doll",
         "PaperDoll": {
-          "head": "Head",
-          "neck": "Neck",
-          "back": "Back",
-          "chest": "Chest",
-          "waist": "Waist",
-          "hands": "Hands",
-          "ring": "Ring",
-          "feet": "Feet",
           "toggleAugmentable": "Toggle the ability to augment this slot (red = unaugmentable)",
           "toggleEquippable": "Toggle the ability to equip any item this slot (red = unequippable)",
           "toggleSpecialty": "Toggle this slot requiring armor be customized before being able to be equipped (red = requires customized armor)"
         }
       },
       "Talents": {
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
-        },
         "category": "Choice category",
-        "choices": "Prompt for choices (comma-separated tags)",
+        "choices": "Optional choices",
         "grants": "Grants [Item]",
         "is-species": "Species talent",
         "tree": "Tree",
         "position": "Position",
+        "tier": "Tier",
+        "branch": "Branch",
+        "speciesTree": "Species-specific",
         "ultimate": "Ult",
         "body": "Body",
         "mind": "Mind",
         "soul": "Soul",
-        "position-error": {
-          "short": "Required (> 0)",
-          "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
+        "speciesAttributes": "Custom Species Attributes (ignore for standard, custom talents)",
+        "CustomSpecies": {
+          "onlyCustom": "Only for Custom Species",
+          "species": "Applies to species",
+          "quirkPoints": "Quirk Points",
+          "talentPoints": "Talent Points"
         }
       },
-      "Specialist": {
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
+      "Features": {
+        "baseCost": "Base Cost",
+        "costMultiplier": "Cost Multiplier",
+        "priority": "Execute Priority",
+        "availability": "Availability",
+        "Availability": {
+          "fastWeapon": "Fast Weapon",
+          "moderateWeapon": "Moderate Weapon",
+          "slowWeapon": "Slow Weapon",
+          "shields": "Shields",
+          "headArmor": "Head Armor",
+          "chestArmor": "Chest Armor",
+          "waistArmor": "Waist Armor",
+          "handsArmor": "Hands Armor",
+          "feetArmor": "Feet Armor",
+          "trinket":  "Trinket",
+          "artifact": "Artifact"
         }
       }
     },
@@ -743,12 +876,16 @@
       "paralysis": "Paralysis",
       "unconscious": "Unconscious",
       "concentration": "Concentration",
+      "isConcentrating": "is Concentrating",
       "focus": "Focus",
+      "isFocusing": "is Focusing",
       "fatigue": "Fatigue"
-    }, 
+    },
     "Settings": {
       "autoRollAttacks": "Bypass attack roll dialog",
       "autoRollAttacksHint": "When enabled, the modifier window that appears when attacking will be bypassed and the attack will be rolled immediately",
+      "highlightTemplate": "Highlight placeable templates",
+      "highlightTemplateHint": "When enabled, placeable templates will be highlighted after click for easier placement",
       "targetRequired": "Targeting required for attacks",
       "targetRequiredHint": "When enabled, a target must be selected before an attack can be rolled",
       "autoRollContests": "Method for contest rolls",
@@ -777,12 +914,25 @@
       "displayActionsOptionHorizontal": "Horizontal top | Horizontal bottom",
       "allowPlayerArchetypeEdit": "Allow player archetype edits (Default: GM Only)",
       "allowPlayerArchetypeEditHint": "When enabled, players can edit their own character's archetype, otherwise only the GM can edit the archetype",
+      "dockedWindowPosition": "Docked window position",
+      "dockedWindowPositionHint": "The position of the docked window, either on the LEFT or RIGHT side of the screen",
+      "DockedWindowPosition": {
+        "left": "Left",
+        "right": "Right",
+        "disabled": "Disabled"
+      },
+      "speciesCustomQuirks": "Allow custom species quirks",
+      "speciesCustomQuirksHint": "When enabled, players and the GM can add custom quirks to custom-made species",
+      "restOnLevelUp": "Rest on level up",
+      "restOnLevelUpHint": "When enabled and a character levels up, they will be prompted to rest, and their resources will be restored",
+      "enableTwitchIntegration": "Enable Twitch Integration",
+      "enableTwitchIntegrationHint": "When enabled, the Twitch Integration tab will appear in the settings menu",
       "Buttons": {
         "twitch": "Twitch Integration",
         "discord": "Utopia Discord Server",
         "compendiumBrowser": "Utopia Compendium Browser"
       },
-			"Twitch": {
+      "Twitch": {
         "channel": "Twitch Channel",
         "channelHint": "The channel name for the Twitch integration",
         "channelId": "Channel ID",
@@ -800,7 +950,7 @@
         "chatName": "Chat Name",
         "chatNameHint": "The name of your 'viewers'. This is the name that will appear in the chat, if viewer names are hidden",
         "enableSpellcrafting": "Enable viewer spellcrafting",
-        "enableSpellcraftingHint": "When enabled, viewers can use channel points to craft spells", 
+        "enableSpellcraftingHint": "When enabled, viewers can use channel points to craft spells",
         "enableArtifice": "Enable viewer artificing",
         "enableArtificeHint": "When enabled, viewers can use channel points to craft items",
         "enableTargeting": "Enable viewers to target",
@@ -826,7 +976,6 @@
       "totalFavor": "System favor"
     }
   },
-
   "TYPES": {
     "Actor": {
       "character": "Character",

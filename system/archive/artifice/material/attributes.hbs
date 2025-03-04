@@ -1,0 +1,28 @@
+<div class="artifice-material-attributes">
+  <div class="grid grid-2col">
+    <div class="flexcol">
+      <label for="system.quality">{{localize 'UTOPIA.Item.Artifice.Components.quality'}}</label>
+      {{formInput systemFields.quality value=system.quality name='system.quality' localize=true}}
+    </div>
+    <div class="flexcol">
+      <label for="system.type">{{localize 'UTOPIA.Item.Artifice.Components.type'}}</label>
+      {{formInput systemFields.type value=system.type name='system.type' localize=true}}
+    </div>
+  </div>
+  {{#if parent}}
+    <div class="flexcol">
+      <label for="system.quantity">{{localize 'UTOPIA.Item.quantity'}}</label>
+      {{formInput systemFields.quantity value=system.quantity name='system.quantity' localize=true}}
+    </div>
+  {{/if}}
+  <div class="flexcol">
+    <label for="system.description">{{localize 'UTOPIA.CommonTerms.description'}}</label>
+    {{#if editable}}
+      <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+        {{{enrichedDescription}}}
+      </prose-mirror>
+    {{else}} 
+      {{{enrichedDescription}}}
+    {{/if}}
+  </div>
+</div>

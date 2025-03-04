@@ -30,8 +30,8 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
 
     schema.costMultiplier = new fields.StringField({ required: false, nullable: true, initial: "flat", choices: {
       "flat": "UTOPIA.Item.SpellFeatures.CostMultiplier.flat",
-      "multiply": "UTOPIA.Item.SpellFeatures.CostMultiplier.multiply",
-      //"divide": "UTOPIA.Item.SpellFeatures.CostMultiplier.divide",
+      "multiply": "UTOPIA.Math.multiply",
+      //"divide": "UTOPIA.Math.divide",
       //"square": "UTOPIA.Item.SpellFeatures.CostMultiplier.power",
     } });
 
@@ -72,7 +72,7 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
       "range": "UTOPIA.Item.SpellFeatures.Modifies.range",
       "duration": "UTOPIA.Item.SpellFeatures.Modifies.duration",
       "aoe": "UTOPIA.Item.SpellFeatures.Modifies.aoe",
-      //"formula": "UTOPIA.Item.SpellFeatures.Modifies.formula",
+      //"formula": "UTOPIA.CommonTerms.formula",
     }});
 
     schema.modifiedAoE = new fields.SchemaField({
@@ -128,9 +128,9 @@ export default class UtopiaSpellFeature extends UtopiaItemBase {
     });
     schema.modifiedFormula = new fields.SchemaField({
       how: new fields.StringField({ required: false, nullable: true, initial: "add", choices: {
-        "add": "UTOPIA.Item.SpellFeatures.Formula.how.add",
-        "subtract": "UTOPIA.Item.SpellFeatures.Formula.how.subtract",
-        //"replace": "UTOPIA.Item.SpellFeatures.Formula.how.replace",
+        "add": "UTOPIA.Math.add",
+        "subtract": "UTOPIA.Math.subtract",
+        //"replace": "UTOPIA.CommonTerms.formula.how.replace",
       }}),
       value: new fields.StringField({ required: false, nullable: true, initial: "" }),
       replace: new fields.StringField({ required: false, nullable: true, initial: "" }),

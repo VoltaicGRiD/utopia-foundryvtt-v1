@@ -6,7 +6,7 @@ const quirks = [
     description:  "This species instead knows 2 simple languages of the player\u2019s choice.",
     attributes: [
       {
-        "communication.languages.choice": 2,
+        "communication.language.choices": 2,
       },
     ],
   },
@@ -17,7 +17,7 @@ const quirks = [
     description:  "This species instead knows any 1 language of the player\u2019s choice.",
     attributes: [
       {
-        "communication.languages.choice": 1,
+        "communication.language.choices": 1,
       },
     ],
   },

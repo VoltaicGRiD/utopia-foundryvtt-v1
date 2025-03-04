@@ -75,6 +75,38 @@ const categories = () =>{
       icon: "fa-question",
       key: "quirk",
       type: "Quirk",
+    },
+    action: {
+      name: game.i18n.localize("TYPES.Item.action"),
+      icon: "fa-bolt",
+      key: "action",
+      type: "Item",
+      details: [
+        {
+          label: "type",
+          key: "system.type",
+          backgroundColor: "#00FFB8",
+          color: getTextContrastHex("#00FFB8")
+        },
+        {
+          label: "cost",
+          key: "system.cost",
+          backgroundColor: "#FFBD00",
+          color: getTextContrastHex("#FFBD00")
+        },
+        {
+          label: "stamina",
+          key: "system.stamina",
+          backgroundColor: "#00BAFF",
+          color: getTextContrastHex("#00BAFF")
+        },
+        {
+          label: "category",
+          key: "system.category",
+          backgroundColor: "#FF8400",
+          color: getTextContrastHex("#FF8400")
+        }
+      ]
     }
   }
 }

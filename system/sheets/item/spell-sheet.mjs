@@ -87,7 +87,7 @@ export class UtopiaSpellSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Actions.Tabs.',
+        label: 'UTOPIA.Item.Tabs.',
       };
   
       switch (partId) {

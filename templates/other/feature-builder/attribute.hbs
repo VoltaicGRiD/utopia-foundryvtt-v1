@@ -1,0 +1,45 @@
+<label class="attribute-input-group" data-type="{{type}}" data-attribute="{{key}}" data-tooltip="{{{localize "UTOPIA.FeatureBuilder.editableTooltip"}}}">
+  {{#if (ne type 'shared')}}
+    <a class="share-attribute" data-action="shareAttribute" data-tooltip="{{localize "UTOPIA.FeatureBuilder.Labels.shareAttribute"}}" data-type="{{type}}" data-attribute="{{key}}"><i class="fas fa-fw fa-share-all"></i></a>
+    {{#if (gt index 5)}}
+      <a class="remove-attribute" data-action="removeAttribute" data-tooltip="{{localize "UTOPIA.FeatureBuilder.Labels.removeAttribute"}}" data-type="{{type}}" data-attribute="{{key}}"><i class="fas fa-fw fa-trash-xmark"></i></a>
+    {{/if}}
+  {{else}}
+    <a class="share-attribute" data-action="removeSharedAttribute" data-tooltip="{{localize "UTOPIA.FeatureBuilder.Labels.unshareAttribute"}}" data-attribute="{{key}}"><i class="fas fa-fw fa-ban"></i></a>
+  {{/if}}
+  <span>{{key}}</span>
+  {{#if (or (eq value false) (eq value true))}}
+    <label class="switch">
+      <input type="checkbox" data-type="{{type}}" data-attribute="{{key}}" {{#if (eq value true)}} checked {{/if}} />
+      <div class="slider round"></div>
+    </label>                
+  {{else}}
+    {{#if (lookup featureOptions key)}}
+      {{#with (lookup featureOptions key) as |option key|}}
+        {{log option}}
+        {{log key}}
+        {{#if option.choices}}
+          <select class="attribute-input" data-editable data-type="{{type}}" data-attribute="{{key}}">
+            {{#each option.choices as |choice|}}
+              <option value="{{choice}}" {{#if (eq choice value)}} selected {{/if}}>{{choice}}</option>
+            {{/each}}
+          </select>
+        {{else if option.fields}}
+          {{#each option.fields as |field subkey|}}
+            {{> 'attribute' 
+              featureOptions=../../featureOptions 
+              value=(lookup value field) 
+              key=field 
+              type=classification}}
+          {{/each}}
+        {{else}}
+          {{log key}}
+          {{log ../key}}
+          <span data-editable contenteditable="true" data-type="{{../type}}" data-attribute="{{../key}}" class="attribute-input">{{../value}}</span>
+        {{/if}}
+      {{/with}}
+    {{else}}
+      <span data-editable contenteditable="true" data-type="{{type}}" data-attribute="{{key}}" class="attribute-input">{{value}}</span> 
+    {{/if}}
+  {{/if}}
+</label>

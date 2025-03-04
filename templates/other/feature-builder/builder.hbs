@@ -1,0 +1,97 @@
+<div class="container">
+
+  <ul class="options-display">
+    {{#each featureOptions as |option key|}}
+      <li class="option" draggable="true" data-draggable data-type="{{option.classifications}}" data-attribute="{{key}}" data-input="{{option.type}}" data-tooltip="{{{localize "UTOPIA.FeatureBuilder.optionsTooltip"}}}" data-tooltip-direction="LEFT">
+        <span>{{key}}</span>
+      </li>
+    {{/each}}
+  </ul>
+
+  <div class="classification-container">
+    <div class="header">
+      <input type="text" class="name" id="feature-name" placeholder="{{localize "UTOPIA.FeatureBuilder.Labels.name"}}" value="{{name}}"/>
+      <button type="button" class="saveFeature" data-action="saveFeature" data-tooltip="{{localize "UTOPIA.FeatureBuilder.Labels.saveFeature"}}"><i class="fas fa-fw fa-floppy-disk"></i> {{localize "UTOPIA.FeatureBuilder.Labels.saveFeature"}}</button>
+    </div>
+
+    <div class="classification-group">
+      <fieldset>
+        <legend>{{localize "UTOPIA.FeatureBuilder.Labels.weapon"}}</legend>
+        {{> 'classification' attribute='fastWeapon' type='classification'}}
+        {{> 'classification' attribute='moderateWeapon' type='classification'}}
+        {{> 'classification' attribute='slowWeapon' type='classification'}}
+      </fieldset>
+      <fieldset>
+        <legend>{{localize "UTOPIA.FeatureBuilder.Labels.shield"}}</legend>
+        {{> 'classification' attributes=attributes attribute='shields' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='consumable' type='classification'}}
+      </fieldset>
+      <fieldset>
+        <legend>{{localize "UTOPIA.FeatureBuilder.Labels.armor"}}</legend>
+        {{> 'classification' attributes=attributes attribute='headArmor' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='chestArmor' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='waistArmor' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='handsArmor' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='feetArmor' type='classification'}}
+      </fieldset>
+      <fieldset>
+        <legend>{{localize "UTOPIA.FeatureBuilder.Labels.artifacts"}}</legend>
+        {{> 'classification' attributes=attributes attribute='equippableArtifact' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='handheldArtifact' type='classification'}}
+        {{> 'classification' attributes=attributes attribute='ammunitionArtifact' type='classification'}}
+      </fieldset>
+    </div>
+
+    <div class="attribute-group" data-drop="shared">
+      <fieldset>
+        <legend>{{localize (concat "UTOPIA.FeatureBuilder.Labels.shared")}}</legend>
+
+        <div class="attributes-input-group-container">
+          <label class="attribute-input-group" data-locked="true" data-type="shared" data-attribute="incompatibleWith" >
+            <span>{{localize (concat "UTOPIA.FeatureBuilder.Labels.incompatibleWith")}}</span>
+            <string-tags data-editable class="attribute-input" data-type="shared" data-attribute="incompatibleWith" contenteditable="true">{{shared.incompatibleWith}}</string-tags>
+          </label>
+
+          <label class="attribute-input-group" data-locked="true" data-type="shared" data-attribute="requires" >
+            <span>{{localize (concat "UTOPIA.FeatureBuilder.Labels.requires")}}</span>
+            <string-tags data-editable class="attribute-input" data-type="shared" data-attribute="requires" contenteditable="true">{{shared.requires}}</string-tags>
+          </label>
+
+          {{#each shared as |value key|}}
+            {{#unless (or (eq key 'incompatibleWith') (eq key 'requires'))}}
+              {{> 'attribute' featureOptions=../featureOptions value=value key=key type='shared'}}
+            {{/unless}}
+          {{/each}}
+        </div>
+      </fieldset>
+    </div>      
+
+    {{#each attributes as |value classification|}}
+      {{#unless (eq classification 'classification')}}  
+        <div class="attribute-group" data-drop="{{classification}}">
+          <fieldset>
+            <legend>{{localize (concat "UTOPIA.FeatureBuilder.Attributes." classification)}}</legend>
+            
+            <div class="sim-container">
+              {{#each (lookup ../simulation classification) as |simValue key|}}
+                {{#if (eq key 'stacks')}}
+                  <span class="sim-label">{{localize (concat "UTOPIA.FeatureBuilder.Labels.simulation1")}} {{simValue}} {{localize "UTOPIA.FeatureBuilder.Labels.simulation2"}}</span>
+                {{else}}
+                  <span class="sim-attribute">{{key}}: {{simValue}}</span>
+                {{/if}}
+              {{/each}}
+            </div>
+
+            <div class="attributes-input-group-container">
+              {{#each value as |attribute key|}}
+                {{> 'attribute' featureOptions=../../featureOptions value=attribute key=key type=classification index=@index}}
+              {{/each}}
+            </div>
+          </fieldset>
+        </div>
+      {{/unless}}
+    {{/each}}
+  </div>
+</div>
+
+

@@ -24,10 +24,14 @@ import {
   UtopiaConsumableSheet,
   UtopiaTrinketSheet,
   UtopiaWeaponSheet,
+
+  UtopiaGearFeatureSheet
 } from "./sheets/item/_module.mjs";
 import { UtopiaTalentTreeSheet } from "./sheets/utility/talent-tree-sheet.mjs";
+import { UtopiaTalentTreeFullscreenSheet } from "./sheets/utility/talent-tree-fullscreen.mjs";
 import { UtopiaSpellcraftSheet } from "./sheets/utility/spellcraft-sheet.mjs";
 import { UtopiaCompendiumBrowser } from "./sheets/utility/compendium-browser.mjs";
+import { UtopiaFeatureBuilder } from "./sheets/utility/feature-builder.mjs";
 
 // Import utility classes.
 import {
@@ -35,7 +39,7 @@ import {
   searchTraits,
   shortToLong,
   longToShort,
-  buildTraitData,
+  utopiaTraits,
   traitShortNames,
   traitLongNames,
   calculateTraitFavor,
@@ -53,6 +57,7 @@ import UtopiaToken from "./hud/token.mjs";
 import UtopiaTokenDocument from "./hud/token-document.mjs";
 import UtopiaTwitchIntegrationSheet from "./sheets/extensions/twitch-integration.mjs";
 import Twitch from "./extensions/twitch.mjs";
+import { UtopiaCharacterCreator } from "./sheets/utility/character-creator.mjs";
 
 //#region Init Hook (Definitions and Initial Function Callouts)
 /* -------------------------------------------- */
@@ -60,7 +65,7 @@ import Twitch from "./extensions/twitch.mjs";
 /* -------------------------------------------- */
 
 // Add key classes to the global scope so they can be more easily used
-// by downstream developers
+// by downline developers
 globalThis.utopia = {
   documents: {
     UtopiaActor,
@@ -76,6 +81,7 @@ globalThis.utopia = {
     UtopiaSpellFeatureSheet,
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
+    UtopiaTalentTreeFullscreenSheet,
   },
   utils: {
     rollItemMacro,
@@ -97,11 +103,14 @@ Hooks.once("init", function () {
   game.utopia = {
     UtopiaSpellcraftSheet,
     UtopiaTalentTreeSheet,
+    UtopiaTalentTreeFullscreenSheet,
     UtopiaGeneralItemSheet,
     UtopiaChatMessage,
     UtopiaActor,
     UtopiaItem,
-    buildTraitData,
+    UtopiaFeatureBuilder,
+    UtopiaCharacterCreator,
+    utopiaTraits,
     rollItemMacro,
     addTalentToActor,
     gatherTalents,
@@ -115,7 +124,7 @@ Hooks.once("init", function () {
 
   // This is how we configure initiative in the system, it has to be done in the init hook.
   CONFIG.Combat.initiative = {
-    formula: "3d6 + @spd.mod",
+    formula: `3d6 + @turnOrder`,
     decimals: 2,
   };
 
@@ -145,6 +154,91 @@ Hooks.once("init", function () {
     }
   }
 
+  const TEMPLATE_PRESETS = {
+    CONE: 'cone',
+    LINE: 'line',
+    SBT: 'sbt',
+    MBT: 'mbt',
+    LBT: 'lbt',
+  };
+
+  CONFIG.UTOPIA = {};
+
+  CONFIG.UTOPIA.measuredTemplatePresets = [
+    {
+      data: { t: CONST.MEASURED_TEMPLATE_TYPES.CONE, distance: 9 },
+      button: {
+        name: TEMPLATE_PRESETS.CONE,
+        title: 'UTOPIA.Templates.Cone.Long',
+        icon: 'fa-solid fa-location-pin fa-rotate-90',
+        visible: true,
+        button: true,
+        onClick: () => {
+          UTOPIAMeasuredTemplate.fromPreset(TEMPLATE_PRESETS.CONE);
+        },
+      },
+    },
+    {
+      data: {
+        t: foundry.CONST.MEASURED_TEMPLATE_TYPES.RAY,
+        distance: 12,
+        width: 1,
+      },
+      button: {
+        name: TEMPLATE_PRESETS.LINE,
+        title: 'UTOPIA.Templates.LINE.Long',
+        icon: 'fa-solid fa-rectangle-wide',
+        visible: true,
+        button: true,
+        onClick: () => {
+          UTOPIAMeasuredTemplate.fromPreset(TEMPLATE_PRESETS.LINE);
+        },
+      },
+    },
+    {
+      data: { t: CONST.MEASURED_TEMPLATE_TYPES.CIRCLE, distance: 1 },
+      button: {
+        name: TEMPLATE_PRESETS.SBT,
+        title: 'UTOPIA.Templates.Small.Long',
+        icon: 'fa-solid fa-circle-1 fa-2xs',
+        visible: true,
+        button: true,
+        onClick: () => {
+          UTOPIAMeasuredTemplate.fromPreset(TEMPLATE_PRESETS.SBT);
+        },
+      },
+    },
+    {
+      data: { t: CONST.MEASURED_TEMPLATE_TYPES.CIRCLE, distance: 2 },
+      button: {
+        name: TEMPLATE_PRESETS.MBT,
+        title: 'UTOPIA.Templates.Medium.Long',
+        icon: 'fa-solid fa-circle-2 fa-sm',
+        visible: true,
+        button: true,
+        onClick: () => {
+          UTOPIAMeasuredTemplate.fromPreset(TEMPLATE_PRESETS.MBT);
+        },
+      },
+    },
+    {
+      data: { t: CONST.MEASURED_TEMPLATE_TYPES.CIRCLE, distance: 3 },
+      button: {
+        name: TEMPLATE_PRESETS.LBT,
+        title: 'UTOPIA.Templates.Large.Long',
+        icon: 'fa-solid fa-circle-3 fa-lg',
+        visible: true,
+        button: true,
+        onClick: () => {
+          UTOPIAMeasuredTemplate.fromPreset(TEMPLATE_PRESETS.LBT);
+        },
+      },
+    },
+  ],
+
+  CONFIG.UTOPIA.activeMeasuredTemplatePreview = null,
+
+
     // Setting up schema handling for the system.
   // This is supposed to replace the default 'Template.json' file.
   // It's a bit more flexible and allows for more complex data structures and validation.
@@ -167,6 +261,14 @@ Hooks.once("init", function () {
     consumable: models.UtopiaConsumable,
     trinket: models.UtopiaTrinket,
     weapon: models.UtopiaWeapon,
+
+    weaponFeature: models.WeaponFeatureOptions,
+    armorFeature: models.ArmorFeatureOptions,
+    consumableFeature: models.ConsumableFeatureOptions,
+    artifactFeature: models.ArtifactFeatureOptions,
+    shieldFeature: models.ShieldFeatureOptions,
+
+    gearFeature: models.UtopiaGearFeature,
   };
 
   // Allow modules to build onto the Item data models.
@@ -191,8 +293,6 @@ Hooks.once("init", function () {
   CONFIG.Dice.terms.d = UtopiaDie;
   CONFIG.Dice.termTypes.DiceTerm = UtopiaDie;
   CONFIG.Dice.types.filter(d => d instanceof Die).forEach(d => d = UtopiaDie);
-
-  console.log(DocumentSheetConfig);
 
   // Active Effects are never copied to the Actor,  // but will still apply to the Actor from within the Item
   // if the transfer property on the Active Effect is true.
@@ -227,6 +327,11 @@ function registerActorSheets() {
     types: ["character", "npc"],
     label: "UTOPIA.SheetLabels.actorV2",
   });
+  Actors.registerSheet("utopia", UtopiaCharacterCreator, {
+    makeDefault: false,
+    types: ["character"],
+    label: "UTOPIA.SheetLabels.characterCreator",
+  })
 
   // Allow modules to build onto the Actor sheets.
   Hooks.callAll("utopiaActorSheets", Actors);
@@ -303,6 +408,11 @@ function registerItemSheets() {
     types: ["weapon"],
     label: "UTOPIA.SheetLabels.weapon",
   });
+  Items.registerSheet("utopia", UtopiaGearFeatureSheet, {
+    makeDefault: true,
+    types: ["gearFeature"],
+    label: "UTOPIA.SheetLabels.gearFeature",
+  })
 
 
   // Allow modules to build onto the Actor sheets.
@@ -324,12 +434,10 @@ function registerActiveEffectSheet() {
 
 function registerSocketHandling() {
   // Client handling
-  game.socket.on("system.utopia", (data) => {
-    console.log(data);
-    
+  game.socket.on("system.utopia", (data) => {    
     if (data.type === "ACTION") {
       if (data.payload === "AD_BREAK_PAUSE_SERVER") {
-        ui.notifications.warn("Pausing the game for 30 seconds while an ad break runs on a Twitch integration stream.");
+        ui.notifications.warn("Pausing the game for 30 seconds while an ad break runs on a Twitch integration line.");
       }
     }
   });
@@ -386,11 +494,11 @@ function registerGameKeybindings() {
 
           let dialog = new api.DialogV2({
             window: {
-              title: `${game.i18n.localize("UTOPIA.Dialog.dealDamage")} - ${
+              title: `${game.i18n.localize("UTOPIA.CommonTerms.dealDamage")} - ${
                 actor.name
               }`,
             },
-            classes: ["utopia", "utopia-dialog"],
+            classes: ["utopia", "utopia.commonterms"],
             content: html,
             buttons: [
               {
@@ -398,7 +506,7 @@ function registerGameKeybindings() {
                 action: "submit",
                 icon: "fas fa-check",
                 id: "submit-button",
-                label: "UTOPIA.Dialog.submit",
+                label: "UTOPIA.CommonTerms.submit",
                 // Callback to retrieve the selected choice value from the form
                 callback: (event, button, dialog) => {
                   return {
@@ -412,7 +520,7 @@ function registerGameKeybindings() {
                 action: "submit",
                 icon: "fas fa-check",
                 id: "submit-button",
-                label: "UTOPIA.Dialog.submit",
+                label: "UTOPIA.CommonTerms.submit",
                 // Callback to retrieve the selected choice value from the form
                 callback: (event, button, dialog) => {
                   return {
@@ -424,7 +532,6 @@ function registerGameKeybindings() {
             ],
             // Handle the submission of the dialog
             submit: (result) => {
-              console.log(result);
               actor.applyDamage(
                 { damage: result.damage, type: result.type, source: "GM" },
                 true
@@ -458,6 +565,15 @@ function registerGameSettings() {
     config: true,
     type: Boolean,
     default: true,
+  });
+
+  game.settings.register('utopia', 'highlightTemplate', {
+    name: 'UTOPIA.Settings.highlightTemplate',
+    hint: 'UTOPIA.Settings.highlightTemplateHint',
+    scope: 'world',
+    type: Boolean,
+    default: true,
+    config: true,
   });
 
   game.settings.register("utopia", "autoRollAttacks", {
@@ -583,7 +699,16 @@ function registerGameSettings() {
     scope: "world",
     config: true,
     type: Boolean,
-    default: true,
+    default: false,
+  })
+
+  game.settings.register('utopia', 'speciesCustomQuirks', {
+    name: "UTOPIA.Settings.speciesCustomQuirks",
+    hint: "UTOPIA.Settings.speciesCustomQuirksHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
   })
 }
 
@@ -653,6 +778,19 @@ Handlebars.registerHelper("toLowerCase", function (str) {
   return str.toLowerCase();
 });
 
+Handlebars.registerHelper('contains', function(needle, haystack, options) {
+  needle = Handlebars.escapeExpression(needle);
+  haystack = Handlebars.escapeExpression(haystack);
+  return (haystack.indexOf(needle) > -1) ? options.fn(this) : options.inverse(this);
+});
+
+Handlebars.registerHelper("for", function(n, block) {
+  var accum = '';
+  for(var i = 0; i < n; ++i)
+      accum += block.fn(i);
+  return accum;
+});
+
 Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
@@ -662,6 +800,10 @@ Handlebars.registerHelper("select", function (value, options) {
   $el.find('[value="' + value + '"]').attr({ selected: "selected" });
   return $el.html();
 });
+
+Handlebars.registerHelper("capitalize", function (value) {
+  return value.capitalize();
+})
 //#endregion
 
 //#region Special Item Handling
@@ -678,8 +820,6 @@ Handlebars.registerHelper("select", function (value, options) {
 export async function _handleSpeciesDrop(actor, item) {
   let grants = item.system.grants;
 
-  console.log(grants);
-
   try {
     if (grants.subtraits.indexOf(",") > -1) {
       let subtraits = grants.subtraits.split(",");
@@ -687,9 +827,6 @@ export async function _handleSpeciesDrop(actor, item) {
       subtraits.forEach((subtrait) => {
         let parsed = String(subtrait.trim());
         let trait = searchTraits(actor.system.traits, parsed);
-
-        console.log(parsed);
-        console.log(trait);
 
         actor.update({
           [`system.traits.${trait}.subtraits.${parsed}.gifted`]: true,
@@ -733,7 +870,6 @@ export async function _handleSpeciesDrop(actor, item) {
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
-
 Hooks.once("ready", function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
@@ -751,16 +887,15 @@ Hooks.once("ready", function () {
   Hooks.on("combatTurnChange", (combat, from, to) => {
     if (game.user.isGM) {
       let token = game.canvas.tokens.placeables.find(t => t.id === to.tokenId);
-      console.log(token);
       token.control();
     }
-  
-    combat.combatants.forEach((combatant) => {
+
+    combat.combatants.forEach(async (combatant) => {
       let actor = game.actors.get(combatant.actorId);
       // If the combatant is the current combatant, we have to restore
       // their Turn Actions
       if (to.combatantId === combatant._id) {
-        actor.update({
+        await actor.update({
           ["system.actions.turn.value"]: actor.system.actions.turn.max,
           ["system.actions.interrupt.value"]: 0,
         });
@@ -768,10 +903,20 @@ Hooks.once("ready", function () {
       // If the combatant is not the current combatant, we have to restore 
       // their Interrupt Actions
       else {
-        actor.update({
+        await actor.update({
           ["system.actions.interrupt.value"]: actor.system.actions.interrupt.max,
           ["system.actions.turn.value"]: 0,
         });
+      }
+
+      if ([...actor.effects].length > 0) {
+        await Promise.all([...actor.effects].forEach(async e => {
+          if (e.isTemporary && e.duration.remaining === 0) {
+            await e.update({
+              disabled: true
+            });
+          }
+        }));
       }
     }); 
   });
@@ -791,8 +936,7 @@ Hooks.once("ready", function () {
   });
 
   Hooks.on("renderMacroConfig", async (app, html, data) => {
-    console.log(app, html, data);
-    
+
   });
 
   Hooks.on("preCreateActiveEffect", (effect, options, userId) => {
@@ -824,21 +968,34 @@ Hooks.once("ready", function () {
   //#endregion
 
   Hooks.on("createActiveEffect", (effect, options, userId) => {
-    console.log(effect);
-
     if (effect.statuses.has("blinded")) {
       let change = {
         key: "system.disfavors",
         mode: 2,
         priority: null,
-        value: '{"attribute": "awa", "amount": 2}',
+        value: 'awa',
       };
-      effect.changes.push(change);
+
+      changes = effect.changes;
+      changes.push([change, change]);
+      effect.update({
+        changes: changes
+      })
     }
 
-    console.log(effect);
     return effect;
   });
+
+  Hooks.on("updateActiveEffect", (effect, modified, options, userId) => {
+    if (effect.isTemporary && modified.disabled !== undefined && game.combat) {
+      effect.update({
+        duration: {
+          startRound: game.combat.current.round,
+          startTurn: game.combat.current.turn,
+        }
+      });
+    }
+  })
 
   // Handle optional module integrations
   Hooks.on("diceSoNiceReady", (dice3d) => {
@@ -963,11 +1120,6 @@ Hooks.on("renderSidebarTab", (tab) => {
 
 function registerDiceSoNice(dice3d) {
   if (!dice3d) return;
-
-  
-
-  console.log("Registering Utopia textures with Dice So Nice");
-  console.log(dice3d);
 
   dice3d.addTexture("utopia", {
     name: "Utopia",
@@ -1112,11 +1264,17 @@ function registerDiceSoNice(dice3d) {
  */
 async function createDocMacro(data, slot) {
   // First, determine if this is a valid owned item.
-  if (data.type !== "Item") return;
-  if (!data.uuid.includes("Actor.") && !data.uuid.includes("Token.")) {
+  if (data.type !== "Item" && data.type !== "Macro") return;
+  if (data.uuid.includes("Actor.") || data.uuid.includes("Token.")) {
     return ui.notifications.warn(
       "You can only create macro buttons for owned Items"
     );
+  }
+  if (data.type === "Macro") {
+    const macro = await Macro.fromDropData(data); 
+    if (macro) {
+      return game.user.assignHotbarMacro(macro, slot);
+    }
   }
   // If it is, retrieve it based on the uuid.
   const item = await Item.fromDropData(data);

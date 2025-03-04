@@ -1,0 +1,4 @@
+<button type="button" class="attribute-toggle" data-action="toggleAttribute" data-attribute="{{attribute}}" data-type="{{type}}">
+  <input type="checkbox" {{#if (lookup attributes attribute)}}checked{{/if}} disabled/>
+  <span class="attribute-label">{{localize (concat "UTOPIA.FeatureBuilder.Attributes." attribute)}}</span>
+</button>

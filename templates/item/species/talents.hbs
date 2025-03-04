@@ -1,0 +1,129 @@
+<div class="tab talents {{tab.cssClass}}" data-group="primary" data-tab="talents">
+  <div class="standard-attributes">
+    <span class="quirk-points">{{localize "UTOPIA.Item.Species.quirkPoints"}}: {{system.quirkPoints}}</span>
+  </div>
+
+  <div class="grid grid-3col">
+    {{!-- <div class="talent-column">
+      <div class="form-group-stacked">
+        <label for="system.talents.copy">{{localize "UTOPIA.Item.Species.Talent.copy"}}</label>
+        {{formInput systemFields.talents.fields.copy name="system.talents.copy" value=system.talents.copy localize=true}}
+      </div>
+      
+      {{#if (ne system.talents.copy 'none')}} 
+        <div class="form-group-stacked">
+          <label for="system.talents.copySpecies">{{localize "UTOPIA.Item.Species.Talent.copySpecies"}}</label>
+          {{formInput systemFields.talents.fields.copySpecies name="system.talents.copySpecies" value=system.talents.copySpecies localize=true}}
+        </div>
+      {{/if}}
+
+      {{#if (eq system.talents.copy 'none')}}
+        {{#each systemFields.talents.fields.first.fields as |field position|}}
+          <div class="talent">
+            {{formInput field name=(concat "system.talents.first." position) value=(lookup ../system.talents.first position)}}
+
+            {{#with (lookup ../speciesTalents.first position)~}}
+              {{{system.description}}}          
+            {{/with}}
+          </div>
+        {{/each}}
+      {{/if}}
+    </div> --}}
+
+    <div class="talent-column">
+      <div class="form-group-stacked">
+        <label for="system.talents.first.copy">{{localize "UTOPIA.Item.Species.Talent.copy"}}</label>
+        {{formInput systemFields.talents.fields.first.fields.copy name="system.talents.first.copy" value=system.talents.first.copy localize=true}}
+      </div>
+      
+      {{#if (ne system.talents.first.copy 'none')}} 
+        <div class="form-group-stacked">
+          <label for="system.talents.first.copySpecies">{{localize "UTOPIA.Item.Species.Talent.copySpecies"}}</label>
+          {{formInput systemFields.talents.fields.first.fields.copySpecies name="system.talents.first.copySpecies" value=system.talents.first.copySpecies localize=true}}
+        </div>
+        <div class="form-group-stacked">
+          <label for="system.talents.first.copyBranch">{{localize "UTOPIA.Item.Species.Talent.copyBranch"}}</label>
+          {{formInput systemFields.talents.fields.first.fields.copyBranch name="system.talents.first.copyBranch" value=system.talents.first.copyBranch localize=true}}
+        </div>
+      {{/if}}
+
+      {{#if (eq system.talents.first.copy 'none')}}
+        {{#each systemFields.talents.fields.first.fields as |field position|}}
+          {{#if (and (not (eq field.name 'copy')) (not (eq field.name 'copySpecies')) (not (eq field.name 'copyBranch')))}}
+            <div class="talent">
+              {{formInput field name=(concat "system.talents.first." position) value=(lookup ../system.talents.first position)}}
+
+              {{#with (lookup ../speciesTalents.first position)~}}
+                {{{system.description}}}          
+              {{/with}}
+            </div>
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
+
+    <div class="talent-column">
+      <div class="form-group-stacked">
+        <label for="system.talents.second.copy">{{localize "UTOPIA.Item.Species.Talent.copy"}}</label>
+        {{formInput systemFields.talents.fields.second.fields.copy name="system.talents.second.copy" value=system.talents.second.copy localize=true}}
+      </div>
+      
+      {{#if (ne system.talents.second.copy 'none')}} 
+        <div class="form-group-stacked">
+          <label for="system.talents.second.copySpecies">{{localize "UTOPIA.Item.Species.Talent.copySpecies"}}</label>
+          {{formInput systemFields.talents.fields.second.fields.copySpecies name="system.talents.second.copySpecies" value=system.talents.second.copySpecies localize=true}}
+        </div>
+        <div class="form-group-stacked">
+          <label for="system.talents.second.copyBranch">{{localize "UTOPIA.Item.Species.Talent.copyBranch"}}</label>
+          {{formInput systemFields.talents.fields.second.fields.copyBranch name="system.talents.second.copyBranch" value=system.talents.second.copyBranch localize=true}}
+        </div>
+      {{/if}}
+
+      {{#if (eq system.talents.second.copy 'none')}}
+        {{#each systemFields.talents.fields.second.fields as |field position|}}
+          {{#if (and (not (eq field.name 'copy')) (not (eq field.name 'copySpecies')) (not (eq field.name 'copyBranch')))}}
+            <div class="talent">
+              {{formInput field name=(concat "system.talents.second." position) value=(lookup ../system.talents.second position)}}
+
+              {{#with (lookup ../speciesTalents.second position)~}}
+                {{{system.description}}}          
+              {{/with}}
+            </div>
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
+
+    <div class="talent-column">
+      <div class="form-group-stacked">
+        <label for="system.talents.third.copy">{{localize "UTOPIA.Item.Species.Talent.copy"}}</label>
+        {{formInput systemFields.talents.fields.third.fields.copy name="system.talents.third.copy" value=system.talents.third.copy localize=true}}
+      </div>
+      
+      {{#if (ne system.talents.third.copy 'none')}} 
+        <div class="form-group-stacked">
+          <label for="system.talents.third.copySpecies">{{localize "UTOPIA.Item.Species.Talent.copySpecies"}}</label>
+          {{formInput systemFields.talents.fields.third.fields.copySpecies name="system.talents.third.copySpecies" value=system.talents.third.copySpecies localize=true}}
+        </div>
+        <div class="form-group-stacked">
+          <label for="system.talents.third.copyBranch">{{localize "UTOPIA.Item.Species.Talent.copyBranch"}}</label>
+          {{formInput systemFields.talents.fields.third.fields.copyBranch name="system.talents.third.copyBranch" value=system.talents.third.copyBranch localize=true}}
+        </div>
+      {{/if}}
+
+      {{#if (eq system.talents.third.copy 'none')}}
+        {{#each systemFields.talents.fields.third.fields as |field position|}}
+          {{#if (and (not (eq field.name 'copy')) (not (eq field.name 'copySpecies')) (not (eq field.name 'copyBranch')))}}
+            <div class="talent">
+              {{formInput field name=(concat "system.talents.third." position) value=(lookup ../system.talents.third position)}}
+
+              {{#with (lookup ../speciesTalents.third position)~}}
+                {{{system.description}}}          
+              {{/with}}
+            </div>
+          {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+</div>

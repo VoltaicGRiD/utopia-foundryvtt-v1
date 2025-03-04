@@ -2,7 +2,7 @@
   <div class="gear-attributes">
     <button type="button" class="grid-span-2" data-action="addResource">
       <i class="fas fa-plus"></i>
-      {{localize "UTOPIA.Item.Gear.addResource"}}
+      {{localize "UTOPIA.CommonTerms.addResource"}}
     </button>
 
     {{#each system.resources as |resource|}}
@@ -44,13 +44,13 @@
 
         </fieldset>
 
-        <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.Item.Gear.deleteResource"}}</button>
+        <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.CommonTerms.deleteResource"}}</button>
       </details>
     {{/each}}
 
     <button type="button" class="grid-span-2" data-action="addAction">
       <i class="fas fa-plus"></i>
-      {{localize "UTOPIA.Item.Gear.addAction"}}
+      {{localize "UTOPIA.Item.addAction"}}
     </button>
 
     {{#each system.resources as |resource|}}
@@ -92,7 +92,7 @@
 
         </fieldset>
 
-        <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.Item.Gear.deleteResource"}}</button>
+        <button type="button" class="grid-span-2" data-action="deleteResource" data-index="{{@index}}"><i class="fas fa-trash"></i> {{localize "UTOPIA.CommonTerms.deleteResource"}}</button>
       </details>
     {{/each}}
   </div>

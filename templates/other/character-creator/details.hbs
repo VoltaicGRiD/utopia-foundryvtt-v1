@@ -1,0 +1,146 @@
+<div class="tab {{tab.cssClass}} details" data-group="primary" data-tab="details">
+  <div class="small-portrait">
+    <img class="profile-img" src="{{actor.img}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="300" width="300"/>
+  </div>
+
+  <div class="details-container">
+    <h1 class="char-name"><input name="name" type="text" class="item-name-input" value="{{actor.name}}" placeholder="Name" data-text="{{actor.name}}"/></h1>
+
+    {{!-- SHP, DHP and Stamina --}}
+    
+    <div class="details-set">
+      <span class="details-label">
+        <i class="fas fa-fw fa-heartbeat"></i>
+        {{localize 'UTOPIA.Actor.Stats.shpShort'}}
+      </span>
+  
+      <div class="data-overlay">
+        <span class="data-number">
+          {{numberFormat system.shp.max decimals=0}}
+          <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.chill'}}"></i>
+        </span>
+      </div>
+
+      <a data-action="getEffectors" data-detail="shp" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}" class="details-info"><i class="fas fa-fw fa-info-circle"></i></a>
+    </div>
+
+    <div class="details-set">
+      <span class="details-label">
+        <i class="fas fa-fw fa-heart"></i>
+        {{localize 'UTOPIA.Actor.Stats.dhpShort'}}
+      </span>
+      
+      <div class="data-overlay">
+        <span class="data-number">
+          {{numberFormat system.dhp.max decimals=0}}
+          <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.chill'}}"></i>
+        </span>
+      </div>
+
+      <a data-action="getEffectors" data-detail="dhp" data-tooltip="{{localize 'UTOPIA.Actor.Stats.dhpLong'}}" class="details-info"><i class="fas fa-fw fa-info-circle"></i></a>
+    </div>
+
+    <div class="details-set">
+      <span class="details-label">
+        <i class="fas fa-fw fa-bolt"></i>
+        {{localize 'UTOPIA.Actor.Stats.staShort'}}
+      </span>
+    
+      <div class="data-overlay">
+        <span class="data-number">
+          {{numberFormat system.stamina.max decimals=0}}
+          <i class="fa-solid fa-circles-overlap fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.chill'}}"></i>
+        </span>
+      </div>
+    
+      <a data-action="getEffectors" data-detail="stamina" data-tooltip="{{localize 'UTOPIA.Actor.Stats.staminaLong'}}" class="details-info"><i class="fas fa-fw fa-info-circle"></i></a>
+    </div>
+
+    {{!-- Defenses --}}
+
+    <div class="details-set">
+      <span class="details-label">
+        <i class="fas fa-fw fa-shield-halved"></i>
+        {{localize 'UTOPIA.CommonTerms.defenses'}}
+      </span>
+
+      <div class="flexrow data-blocks">
+
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.defenses.chill.total decimals=0}}
+            <i class="fa-solid fa-snowflake fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.chill'}}"></i>
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.defenses.energy.total decimals=0}}
+            <i class="fa-solid fa-bolt fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.energy'}}"></i>
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.defenses.heat.total decimals=0}}
+            <i class="fa-solid fa-fire fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.heat'}}"></i>
+          </span>
+        </div>
+      
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.defenses.physical.total decimals=0}}
+            <i class="fa-solid fa-hand-fist fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.physical'}}"></i>
+          </span>
+        </div>
+      
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.defenses.psyche.total decimals=0}}
+            <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.DamageTypes.psyche'}}"></i>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    {{!-- Travel --}}
+
+    <div class="details-set">
+      <span class="details-label">
+        <i class="fas fa-fw fa-rabbit-running"></i>
+        {{localize 'UTOPIA.CommonTerms.travel'}}
+      </span>
+
+      <div class="flexrow data-blocks">
+        
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.travel.land.total decimals=0}}
+            <i class="fa-solid fa-mountain fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.land'}}"></i>
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.travel.water.total decimals=0}}
+            <i class="fa-solid fa-person-swimming fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.water'}}"></i>
+          </span>
+        </div>
+
+        <div class="data-overlay">
+          <span class="data-number">
+            {{numberFormat system.travel.air.total decimals=0}}
+            <i class="fa-solid fa-person-fairy fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Travel.air'}}"></i>
+          </span>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+  <div class="full-portrait">
+    <img class="full-profile-img" src="{{actor.system.fullPortrait}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="900" width="400"/>
+  </div>
+
+</div>

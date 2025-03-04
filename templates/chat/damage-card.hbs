@@ -25,49 +25,71 @@
             </div>
           {{else}}
             <div class="dice-result">
-              <h4 class="dice-estimate">{{estimate}}</h4>
+              <h4 class="dice-total">~{{numberFormat estimate decimals=0}}</h4>
             </div>
           {{/if}}
+          <div class="dice-result gm-only" data-visibility="gm">
+            <div class="dice-formula">{{formula}}</div>
+            {{{tooltip}}}
+            <h4 class="dice-total">{{total}}</h4>
+          </div>
+        {{/if}}
+      </div>
+
+      {{#if blocked}}
+        <div class="block-message">
+          <i class="fa-duotone fa-regular fa-shield-halved"></i>
+          <span>{{localize "UTOPIA.CommonTerms.blocked"}}: {{blockedDamage}}</span>
+        </div>
+        <div class="block-message">
+          <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
+          <span>{{localize "UTOPIA.CommonTerms.newTotal"}}: {{newTotal}}</span>
+        </div>
+      {{/if}}
+
+      {{#if dodged}}
+        <div class="dodge-message">
+          <i class="fa-duotone fa-solid fa-person-falling-burst"></i>
+          <span>{{localize "UTOPIA.CommonTerms.dodged"}}: {{dodgedRoll}} = {{dodgedSuccess}}</span>
+        </div>
+        <div class="dodge-message">
+          <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
+          <span>{{localize "UTOPIA.CommonTerms.newTotal"}}: {{newTotal}}</span>
+        </div>
+      {{/if}}
+
+      <div class="response-buttons" data-whose="opposer">
+        {{#if (and (gt total 0) (not noResponse))}}
+          <button type="button" class="response-button" data-action="responseAction" data-response="block">
+            <i class="fas fa-shield"></i>&nbsp;&nbsp;{{localize "UTOPIA.Actor.block"}}
+          </button>
+          <button type="button" class="response-button" data-action="responseAction" data-response="dodge">
+            <i class="fas fa-person-falling-burst"></i>&nbsp;&nbsp;{{localize "UTOPIA.Actor.dodge"}}
+          </button>
+        {{/if}}
+      </div>
+
+      <div class="gm-response-buttons" data-visibility="gm">
+        <button type="button" class="response-button" data-action="quickDamage" data-damage="{{total}}" data-type="original">Quick Damage Original Target</button>
+        <button type="button" class="response-button" data-action="quickDamage" data-damage="{{total}}" data-type="mine">Quick Damage My Target(s)</button>
+        <button type="button" class="response-button" data-action="damageDialog" disabled>Damage Dialog</button>
+        {{#if hasTemplate}}
+          <button type="button" class="response-button" data-action="deleteTemplate">Delete Used Template(s)</button>
         {{/if}}
       </div>
     </div>
 
-    {{#if blocked}}
-      <div class="block-message">
-        <i class="fa-duotone fa-regular fa-shield-halved"></i>
-        <span>{{localize "UTOPIA.Descriptions.blocked"}}: {{blockedDamage}}</span>
-      </div>
-      <div class="block-message">
-        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-        <span>{{localize "UTOPIA.Descriptions.newTotal"}}: {{newTotal}}</span>
-      </div>
-    {{/if}}
-
-    {{#if dodgeded}}
-      <div class="dodged-message">
-        <i class="fa-duotone fa-regular fa-shield-halved"></i>
-        <span>{{localize "UTOPIA.Descriptions.dodgeded"}}: {{dodgedRoll}}</span>
-      </div>
-      <div class="dodged-message">
-        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-        <span>{{localize "UTOPIA.Descriptions.newTotal"}}: {{newTotal}}</span>
-      </div>
-    {{/if}}
-
-    {{#if (gt total 0)}}
-      <div data-visibility="opposer">
-        <button type="button" class="response-button" data-action="responseAction" data-response="block">Block</button>
-        <button type="button" class="response-button" data-action="responseAction" data-response="dodge">Dodge</button>
-      </div>
-    {{/if}}
 
     <footer data-visibility="gm">
-      <button type="button" class="damage-button" data-action="quickDamage" data-damage="{{total}}">Quick Damage</button>
-      <button type="button" class="damage-button" data-action="damageDialog" disabled>Damage Dialog</button>
-      {{!-- <div class="grid grid-2col message-buttons">
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
-      </div> --}}
+      <div class="targets">
+        {{#each targets as |target|}}
+          {{#if target.img}}
+            <img src="{{target.img}}" alt="{{target.name}}" data-tooltip="{{target.name}}" />
+          {{else}}
+            <img src="{{target.actor.img}}" alt="{{target.actor.name}}" data-tooltip="{{target.actor.name}}" />
+          {{/if}}
+        {{/each}}
+      </div>
     </footer>
   </div>
 </div>

@@ -1,0 +1,21 @@
+<div class="flexrow">
+  <div class="standard-attributes">
+    <span class="classification">Shared</span>
+    <div class="attribute-set-row">
+      {{#each system.shared as |value attribute|}}
+        <span class="tag">{{attribute}}: <span class="tag-value">{{value}}</span></span>
+      {{/each}}
+    </div>
+    {{#each system.classifications as |attributes classification|}}
+      {{#unless (eq classification 'shared')}}
+        <span class="classification">{{classification}}</span>
+        <div class="attribute-set-row">
+          {{#each attributes as |value attribute|}}
+            <span class="tag">{{attribute}}: <span class="tag-value">{{value}}</span></span>
+          {{/each}}
+        </div>
+      {{/unless}}
+    {{/each}}
+    <button data-action="edit">{{localize "UTOPIA.CommonTerms.edit"}}</button>
+  </div>
+</div>

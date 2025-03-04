@@ -4,6 +4,17 @@
   width: 100%;
   height: 300px;
 
+  .dock-buttons {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    left: 0;
+    top: -30px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
   & > i {
     position: absolute;
     left: 50%;
@@ -19,6 +30,15 @@
     padding: 0 2px;
     border: 1px solid #b5b3a4;
     border-radius: 5px;
+  }
+
+  .key {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    line-height: 20px;
+    width: 200px;
+    text-wrap: pretty;
   }
 
   .paper-doll-entry {
@@ -64,6 +84,50 @@
         text-align: right;
       }
     }
+
+    .item-slots {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      .item-slot,
+      .augment-slot {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+      }
+      
+      .item-slot > *,
+      .augment-slot > * {
+        pointer-events: none;
+      }
+
+      .item-slot {
+        border: 2px dashed white;
+      }
+
+      .item-slot.filled {
+        border: 2px solid white;
+      }
+
+      .item-slot.locked {
+        border: 2px solid #9d3a2a;
+        background-color: #511e16;
+      }
+
+      .augment-slot {
+        border: 2px dashed #0685b9;
+        background-color: #034e6c;
+      }
+
+      .augment-slot.filled {
+        border: 2px solid #0685b9;
+      }
+    }  
+    
+    .item-slots.left {
+      flex-direction: row-reverse;
+    }
   }
 
   .head {
@@ -78,7 +142,7 @@
   .neck {
     position: absolute;
     flex-direction: row;
-    top: 60px;
+    top: 65px;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;

@@ -71,15 +71,19 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     // Block and Dodge
     schema.block = new fields.SchemaField({
       quantity: new fields.SchemaField({
-        bonus: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
       }),
-      size: new fields.NumberField({ ...requiredInteger, initial: 4 }),
+      size: new fields.SchemaField({
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      }),
     });
     schema.dodge = new fields.SchemaField({
       quantity: new fields.SchemaField({
-        bonus: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
       }),
-      size: new fields.NumberField({ ...requiredInteger, initial: 12 }),
+      size: new fields.SchemaField({
+        bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      }),
     });
 
     // Defenses
@@ -136,8 +140,15 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     // Spellcap
     schema.spellcap = new fields.SchemaField({
       trait: new fields.StringField({ required: true, nullable: false, initial: "res" }),
+      multiplier: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       bonus: new fields.NumberField({ ...requiredInteger, initial: 0 })
     });
+
+    // Cast Discounts
+    schema.castDiscount = new fields.SchemaField({
+      bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      value: new fields.NumberField({ ...requiredInteger, initial: 0 })
+    })
     
     // Attributes
     schema.attributes = new fields.SchemaField({
@@ -269,6 +280,33 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }),
     })
 
+    schema.crafting = new fields.SchemaField({
+      material: new fields.SchemaField({
+        discount: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      }),
+      refinement: new fields.SchemaField({
+        discount: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      }),
+      power: new fields.SchemaField({
+        discount: new fields.NumberField({ ...requiredInteger, initial: 0 })
+      }),
+    })
+
+    schema.weaponless = new fields.SchemaField({
+      damage: new fields.StringField({ ...requiredInteger, initial: "1d6" }),
+      type: new fields.StringField({ ...requiredInteger, initial: "physical", choices: {
+        "physical": "UTOPIA.DamageTypes.physical",
+        "energy": "UTOPIA.DamageTypes.energy",
+        "heat": "UTOPIA.DamageTypes.heat",
+        "chill": "UTOPIA.DamageTypes.chill",
+        "psyche": "UTOPIA.DamageTypes.psyche",
+        "kinetic": "UTOPIA.DamageTypes.kinetic",
+      } }),
+      range: new fields.StringField({ ...requiredInteger, initial: "0/0" }),
+      traits: new fields.SetField(new fields.StringField({ required: true, nullable: false }), { initial: [] }),
+      stamina: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+    })
+
     schema.resource = new fields.SchemaField({
       resourceId: new fields.StringField({required: true, nullable: false, initial: foundry.utils.randomID(16)}),
       name: new fields.StringField({required: true, nullable: false}),
@@ -321,7 +359,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     });
 
     schema.evolution = new fields.SchemaField({
-      heads: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      head: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       feet: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       hands: new fields.NumberField({ ...requiredInteger, initial: 1 }),
     });
@@ -338,11 +376,21 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       ring: new fields.BooleanField({ required: true, initial: false }),
       feet: new fields.BooleanField({ required: true, initial: false }),
     });
-    
     schema.armors = new fields.SchemaField({
       unaugmentable: armors(),
       unequippable: armors(),
       specialty: armors(),
+    });
+
+    schema.augments = new fields.SchemaField({
+      head: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      neck: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      back: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      chest: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      waist: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      hands: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      ring: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      feet: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
     });
 
     schema.communication = new fields.SchemaField({
@@ -372,16 +420,9 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       validate: (value) => {
         traitKeys().includes(value);
       }
-    })
+    });
 
     return schema;
-  }
-
-  migrateData(source) {
-    const resources = source.resources || [];
-    for (let r of resources) {
-      r.source = null;
-    }
   }
 
   /**
@@ -442,7 +483,19 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     // Make modifications to data here. For example:
     //sum = sum + systemData.traits[key].subtraits[sub].value;    console.log(systemData);
 
+    this.allEquippedItems = [];
+    Object.keys(this.equipmentSlots).forEach(k => {
+      this.allEquippedItems.push(...this.equipmentSlots[k]);
+    })
+
+    this.allAugments = [];
+    Object.keys(this.augments).forEach(k => {
+      this.allAugments.push(...this.augments[k])
+    })
+
     this.species = this.parent.items.filter(i => i.type === "species")[0] ?? null;
+
+    this.turnOrder = "@spd.mod";
 
     var speciesProcessed = false;
     const species = {
@@ -463,22 +516,26 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         unequippable: {},
         unaugmentable: {},
         speciality: {},
-      }
+      },
       travel: {
-        land: {},
-        water: {},
-        air: {}
+        land: {
+          value: "@spd.total"
+        },
+        water: {
+          value: 0
+        },
+        air: {
+          value: 0
+        }
       },
       evolution: {
-        heads: 0,
+        head: 0,
         feet: 0,
         hands: 0
       },
-      languages: []
+      languages: [],
+      uuid: null,
     }
-
-    this.points.talent.total = this.points.talent.bonus + this.experience.level;
-    this.points.specialist.total = this.points.specialist.bonus + Math.floor(this.experience.level / 10);
 
     let bodyScore = this.points.body.bonus;
     let mindScore = this.points.mind.bonus;
@@ -502,48 +559,66 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         mindScore += parseInt(i.system.points.mind);
         soulScore += parseInt(i.system.points.soul);
 
-        this.trees[i.system.tree] = i.system.position;
-        
+        if (this.trees[i.system.tree] === undefined) {
+          this.trees[i.system.tree] = {}
+          this.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (this.trees[i.system.tree][String(i.system.branch)] === undefined) {
+          this.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (this.trees[i.system.tree][String(i.system.branch)] < i.system.tier) {
+          this.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (!Object.keys(this.trees[i.system.tree]).includes(String(i.system.branch))) {
+          this.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+                  
         if (i.system.category && i.system.category.toLowerCase().includes("artistry")) {
           artistries.push(Array.from(i.system.choices)[0]);
         }
       }
 
-      if (i.type === "specialist") {
+      if (i.type === "specialistTalent") {
         this.points.specialist.total -= 1;
       }
 
       if (i.type === "species") {
-        speciesProcessed = true;
-        species.con = i.system.stats.constitution.total;
-        species.end = i.system.stats.endurance.total;
-        species.eff = i.system.stats.effervescence.total;
-        species.block.quantity = i.system.block.quantity;
-        species.block.size = i.system.block.size;
-        species.dodge.quantity = i.system.dodge.quantity;
-        species.dodge.size = i.system.dodge.size;
-        species.travel.land.value = i.system.travel.land.value;
-        species.travel.land.stamina = i.system.travel.land.stamina;
-        species.travel.water.value = i.system.travel.water.value;
-        species.travel.water.stamina = i.system.travel.water.stamina;
-        species.travel.air.value = i.system.travel.air.value;
-        species.travel.air.stamina = i.system.travel.air.stamina;
-        species.evolution.heads = i.system.evolution.heads;
-        species.evolution.feet = i.system.evolution.feet;
-        species.evolution.hands = i.system.evolution.hands;
-        species.armors.unaugmentable = i.system.armors.unaugmentable;
-        species.armors.unequippable = i.system.armors.unequippable;
-        species.armors.speciality = i.system.armors.speciality;
-        species.subtraits = [...i.system.gifts.subtraits].map(s => s.length === 3 ? s.toLowerCase() : longToShort(s.toLowerCase()));
-        species.subtraitGifts = i.system.gifts.points;
+        if (!speciesProcessed) {
+          speciesProcessed = true;
+          species.name = i.name;
+          species.con = i.system.stats.constitution.total;
+          species.end = i.system.stats.endurance.total;
+          species.eff = i.system.stats.effervescence.total;
+          species.block.quantity = i.system.block.quantity;
+          species.block.size = i.system.block.size;
+          species.dodge.quantity = i.system.dodge.quantity;
+          species.dodge.size = i.system.dodge.size;
+          species.travel.land.value = i.system.travel.land.value;
+          species.travel.land.stamina = i.system.travel.land.stamina;
+          species.travel.water.value = i.system.travel.water.value;
+          species.travel.water.stamina = i.system.travel.water.stamina;
+          species.travel.air.value = i.system.travel.air.value;
+          species.travel.air.stamina = i.system.travel.air.stamina;
+          species.evolution.head = i.system.evolution.head;
+          species.evolution.feet = i.system.evolution.feet;
+          species.evolution.hands = i.system.evolution.hands;
+          species.armors.unaugmentable = i.system.armors.unaugmentable;
+          species.armors.unequippable = i.system.armors.unequippable;
+          species.armors.speciality = i.system.armors.speciality;
+          species.subtraits = [...i.system.gifts.subtraits].map(s => s.length === 3 ? s.toLowerCase() : longToShort(s.toLowerCase()));
+          species.subtraitGifts = i.system.gifts.points;
+          species.uuid = i.uuid;
+        }
       }
 
       if (i.type === "armor" || i.type === "trinket" || i.type === "artifact") {
-        armor.chill += i.system.chill;
-        armor.energy += i.system.energy;
-        armor.heat += i.system.heat;
-        armor.physical += i.system.physical;
-        armor.psyche += i.system.psyche;
+        if (this.allEquippedItems.includes(i.id) || this.allAugments.includes(i.id)) {
+          armor.chill += i.system.defenses.chill;
+          armor.energy += i.system.defenses.energy;
+          armor.heat += i.system.defenses.heat;
+          armor.physical += i.system.defenses.physical;
+          armor.psyche += i.system.defenses.psyche;
+        }
       }
 
       if (i.system.slots && i.system.slots > 0) {
@@ -551,38 +626,34 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }
     }
 
-    console.log(species);
-
-    this.points.body.total = bodyScore;
-    this.points.mind.total = mindScore;
-    this.points.soul.total = soulScore;
-
-    this.points.talent.total -= bodyScore;
-    this.points.talent.total -= mindScore;
-    this.points.talent.total -= soulScore;
-
     if (species.subtraits === "[Any 2 Subtraits]") {
       this.points.gifted.value = 2;
-    }
+    } 
     else {
-      this.points.gifted.value = 0;
+      this.points.gifted.value = species.subtraitGifts ?? 0;
     }
 
     this.artistries = artistries;
+    this.parent.setFlag('utopia', 'artistries', artistries);
+
+    this.species = species;
 
     // Get our experience values
     // Calculate experience thresholds for the current and next levels
     this.experience.previous = getTotalExpForLevel(this.experience.level);
-    this.experience.next = getTotalExpForLevel(this.experience.level + 1);
+    this.experience.next = getTotalExpForLevel(this.experience.level + 1) - getTotalExpForLevel(this.experience.level);
     this.experience.percentage = Math.floor((this.experience.value - this.experience.previous) / (this.experience.next - this.experience.previous) * 100);
 
     // Calculate the current level based on total experience
-    const currentLevel = this.experience.level;
-    const calulcatedLevel = calculateLevelFromExperience(this.experience.value);
+    let currentLevel = this.experience.level;
+    let calulcatedLevel = calculateLevelFromExperience(this.experience.value);
 
     // Check if the level has increased
-    if (calulcatedLevel > currentLevel) {
-      this.levelUp();
+    while (calulcatedLevel > currentLevel) {
+      currentLevel++;
+      this.experience.level = currentLevel;
+      this.experience.previous = getTotalExpForLevel(currentLevel);
+      this.experience.next = getTotalExpForLevel(currentLevel + 1);
     }
 
     // Functions for experience calculations
@@ -604,6 +675,17 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     this.attributes.constitution.total = this.attributes.constitution.bonus + species.con;
     this.attributes.endurance.total = this.attributes.endurance.bonus + species.end;
     this.attributes.effervescence.total = this.attributes.effervescence.bonus + species.eff;
+
+    this.points.talent.total = this.points.talent.bonus + this.experience.level;
+    this.points.specialist.total = this.points.specialist.bonus + Math.floor(this.experience.level / 10);
+
+    this.points.body.total = bodyScore;
+    this.points.mind.total = mindScore;
+    this.points.soul.total = soulScore;
+
+    this.points.talent.total -= bodyScore;
+    this.points.talent.total -= mindScore;
+    this.points.talent.total -= soulScore;
 
     const body = this.points.body.total;
     const mind = this.points.mind.total;
@@ -650,7 +732,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
         if (species.subtraits && Array.isArray(species.subtraits) && species.subtraits.includes(k)) {
           subtrait.gifted = true;
         } 
-        else if (species.subtraits && species.subtraits === "[Any 2 Subtraits]") {
+        else if (species.subtraits && (species.subtraits === "[Any 2 Subtraits]") || species.subtraitGifts > 0) {
           if (subtrait.gifted)
             this.points.gifted.value -= 1;
         }
@@ -699,11 +781,28 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       trait.mod = mod;
     }
 
+    function isPlainObject(obj) {
+      return Object.prototype.toString.call(obj) === '[object Object]';
+    }
+
     // Calculate block and dodge
-    this.block.size = species.block.size;
-    this.dodge.size = species.dodge.size;
-    this.block.quantity.total = this.block.quantity.bonus + species.block.quantity;
-    this.dodge.quantity.total = this.dodge.quantity.bonus + species.dodge.quantity;
+    if (isPlainObject(species.block)) {
+      this.block = {
+        size: {
+          total: species.block.size,
+        },
+        quantity: {
+          total: species.block.quantity,
+        }
+      }
+    }
+
+    this.block.size.total = species.block?.size ?? 4;
+    this.dodge.size.total = species.dodge?.size ?? 12;
+    this.block.quantity.total = this.block.quantity.bonus + species.block?.quantity ?? 1;
+    this.dodge.quantity.total = this.dodge.quantity.bonus + species.dodge?.quantity ?? 1;
+
+    console.warn("Preparing defenses");
 
     // Calculate defenses
     this.defenses.chill.total = armor.chill + this.defenses.chill.bonus;
@@ -716,6 +815,11 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     let spellcap = this.spellcap.bonus;
     spellcap += findTrait(this.parent, this.spellcap.trait).total;
     this.spellcap.total = spellcap;
+
+    this.castDiscount.total = this.castDiscount.bonus + this.castDiscount.value;
+
+    // Condition check traits
+    this.focusTrait = "for";
 
     // Slot capacity is calculated from size and strength
     const str = this.traits.str.total;
@@ -738,25 +842,52 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     var airValue = 0;
     var waterValue = 0;
     
-    if (species.travel?.land?.value?.length ?? "@spd.total" !== 0)
-      landValue = (await new Roll(species.travel.land.value, this.parent.getRollData()).roll()).total;
-    if (species.travel?.air?.value?.length ?? "" !== 0)
-      airValue = (await new Roll(species.travel.air.value, this.parent.getRollData()).roll()).total;
-    if (species.travel?.water?.value?.length ?? "" !== 0)
-      waterValue = (await new Roll(species.travel.water.value, this.parent.getRollData()).roll()).total;
+    if (species.travel.land.value !== 0 && species.travel.land.value !== ""){
+      const roll = await new Roll(species.travel.land.value, this.parent.getRollData()).roll();
+      landValue = roll.total;
+    }
+    if (species.travel.air.value !== 0 && species.travel.air.value !== ""){
+      const roll = await new Roll(species.travel.air.value, this.parent.getRollData()).roll();
+      airValue = roll.total;
+    }
+    if (species.travel.water.value !== 0 && species.travel.water.value !== ""){
+      const roll = await new Roll(species.travel.water.value, this.parent.getRollData()).roll();
+      waterValue = roll.total;
+    }
     
     this.travel.land.total = landValue + this.travel.land.bonus;
     this.travel.air.total = airValue + this.travel.air.bonus;
     this.travel.water.total = waterValue + this.travel.water.bonus;
 
     // Handle evolution and armors
-    this.evolution.heads = species.evolution.heads;
+    this.evolution.head = Math.max(species.evolution.head, 1);
     this.evolution.feet = species.evolution.feet;
     this.evolution.hands = species.evolution.hands;
 
-    this._processFlags();
-    this._processTalentTrees();
-    this._processResources();
+    // Handle slot capacities
+    this.equipmentSlots.capacity = {};
+    this.equipmentSlots.capacity.head = this.evolution.head;
+    this.equipmentSlots.capacity.neck = this.evolution.head;
+    this.equipmentSlots.capacity.back = 1;
+    this.equipmentSlots.capacity.chest = 1;
+    this.equipmentSlots.capacity.waist = 1;
+    this.equipmentSlots.capacity.feet = this.evolution.feet / 2;
+    this.equipmentSlots.capacity.hands = this.evolution.hands / 2;
+    this.equipmentSlots.capacity.ring = this.evolution.hands / 2;
+
+    this.augments.capacity = {};
+    this.augments.capacity.head = this.augments.capacity.all ?? 0 + this.evolution.head;
+    this.augments.capacity.neck = this.augments.capacity.all ?? 0 + this.evolution.head;
+    this.augments.capacity.back = this.augments.capacity.all ?? 0 + 1;
+    this.augments.capacity.chest = this.augments.capacity.all ?? 0 + 1;
+    this.augments.capacity.waist = this.augments.capacity.all ?? 0 + 1;
+    this.augments.capacity.feet = this.augments.capacity.all ?? 0 + this.evolution.feet / 2;
+    this.augments.capacity.hands = this.augments.capacity.all ?? 0 + this.evolution.hands / 2;
+    this.augments.capacity.ring = this.augments.capacity.all ?? 0 + this.evolution.hands / 2;
+
+    await this._processFlags();
+    //await this._processTalentTrees();
+    await this._processResources();
 
     Hooks.callAll("prepareActorData", this.parent, actorData);
   }
@@ -774,6 +905,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
 
     const items = this.parent.items;
     this.resources = [];
+    this.itemResources = [];
 
     items.forEach((item) => {
       if (item.system.resources && item.system.resources.length > 0) {
@@ -783,7 +915,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
             const roll = await new Roll(resource.max.formula, this.parent.getRollData()).evaluate();
             resource.max.total = roll.total;
           
-            this.resources.push({
+            this.itemResources.push({
               resourceId: foundry.utils.randomID(16),
               name: resource.name ?? "Resource",
               description: resource.description ?? `[${item.name}]`,
@@ -802,7 +934,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       }
     });
 
-    this.resources.push(...this.actorResources);
+    this.resources.push(...this.actorResources, ...this.itemResources);
 
     this.resources.sort((a, b) => { return a.name.localeCompare(b.name); });
   }
@@ -811,7 +943,7 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     const talents = this.parent.items.filter(f => f.type === "talent");
 
     for (let talent of talents) {
-      const height = talent.system.position;
+      const height = talent.system.tier;
       const tree = talent.system.tree;
 
       if (!this.trees[tree]) 
@@ -829,6 +961,10 @@ export default class UtopiaCharacter extends UtopiaActorBase {
       const value = utopia[key] ?? true;
 
       switch (key) {
+        case "cyberneticSpecialist": 
+          break;
+        case "augmentor": 
+          break;
         case "dualWielder":
           break;
         case "sageSlayer": 
@@ -850,5 +986,371 @@ export default class UtopiaCharacter extends UtopiaActorBase {
     });
     
     Hooks.callAll("processActorFlags", this.parent, flags);
+  }
+
+  async testSpecies(speciesItem) {
+    const data = {};
+
+    data.allEquippedItems = [];
+    Object.keys(data.equipmentSlots).forEach(k => {
+      data.allEquippedItems.push(...data.equipmentSlots[k]);
+    })
+
+    data.allAugments = [];
+    Object.keys(data.augments).forEach(k => {
+      data.allAugments.push(...data.augments[k])
+    })
+
+    data.species = data.parent.items.filter(i => i.type === "species")[0] ?? null;
+
+    data.turnOrder = "@spd.mod";
+
+    const species = {};
+
+    if (i.type === "species") {
+      if (!speciesProcessed) {
+        speciesProcessed = true;
+        species.name = speciesItem.name;
+        species.con = speciesItem.system.stats.constitution.total;
+        species.end = speciesItem.system.stats.endurance.total;
+        species.eff = speciesItem.system.stats.effervescence.total;
+        species.block.quantity = speciesItem.system.block.quantity;
+        species.block.size = speciesItem.system.block.size;
+        species.dodge.quantity = speciesItem.system.dodge.quantity;
+        species.dodge.size = speciesItem.system.dodge.size;
+        species.travel.land.value = speciesItem.system.travel.land.value;
+        species.travel.land.stamina = speciesItem.system.travel.land.stamina;
+        species.travel.water.value = speciesItem.system.travel.water.value;
+        species.travel.water.stamina = speciesItem.system.travel.water.stamina;
+        species.travel.air.value = speciesItem.system.travel.air.value;
+        species.travel.air.stamina = speciesItem.system.travel.air.stamina;
+        species.evolution.head = speciesItem.system.evolution.head;
+        species.evolution.feet = speciesItem.system.evolution.feet;
+        species.evolution.hands = speciesItem.system.evolution.hands;
+        species.armors.unaugmentable = speciesItem.system.armors.unaugmentable;
+        species.armors.unequippable = speciesItem.system.armors.unequippable;
+        species.armors.speciality = speciesItem.system.armors.speciality;
+        species.subtraits = [...speciesItem.system.gifts.subtraits].map(s => s.length === 3 ? s.toLowerCase() : longToShort(s.toLowerCase()));
+        species.subtraitGifts = speciesItem.system.gifts.points;
+        species.uuid = speciesItem.uuid;
+      }
+    }
+
+    let bodyScore = data.points.body.bonus;
+    let mindScore = data.points.mind.bonus;
+    let soulScore = data.points.soul.bonus;
+
+    let armor = {
+      chill: 1,
+      energy: 1,
+      heat: 1,
+      physical: 1,
+      psyche: 1,
+    }
+
+    let artistries = [];
+
+    for (let i of data.parent.items) {
+      console.log(i);
+
+      if (i.type === 'talent') {
+        bodyScore += parseInt(i.system.points.body);
+        mindScore += parseInt(i.system.points.mind);
+        soulScore += parseInt(i.system.points.soul);
+
+        if (data.trees[i.system.tree] === undefined) {
+          data.trees[i.system.tree] = {}
+          data.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (data.trees[i.system.tree][String(i.system.branch)] === undefined) {
+          data.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (data.trees[i.system.tree][String(i.system.branch)] < i.system.tier) {
+          data.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+        else if (!Object.keys(data.trees[i.system.tree]).includes(String(i.system.branch))) {
+          data.trees[i.system.tree][String(i.system.branch)] = i.system.tier;
+        }
+                  
+        if (i.system.category && i.system.category.toLowerCase().includes("artistry")) {
+          artistries.push(Array.from(i.system.choices)[0]);
+        }
+      }
+
+      if (i.type === "specialistTalent") {
+        data.points.specialist.total -= 1;
+      }
+
+      if (i.type === "armor" || i.type === "trinket" || i.type === "artifact") {
+        if (data.allEquippedItems.includes(i.id) || data.allAugments.includes(i.id)) {
+          armor.chill += i.system.defenses.chill;
+          armor.energy += i.system.defenses.energy;
+          armor.heat += i.system.defenses.heat;
+          armor.physical += i.system.defenses.physical;
+          armor.psyche += i.system.defenses.psyche;
+        }
+      }
+
+      if (i.system.slots && i.system.slots > 0) {
+        data.slots += i.system.slots;
+      }
+    }
+
+    if (species.subtraits === "[Any 2 Subtraits]") {
+      data.points.gifted.value = 2;
+    } 
+    else {
+      data.points.gifted.value = species.subtraitGifts ?? 0;
+    }
+
+    data.artistries = artistries;
+    data.parent.setFlag('utopia', 'artistries', artistries);
+
+    data.species = species;
+
+    // Get our experience values
+    // Calculate experience thresholds for the current and next levels
+    data.experience.previous = getTotalExpForLevel(data.experience.level);
+    data.experience.next = getTotalExpForLevel(data.experience.level + 1) - getTotalExpForLevel(data.experience.level);
+    data.experience.percentage = Math.floor((data.experience.value - data.experience.previous) / (data.experience.next - data.experience.previous) * 100);
+
+    // Calculate the current level based on total experience
+    let currentLevel = data.experience.level;
+    let calulcatedLevel = calculateLevelFromExperience(data.experience.value);
+
+    // Check if the level has increased
+    while (calulcatedLevel > currentLevel) {
+      currentLevel++;
+      data.experience.level = currentLevel;
+      data.experience.previous = getTotalExpForLevel(currentLevel);
+      data.experience.next = getTotalExpForLevel(currentLevel + 1);
+    }
+
+    // Functions for experience calculations
+    function getTotalExpForLevel(N) {
+      // Characters start at level 10 with 0 XP
+      if (N <= 10) return 0;
+      return 100 * (((N - 1) * N) / 2 - 45);
+    }
+
+    function calculateLevelFromExperience(expValue) {
+      // Solve the quadratic equation: N^2 - N - 2S = 0
+      let S = expValue / 100 + 45;
+      let discriminant = 1 + 8 * S;
+      let sqrtDiscriminant = Math.sqrt(discriminant);
+      let N = (1 + sqrtDiscriminant) / 2;
+      return Math.floor(N);
+    }
+
+    data.attributes.constitution.total = data.attributes.constitution.bonus + species.con;
+    data.attributes.endurance.total = data.attributes.endurance.bonus + species.end;
+    data.attributes.effervescence.total = data.attributes.effervescence.bonus + species.eff;
+
+    data.points.talent.total = data.points.talent.bonus + data.experience.level;
+    data.points.specialist.total = data.points.specialist.bonus + Math.floor(data.experience.level / 10);
+
+    data.points.body.total = bodyScore;
+    data.points.mind.total = mindScore;
+    data.points.soul.total = soulScore;
+
+    data.points.talent.total -= bodyScore;
+    data.points.talent.total -= mindScore;
+    data.points.talent.total -= soulScore;
+
+    const body = data.points.body.total;
+    const mind = data.points.mind.total;
+    const soul = data.points.soul.total;
+    const con = data.attributes.constitution.total;
+    const end = data.attributes.endurance.total;
+    const eff = data.attributes.effervescence.total;
+    const lvl = data.experience.level;
+
+    // Surface HP (SHP) is calculated from Body points
+    data.shp.max = overrideFlags["system.shp.max"] ?? body * con + lvl;
+    if (data.shp.value > data.shp.max) {
+      data.shp.value = data.shp.max;
+    }
+    
+    // Deep HP (DHP) is calculated from Soul points
+    data.dhp.max = overrideFlags["system.dhp.max"] ?? soul * eff + lvl;
+    if (data.dhp.value > data.dhp.max) {
+      data.dhp.value = data.dhp.max;
+    }
+
+    // Maximum stamina is calculated from mind
+    data.stamina.max = overrideFlags["system.stamina.max"] ?? mind * end + lvl;
+    if (data.stamina.value > data.stamina.max) {
+      data.stamina.value = data.stamina.max;
+    }
+
+    // Maximum Turn and Interrupt actions
+    data.actions.turn.value >= overrideFlags["system.actions.turn.max"] ?? data.actions.turn.max ? data.actions.turn.value = data.actions.turn.max : 6;
+    data.actions.interrupt.value >= overrideFlags["system.actions.interrupt.max"] ?? data.actions.interrupt.max ? data.actions.interrupt.value = data.actions.interrupt.max : 2;
+
+    data.points.subtrait.total = data.points.subtrait.bonus + 15 + data.experience.level - 10;
+
+    // Loop through ability scores, and add their modifiers to our sheet output.
+    for (const key in data.traits) {
+      const trait = data.traits[key];
+      const parent = trait.parent;
+      const subtraits = trait.subtraits;
+
+      Object.keys(subtraits).forEach((k) => {
+        const subtrait = subtraits[k];
+        if (species.subtraits && Array.isArray(species.subtraits) && species.subtraits.includes(k)) {
+          subtrait.gifted = true;
+        } 
+        else if (species.subtraits && (species.subtraits === "[Any 2 Subtraits]") || species.subtraitGifts > 0) {
+          if (subtrait.gifted)
+            data.points.gifted.value -= 1;
+        }
+        const gifted = subtrait.gifted;
+        subtrait.total = subtrait.value + subtrait.bonus;
+        subtrait.mod = subtraits[k].total - 4;
+        data.points.subtrait.total -= (subtrait.value - 1);
+
+        switch(k) {
+          case "spd":
+          case "dex":
+          case "pow":
+          case "for":
+            subtrait.max = gifted ? body * 2 : body;
+            break;
+          case "eng":
+          case "mem":
+          case "awa":
+          case "res":
+            subtrait.max = gifted ? mind * 2 : mind;
+            break;
+          case "por":
+          case "stu":
+          case "app":
+          case "lan":
+            subtrait.max = gifted ? soul * 2 : soul;
+            break;
+          default:
+            subtrait.max = 0;
+            break;
+        }
+
+        if (subtrait.mod < 0 && gifted) {
+          subtrait.mod = 0;
+        }
+      });
+      
+      let sum = 0;
+      Object.keys(subtraits).forEach((k) => {
+        sum += subtraits[k].value;
+      });
+
+      trait.total = trait.bonus + sum;
+
+      let mod = trait.total - 4;
+      trait.mod = mod;
+    }
+
+    function isPlainObject(obj) {
+      return Object.prototype.toString.call(obj) === '[object Object]';
+    }
+
+    // Calculate block and dodge
+    if (isPlainObject(species.block)) {
+      data.block = {
+        size: {
+          total: species.block.size,
+        },
+        quantity: {
+          total: species.block.quantity,
+        }
+      }
+    }
+
+    data.block.size.total = species.block?.size ?? 4;
+    data.dodge.size.total = species.dodge?.size ?? 12;
+    data.block.quantity.total = data.block.quantity.bonus + species.block?.quantity ?? 1;
+    data.dodge.quantity.total = data.dodge.quantity.bonus + species.dodge?.quantity ?? 1;
+
+    console.warn("Preparing defenses");
+
+    // Calculate defenses
+    data.defenses.chill.total = armor.chill + data.defenses.chill.bonus;
+    data.defenses.energy.total = armor.energy + data.defenses.energy.bonus;
+    data.defenses.heat.total = armor.heat + data.defenses.heat.bonus;
+    data.defenses.physical.total = armor.physical + data.defenses.physical.bonus;
+    data.defenses.psyche.total = armor.psyche + data.defenses.psyche.bonus;
+
+    // Spellcap is calculated from resolve
+    let spellcap = data.spellcap.bonus;
+    spellcap += findTrait(data.parent, data.spellcap.trait).total;
+    data.spellcap.total = spellcap;
+
+    data.castDiscount.total = data.castDiscount.bonus + data.castDiscount.value;
+
+    // Condition check traits
+    data.focusTrait = "for";
+
+    // Slot capacity is calculated from size and strength
+    const str = data.traits.str.total;
+    switch (data.size) {
+      case "sm": 
+        data.slotCapacity.total = data.slotCapacity.bonus + (2 * str);
+        break;
+      case "med":
+        data.slotCapacity.total = data.slotCapacity.bonus + (5 * str);
+        break;
+      case "lg":
+        data.slotCapacity.total = data.slotCapacity.bonus + (15* str);
+        break;
+    }
+
+    // Handle travel
+    var landValue = 0;
+    var airValue = 0;
+    var waterValue = 0;
+    
+    if (species.travel.land.value !== 0 && species.travel.land.value !== ""){
+      const roll = await new Roll(species.travel.land.value, data.parent.getRollData()).roll();
+      landValue = roll.total;
+    }
+    if (species.travel.air.value !== 0 && species.travel.air.value !== ""){
+      const roll = await new Roll(species.travel.air.value, data.parent.getRollData()).roll();
+      airValue = roll.total;
+    }
+    if (species.travel.water.value !== 0 && species.travel.water.value !== ""){
+      const roll = await new Roll(species.travel.water.value, data.parent.getRollData()).roll();
+      waterValue = roll.total;
+    }
+    
+    data.travel.land.total = landValue + data.travel.land.bonus;
+    data.travel.air.total = airValue + data.travel.air.bonus;
+    data.travel.water.total = waterValue + data.travel.water.bonus;
+
+    // Handle evolution and armors
+    data.evolution.head = Math.max(species.evolution.head, 1);
+    data.evolution.feet = species.evolution.feet;
+    data.evolution.hands = species.evolution.hands;
+
+    // Handle slot capacities
+    data.equipmentSlots.capacity = {};
+    data.equipmentSlots.capacity.head = data.evolution.head;
+    data.equipmentSlots.capacity.neck = data.evolution.head;
+    data.equipmentSlots.capacity.back = 1;
+    data.equipmentSlots.capacity.chest = 1;
+    data.equipmentSlots.capacity.waist = 1;
+    data.equipmentSlots.capacity.feet = data.evolution.feet / 2;
+    data.equipmentSlots.capacity.hands = data.evolution.hands / 2;
+    data.equipmentSlots.capacity.ring = data.evolution.hands / 2;
+
+    data.augments.capacity = {};
+    data.augments.capacity.head = data.augments.capacity.all ?? 0 + data.evolution.head;
+    data.augments.capacity.neck = data.augments.capacity.all ?? 0 + data.evolution.head;
+    data.augments.capacity.back = data.augments.capacity.all ?? 0 + 1;
+    data.augments.capacity.chest = data.augments.capacity.all ?? 0 + 1;
+    data.augments.capacity.waist = data.augments.capacity.all ?? 0 + 1;
+    data.augments.capacity.feet = data.augments.capacity.all ?? 0 + data.evolution.feet / 2;
+    data.augments.capacity.hands = data.augments.capacity.all ?? 0 + data.evolution.hands / 2;
+    data.augments.capacity.ring = data.augments.capacity.all ?? 0 + data.evolution.hands / 2;
+
+    return data;
   }
 }

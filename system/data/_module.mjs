@@ -23,5 +23,13 @@ export {default as UtopiaConsumable} from "./item/gear/gear-consumable.mjs";
 export {default as UtopiaTrinket} from "./item/gear/gear-trinket.mjs";
 export {default as UtopiaWeapon} from "./item/gear/gear-weapon.mjs";
 
+export {default as UtopiaGearFeature} from "./item/item-gear-feature.mjs";
+
+export {default as WeaponFeatureOptions} from "./item/feature-options/weapon.mjs";
+export {default as ShieldFeatureOptions} from "./item/feature-options/shield.mjs";
+export {default as ArmorFeatureOptions} from "./item/feature-options/armor.mjs";
+export {default as ArtifactFeatureOptions} from "./item/feature-options/artifact.mjs";
+export {default as ConsumableFeatureOptions} from "./item/feature-options/consumable.mjs";
+
 // Export Users
 export { default as UtopiaUser } from "./user.mjs";

@@ -1,4 +1,4 @@
-import { buildTraitData } from "../../helpers/actorTraits.mjs";
+import { utopiaTraits } from "../../helpers/actorTraits.mjs";
 
 const { api, sheets } = foundry.applications;
 
@@ -51,7 +51,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Do
     var context = {
       actor: this.document,
       traits: this.document.system.traits,
-      subtraits: buildTraitData(this.document),
+      subtraits: utopiaTraits(this.document),
 
       canDock: game.settings.get('utopia', 'dockedWindowPosition') !== 2 && this.dockedTo,
       docked: this.isDocked,
@@ -129,7 +129,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Do
 
   static async _addPoint(event, target) {
     let subtrait = target.dataset.trait;
-    let subtraits = await buildTraitData(this.document);
+    let subtraits = await utopiaTraits(this.document);
 
     console.log(subtrait, subtraits);
 
@@ -152,7 +152,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Do
 
   static async _addGift(event, target) {
     let subtrait = target.dataset.trait;
-    let subtraits = await buildTraitData(this.document);
+    let subtraits = await utopiaTraits(this.document);
 
     console.log(subtrait, subtraits);
 
@@ -164,7 +164,7 @@ export class UtopiaSubtraitSheetV2 extends api.HandlebarsApplicationMixin(api.Do
       return ui.notifications.error("You have already gifted this subtrait.");
     }
 
-    let trait = subtraits[subtrait].trait;
+    let trait = subtraits[subtrait].trait.short;
     await this.document.update({
       [`system.traits.${trait}.subtraits.${subtrait}.gifted`]: true,
       [`system.points.gifted.value`]: this.document.system.points.gifted.value - 1

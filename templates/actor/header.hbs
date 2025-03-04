@@ -36,7 +36,11 @@
         </div>
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}">
           {{formInput systemFields.shp.fields.value value=system.shp.value name="system.shp.value" localize=true}}
-          <span class="new-resource-max">{{system.shp.max}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.shp.fields.max value=system.shp.max name="system.shp.max" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.shp.max}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.shpShort'}}</span>
         </label>
       </div>
@@ -44,7 +48,11 @@
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.dhpLong'}}">
           {{formInput systemFields.dhp.fields.value value=system.dhp.value name="system.dhp.value" localize=true}}
-          <span class="new-resource-max">{{system.dhp.max}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.dhp.fields.max value=system.dhp.max name="system.dhp.max" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.dhp.max}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.dhpShort'}}</span>
         </label>
       </div>
@@ -52,16 +60,23 @@
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.staLong'}}">
           {{formInput systemFields.stamina.fields.value value=system.stamina.value name="system.stamina.value" localize=true}}
-          <span class="new-resource-max">{{system.stamina.max}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.stamina.fields.max value=system.stamina.max name="system.stamina.max" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.stamina.max}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.staShort'}}</span>
         </label>
       </div>
 
       <div class="new-resource large">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.expLong'}}">
-          {{!-- [ --}}
           {{formInput systemFields.experience.fields.value value=system.experience.value name="system.experience.value" localize=true}}
-          <span class="new-resource-max">{{system.experience.next}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.experience.fields.next value=system.experience.next name="system.experience.next" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.experience.next}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.expShort'}}</span>
         </label>
       </div>
@@ -69,7 +84,11 @@
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.taLong'}}">
           {{formInput systemFields.actions.fields.turn.fields.value value=system.actions.turn.value name="system.actions.turn.value" localize=true}}
-          <span class="new-resource-max">{{system.actions.turn.max}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.actions.fields.turn.fields.max value=system.actions.turn.max name="system.actions.turn.max" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.actions.turn.max}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.taShort'}}</span>
         </label>
       </div>
@@ -77,7 +96,11 @@
       <div class="new-resource">
         <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.iaLong'}}">
           {{formInput systemFields.actions.fields.interrupt.fields.value value=system.actions.interrupt.value name="system.actions.interrupt.value" localize=true}}
-          <span class="new-resource-max">{{system.actions.interrupt.max}}</span>
+          {{#if (eq type 'npc')}}
+            {{formInput systemFields.actions.fields.interrupt.fields.max value=system.actions.interrupt.max name="system.actions.interrupt.max" localize=true}}
+          {{else}}
+            <span class="new-resource-max">{{system.actions.interrupt.max}}</span>
+          {{/if}}
           <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.iaShort'}}</span>
         </label>
       </div>  
@@ -88,6 +111,22 @@
           <span>{{localize "UTOPIA.Actor.rest"}}</span>
         </button>
       </div>  
+
+      {{#if (eq actor.type "character")}}
+        <div class="new-resource">
+          <button type="button" class="rest-button" data-action="builder">
+            <i class="fas fa-edit"></i>
+            <span>{{localize "UTOPIA.CharacterCreator.builder"}}</span>
+          </button>
+        </div>  
+      {{else}}
+        <div class="new-resource">
+          <button type="button {{#if (eq automated true)}}active{{/if}}" class="rest-button" data-action="toggleAutomation">
+            <i class="fas fa-edit"></i>
+            <span>{{localize "UTOPIA.Actor.toggleAutomation"}}</span>
+          </button>
+        </div>  
+      {{/if}}
 
     </div>
   </div>

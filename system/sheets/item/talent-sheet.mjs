@@ -131,7 +131,7 @@ export class UtopiaTalentSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Talents.Tabs.',
+        label: 'UTOPIA.Item.Tabs.',
       };
   
       switch (partId) {

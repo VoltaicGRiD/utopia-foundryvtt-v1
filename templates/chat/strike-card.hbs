@@ -64,12 +64,11 @@
     </div>
 
     <footer data-visibility="gm">
-      {{#if hasGMNotes}}
-        <details class="gm-notes">
-          <summary>GM Notes</summary>
-          <span>{{{enrichedGMNotes}}}</span>
-        </details>
-      {{/if}}
+      <div class="targets">
+        {{#each targets as |target|}}
+          <img src="{{target.img}}" alt="{{target.name}}" data-tooltip="{{target.name}}"/>
+        {{/each}}
+      </div>
     </footer>
   </div>
 </div>

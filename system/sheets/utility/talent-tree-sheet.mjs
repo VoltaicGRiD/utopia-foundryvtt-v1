@@ -62,9 +62,14 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
   async _preparePartContext(partId, context, options) {
     if (partId === 'content') {
       var allGameTalents = await game.packs.get('utopia.talents').getDocuments();
+      var species = await fromUuid(this.actor.system.species.uuid);
+
+      var tempTalents = species.system.talents;
+      console.log(tempTalents);
+
       var talentFolders = game.packs.get('utopia.talents').folders;
   
-      var allGenericTalents = allGameTalents.filter(t => !t.system.isSpecies).map(t => {
+      var allGenericTalents = allGameTalents.filter(t => !t.system.speciesTree && t.system.customSpecies.onlyCustom === false).map(t => {
         const longNames = Object.keys(traitLongNames);
         longNames.forEach((long, short) => {
           const re = new RegExp(long.capitalize(), 'g');
@@ -81,13 +86,14 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
           name: t.name, 
           id: t.id,
           tree: t.system.tree,
-          position: t.system.position,
+          branch: t.system.branch,
+          tier: t.system.tier,
           available: "locked",
           description: t.system.description,
         }
       });
   
-      var allSpeciesTalents = allGameTalents.filter(t => t.system.isSpecies).map(t => {
+      var allSpeciesTalents = allGameTalents.filter(t => t.system.speciesTree && t.system.customSpecies.onlyCustom === false).map(t => {
         const longNames = Object.keys(traitLongNames);
         longNames.forEach((long, short) => {
           const re = new RegExp(long.capitalize(), 'g');
@@ -104,7 +110,8 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
           name: t.name,
           id: t.id,
           tree: t.system.tree,
-          position: t.system.position,
+          branch: t.system.branch,
+          tier: t.system.tier,
           available: "locked",
           description: t.system.description,
         }
@@ -139,15 +146,14 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
         } 
         else {
           let actorSpeciesTalents = allSpeciesTalents.filter(t => {
-            let match = false;
-            let parentSpecies = this.actor.system.species.name.toLowerCase().split(' ')[1];
-            let species = this.actor.system.species.name.toLowerCase().replace(' ', '_');
-            let parentTree = t.tree.split('-')[0];
-            if (parentSpecies === parentTree.toLowerCase())
-              match = true;
-            if (species === t.tree.toLowerCase().replace(' ', '_'))
-              match = true;
-            return match;
+            const actorSpecies = this.actor.system.species.name.toLowerCase().replace(' ', '_');
+            const talentSpecies = t.tree.toLowerCase().replace(' ', '_');
+            if (talentSpecies === actorSpecies) return true;
+            if (!talentSpecies.includes('_')) {
+              if (actorSpecies.split('_')[1] === talentSpecies) return true;
+              return false;
+            }
+            return false;
           });
           allTalents = allGenericTalents.concat(actorSpeciesTalents);
   
@@ -159,9 +165,22 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
   
             let available = "locked";
             if (actorTalentIds.includes(t.id)) { available = "taken" }
-            if (actorTreeKeys.includes(t.tree) && actorTrees[t.tree] == t.position - 1) { available = "available" }
-            if (!actorTreeKeys.includes(t.tree) && t.position === 1) { available = "available" }
-            if (actorTreeKeys.includes(t.tree) && actorTrees[t.tree] > t.position - 1) { available = "taken" }
+            let trees = Object.keys(actorTrees);
+            if (trees.includes(t.tree)) {
+              let branches = Object.keys(actorTrees[t.tree]).map(k => String(k));
+              if (branches.includes(String(t.branch))) {
+                if (actorTrees[t.tree][t.branch] === t.tier - 1) { available = "available" }
+                if (actorTrees[t.tree][t.branch] > t.tier - 1) { available = "taken" }
+                if (actorTrees[t.tree][t.branch] < t.tier - 1) { available = "locked" }
+                if (actorTrees[t.tree][t.branch] === undefined) { available = "available" }
+              }
+              else {
+                if (t.tier === 1) { available = "available" }
+              }
+            }
+            else {
+              if (t.tier === 1) { available = "available" }
+            }
   
             return {
               ...t,
@@ -172,17 +191,34 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
       }
   
       allTalents.sort((a, b) => {
-        if (a.tree < b.tree) {
-          return -1;
-        } else if (a.tree > b.tree) {
-          return 1;
+        if (a.tree.includes(' ')) {
+          const aTree = a.tree.split(' ')[1];
+          if (aTree < b.tree) 
+            return -1;
+          else if (aTree > b.tree) 
+            return 1;
+          else 
+            return a.tier - b.tier;
+        } else if (b.tree.includes(' ')) {
+          const bTree = b.tree.split(' ')[1];
+          if (a.tree < bTree) 
+            return -1;
+          else if (a.tree > bTree) 
+            return 1;
+          else 
+            return a.tier - b.tier;
         } else {
-          return a.position - b.position;
+          if (a.tree < b.tree) 
+            return -1;
+          else if (a.tree > b.tree) 
+            return 1;
+          else 
+            return a.tier - b.tier;
         }
-      });
-  
+      })
+
       allTalents.sort((a, b) => {
-        return a.position - b.position;
+        return a.tier - b.tier;
       });
   
       allTalents = allTalents.filter(t => {
@@ -248,23 +284,23 @@ export class UtopiaTalentTreeSheet extends api.HandlebarsApplicationMixin(api.Ap
       var allTalentTrees = {};
       allTalents.forEach(t => { 
         var treeName = t.tree; // Get the name of the tree
-        var treeColumn = treeName.split('-')[1]; // Get the column of the tree
+        var treeColumn = t.branch;
         var parentTree = treeName.split('-')[0]; // Get the parent tree name
-        if (treeColumn === undefined) { // Subspecies trees don't have a column, but we can get their parent species by splitting the name of the tree by a space, and getting the second value
-          treeColumn = treeName.split(' ')[0];
-          parentTree = treeName.split(' ')[1];
-        }
-        var color = talentFolders.find(f => f.name.toLowerCase() === parentTree.toLowerCase()).color.css;
+        // if (treeColumn === undefined) { // Subspecies trees don't have a column, but we can get their parent species by splitting the name of the tree by a space, and getting the second value
+        //   treeColumn = treeName.split(' ')[0];
+        //   parentTree = treeName.split(' ')[1];
+        // }
+        var color = talentFolders.find(f => f.name.toLowerCase() === parentTree.toLowerCase())?.color?.css ?? "#000";
         if (!allTalentTrees[parentTree]) {
           allTalentTrees[parentTree] = {};
           allTalentTrees[parentTree].color = color;
         }
-        color = talentFolders.find(f => f.name.toLowerCase() === treeName.toLowerCase()).color.css;
+        color = talentFolders.find(f => f.name.toLowerCase() === treeName.toLowerCase())?.color?.css ?? "#000";
         if (!allTalentTrees[parentTree][treeColumn]) {
           allTalentTrees[parentTree][treeColumn] = {};
           allTalentTrees[parentTree][treeColumn].color = color;
         }
-        allTalentTrees[parentTree][treeColumn][t.position] = t;
+        allTalentTrees[parentTree][treeColumn][t.tier] = t;[]
       });
   
       this.availableTalents = allTalents;

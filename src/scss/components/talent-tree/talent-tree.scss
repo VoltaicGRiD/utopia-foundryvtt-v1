@@ -190,3 +190,16 @@
   font-weight: 900;
   color: #d3688a;
 }
+
+// ----------------------------------------------------
+
+.talent-tree-fullscreen-sheet {
+  header {
+    display: none;
+  }
+
+  .content {
+    width: 100vw;
+    height: 100vh;
+  }
+}

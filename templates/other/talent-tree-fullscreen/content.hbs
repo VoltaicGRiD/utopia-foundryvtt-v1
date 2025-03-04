@@ -1,0 +1,23 @@
+<div class="content">
+  <a class="close-button" data-action="close"><i class="fas fa-x"></i></a>
+
+  <div class="trees">
+    {{#each trees as |tree|}}
+      <div class="tree">
+        <div class="tree-header">{{name}}</div>
+        <div class="branches">
+          {{#each branches as |branch|}}
+            <div class="branch">
+              <div class="branch-header">{{localize "UTOPIA.Item.Talents.branch"}}: {{name}}</div>
+              <div class="talents">
+                {{#each talents as |talent|}}
+                  {{>"tree-talent" talent=talent index=@index color=branch.color}}
+                {{/each}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

@@ -14,3 +14,5 @@ export { UtopiaArtifactSheet } from "./gear/artifact.mjs";
 export { UtopiaConsumableSheet } from "./gear/consumable.mjs";
 export { UtopiaTrinketSheet } from "./gear/trinket.mjs";
 export { UtopiaWeaponSheet } from "./gear/weapon.mjs";
+
+export { UtopiaGearFeatureSheet } from "./gear-feature-sheet.mjs";

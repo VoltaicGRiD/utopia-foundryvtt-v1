@@ -2,7 +2,7 @@
   
   <div class="tab-buttons">
     {{#if editable}} 
-      <button type="button" class="tab-button" data-action="selectActions">{{localize "UTOPIA.Actor.Actions.browseActions"}}</button>
+      <button type="button" class="tab-button"  data-action="openCompendium" data-category="action">{{localize "UTOPIA.Actor.Actions.browseActions"}}</button>
     {{/if}}
   </div>
 
@@ -21,14 +21,23 @@
     </div>
 
     <div class="interrupt-actions">
-      
-      <h3>{{localize "UTOPIA.Actor.Actions.interruptActions"}}</h3>
-      {{#each interruptAction as |action|}}
-        <button type="button" class="flexrow" data-roll-type="action" data-target="{{action.id}}" data-action="roll">
-          <span>{{action.name}}</span>
+      <h3>{{localize "UTOPIA.Actor.Actions.otherActions"}}</h3>
+      {{#each interruptActions as |action|}}
+        <div class="action" >
+          <span class="name">{{action.name}}</span>
           <span><i>{{action.system.formula}}</i></span>
-          <span><i class="fa-solid fa-circle-pause"></i>&nbsp;{{action.system.cost}}</span>
-        </button>
+          {{#if (eq action.system.type "interrupt")}}
+            <span class="cost"><i class="fa-solid fa-circle-pause"></i>&nbsp;{{action.system.cost}}</span>
+          {{else if (eq action.system.type "special")}}
+            <span class="cost"><i class="fa-solid fa-circle-star"></i>&nbsp;{{action.system.cost}}</span>
+          {{else if (eq action.system.type "macro")}}
+            <span class="cost"><i class="fa-solid fa-microchip"></i>&nbsp;{{action.system.cost}}</span>
+          {{/if}}
+          <div class="controls" style="display: none">
+            <a data-roll-type="action" data-target="{{action.id}}" data-action="roll">{{localize 'UTOPIA.CommonTerms.perform'}}</a>
+            <a data-action="deleteAction" data-target="{{action.id}}">{{localize 'UTOPIA.CommonTerms.delete'}}</a>
+          </div>
+        </div>
       {{/each}}
     </div>
   </div>

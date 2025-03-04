@@ -31,4 +31,9 @@
       </svg>
     </div>
   </a>
+
+  {{#if (eq automated false)}}
+    <input type="number" name="{{subtraitLeft.path}}" value="{{subtraitLeft.value}}" class="subtraitLeft-value" data-subtrait="{{subtraitLeft.short}}" data-tooltip="{{subtraitLeft.name}}"/>
+    <input type="number" name="{{subtraitRight.path}}" value="{{subtraitRight.value}}" class="subtraitRight-value" data-subtrait="{{subtraitRight.short}}" data-tooltip="{{subtraitRight.name}}"/>
+  {{/if}}
 </div>

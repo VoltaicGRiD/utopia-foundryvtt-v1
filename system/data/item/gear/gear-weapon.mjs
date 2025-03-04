@@ -49,12 +49,46 @@ export default class UtopiaWeapon extends UtopiaGearBase {
     })
     schema.strikes = new fields.ArrayField(schema.strike, { required: true, nullable: false, initial: [schema.strike.getInitialValue()] });  
 
+    schema.damage = new fields.StringField({ ...requiredString, validate: (value) => {
+      return Roll.validate(value);
+    }})
+    schema.meleeDamageModifierTraitChoice = new fields.BooleanField({ required: true, nullable: false, initial: true });
+    schema.meleeDamageModifierTrait = new fields.StringField({ ...requiredString, initial: "none" })
+    schema.rangedDamageModifierTraitChoice = new fields.BooleanField({ required: true, nullable: false, initial: true });
+    schema.rangedDamageModifierTrait = new fields.StringField({ ...requiredString, initial: "none" })
+    schema.damageTemplate = new fields.StringField({ ...requiredString, initial: "none" });
+    schema.reach = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.closeRange = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.farRange = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.accuracyFavor = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.accuracyTrait = new fields.StringField({ ...requiredString, initial: "default" });
+    schema.ignoreSHP = new fields.BooleanField({ required: true, nullable: false, initial: false });
+    schema.ignoreDefense = new fields.BooleanField({ required: true, nullable: false, initial: false });
+    schema.shpPercentage = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.dhpPercentage = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.objectPercentage = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.blindingActions = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.blindingTrait = new fields.StringField({ ...requiredString, initial: "none" });
+    schema.blindingDuration = new fields.NumberField({ ...requiredInteger, initial: 1 }); // Rounds (until beginning of user's next turn)
+    schema.confusingActions = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.confusingTrait = new fields.StringField({ ...requiredString, initial: "none" });
+    schema.confusingDuration = new fields.NumberField({ ...requiredInteger, initial: 1 }); // Rounds (until beginning of user's next turn)
+    schema.blastingLineWidth = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.blastingAccuracyRequired = new fields.BooleanField({ required: true, nullable: false, initial: false });
+    schema.boomingConeDegrees = new fields.NumberField({ ...requiredInteger, initial: 90 });
+    schema.boomingAccuracyRequired = new fields.BooleanField({ ...requiredString, initial: false });
+    schema.armed = new fields.BooleanField({ required: true, nullable: false, initial: false });
+    schema.rechargeAfter = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.rechargeTrait = new fields.StringField({ ...requiredString, initial: "none" });
+    schema.rechargeActions = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.returnDamage = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.returnDamageType = new fields.StringField({ ...requiredString, initial: "physical" });
+    schema.nonLethal = new fields.BooleanField({ required: true, nullable: false, initial: false });
+
     return schema;
   }
 
   prepareDerivedData() {
     super.prepareDerivedData();
-
-    console.warn("preparing derived data: ", this);
   }
 }

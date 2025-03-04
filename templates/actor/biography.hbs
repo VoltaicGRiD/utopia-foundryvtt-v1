@@ -7,7 +7,7 @@
     </div>
 
     <fieldset>
-      <legend>{{localize "UTOPIA.Actor.Biography.biographyFields"}}</legend>
+      <legend>{{localize "UTOPIA.Biography.biographyFields"}}</legend>
       <div class="grid grid-4col">
         {{#each biographyFields as |field key|}}
           <div class="flexcol">
@@ -19,7 +19,7 @@
     </fieldset>
 
     <fieldset>
-      <legend>{{localize "UTOPIA.Descriptions.description"}}</legend>
+      <legend>{{localize "UTOPIA.CommonTerms.description"}}</legend>
       {{#if editable}}
         <prose-mirror name="system.biography.description" data-document-u-u-i-d="{{actor.uuid}}" value="{{system.biography.description}}" collaborate="true" toggled="true">
           {{{enrichedBiography}}}
@@ -30,7 +30,7 @@
     </fieldset>
 
     <fieldset>
-      <legend>{{localize "UTOPIA.Descriptions.gmSecrets"}}</legend>
+      <legend>{{localize "UTOPIA.CommonTerms.gmSecrets"}}</legend>
       {{#if gm}}
         <prose-mirror name="system.biography.gmSecrets" data-document-u-u-i-d="{{actor.uuid}}" value="{{system.biography.gmSecrets}}" collaborate="true" toggled="true">
           {{{enrichedGMNotes}}}

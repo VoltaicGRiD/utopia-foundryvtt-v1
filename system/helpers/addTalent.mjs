@@ -53,8 +53,8 @@ export async function addTalentToActor(actor, selected) {
   }
 
   // Is the talent the first in it's tree?
-  let talentPosition = item.system.position;
-  if (talentPosition == 1)
+  let talentTier = item.system.tier;
+  if (talentTier == 1)
   {
     // First talent in the tree
     await checkForChoices(actor, item);
@@ -62,8 +62,9 @@ export async function addTalentToActor(actor, selected) {
   } else {
     // Talent is not the first in the tree
     let tree = item.system.tree;
-    let treePosition = actor.system.trees[tree];
-    if (treePosition == talentPosition - 1) {
+    let branch = item.system.branch;
+    let treePosition = actor.system.trees[tree][branch];
+    if (treePosition == talentTier - 1) {
       // Actor has the prerequisite talent
       await checkForChoices(actor, item);
       return;
@@ -195,10 +196,7 @@ export async function submitChoices(choice, data) {
  */
 export async function createTalent(actor, item, createTree) {
   // Create the talent item
-  console.log(item);[]
-  console.log(actor);
   let data = [item];
-  console.log(data);
   await actor.createEmbeddedDocuments('Item', data);
 
   // Update the talent tree window

@@ -56,6 +56,6 @@ export default class UtopiaTrinket extends UtopiaGearBase {
   }
 
   prepareDerivedData() {
-
+    super.prepareDerivedData();
   }
 }

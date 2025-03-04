@@ -65,7 +65,7 @@
     color: rgb(214, 201, 142);
   }
 
-.data-number {
+span.data-number {
   position: absolute;
   min-width: 50px;
   left: 50%;
@@ -78,6 +78,21 @@
   text-shadow: 0px 0px 3px black, 0px 0px 6px black;
   z-index: 1000;
   pointer-events: none;
+}
+
+input.data-number {
+  position: absolute;
+  min-width: 50px;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  filter: drop-shadow(0px 0px 3px black);
+  text-shadow: 0px 0px 3px black, 0px 0px 6px black;
+  z-index: 1000;
+  background: transparent;
 }
 
 .point-blocks {
@@ -270,7 +285,22 @@
   align-items: start;
 }
 
-.spell {
+.actions h3 {
+  margin-bottom: 0;
+}
+
+.interrupt-actions {
+  display: flex;
+  flex-direction:column;
+  gap: 10px;
+
+  .action {
+    background-color: #7e6206;
+  }
+}
+
+.spell,
+.action {
   width: 100%;
   display: flex;
   align-content: center;
@@ -278,7 +308,7 @@
   border-radius: 0px 5px 0 5px;
   flex-wrap: wrap;
   
-  .spell-name, .spell-cost {
+  .name, .cost {
     position: static;
     top: 0;
     line-height: 24px;
@@ -288,29 +318,29 @@
     filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
   }
 
-  .spell-name {
+  .name {
     left: 0;
   }
   
-  .spell-cost {
+  .cost {
     right: 0;
   }
 
-  .spell-controls {
+  .controls {
     position: static;
     left: 0;
     top: 24px;
     width: 100%;
     height: 24px;
     flex-direction: row;
-
+  
     & a {
       width: 100%;
       text-align: center;
       line-height: 24px;
       filter: drop-shadow(0px 0px 3px black) drop-shadow(0px 0px 6px black);
-
-
+  
+  
       &:hover {
         background-color: #ff0000;
         color: white;
@@ -330,6 +360,16 @@
 
 .gear-list-header {
   margin: 10px;
+}
+
+.item-name {
+  line-height: 30px;
+}
+
+.item-detail {
+  font-style: italic;
+  font-size: 0.8em;
+  padding: 0 0.5em;
 }
 
 .resources {
@@ -533,6 +573,28 @@
   }
 }
 
+.properties-table-container {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.properties-table {
+  margin: 0;
+
+  td, th {
+    margin: 0;
+    padding: 0 0.5em;
+  }
+
+  input {
+    height: 20px;
+    line-height: 20px;
+    padding: 0 5px;
+    background: transparent;
+  }
+}
+
 
 .actor-traits {
   display: flex;
@@ -560,7 +622,7 @@
     display: block;
     position: relative;
     width: 100%;
-    height: 120px;
+    height: 150px;
     margin: 5px;
     padding: 10px;
 
@@ -613,6 +675,23 @@
       z-index: -1;
     }
 
+    .subtraitLeft-value,
+    .subtraitRight-value {
+      position: absolute;
+      bottom: 0;
+      width: 50px;
+      height: 25px;
+      line-height: 25px;
+      text-align: center;
+    }
+    
+    .subtraitLeft-value {
+      left: 0;
+    }
+    .subtraitRight-value {
+      right: 0;
+    }
+
     .subtrait-container-left,
     .subtrait-container-right {
       width: 50px;
@@ -632,6 +711,15 @@
         border: 1px solid #b5b3a4;
         border-radius: 10px;
         transform: translate(-50%, -50%);
+      }
+
+      .subtrait-value {
+        font-size: 1.3em;
+        color: white;
+        position: absolute;
+        left: 0;
+        top: -3px;
+        filter: drop-shadow(black 1px 1px 1px) drop-shadow(black 1px -1px 1px) drop-shadow(black -1px 1px 1px) drop-shadow(black -1px -1px 1px);
       }
         
       .subtrait-mod {
@@ -663,13 +751,13 @@
     .subtrait-container-left {
       position: absolute;
       left: 0;
-      bottom: 0;
+      bottom: 30px;
     }
 
    .subtrait-container-right {
       position: absolute;
       right: 0;
-      bottom: 0;
+      bottom: 30px;
     }
   }
 }

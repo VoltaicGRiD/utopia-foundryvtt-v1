@@ -1,6 +1,6 @@
 const { api, sheets } = foundry.applications;
 
-import { buildTraitData } from "../../helpers/actorTraits.mjs";
+import { utopiaTraits } from "../../helpers/actorTraits.mjs";
 import Quirks from "../../other/quirks.mjs";
 
 export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
@@ -9,20 +9,24 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+    this.customQuirkEditors = [];
   }
 
   static DEFAULT_OPTIONS = {
     classes: ["utopia", "species-sheet"],
     position: {
-      width: 700,
+      width: 800,
       height: 600,
     },
     actions: {
       image: this._image,
       addQuirk: this._addQuirk,
+      addCustomQuirk: this._addCustomQuirk,
       removeQuirk: this._removeQuirk,
+      removeCustomQuirk: this._removeCustomQuirk,
       togglePaperdoll: this._togglePaperdoll,
       tradeSubtraits: this._tradeSubtraits,
+      saveQuirk: this._saveQuirk,
       //update: this._update,
     },
     form: {
@@ -54,6 +58,10 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
       template: "systems/utopia/templates/item/species/quirks.hbs",
       scrollable: [".standard-attributes"]
     },
+    talents: {
+      template: "systems/utopia/templates/item/species/talents.hbs",
+      scrollable: [".talent-column"]
+    },
     description: {
       template: "systems/utopia/templates/item/generic/description.hbs",
     },
@@ -61,11 +69,11 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    options.parts = ["header", "tabs", "attributes", "quirks", "paperdoll", "description"];
+    options.parts = ["header", "tabs", "attributes", "quirks", "talents", "paperdoll", "description"];
   };
 
   async _prepareContext(options) {
-    const subtraits = buildTraitData();
+    const subtraits = utopiaTraits();
 
     var context = {
       // Validates both permissions and compendium status
@@ -84,8 +92,10 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
+      hasCustomQuirks: this.item.system.customQuirks.length > 0,
       quirks: Quirks,
-      subtraits: subtraits
+      subtraits: subtraits,
+      allowCustomQuirks: game.settings.get('utopia', 'speciesCustomQuirks') === true,
     };
 
     context.speeds = [
@@ -96,6 +106,21 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
       "@spd.total * 4"
     
     ];
+
+    const speciesTalents = {};
+    const systemTalents = this.item.system.talents;
+    await Object.keys(systemTalents).forEach(async k => {
+      if (k !== "copy" && k !== "copySpecies") {
+        speciesTalents[k] = {};
+        const tierTalents = systemTalents[k];
+        await Object.keys(tierTalents).forEach(async t => {
+          speciesTalents[k][t] = await fromUuid(systemTalents[k][t]);
+        });
+      }
+    });
+
+    context.speciesTalents = speciesTalents;
+
     console.log(context);
 
     return context;
@@ -105,8 +130,17 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
     switch (partId) {
       case 'attributes':
       case 'quirks':
+      case 'talents':
       case 'description':
         context.tab = context.tabs[partId];
+        context.enrichedDescription = await TextEditor.enrichHTML(
+          this.item.system.description,
+          {
+            secrets: this.document.isOwner,
+            rollData: this.item.getRollData(),
+            relativeTo: this.item.actor ?? this.item,
+          }
+        );
         break;
       case 'paperdoll': 
         context.paperdoll = this.item.system.getPaperDoll()
@@ -142,6 +176,7 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
         case 'attributes':
         case 'paperdoll':
         case 'quirks':
+        case 'talents':
         case 'description':
           tab.id = partId;
           tab.label += partId;
@@ -157,6 +192,15 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
     }, {});
   }
 
+  _prepareSubmitData(event, form, formData) {
+    const submitData = super._prepareSubmitData(event, form, formData);
+    submitData.system?.customQuirks?.forEach((quirk, index) => {
+      const editor = this.customQuirkEditors[index];
+      quirk.attributes = editor.getValue();
+    }) ?? [];
+    return submitData;
+  }
+
   /**
    * Actions performed after any render of the Application.
    * Post-render steps are not awaited by the render process.
@@ -168,17 +212,50 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
   _onRender(context, options) {
     super._onRender(context, options);
     this.#dragDrop.forEach((d) => d.bind(this.element));
+
+    this.customQuirkEditors = [];
+
+    this.element.querySelectorAll('#editor').forEach((editor) => {
+      const aceEditor = ace.edit(editor, {
+        theme: "ace/theme/dracula",
+        mode: "ace/mode/json",
+        maxLines: 30,
+        minLines: 4,
+        wrap: true,
+        tabSize: 2,
+      });
+      aceEditor.renderer.setScrollMargin(10, 10, 10, 10);
+
+      // TODO: Add _onPosition(position) update to size of editor
+      //aceEditor.resize();
+
+      this.customQuirkEditors.push(aceEditor);
+    });
+
+    // context.system.customQuirks.forEach((quirk, index) => {
+    //   this.customQuirkEditors[index].setValue(JSON.stringify(quirk.attributes, null, 2));
+    // });
   }
 
-  static async _image(event) {
+  static async _image(event, target) {
     event.preventDefault();
+
+    const type = target.dataset.type;
+
     let file = await new FilePicker({
       type: "image",
       current: this.document.img,
       callback: (path) => {
-        this.document.update({
-          img: path,
-        });
+        if (type === "full-body") {
+          this.document.update({
+            ['system.fullBodyPortrait']: path,
+          });
+        }
+        else {
+          this.document.update({
+            img: path,
+          });
+        }
       },
     }).browse();
   }
@@ -203,6 +280,41 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
     });
   }
 
+  static async _addCustomQuirk(event, target) {
+    const quirk = {
+      name: "New Quirk",
+      qp: 0,
+      description: "",
+      attributes: `[
+  {
+    
+  }
+]`,
+    }
+    const quirks = this.item.system.customQuirks;
+    quirks.push(quirk);
+
+    await this.item.update({
+      system: {
+        customQuirks: quirks
+      }
+    });
+  }
+
+  static async _saveQuirk(event, target) {
+    const index = target.dataset.quirk;
+    const quirks = this.item.system.customQuirks;
+    const quirk = quirks[index];
+    quirk.attributes = this.customQuirkEditors[index].getValue();
+    console.log("attributes:", quirk.attributes);
+
+    await this.item.update({
+      system: {
+        customQuirks: quirks
+      }
+    })
+  }
+
   static async _removeQuirk(event, target) {
     const index = target.dataset.quirk;
     
@@ -212,6 +324,19 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
     await this.item.update({
       system: {
         quirks: quirks
+      }
+    });
+  }
+
+  static async _removeCustomQuirk(event, target) {
+    const index = target.dataset.quirk;
+    
+    const quirks = this.item.system.customQuirks;
+    quirks.splice(index, 1);
+    
+    await this.item.update({
+      system: {
+        customQuirks: quirks
       }
     });
   }
@@ -532,6 +657,7 @@ export class UtopiaSpeciesSheet extends api.HandlebarsApplicationMixin(
    */
   async _onDropItem(event, data) {
     if (!this.item.isOwner) return false;
+    this.render(true);
   }
 
   /* -------------------------------------------- */

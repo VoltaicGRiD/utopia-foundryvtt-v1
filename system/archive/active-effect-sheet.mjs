@@ -147,7 +147,7 @@ export default class UtopiaActiveEffectSheet extends api.HandlebarsApplicationMi
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Actions.Tabs.',
+        label: 'UTOPIA.Item.Tabs.',
       };
   
       switch (partId) {

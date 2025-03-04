@@ -1,0 +1,25 @@
+{{#with talent~}}
+    <div class="talent" style="background-color: {{../color}}; top: calc(-50px * {{../index}}); z-index: calc(10 - {{../index}})">
+        <span class="talent-name">{{name}}</span>
+        <div class="talent-description">
+            {{{description}}}
+        </div>
+        <div class="talent-points">
+            <span class="body">
+                <i class="fa-solid fa-shield fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.body'}}"></i>
+                <span>{{body}}</span>
+            </span>
+            <span class="mind">
+                <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}"></i>
+                <span>{{mind}}</span>
+            </span>
+            <span class="soul">
+                <i class="fa-solid fa-flame fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.soul'}}"></i>
+                <span>{{soul}}</span>
+            </span>
+        </div>
+        {{!-- <div class="talent-automated">
+            <span><i class="fas fa-robot"></i>&nbsp;{{automated}}</span>
+        </div> --}}
+    </div>
+{{/with}}

@@ -25,7 +25,7 @@
           <input class="variable-options" name="{{concat "system.variables." key ".options"}}" data-key="{{key}}" autofocus>
         {{/if}}
         <div class="variable-description">
-          {{formInput ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true placeholder=(localize 'UTOPIA.Item.description')}}
+          {{formInput ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true placeholder=(localize 'UTOPIA.CommonTerms.description')}}
         </div>
       </div>  
     {{/each}}

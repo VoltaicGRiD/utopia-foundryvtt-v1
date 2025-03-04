@@ -75,6 +75,44 @@ export class UtopiaRollDialog extends api.HandlebarsApplicationMixin(api.Applica
       roll.terms[index].disabled = true;
     });
 
+    const specialFavorTypes = ['accuracy', 'devices', 'inconspicuous', 'multitasking', 
+      'difficultTerrain', 'traversal', 
+      'maintainFocus', 'maintainConcentration', 
+      'resistInfluence', 'resistSpellEffects'
+    ]
+
+    var specialFavors = {}
+    if (options.specialFavors && Object.keys(options.specialFavors).length > 0)
+      specialFavors = options.specialFavors;
+    else {
+      var specials = options.actor.system.favors.filter(f => specialFavorTypes.includes(f));
+      for (const favor of specials) {
+        specialFavors[favor] = {
+          amount: specialFavors[favor] ? specialFavors[favor].amount + 1 : 1,
+          value: favor,
+          selected: false,
+          name: game.i18n.localize(`UTOPIA.Actor.SpecialFavors.${favor}`)
+        }
+      }    
+    }
+
+    var specialDisfavors = {}
+    if (options.specialDisfavors && Object.keys(options.specialDisfavors).length > 0)
+      specialDisfavors = options.specialDisfavors;
+    else {
+      specials = options.actor.system.disfavors.filter(f => specialFavorTypes.includes(f));
+      for (const favor of specials) {
+        specialDisfavors[favor] = {
+          amount: specialFavors[favor] ? specialFavors[favor].amount + 1 : 1,
+          value: favor,
+          selected: false,
+          name: game.i18n.localize(`UTOPIA.Actor.SpecialFavors.${favor}`)
+        }
+      }    
+    }
+
+    const hasSpecialFavors = Object.keys(specialFavors).length > 0 || Object.keys(specialDisfavors).length > 0;
+
     const context = {
       actor: options.actor ?? undefined,
       item: options.item ?? undefined,
@@ -86,17 +124,55 @@ export class UtopiaRollDialog extends api.HandlebarsApplicationMixin(api.Applica
       terms: roll.terms,
       customTerms: options.customTerms ?? [],
       target: target,
-      targets: targets,
+      targets: targets ?? [],
+      description: options.description ?? "",
+      hasSpecialFavors: hasSpecialFavors,
+      specialFavors: specialFavors,
+      specialDisfavors: specialDisfavors
       //config: CONFIG.UTOPIA,
       //modifiers: this.modifiers,
     };
 
     this.renderOptions = options;
+    this.renderOptions.roll = new Roll(this.renderOptions.roll.formula);
+    this.renderOptions.specialDisfavors = specialDisfavors;
+    this.renderOptions.specialFavors = specialFavors;
     this.context = context;
 
     console.log(options, context);
 
     return context;
+  }
+
+  _onRender(options, context) {
+    const optionals = this.element.querySelectorAll('input[type="checkbox"]');
+    optionals.forEach(optional => {
+      optional.addEventListener('change', event => {
+        const enabled = event.target.checked;
+        const favor = event.target.dataset.favor;
+        const type = event.target.dataset.type;
+        const amount = parseInt(event.target.dataset.amount);
+        const term = this.renderOptions.roll.terms[0];
+        const quantity = term.number;
+
+        if (type === "favor" && enabled === false) { // This means we need to remove the favor that was added
+          this.renderOptions.specialFavors[favor].selected = false;
+          term.alter(0, quantity - amount);
+        } else if (type === "favor" && enabled === true) {
+          this.renderOptions.specialFavors[favor].selected = true;
+          term.alter(0, quantity + amount);
+        } else if (type === "disfavor" && enabled === false) {
+          this.renderOptions.specialDisfavors[favor].selected = false;
+          term.alter(0, quantity + amount);
+        } else if (type === "disfavor" && enabled === true) {
+          this.renderOptions.specialDisfavors[favor].selected = false;
+          term.alter(0, quantity - amount);
+        }
+
+        this.renderOptions.roll = new Roll(this.renderOptions.roll.formula);
+        this.render(this.renderOptions);
+      })
+    });
   }
 
   static async _addFavor(event, target) {
@@ -191,7 +267,7 @@ export class UtopiaRollDialog extends api.HandlebarsApplicationMixin(api.Applica
     if (this.renderOptions.customTerms)
       formula = formula + this.renderOptions.customTerms.map(term => term.operator + " " + term.value).join(" ");
     const roll = await new Roll(formula, {}).evaluate();
-    this.renderOptions.actor?.finalizeRoll(roll, this.renderOptions);
+    this.renderOptions.actor?.finalizeRoll(roll, this.renderOptions, this.renderOptions.templateOptions ?? this.renderOptions.templateData ?? {});
     this.close();
   }
 }

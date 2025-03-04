@@ -1,4 +1,4 @@
-import { buildTraitData } from '../../helpers/actorTraits.mjs';
+import { utopiaTraits } from '../../helpers/actorTraits.mjs';
 import { prepareActiveEffectCategories } from '../../helpers/effects.mjs';
 import { UtopiaActorComponentsSheet } from './components-sheet.mjs';
 import { UtopiaDataOverrideSheet } from './data-override-sheet.mjs';
@@ -6,6 +6,9 @@ import { UtopiaTalentTreeSheet } from '../utility/talent-tree-sheet.mjs';
 import { UtopiaCompendiumBrowser } from '../utility/compendium-browser.mjs';
 import { UtopiaSpellcraftSheet } from '../utility/spellcraft-sheet.mjs';
 import { UtopiaSubtraitSheetV2 } from './subtrait-sheet.mjs';
+import { UtopiaPaperdollSheet } from './paperdoll-sheet.mjs';
+import CompendiumCategories from "../../other/compendiumCategories.mjs";
+import { UtopiaCharacterCreator } from '../utility/character-creator.mjs';
 const { api, sheets } = foundry.applications;
 
 /**
@@ -71,6 +74,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       equipItem: this._equipItem,
       openDataOverride: this._openDataOverride,
       openCompendium: this._openCompendium,
+      togglePaperDoll: this._togglePaperdoll,
+      builder: this._builder,
+      toggleAutomation: this._toggleAutomated,
     },
     form: {
       submitOnChange: true,
@@ -92,6 +98,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     },
     npcDetails: {
       template: 'systems/utopia/templates/actor/details-npc.hbs',
+    },
+    properties: {
+      template: 'systems/utopia/templates/actor/properties-npc.hbs',
     },
     actions: {
       template: 'systems/utopia/templates/actor/actions.hbs',
@@ -127,7 +136,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         options.parts.push('biography', 'characterDetails', 'talents', 'gear',  'spells', 'actions', 'effects');
         break;
       case 'npc':
-        options.parts.push('biography', 'npcDetails', 'gear', 'spells', 'actions', 'effects');
+        if (this.document.system.automated) 
+          options.parts.push('biography', 'npcDetails', 'talents', 'gear', 'spells', 'actions', 'effects');
+        else 
+          options.parts.push('biography', 'npcDetails', 'properties', 'talents', 'gear', 'spells', 'actions', 'effects');
         break;
     }
   }
@@ -158,12 +170,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       // Necessary for formInput and formFields helpers
       fields: this.document.schema.fields,
       systemFields: this.document.system.schema.fields,
-      traits: buildTraitData(this.actor),
+      traits: utopiaTraits(this.actor),
       // Adding a pointer to CONFIG.UTOPIA
       config: CONFIG.UTOPIA,
       tabs: this._getTabs(options.parts),
       // Check for the "overrideDerivedData" flag
       overrideDerivedData: this.actor.getFlag('utopia', 'overrideDerivedData') ?? false,
+      type: this.actor.type,
+      automated: this.actor.system.automated
     };
 
     // Offloading context prep to a helper function
@@ -211,6 +225,11 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         );
 
         break;
+      case 'properties': 
+        context.tab = context.tabs[partId];
+        context.actorProperties = foundry.utils.flattenObject(this.actor.system);
+        context.overrides = foundry.utils.flattenObject(this.actor.system.overrides);
+        break;
       case 'effects':
         context.tab = context.tabs[partId];
         // Prepare active effects
@@ -230,6 +249,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
     return context;
   }
+  
 
   /**
    * Generates the data for the generic tab navigation template
@@ -295,6 +315,9 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           tab.id = 'effects';
           tab.label += 'effects';
           break;
+        case 'properties':
+          tab.id = 'properties';
+          tab.label += 'properties';
         default:
       }
       
@@ -312,6 +335,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
    */
   _prepareItems(context) {
     // Initialize containers.
+    const armor = [];
     const gear = [];
     const weapons = [];
     const talents = [];
@@ -327,7 +351,33 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
       i.img = i.img || Item.DEFAULT_ICON;
       
-      if (i.type === 'gear') {
+      if (["weapon", "artifact", "trinket"].includes(i.type)) {
+        const roll = new Roll(i.system.formula);
+        const terms = roll.terms;
+        // We need to set the term's index to the index of the redistribution we have in the formula
+        terms.forEach((term, index) => {
+          if (!term.redistributions || term.redistributions.length === 0) return;
+          const redistributions = term.redistributions;
+          const formula = term.formula;
+          console.log(term, formula, redistributions);
+          redistributions.forEach((redistribution, index) => {
+            if (redistribution.formula === formula) {
+              term.index = index;
+            }
+          });
+        });
+        i.terms = terms;
+        if (i.system.strikes.length > 0) {
+          weapons.push(i);
+        }
+        else {
+          gear.push(i);
+        }
+      }
+      else if (i.type === 'armor') {
+        armor.push(i);
+      }
+      else if (i.type === 'weapon') {
         const roll = new Roll(i.system.formula);
         const terms = roll.terms;
         // We need to set the term's index to the index of the redistribution we have in the formula
@@ -351,9 +401,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
           gear.push(i);
         }
       }
-      else if (i.type === 'weapon') {
-        weapons.push(i);
-      }
       else if (i.type === 'talent') {
         talents.push(i);
       }
@@ -361,6 +408,8 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
         specialist.push(i);
       }
       else if (i.type === 'action') {
+        console.log(i.system.type);
+
         if (i.system.type === 'turn')
           turnActions.push(i);
         else 
@@ -380,6 +429,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     }
 
     // Assign and return
+    context.armor = armor;
     context.weapons = weapons;
     context.talents = talents;
     context.spells = spells;
@@ -406,10 +456,10 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     this.#dragDrop.forEach((d) => d.bind(this.element));
     this.#disableOverrides();
 
-    this.element.querySelectorAll('.spell').forEach((spell) => {
+    this.element.querySelectorAll(['.spell', '.action']).forEach((spell) => {
       spell.addEventListener('click', (event) => {
         console.log(event);
-        let controls = spell.querySelector('.spell-controls');
+        let controls = spell.querySelector('.controls');
         console.log(controls, controls.style.display);
         controls.style.display = controls.style.display === 'none' ? 'flex' : 'none';
       });
@@ -436,13 +486,13 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       });
     });
 
-    this.element.querySelectorAll('.action').forEach((action) => {
-      action.addEventListener('contextmenu', async (event) => {
-        console.log(event);
-        const target = action.dataset.target;
-        await this.actor.deleteEmbeddedDocuments('Item', [target]);
-      });
-    });
+    // this.element.querySelectorAll('.action').forEach((action) => {
+    //   action.addEventListener('contextmenu', async (event) => {
+    //     console.log(event);
+    //     const target = action.dataset.target;
+    //     await this.actor.deleteEmbeddedDocuments('Item', [target]);
+    //   });
+    // });
 
     this.element.querySelectorAll("input:not(disabled)").forEach((input) => {
       input.addEventListener('focus', () => {
@@ -450,9 +500,32 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       });
     });
 
-    this.element.querySelector("#overrideDerivedData").addEventListener('change', async (event) => {
-      await this.actor.setFlag('utopia', 'overrideDerivedData', event.target.checked);
+    this.element.querySelector('#properties-search').addEventListener('input', (event) => {
+      const search = event.target.value.toLowerCase();
+      const properties = Array.from(this.element.querySelectorAll('.property'));
+      for (const property of properties) {
+        if (property.dataset.name.toLowerCase().includes(search)) {
+          property.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          break;
+        }
+      }
     });
+
+    this.element.querySelectorAll('.property-value').forEach((property) => {
+      property.addEventListener('change', async (event) => {
+        const value = event.target.value;
+        const path = property.dataset.property;
+        const overrides = this.actor.system.overrides;
+        overrides[path] = value;
+        await this.actor.update({
+          ['system.overrides']: overrides
+        });
+      })
+    });
+
+    // this.element.querySelector("#overrideDerivedData").addEventListener('change', async (event) => {
+    //   await this.actor.setFlag('utopia', 'overrideDerivedData', event.target.checked);
+    // });
   }
 
   /**
@@ -478,11 +551,19 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     return biographyFields
   }
 
+  static async _toggleAutomated(event, target) {
+    await this.actor.update({
+      system: {
+        automated: !this.actor.system.automated
+      }
+    });
+  }
+
   static async _useItem(event, target) {
     const doc = this._getEmbeddedDocument(target);
     console.log(doc);
 
-    doc.system.use();
+    doc.use();
   }
 
   static async _addToStat(event, target) {
@@ -533,17 +614,17 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   static async _deleteResource(event, target) {
     const index = event.target.dataset.index;
 
-    const resources = this.actor.system.resources;
+    const resources = this.actor.system.actorResources;
 
     resources.splice(index, 1);
 
     await this.actor.update({
-      [`system.resources`]: resources,
+      [`system.actorResources`]: resources,
     });
   }
 
   static async _addResource(event, target) {
-    const resources = this.actor.system.resources;
+    const resources = this.actor.system.actorResources ?? [];
     const resource = {
       name: `New Resource ${resources.length + 1}`,
       source: true
@@ -551,24 +632,41 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     resources.push(resource);
 
     await this.actor.update({
-      [`system.resources`]: resources,
+      [`system.actorResources`]: resources,
     });
 
     console.log(this.actor);
   }
 
   static async _equipItem(event, target) {
+    const type = target.dataset.equip === 'equip' ? "equipmentSlots" : "augments";
     const doc = this._getEmbeddedDocument(target);
+    const items = [];
+    const equippable = doc.system.equippable;
+    const slot = doc.system.slot;
 
-    if (this.actor.equipmentSlots.head === doc.id) { // This item is equipped
-      this.actor.update({
-        ['system.equipmentSlots.head']: "empty"
-      });
-    }
-    else { // Nothing or something else is equipped
-      this.actor.update({
-        ['system.equipmentSlots.head']: doc.id
-      });
+    if (equippable) {
+      if (type === "augments") { // If we're augmenting, and its equipped, we unequip it, then augment it
+        if (this.actor.system.allEquippedItems.includes(doc.id)) {
+
+        }
+      }
+      const itemsInSlot = foundry.utils.getProperty(this.actor, `system.${type}.${slot}`);
+      if (itemsInSlot.includes(doc.id)) { // Unequip item
+        const equipment = itemsInSlot.filter(i => i !== doc.id)
+        await this.actor.update({
+          [`system.${type}.${slot}`]: equipment
+        });
+      }
+      else { // Equip item
+        itemsInSlot.push(doc.id);
+        const capacity = foundry.utils.getProperty(this.actor, `system.${type}.capacity.${slot}`);
+        if (itemsInSlot.length > capacity) 
+          return ui.notifications.error("This slot is either already taken, or there's no equipment slot available");
+        await this.actor.update({
+          [`system.${type}.${slot}`]: itemsInSlot
+        });
+      }
     }
 
     this.render();
@@ -592,14 +690,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     //newSheet.actor = this.actor;
     let newSheet = new UtopiaCompendiumBrowser();
     newSheet.render(true);
-
-    // Retrieve the species options from the 'utopia.species' compendium
-    let pack = game.packs.get('utopia.species');
-    let options = await pack.getDocuments();
-    newSheet.displayOptions = options;
-    
-    // Render the options sheet to the user
-    newSheet.render(true);
   }
   
   static async _openTalent(event, target) {
@@ -620,7 +710,6 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       case 0: 
         var sheet = await new window(foundry.utils.mergeObject(options, {
           position: {
-            left: this.position.left + this.position.width,
             top: this.position.top
           }
         }));
@@ -630,13 +719,18 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
         this.children.push(sheet);
         this.dockedRight.push(sheet);
+        this.setPosition({
+          left: this.position.left - (sheet.position.width / 2)
+        });
     
         sheet.render(true);
+        sheet.setPosition({
+          left: this.position.left + this.position.width,
+        })
         break;
       case 1:
         var sheet = await new window(foundry.utils.mergeObject(options, {
           position: {
-            left: this.position.left - 450,
             top: this.position.top
           }
         }));
@@ -646,8 +740,14 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
 
         this.children.push(sheet);
         this.dockedLeft.push(sheet);
+        this.setPosition({
+          left: this.position.left + (sheet.position.width / 2)
+        });
     
         sheet.render(true);
+        sheet.setPosition({
+          left: this.position.left - sheet.position.width,
+        })
         break;
       case 2:
         var sheet = await new window(foundry.utils.mergeObject(options, {
@@ -683,7 +783,7 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
   }
 
   static async _openCompendium(event, target) {
-    const category = target.dataset.category;
+    const category = CompendiumCategories()[target.dataset.category];
     const sheet = new UtopiaCompendiumBrowser();
     sheet.render({
       filter: {}, 
@@ -772,6 +872,12 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
       whisper: [game.user.id],
       content: await renderTemplate(template, templateData),
     })
+  }
+
+  static async _builder(event, target) {
+    const builder = new UtopiaCharacterCreator({document: this.document});
+    builder.render(true);
+    this.close();
   }
 
   /**************
@@ -1159,6 +1265,18 @@ export class UtopiaActorSheetV2 extends api.HandlebarsApplicationMixin(
     // Handle item sorting within the same Actor
     if (this.actor.uuid === item.parent?.uuid)
       return this._onSortItem(event, item);
+
+    if (item.type === "specialistTalent") {
+      if (this.actor.system.points.specialist.total <= 0 && !game.user.isGM) {
+        return ui.notifications.error("You don't have enough specialist talent points remaining to add this specialist talent"); 
+      }
+      else if (!game.user.isGM && !item.system.canActorAccept(this.actor)) {
+        return ui.notifications.error("You do not meet the pre-requisites to take this talent. A GM can override this by adding it themselves");
+      }
+    } 
+
+    if (item.type === "talent" && this.actor.system.points.talent.total <= 0 && !game.user.isGM)
+      return ui.notifications.error("You don't have enough talent points remaining to add this talent"); 
 
     // Create the owned item
     return this._onDropItemCreate(item, event);

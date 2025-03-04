@@ -125,7 +125,7 @@ export class UtopiaArtificeFeatureSheet extends api.HandlebarsApplicationMixin(s
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Artifice.Features.Tabs.',
+        label: 'UTOPIA.Item.Tabs.',
       };
   
       switch (partId) {

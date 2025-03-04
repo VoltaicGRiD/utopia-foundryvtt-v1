@@ -122,7 +122,14 @@ export class UtopiaSpellcraftSheet extends api.HandlebarsApplicationMixin(api.Ap
           artistries[f.folder.name] = artistryData;
         }
 
+        const actorHasArtistry = (this.actor?.getFlag('utopia', 'artistries') ?? []).map(a => a.toLowerCase()).includes(f.folder.name.toLowerCase());
+        
         artistries[f.folder.name].features[`feature-${index}`] = f;
+        
+        if (!actorHasArtistry) {
+          f.locked = true;
+          artistries[f.folder.name].locked = true;
+        }
 
         features[`feature-${index}`] = f;
         index++;
