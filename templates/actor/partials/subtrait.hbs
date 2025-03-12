@@ -1,0 +1,14 @@
+<div class="trait-container">
+  {{#if isPlay}}
+    <span class="trait-name"><i class="fa-fw {{trait.icon}}"></i> {{localize trait.name}}</span>
+    <span class="trait-total">{{numberFormat trait.total}}</span>
+    <span class="trait-mod">{{numberFormat trait.mod sign=true}}</span>
+  {{else}}
+    {{log key}}
+    {{log source}}
+    <span class="trait-name">{{localize trait.name}}</span>
+    <input name="system.subtraits.{{key}}.value" type="number" value="{{source.value}}">
+    <input name="system.subtraits.{{key}}.mod" type="number" value="{{source.mod}}">
+    <input name="system.subtraits.{{key}}.gifted" type="checkbox" {{#if source.gifted}}checked{{/if}}>
+  {{/if}}
+</div>

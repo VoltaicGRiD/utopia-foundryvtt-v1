@@ -1,0 +1,40 @@
+<div class="tab variables {{tab.cssClass}}" data-group="primary" data-tab="variables">
+  {{#if system.variables}}
+    {{#if (gt (variables.length) 2)}}
+      <div class="grid grid-6col">
+    {{/if}}
+    {{#each system.variables as |variable key|}}
+      <div class="variable">
+        <div class="grid grid-6col">
+          <div class="grid-span-2">
+            {{formGroup ../systemFields.variableName value=(lookup (lookup ../system.variables key) "name") name=(concat "system.variables." key ".name") localize=true stacked=true}}
+          </div>
+          <div class="grid-span-3">
+            {{formGroup ../systemFields.kind value=(lookup (lookup ../system.variables key) "kind") name=(concat "system.variables." key ".kind") localize=true stacked=true}}
+          </div>
+          {{#if (eq (lookup (lookup ../system.variables key) "kind") "dice")}}
+            <div class="grid-span-2">
+              {{formGroup ../systemFields.dice value=(lookup (lookup ../system.variables key) "dice") name=(concat "system.variables." key ".dice") localize=true stacked=true}}
+            </div>
+          {{/if}}
+          <button type="button" data-variable="{{key}}">
+            <a data-action="removeVariable" data-variable="{{key}}">{{localize 'UTOPIA.Items.SpellFeature.Variables.Delete'}}</a>
+          </button>
+        </div>
+        {{#if (eq (lookup (lookup ../system.variables key) "kind") "options")}}
+          <input class="variable-options" name="{{concat "system.variables." key ".options"}}" data-key="{{key}}" autofocus>
+        {{/if}}
+        <div class="variable-description">
+          {{formGroup ../systemFields.variableDescription value=(lookup (lookup ../system.variables key) "description") name=(concat "system.variables." key ".description") localize=true stacked=true placeholder=(localize 'UTOPIA.CommonTerms.description')}}
+        </div>
+      </div>  
+    {{/each}}
+    {{#if (gt (system.variables.length) 2)}}  
+      </div>
+    {{/if}}
+  {{/if}}
+
+  <button type="button" class="add-variable-button">
+    <a data-action="newVariable">{{localize 'UTOPIA.Items.SpellFeature.Variables.New'}}</a>
+  </button>
+</div>

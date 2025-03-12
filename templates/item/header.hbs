@@ -1,0 +1,17 @@
+<div class="item-header">
+  {{#if (eq item.type "species")}}
+    <label class="mode-toggle">{{localize "UTOPIA.Items.Species.ToggleMode"}}
+      <input type="checkbox" data-action="toggleMode" data-target="data.attributes" data-mode="edit">
+    </label>
+  {{/if}}
+
+
+  <input class="item-name" name='name' type='text' class="item-name-input" value='{{item.name}}' placeholder='Name' />
+  <img class='item-icon' src='{{item.img}}' data-edit='img' data-action="image" title='{{item.name}}'/>
+  {{#each headerFields as |field|}}
+    {{log field}}
+    {{formGroup field.field classes="item-header-field" value=field.value stacked=field.stacked localize=true options=field.options}}
+  {{/each}}
+</div>
+
+  

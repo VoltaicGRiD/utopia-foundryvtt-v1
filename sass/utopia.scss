@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,86.4,100..900;1,86.4,100..900&family=Nova+Cut&display=swap');
+
+:root {
+  --color-text-dark-primary: #191813;
+  --color-text-dark-inactive: #7a7971;
+  --color-text-dark-5: #666;
+  --color-text-light-6: #999;
+  --color-border-light-1: #ddd;
+  --color-border-dark-5: #666;
+  --color-border-light-tertiary: #7a7971;
+  --form-field-height: 26px;
+  --color-shadow-primary: #ff0000;
+  --color-border-light-2: #999;
+  
+  --utopia-color-black: #000;
+  --utopia-color-dark: #191813;
+  --utopia-color-faint: #c9c7b8;
+  --utopia-color-beige: #b5b3a4;
+  --utopia-color-tan: #7a7971;
+  --utopia-color-olive: #4b4a44;
+  --utopia-color-crimson: #44191A;
+  --utopia-color-groove: #eeede0;
+  --utopia-color-gold: #9f9275;
+  --utopia-color-red: #ed1c24;
+  --utopia-color-blue: cornflowerblue;
+  --utopia-color-green: #205b15;
+  --utopia-color-maroon: #741b2b;
+  --utopia-color-parchment: #f1ebe8;
+  --utopia-color-purple: #c44dff;
+  --utopia-color-scrollbar: var($utopia-color-maroon);
+  --utopia-color-card: #f8f4f1;
+  --utopia-color-hp-1: #1b4b29;
+  --utopia-color-hp-2: #3ba55d;
+  --utopia-color-hp-3: #276d3c;
+  --utopia-color-hd-1: #401f25;
+  --utopia-color-hd-2: var($utopia-color-maroon);
+  --utopia-color-hd-3: #500000;
+  --utopia-color-sc-1: #433754;
+  --utopia-color-sc-2: #776493;
+  --utopia-color-blue-white: #cfd2da;
+  --utopia-color-blue-gray-1: #242731;
+  --utopia-color-blue-gray-2: #252830;
+  --utopia-color-blue-gray-3: #434857;
+  --utopia-color-blue-gray-4: #333742;
+  --utopia-color-iron-gray: #313131;
+  --utopia-color-light-gray: #3d3d3d;
+  --utopia-color-dark-gray: #0d0b0b;
+  --utopia-color-success: #006c00;
+  --utopia-color-success-background: #c7d0c0;
+  --utopia-color-success-critical: green;
+  --utopia-color-failure: #6e0000;
+  --utopia-color-failure-background: #ffdddd;
+  --utopia-color-failure-critical: red;
+  --utopia-color-note-info: #5c87b9;
+  --utopia-color-note-warn: #9b6903;
+  --utopia-color-application-damage: #9c5b47;
+  --utopia-color-application-healing: #3c7f58;
+  --utopia-color-application-temp: #007F7F;
+  --utopia-color-table-row-even: var($utopia-color-parchment);
+  --utopia-color-table-row-odd: var($utopia-color-card);
+  --utopia-color-character-setup: #079c57;
+  --utopia-color-talents: #a9a235;
+  --utopia-color-gameplay: #b3722c;
+  --utopia-color-attribute-max: #ef4136;
+  --utopia-background-25: rgb(0 0 0 / 25%);
+  --utopia-background-10: rgb(0 0 0 / 10%);
+  --utopia-background-5: rgb(0 0 0 / 5%);
+  --utopia-background-card: var($utopia-color-card);
+  --utopia-background-parchment: var($utopia-color-parchment);
+  --utopia-border-dark: 1px solid #999;
+  --utopia-border-light: 1px solid #CCC;
+  --utopia-border-groove: 2px groove var($utopia-color-groove);
+  --utopia-border-dotted: 1px dotted #bbb;
+  --utopia-border-gold: 1px solid var($utopia-color-gold);
+  --utopia-header-border-width: 4px;
+  --utopia-font-noto: "Noto Sans", sans-serif;
+  --utopia-font-noto-variation: "wdth" 80;
+  --utopia-font-names: "Nova Cut", sans-serif;
+  --utopia-sheet-background-dark: url("../assets/parchment-dark.png") repeat;
+  --utopia-sheet-background: url("../assets/parchment.png") repeat;
+  --utopia-shadow-45: rgb(0 0 0 / 45%);
+  --utopia-shadow-15: rgb(0 0 0 / 15%);
+  --utopia-highlight-10: rgb(255 255 255 / 10%);
+  --utopia-highlight-45: rgb(255 255 255 / 45%);
+  --utopia-formula-border: 1px dashed rgb(0 0 0 / 25%);
+  --utopia-effects-border: var(--utopia-color-beige);
+  --utopia-attribute-gap: 10px;
+  
+  --utopia-artistry-evocation: #f36849;
+  --utopia-artistry-enchantment: #ee96b8;
+  --utopia-artistry-illusion: #92d5df;
+  --utopia-artistry-array: #f5ed64;
+  --utopia-artistry-necromancy: #a55ca3;
+  --utopia-artistry-divination: #66b9b1;
+  --utopia-artistry-wake: #f7a855;
+  --utopia-artistry-alteration: #8dc56a;
+  
+  --utopia-spellcraft-background: linear-gradient(180deg,
+    var(--utopia-artistry-alteration) 0%,
+    var(--utopia-artistry-evocation) 14.2857%,
+    var(--utopia-artistry-enchantment) 28.5714%,
+    var(--utopia-artistry-illusion) 42.8571%,
+    var(--utopia-artistry-array) 57.1429%,
+    var(--utopia-artistry-necromancy) 71.4286%,
+    var(--utopia-artistry-divination) 85.7143%,
+    var(--utopia-artistry-wake) 100%);
+  
+  --utopia-capacity-container-background-color: oklch(57.5% 0.012 101);
+  --utopia-capacity-container-border-color: oklch(20.8% 0.01 98);
+  --utopia-capacity-background-color: oklch(62% 0.05 246);
+  --utopia-capacity-border-color: oklch(91% 0.044 252.5);
+  --utopia-capacity-text-color: oklch(95% 0 0);
+}
+
+@import "components/tagify.scss";
+.app {
+  // background: var(--utopia-shadow-15);
+  // box-shadow: none;
+}
+
+.sidebar-tab {
+  background: none;
+}
+
+.sidebar-tab::after {
+  content: "";
+  background-image: url(../assets/chat-background.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  filter: blur(5px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.chat-message {
+  @import "components/chat.scss";
+}
+
+.utopia {
+  @import "components/paper-doll.scss";
+  @import "components/grid.scss";
+
+  &.item-sheet,
+  &.actor-sheet {
+    @import "components/forms";
+  }
+  
+  @import "components/talent-tree";
+
+  .effects {
+    @import "components/effects";
+  }
+
+  .character {
+    @import "components/character-sheet";
+  }
+
+  &.spell-sheet,
+  &.spellcraft {
+    border-radius: 0 25px 0 25px ;
+
+    @import "components/spells.scss";
+    @import "components/spellcraft.scss";
+  }
+}

@@ -1,94 +1,145 @@
-<header class="sheet-header">
-  <img class="profile-img" src="{{actor.img}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-  <div class="header-fields">
-    <div class="char-header flexrow">
-      <h1 class="char-name"><input name="name" type="text" class="item-name-input" value="{{actor.name}}" placeholder="Name"/></h1>
-      <h1 class="species-container">
-        <input disabled class="species-input" name="species" placeholder="Species" type="text" value="{{system.species.name}}"/>
-        {{#unless system.species.name}}
-          <i data-action="selectSpecies" class="fa-solid fa-magnifying-glass species"></i>
-        {{/unless}}
-      </h1>
-      {{!-- <div class="edit-slider">
-        <label for="overrideDerivedData">{{localize "UTOPIA.Actor.overrideDerivedData"}}</label>
-        <label class="switch" for="overrideDerivedData">
-          <input type="checkbox" id="overrideDerivedData" name="overrideDerivedData" {{#if (eq overrideDerivedData true)}} checked {{/if}} />
-          <div class="slider round"></div>
-        </label>
-      </div> --}}
-    </div>
-    <div class="resources">
+<div class="actor-header">
+  {{#if (eq actor.type "character")}}
+    <input type="checkbox" class="mode-toggle" data-action="toggleMode" data-target="data.attributes" data-mode="edit">
+  {{/if}}
 
-      <div class="new-resource">
-        <div class="resource-context">
-          <div class="add-buttons">
-            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="1">+1</button>
-            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="5">+5</button>
-            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="20">+20</button>
-            <button type="button" data-action="maxStat" data-stat="system.shp.value" data-value="system.shp.max">Max</button>
+  {{#if isPlay}}
+    <span class="actor-name">{{actor.name}}</span>
+  {{else}}
+    <input class="actor-name" name='name' type='text' class="actor-name-input" value='{{actor.name}}' placeholder='Name' />
+  {{/if}}
+  <div class="icon-surround">
+    <div class="attribute-container-row">
+      <label class="attribute-label">SURFACE</label>
+      <div class="attribute-set">
+        <div class="attribute">
+          <img class="box" src="systems/utopia/assets/attribute-box.png" width="60" height="60" />
+          <input type="number" class="attribute" name="system.hitpoints.surface.value" value="{{system.hitpoints.surface.value}}" placeholder="SHP" />
+        </div>
+        <div class="attribute-max">
+          <img class="box" src="systems/utopia/assets/attribute-max.png" width="60" height="60" />
+          {{#if isPlay}}
+            <span class="attribute">{{system.hitpoints.surface.max}}</span>
+          {{else}}
+            <input type="number" class="attribute" name="system.hitpoints.surface.max" value="{{systemSource.hitpoints.surface.max}}" placeholder="SHP" />
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <div class="icon-surround-inner">
+      <img class='actor-icon' src='{{actor.img}}' data-edit='img' data-action="image" data-image="icon" title='{{actor.name}}' height="60"/>
+      <div class="attribute-container">
+        <div class="attribute-set-row">
+          <div class="attribute">
+            <img class="box" src="systems/utopia/assets/attribute-box.png" width="60" height="60" />
+            <input type="number" class="attribute" name="system.stamina.value" value="{{system.stamina.value}}" placeholder="SHP" />
           </div>
-          <div class="subtract-buttons">
-            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="1">-1</button>
-            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="5">-5</button>
-            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="20">-20</button>
-            <button type="button" data-action="minStat" data-stat="system.shp.value" data-value="0">Min</button>
+          <div class="attribute-max">
+            <img class="box" src="systems/utopia/assets/attribute-max.png" width="60" height="60" />
+            {{#if isPlay}}
+              <span class="attribute">{{system.stamina.max}}</span>
+            {{else}}
+              <input type="number" class="attribute" name="system.stamina.max" value="{{systemSource.stamina.max}}" placeholder="SHP" />
+            {{/if}}
           </div>
         </div>
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.shpLong'}}">
-          {{formInput systemFields.shp.fields.value value=system.shp.value name="system.shp.value" localize=true}}
-          <span class="new-resource-max">{{system.shp.max}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.shpShort'}}</span>
-        </label>
+        <label class="attribute-label">STAMINA</label>
       </div>
-
-      <div class="new-resource">
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.dhpLong'}}">
-          {{formInput systemFields.dhp.fields.value value=system.dhp.value name="system.dhp.value" localize=true}}
-          <span class="new-resource-max">{{system.dhp.max}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.dhpShort'}}</span>
-        </label>
-      </div>
-
-      <div class="new-resource">
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.staLong'}}">
-          {{formInput systemFields.stamina.fields.value value=system.stamina.value name="system.stamina.value" localize=true}}
-          <span class="new-resource-max">{{system.stamina.max}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.staShort'}}</span>
-        </label>
-      </div>
-
-      <div class="new-resource large">
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.expLong'}}">
-          {{!-- [ --}}
-          {{formInput systemFields.experience.fields.value value=system.experience.value name="system.experience.value" localize=true}}
-          <span class="new-resource-max">{{system.experience.next}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.expShort'}}</span>
-        </label>
-      </div>
-
-      <div class="new-resource">
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.taLong'}}">
-          {{formInput systemFields.actions.fields.turn.fields.value value=system.actions.turn.value name="system.actions.turn.value" localize=true}}
-          <span class="new-resource-max">{{system.actions.turn.max}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.taShort'}}</span>
-        </label>
-      </div>
-
-      <div class="new-resource">
-        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actor.Stats.iaLong'}}">
-          {{formInput systemFields.actions.fields.interrupt.fields.value value=system.actions.interrupt.value name="system.actions.interrupt.value" localize=true}}
-          <span class="new-resource-max">{{system.actions.interrupt.max}}</span>
-          <span class="new-resource-label">{{localize 'UTOPIA.Actor.Stats.iaShort'}}</span>
-        </label>
-      </div>  
-
-      <div class="new-resource">
-        <button type="button" class="rest-button" data-action="rest">
-          <i class="fas fa-alarm-clock"></i>
-          <span>{{localize "UTOPIA.Actor.rest"}}</span>
-        </button>
-      </div>  
-
     </div>
+
+    <div class="attribute-container-row">
+      <div class="attribute-set">
+        <div class="attribute">
+          <img class="box" src="systems/utopia/assets/attribute-box.png" width="60" height="60" />
+          <input type="number" class="attribute" name="system.hitpoints.deep.value" value="{{system.hitpoints.deep.value}}" placeholder="SHP" />
+        </div>
+        <div class="attribute-max">
+          <img class="box" src="systems/utopia/assets/attribute-max.png" width="60" height="60" />
+          {{#if isPlay}}
+            <span class="attribute">{{system.hitpoints.deep.max}}</span>
+          {{else}}
+            <input type="number" class="attribute" name="system.hitpoints.deep.max" value="{{systemSource.hitpoints.deep.max}}" placeholder="SHP" />
+          {{/if}}
+        </div>
+      </div>
+      <label class="attribute-label">DEEP</label>
+    </div> 
   </div>
-</header>
+
+  <div class="actions">
+    {{#if system._speciesData}}
+      <a class="action-button" data-action="viewDocument" data-document-id="{{system._speciesData.id}}" data-document-type="species"><i class="fa-fw fas fa-paw"></i> {{system._speciesData.name}}</a>
+    {{else}}
+      <a class="action-button" data-action="openApplication" data-application="browser" data-document-type="species"><i class="fa-fw fas fa-paw"></i> {{localize "UTOPIA.Actors.Actions.NoSpecies"}}</a>
+    {{/if}}
+  </div>
+
+  <div class="actions">
+    <a class="action-button" data-action="roll" data-roll="block"><i class="fa-fw fas fa-shield"></i> {{localize "UTOPIA.Actors.Actions.Block"}}</a>
+    <a class="action-button" data-action="roll" data-roll="dodge"><i class="fa-fw fas fa-person-walking-dashed-line-arrow-right"></i> {{localize "UTOPIA.Actors.Actions.Dodge"}}</a>
+    <a class="action-button" data-action="roll" data-roll="rest"><i class="fa-fw fas fa-bed-pulse"></i> {{localize "UTOPIA.Actors.Actions.Rest"}}</a>
+  </div>
+
+  <div class="checks">
+    {{#each specialtyChecks as |check key|}}
+      <a data-action="viewDocument" data-document-type="specialtyCheck" data-check="{{check.key}}" class="check-name" style="color: black;"><i class="fa-fw {{check.icon}}"></i> {{localize check.label}}</a>
+      {{#if ../isPlay}}
+        <a data-action="roll" data-roll="check" data-check="{{check.key}}" class="check-formula formula" style="color: black;">{{check.formula}}</a>
+      {{else}}
+        <select name="system.checks.{{check.key}}" class="check-attribute" style="color: black;">
+          <optgroup label="{{localize "UTOPIA.TRAITS.GroupName"}}">
+            {{#each ../checks.Traits as |trait traitKey|}}
+            <option value="{{trait.short}}" {{#if (eq check.attribute trait.short)}}selected{{/if}}>{{localize trait.label}}</option>
+            {{/each}}
+          </optgroup>
+          <optgroup label="{{localize "UTOPIA.SUBTRAITS.GroupName"}}">
+            {{#each ../checks.Subtraits as |subtrait subtraitKey|}}
+              <option value="{{subtrait.short}}" {{#if (eq check.attribute subtrait.short)}}selected{{/if}}>{{localize subtrait.label}}</option>
+            {{/each}}
+          </optgroup>
+        </select>
+      {{/if}}
+    {{/each}}
+
+    <select data-type="trait" class="check-attribute trait-select" style="color: black;">
+      {{#each checks.Traits as |trait key|}}
+        <option value="{{trait.short}}">
+          {{localize trait.label}}&nbsp;&#8212;&nbsp; 
+          <span>{{numberFormat trait.total}}</span>&nbsp;&#8212;&nbsp;
+          <span>{{numberFormat trait.mod sign=true}}</span>
+        </option>
+      {{/each}}
+    </select>
+    {{#if isPlay}}
+      <a data-action="roll" data-roll="check" class="check-formula formula trait-check" style="color: black;">{{check.formula}}</a>
+    {{else}}
+      <div class="trait-check-edit">
+        <input class="formula trait-check" data-key="value" name="" type="number">
+        <input class="formula trait-check" data-key="mod"   name="" type="number">
+      </div>
+    {{/if}}
+
+    <select data-type="subtrait" class="check-attribute trait-select" style="color: black;">
+      {{#each checks.Subtraits as |trait key|}}
+        {{log trait}}
+        <option value="{{trait.short}}">
+          {{localize trait.label}}&nbsp;&#8212;&nbsp; 
+          <span>{{numberFormat trait.total}}</span>&nbsp;&#8212;&nbsp;
+          <span>{{numberFormat trait.mod sign=true}}</span>
+        </option>
+      {{/each}}
+    </select>
+    {{#if isPlay}}
+      <a data-action="roll" data-roll="check" class="check-formula formula subtrait-check" style="color: black;">{{check.formula}}</a>
+    {{else}}
+      <div class="subtrait-check-edit">
+        <input class="formula subtrait-check" data-key="value"    name="" type="number">
+        <input class="formula subtrait-check" data-key="mod"      name="" type="number">
+        <input class="formula subtrait-check" data-key="gifted"   name="" type="checkbox">
+      </div>
+    {{/if}}  
+  </div>
+</div>
+
+  

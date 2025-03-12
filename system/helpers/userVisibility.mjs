@@ -1,5 +1,3 @@
-import { UtopiaChatMessage } from "../documents/chat-message.mjs";
-
 class UtopiaUserVisibility {
   /** Edits HTML live based on permission settings. Used to hide certain blocks and values */
   static process(html, options = {}) {

@@ -3,7 +3,7 @@
  * @param {Item} item - The item being used for the attack.
  * @returns {Promise<boolean>} Whether the attack can proceed based on range.
  */
-export async function rangeTest(item, target) {
+export async function rangeTest({item, target, trait = 'dex'}) {
   // Get the user's selected token.
   let userToken = canvas.tokens.controlled[0];
   if (!userToken) {
@@ -32,7 +32,7 @@ export async function rangeTest(item, target) {
   // Determine the distance between the user and the target.
   let distance = Math.abs(userPosition - targetPosition) / 100;
 
-  let dexterityCheck;
+  let traitCheck;
   let range = item.system.range;
 
   // Determine the Test Difficulty from the item's parent's `system.rangedTDModifier` attribute.
@@ -63,10 +63,10 @@ export async function rangeTest(item, target) {
       // Determine the appropriate dexterity check based on distance.
       if (distance <= closeRange) {
         // Within close range, use a favorable roll.
-        dexterityCheck = "4d6 + @dex.mod";
+        traitCheck = `4d6 + @${trait}.mod`;
       } else if (distance <= farRange) {
         // Within far range, use a standard roll.
-        dexterityCheck = "2d6 + @dex.mod";
+        traitCheck = `2d6 + @${trait}.mod`;
       } else {
         // Beyond far range, the attack cannot proceed.
         ui.notifications.error("Target is out of range.");
@@ -76,10 +76,10 @@ export async function rangeTest(item, target) {
       // Prepare the roll.
       const speaker = ChatMessage.getSpeaker({ actor: item.parent });
       const rollMode = game.settings.get('core', 'rollMode');
-      const label = `[${item.type}] Ranged > Dex Check`;
+      const label = `[${item.type}] Ranged Check`;
 
       // Perform the dexterity check roll.
-      const roll = new Roll(dexterityCheck, rollData);
+      const roll = new Roll(traitCheck, rollData);
       const chat = await roll.toMessage({
         speaker: speaker,
         rollMode: rollMode,

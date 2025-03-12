@@ -1,6 +1,6 @@
 {
   "id": "utopia",
-  "title": "Utopia",
+  "title": "Utopia (V2)",
   "description": "The Utopia system for FoundryVTT!",
   "authors": [
     {
@@ -48,13 +48,21 @@
       "npc": {}
     },
     "Item": {
+      "body": {},
+      "kit": {},
+      "class": {},
+            
       "action": {},
+      "favor": {},
       
       "species": {},
+      "quirk": {},
       
       "talent": {},
+      "talentTree": {},
       "specialistTalent": {},
-      
+      "speciesTalent": {},
+
       "spell": {},
       "spellFeature": {},
       
@@ -64,7 +72,10 @@
       "trinket": {},
       "weapon": {},
 
-      "general": {}
+      "gear": {},
+      "gearFeature": {},
+
+      "generic": {}
     },
     "ActiveEffect": {
       "passive": {},
@@ -92,6 +103,19 @@
     {
       "name": "talents",
       "label": "SRD Talents",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "talentTrees",
+      "label": "SRD Talent Trees",
       "banner": "systems/utopia/assets/Utopia-Background.webp",
       "path": "",
       "type": "Item",
@@ -155,30 +179,6 @@
       "flags": {}
     },
     {
-      "name": "gear",
-      "label": "SRD Gear",
-      "banner": "systems/utopia/assets/Utopia-Background.webp",
-      "path": "",
-      "type": "Item",
-      "system": "utopia",
-      "ownership": {
-
-      },
-      "flags": {}
-    },
-    {
-      "name": "components",
-      "label": "SRD Components",
-      "banner": "systems/utopia/assets/Utopia-Background.webp",
-      "path": "",
-      "type": "Item",
-      "system": "utopia",
-      "ownership": {
-
-      },
-      "flags": {}
-    },
-    {
       "name": "artificeFeatures",
       "label": "SRD Artifice Features",
       "banner": "systems/utopia/assets/Utopia-Background.webp",
@@ -186,7 +186,8 @@
       "type": "Item",
       "system": "utopia",
       "ownership": {
-
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
       },
       "flags": {}
     },
@@ -253,6 +254,19 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "favors",
+      "label": "Utility Favors",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
   "dependencies": [
@@ -263,13 +277,65 @@
     }
   ],
   "flags": {},
-  "packFolders": [],
+  "packFolders": [
+    {
+      "name": "Official SRD Content",
+      "sorting": "a",
+      "color": "#ff0000",
+      "packs": [],
+      "folders": [
+        {
+          "name": "Talents Etc.",
+          "sorting": "a",
+          "color": "string",
+          "packs": ["talents", "talentTrees", "specialistTalents"],
+          "folders": []
+        },
+        {
+          "name": "Equipment Etc.",
+          "sorting": "a",
+          "color": "string",
+          "packs": [
+            "artificeFeatures",
+            "gear",
+            "utianEquipment",
+            "pianEquipment",
+            "martialGear"
+          ],
+          "folders": []
+        },
+        {
+          "name": "Species Etc.",
+          "sorting": "a",
+          "color": "string",
+          "packs": ["species"],
+          "folders": []
+        },
+        {
+          "name": "Conceptual Etc.",
+          "sorting": "a",
+          "color": "string",
+          "packs": ["actions", "favors", "utopiaMacros"],
+          "folders": []
+        },
+        {
+          "name": "Spells Etc.",
+          "sorting": "a",
+          "color": "string",
+          "packs": ["spells", "spellFeatures"],
+          "folders": []
+        }
+      ]
+    }
+  ],
   "socket": true,
   "manifest": "Replace this with a link to the /latest release system.json so people can receive updates after they've installed the system",
   "download": "This must link to a .zip file of the current version",
   "background": "systems/utopia/assets/Utopia-Background.webp",
-  "gridDistance": 1,
-  "gridUnits": "m",
+  "grid": {
+    "distance": 1,
+    "unites": "m"
+  },
   "primaryTokenAttribute": "shp",
   "secondaryTokenAttribute": "dhp"
 }

@@ -1,73 +1,27 @@
-<div class="utopia">
-  <div class="chat-card item-card item-rarity-{{rarity}}" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
-    <header class="card-header flexrow" data-action="openItem">
-      <img src="{{item.img}}" alt="{{item.name}}" />
-      <h3>{{item.name}}</h3>
-    </header>
-
-    <div class="tags" data-tooltip-class="utopia">
-
-    </div>
-
-    <div class="card-content">
-      <div class="dice-roll" data-tooltip-class="utopia">
-        {{#if flavor~}}
-          <div class="dice-flavor">
-            {{flavor}}
-          </div>
-        {{~/if}}  
-        {{#if formula}}
-          {{#if finalized}}
-            <div class="dice-result">
-              <div class="dice-formula">{{formula}}</div>
-              {{{tooltip}}}
-              <h4 class="dice-total">{{total}}</h4>
-            </div>
-          {{else}}
-            <div class="dice-result">
-              <h4 class="dice-estimate">{{estimate}}</h4>
-            </div>
-          {{/if}}
-        {{/if}}
-      </div>
-    </div>
-
-    {{#if blocked}}
-      <div class="block-message">
-        <i class="fa-duotone fa-regular fa-shield-halved"></i>
-        <span>{{localize "UTOPIA.Descriptions.blocked"}}: {{blockedDamage}}</span>
-      </div>
-      <div class="block-message">
-        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-        <span>{{localize "UTOPIA.Descriptions.newTotal"}}: {{newTotal}}</span>
-      </div>
-    {{/if}}
-
-    {{#if dodgeded}}
-      <div class="dodged-message">
-        <i class="fa-duotone fa-regular fa-shield-halved"></i>
-        <span>{{localize "UTOPIA.Descriptions.dodgeded"}}: {{dodgedRoll}}</span>
-      </div>
-      <div class="dodged-message">
-        <i class="fa-duotone fa-bullseye-pointer fa-flip-horizontal fa-fw"></i>
-        <span>{{localize "UTOPIA.Descriptions.newTotal"}}: {{newTotal}}</span>
-      </div>
-    {{/if}}
-
-    {{#if (gt total 0)}}
-      <div data-visibility="opposer">
-        <button type="button" class="response-button" data-action="responseAction" data-response="block">Block</button>
-        <button type="button" class="response-button" data-action="responseAction" data-response="dodge">Dodge</button>
-      </div>
-    {{/if}}
-
-    <footer data-visibility="gm">
-      <button type="button" class="damage-button" data-action="quickDamage" data-damage="{{total}}">Quick Damage</button>
-      <button type="button" class="damage-button" data-action="damageDialog" disabled>Damage Dialog</button>
-      {{!-- <div class="grid grid-2col message-buttons">
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="success">Yes</button>
-        <button type="button" type="button" class="damage-creature" data-action="damage" data-damage="{{total}}" data-outcome="falure">No</button>
-      </div> --}}
-    </footer>
+<div class="chat-card">
+  
+  <div class="card-header">
+    <img class="card-header-icon" src="systems/utopia/assets/damage.svg" title="Damage" width="30" height="30" />
+    <h3>Damage</h3>
   </div>
+
+  <div class="card-content">
+    {{{item.system.description}}}
+  </div>
+
+  {{#each instances as |instance|}}
+    {{> "damage-instance" instance}}
+  {{/each}}
+
+  {{#if template}}
+    <button data-action="template" data-template="{{template}}"><i class='fa-solid fa-bullseye'></i></button>
+  {{/if}}
+
+  <footer data-visibility="gm">
+    <div class="targets">
+      {{#each targets as |target|}}
+        <img src="{{target.img}}" alt="{{target.name}}" data-tooltip="{{target.name}}" />
+      {{/each}}
+    </div>
+  </footer>
 </div>

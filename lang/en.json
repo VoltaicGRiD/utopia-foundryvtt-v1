@@ -1,300 +1,281 @@
 {
   "UTOPIA": {
-    "Actor": {
-      "rest": "Rest",
-      "Tabs": {
-        "details": "Details",
-        "actions": "Actions",
-        "spells": "Spells",
-        "gear": "Gear",
-        "talents": "Talents",
-        "biography": "Biography",
-        "effects": "Effects",
-        "alteration": "Alteration",
-        "array": "Array",
-        "divination": "Divination",
-        "enchantment": "Enchantment",
-        "evocation": "Evocation",
-        "illusion": "Illusion",
-        "necromancy": "Necromancy",
-        "wake": "Wake"
-      },
-      "block": "Block",
-      "dodge": "Dodge",
-      "Defenses": {
-        "chill": "Chill",
-        "energy": "Energy",
-        "heat": "Heat",
-        "physical": "Physical",
-        "psyche": "Psyche"
-      },
-      "Traits": {
-        "agi": { "long": "Agility", "abbr": "agi" },
-        "str": { "long": "Strength", "abbr": "str" },
-        "int": { "long": "Intellect", "abbr": "int" },
-        "wil": { "long": "Will", "abbr": "wil" },
-        "dis": { "long": "Display", "abbr": "dis" },
-        "cha": { "long": "Charm", "abbr": "cha" }
-      },
-      "Subtraits": {
-        "spd": { "long": "Speed", "abbr": "spd" },
-        "dex": { "long": "Dexterity", "abbr": "dex" },
-        "pow": { "long": "Power", "abbr": "pow" },
-        "for": { "long": "Fortitude", "abbr": "for" },
-        "eng": { "long": "Engineering", "abbr": "eng" },
-        "mem": { "long": "Memory", "abbr": "mem" },
-        "res": { "long": "Resolve", "abbr": "res" },
-        "awa": { "long": "Awareness", "abbr": "awa" },
-        "por": { "long": "Portrayal", "abbr": "por" },
-        "stu": { "long": "Stunt", "abbr": "stu" },
-        "app": { "long": "Appeal", "abbr": "app" },
-        "lan": { "long": "Language", "abbr": "lan" }
-      },
-      "Stats": {
-        "shpShort": "SHP",
-        "shpLong": "Surface Hit Points",
-        "dhpShort": "DHP", 
-        "dhpLong": "Deep Hit Points",
-        "staShort": "STA",
-        "staLong": "Stamina Points",
-        "expShort": "EXP",
-        "expLong": "Experience Points",
-        "taShort": "TA",
-        "taLong": "Turn Actions",
-        "iaShort": "IA",
-        "iaLong": "Interrupt Actions"
-      },
-      "Points": {
-        "subtrait": "Subtrait",
-        "talent": "Talent",
-        "specialist": "Specialist",
-        "gifted": "Gifted Subtraits",
-        "body": "Body",
-        "mind": "Mind",
-        "soul": "Soul"
-      },
-      "Attributes": {
-        "constitution": "Constitution",
-        "endurance": "Endurance",
-        "effervescence": "Effervescence"
-      },
-      "Travel": {
-        "land": "Land Travel",
-        "water": "Water Travel",
-        "air": "Air Travel"
-      },
+    "TRAITS": {
+      "Agility": "Agility",
+      "Strength": "Strength",
+      "Intellect": "Intellect",
+      "Will": "Will",
+      "Display": "Display",
+      "Charm": "Charm",
+      "GroupName": "Traits"
+    },
+    "SUBTRAITS": {
+      "Dexterity": "Dexterity",
+      "Speed": "Speed",
+      "Fortitude": "Fortitude",
+      "Power": "Power",
+      "Engineering": "Engineering",
+      "Memory": "Memory",
+      "Awareness": "Awareness",
+      "Resolve": "Resolve",
+      "Portrayal": "Portrayal",
+      "Stunt": "Stunt",
+      "Appeal": "Appeal",
+      "Language": "Language",
+      "GroupName": "Subtraits"
+    },
+    "COMMON": {
+      "consolidate": "Consolidate sheet",
+      "description": "Description"
+
+    },
+    "RARITIES": {
+      "Crude": "Crude",
+      "Common": "Common",
+      "Extraordinary": "Extraordinary",
+      "Rare": "Rare",
+      "Legendary": "Legendary",
+      "Mythical": "Mythical",
+      "GroupName": "Rarities"
+    },
+    "DAMAGE_TYPES": {
+      "Physical": "Physical",
+      "Energy": "Energy",
+      "Heat": "Heat",
+      "Chill": "Chill",
+      "Psyche": "Psyche",
+      "Kinetic": "Kinetic",
+      "Necrotic": "Necrotic",
+      "Healing": "Healing"
+    },  
+    "ARTISTRIES": {
+      "Alteration": "Alteration",
+      "Array": "Array",
+      "Illusion": "Illusion",
+      "Evocation": "Evocation",
+      "Enchantment": "Enchantment",
+      "Divination": "Divination",
+      "Necromancy": "Necromancy",
+      "Wake": "Wake"
+    },
+    "MATH": {
+      "Flat": "Flat",
+      "Multiply": "Multiply",
+      "Add": "Add",
+      "Subtract": "Subtract",
+      "Divide": "Divide",
+      "Square": "Square",
+      "SquareRoot": "Square Root",
+      "Round": "Round",
+      "Ceiling": "Ceiling",
+      "Floor": "Floor",
+      "Random": "Random"
+    },
+    "Spellcraft": {
+      "Save": "Save",
+      "SaveAndCast": "Save and Cast",
+      "Cast": "Cast",
+      "Duration": "Duration",
+      "Range": "Range",
+      "AoEShort": "Area of Effect",
+      "Stamina": "Stamina"
+    },
+    "Actors": {
       "Actions": {
-        "block": "Block",
-        "dodge": "Dodge",
-        "rest": "Rest",
-        "turnActions": "Turn Actions",
-        "interruptActions": "Interrupt Actions",
-        "browseActions": "Browse Actions"
+        "Block": "Block",
+        "Dodge": "Dodge",
+        "Rest": "Rest",
+        "OpenTalentTree": "Open Talent Tree",
+        "NewArtifice": "Create New Artifice",
+        "NoSpecies": "No Species, Click to Select",
+        "Perform": "Perform"
       },
-      "Resources": {
-        "resources": "Resources",
-        "add": "Add Resource"
-      },
-      "Biography": {
-        "biographyFields": "Biography Fields",
-        "age": "Age",
-        "pronouns": "Pronouns",
-        "education": "Education",
-        "ethnicity": "Ethnicity",
-        "occupation": "Occupation",
-        "nationality": "Nationality",
-        "upbringing": "Upbringing",
-        "height": "Height",
-        "weight": "Weight",
-        "bodyType": "Body Type",
-        "hairEyesSkin": "Hair, eyes, and skin",
-        "markings": "Markings",
-        "voice": "Voice / Accent",
-        "quirks": "Quirks",
-        "enemies": "Enemies",
-        "allies": "Allies",
-        "rivals": "Rivals",
-        "family": "Family",
-        "friends": "Friends",
-        "partners": "Partners",
-        "strength": "Strength Source",
-        "reputation": "Reputation",
-        "personalSecrets": "Personal Secrets",
-        "gmSecrets": "GM Secrets",
-        "achievements": "Achievements",
-        "coreMemories": "Core Memories",
-        "phobias": "Phobias",
-        "dreams": "Dreams",
-        "nightmares": "Nightmares",
-        "anathema": "Anathema",
-        "edicts": "Edicts",
-        "hobbies": "Hobbies",
-        "interests": "Interests",
-        "ambitions": "Ambitions",
-        "moralAlignment": "Moral Alignment",
-        "philosophicalAlignment": "Philosophical Alignment",
-        "politicalAlignment": "Political Alignment",
-        "motivations": "Motivations",
-        "birthday": "Birthday",
-        "deathday": "Deathday",
-        "generalKnowledgeDivider": "----- General Knowledge -----",
-        "relationshipsDivider": "----- Relationships -----",
-        "personalInformationDivider": "----- Personal Information -----",
-        "alignmentsDivider": "----- Alignments -----",
-        "publicInformationDivider": "----- Public Information -----"
-      }
-    },   
-    "SheetLabels": {
-      "actorV2": "Utopia Actor Sheet",
-      
-      "item": "Utopia Item Sheet",
-      
-      "armor": "Utopia Armor Sheet",
-      "artifact": "Utopia Artifact Sheet",
-      "consumable": "Utopia Consumable Sheet",
-      "trinket": "Utopia Trinket Sheet",
-      "weapon": "Utopia Weapon Sheet",
-
-      "subtrait": "Utopia Subtrait Selection",
-      "talent-tree-selector": "Utopia Talent Tree",
-      "spellcraft": "Utopia Spellcrafting",
-      "craftingFeatures": "Utopia Artifice Features",
-      
-      "undock": "Undock Window",
-      "undockShort": "Undock",
-      "dock": "Dock Window",
-      "dockShort": "Dock",
-      "swapDock": "Swap Docked Side",
-      "swapDockShort": "Swap",
-      
-      "twitchIntegration": "Twitch Integration",
-
-      "openDataOverride": "Override Actor Data",
-
-      "roll": "Roll Dialog",
-      "compendiumBrowser": "Utopia Compendium Browser"
-    },
-    "CompendiumBrowser": {
-      "dragDropHint": "Drag and Drop onto your Character Sheet to add an item",
-      "Filters": {
-        "category": "Category",
-        "rarity": "Rarity",
-        "value": "Value",
-        "rarityPoints": "Rarity Points",
-        "flavor": "Item Flavor",
-        "description": "Description",
-        "saveFilter": "Save Filter"
-        
+      "Items": {
+        "Talents": "Talents",
+        "Actions": "Actions",
+        "Gear": "Gear",
+        "Consumables": "Consumables",
+        "Components": "Components"
       }
     },
-    "Dialog": {
-      "dealDamage": "Deal Damage",
-      "applyHealing": "Apply Healing",
-      "submit": "Submit"
+    "Chats": {
+      "DamageInstance": {
+        "SHP": "SHP",
+        "DHP": "DHP",
+        "STAMINA": "STA",
+        "TOTAL": "TOT"
+      }
     },
-    "Descriptions": {
-      "description": "Description",
-      "gmSecrets": "GM Secrets",
-      "attributes": "Attributes",
-      "subtraitPoints": "Subtrait Points",
-      "subtraitGifts": "Subtrait Gifts",
-      "points": "Points",
-      "defenses": "Defenses",
-      "blocked": "Blocked Damage",
-      "newTotal": "New Damage",
-      "damage": "Damage",
-      "damageType": "Damage Type",
-      "parent": "Parent",
-      "spellcap": "Spellcap",
-      "keepopen": "Keep open",
-      "roll": "Roll",
-      "useItem": "Use Item",
-      "tags": "Tags",
-      "talents": "Talents",
-      "specialistTalents": "Specialist Talents",
-      "unlock": "Make all talents available (GM Only)",
-      "search": "Search",
-      "filter": "Filter",
-      "filterhelp": "Try one of these: 'dwarf' | 'body=2' | 'body>2 mind<2' | 'next' | 'locked'",
-      "kineticForce": "Kinetic",
-      "save": "Save",
-      "all": "All",
-      "submit": "Submit",
-      "favorite": "Favorites",
-      "available": "Available",
-      "locked": "Locked",
-      "travel": "Travel Speeds",
-      "submitMaterials": "Submit Materials",
-      "artificeDisabled": "You must have a valid talent to be able to artifice",
-      "equipItem": "Equip Item",
-      "overrideWarning": "Warning! Making any changes here will disable automatic data updates from changes to the document. This should only be done if you know what you're doing! Some changes may even break an actor.",
-      "overrideReEnable": "To re-enable automatic updates, set the 'utopia' 'override' flag to an empty array (square brackets) on the document",
-      "remaining": "Remaining"
-    },
-
-    "Checks": {
-      "failure": "Check Failed!",
-      "success": "Check Succeeded!"
-    },
-    "Item": {
-      "formula": "Formula",
-      "flavor": "Item Flavor",
-      "description": "Description",
-      "gmSecrets":"GM Secrets",
-      "quantity": "Quantity",
-      "Tabs": {
-        "attributes": "Attributes",
-        "description": "Description",
-        "effects": "Effects",
-        "quirks": "Quirks",
-        "paperdoll": "Paper Doll"
+    "Items": {
+      "FIELDS": {
+        "tags": {
+          "label": "Tags"
+        },
+        "grants": {
+          "label": "Granted Items",
+          "hint": "Other talents, actions, gear, or otherwise granted by this item. These items are created as separate entities in the owning actor."
+        },
+        "formula": {
+          "label": "Formula",
+          "hint": "The roll formula to execute. This may be used for damage, healing, a test, or otherwise."
+        },
+        "rarity": {
+          "label": "Rarity",
+          "hint": "The rarity of this item. This is used to determine the color of the item in the inventory and its value."
+        }
       },
-      "Archetype": {
-        "unknownDepiction": "Unknown depiction",
-        "color": "Color",
-        "Color": {
-          "red": "Red",
-          "yellow": "Yellow",
-          "green": "Green",
-          "blue": "Blue",
-          "orange": "Orange",
-          "purple": "Purple"
+      "Action": {
+        "FIELDS": {
+          "type": {
+            "label": "Type"
+          },
+          "category": {
+            "label": "Category",
+            "_hint": "The category modifies the behaviour when performing the action."
+          },
+          "resource": {
+            "label": "Resource",
+            "hint": "The resource (name) required to perform the action."
+          },
+          "consumed": {
+            "label": "Amount Consumed",
+            "hint": "The amount of the resource consumed when performing the action.\nSet to 0 to only check if the resource exists."
+          },
+          "macro": {
+            "label": "Macro",
+            "hint": "The macro to execute when performing the action. Only works if the category is set to 'macro'."
+          },
+          "actor": {
+            "label": "Affected Actor(s)",
+            "hint": "The actor(s) affected by the action."
+          },
+          "template": {
+            "label": "Damage and Effect Template",
+            "hint": "The template to use for the damage and effects of the action."
+          },
+          "cost": {
+            "label": "Cost",
+            "_hint": "The turn or interrupt cost of the action. This can be a number or a formula."
+          },
+          "stamina": {
+            "label": "Stamina",
+            "_hint": "The stamina cost of the action. This can be a number or a formula."
+          },
+          "secret": {
+            "label": "Secret",
+            "hint": "Only visible to the owner of the actor and the GM."
+          },
+          "checks": {
+            "label": "Checks and Tests",
+            "hint": "Select multiple to be able to choose when performing this action."
+          },
+          "checkFavor": {
+            "label": "Check and Test Favor",
+            "hint": "Enable for actor favors to be applied to the checks and tests performed by this action."
+          },
+          "damages": {
+            "label": "Damage and Healing",
+            "hint": "The damage and healing effects of this action."
+          }
         },
-        "proverb": "Proverb",
-        "unknownProverb": "Unknown proverb",
-        "maturity": "Maturity",
-        "immaturity": "Immaturity",
-        "depiction": "Depiction",
-        "exo": "Exo",
-        "Exo": {
-          "aristocrat": "Aristocrat",
-          "practitioner": "Practitioner",
-          "construct": "Construct"
+        "Actor": {
+          "self": "Self",
+          "target": "Targets"
         },
-        "endo": "Endo",
-        "Endo": {
-          "tempest": "Tempest",
-          "trickster": "Trickster",
-          "scholar": "Scholar"
+        "Type": {
+          "turn": "Turn",
+          "interrupt": "Interrupt",
+          "free": "Free"
+        },
+        "Category": {
+          "damage": "Damage / Healing",
+          "test": "Check / Test",
+          "macro": "Macro"
+        },
+        "Template": {
+          "none": "None",
+          "sbt": "Small Blast (2M)",
+          "mbt": "Medium Blast (4M)",
+          "lbt": "Large Blast (6M)",
+          "xbt": "Extra Large Blast (8M)",
+          "cone": "Cone (2M)",  
+          "line": "Line (2M)"
+        }
+      },
+      "Body": {
+        "FIELDS": {
+          "baseDR": {
+            "label": "Base DR"
+          },
+          "shp": {
+            "label": "SHP"
+          },
+          "dhp": {
+            "label": "DHP"
+          },
+          "stamina": {
+            "label": "Stamina"
+          },
+          "traitDefault": {
+            "label": "(Sub)Trait Default"
+          },
+          "traits": {
+            "label": "(Sub)Traits",
+            "hint": "The non-default (sub)traits this body has."
+          },
+          "block.quantity": {
+            "label": "Block Dice",
+            "hint": "The number of d4's to roll for blocking."
+          },
+          "dodge.quantity": {
+            "label": "Dodge Dice",
+            "hint": "The number of d12's to roll for dodging."
+          },
+          "defenses": {
+            "label": "Defenses"
+          },
+          "defenses.energy": {
+            "label": "Energy"
+          },
+          "defenses.heat": {
+            "label": "Heat"
+          },
+          "defenses.chill": {
+            "label": "Chill"
+          },
+          "defenses.physical": {
+            "label": "Physical"
+          },
+          "defenses.psyche": {
+            "label": "Psyche"
+          },
+          "harvest": {
+            "label": "Harvest",
+            "hint": "The harvest settings for this body."
+          },
+          "harvest.testTrait": {
+            "label": "Harvest (Sub)Trait"
+          },
+          "harvest.testDifficulty": {
+            "label": "Harvest TD",
+            "hint": "The test difficulty to harvest this item. You may use a formula."
+          },
+          "harvest.componentFormula": {
+            "label": "Harvest Components",
+            "hint": "The formula to determine the components harvested."
+          },
+          "harvest.componentRarity": {
+            "label": "Harvest Rarity",
+            "hint": "The rarity of the harvested components."
+          },
+          "harvest.componentType": {
+            "label": "Harvest Type",
+            "hint": "The type of the harvested components."
+          }
         }
       },
       "Gear": {
-        "add": "Add",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
-        },
-        "quantity": "Quantity",
-        "rarityPoints": "Rarity Points",
-        "value": "Value",
-        "Price": {
-          "silver": "Silver",
-          "utianCredits": "Utian Credits"
-        },
-        "slots": "Slots",
-        "slot": "Slot",
-        "Slot": {
+        "Slot": { 
           "head": "Head",
           "neck": "Neck",
           "back": "Back",
@@ -303,273 +284,40 @@
           "hands": "Hands",
           "ring": "Ring",
           "feet": "Feet"
-        },
-        "equippable": "Equippable",
-        "handheld": "Handheld",
-        "hands": "Hands",
-        "actionCost": "Action Cost",
-        "materialComponents": "Material",
-        "refinementComponents": "Refinement",
-        "powerComponents": "Power",
-        "flavor": "Item Flavor",
-        "addResource": "Add Resource",
-        "deleteResource": "Delete Resource",
-        "resource": "Resource",
-        "Resource": {
-          "attributes": "Resource Attributes",
-          "name": "Name",
-          "max": "Max",
-          "amount": "Amount",
-          "propagateToActor": "Propagate",
-          "recoverAmount": "Recovered",
-          "recoverInterval": "Interval",
-          "RecoverInterval": {
-            "none": "None",
-            "turn": "Turn",
-            "round": "Round",
-            "rest": "Rest",
-            "day": "Day",
-            "session": "Session"
-          }
-        },
-        "addAction": "Add Action",
-        "deleteAction": "Delete Action",
-        "action": "Action",
-        "Action": {
-          "attributes": "Action Attributes",
-          "name": "Name",
-          "category": "Category",
-          "Category": {
-            "generic": "Generic",
-            "trait": "Trait",
-            "damage": "Damage",
-            "macro": "Macro"
-          },
-          "type": "Type",
-          "Type": {
-            "turn": "Turn",
-            "interrupt": "Interrupt"
-          },
-          "trait": "Trait",
-          "modifier": "Modifier",
-          "cost": "Cost",
-          "stamina": "Stamina",
-          "formula": "Formula",
-          "flavor": "Flavor",
-          "template": "Template",
-          "Template": {
-            "none": "None",
-            "sbt": "Small Blast (2m)",
-            "mbt": "Medium Blast (4m)",
-            "lbt": "Large Blast (8m)",
-            "xbt": "Extra-Large Blast (12m)",
-            "cone": "Cone",
-            "line": "Line"
-          },
-          "resource": "Resource",
-          "consumed": "Amount Consumed",
-          "macro": "Macro UUID",
-          "actor": "Macro Target",
-          "Actor": {
-            "default": "Default",
-            "self": "Self",
-            "target": "Target"
-          }
-        },
-        "addStrike": "Add Strike",
-        "deleteStrike": "Delete Strike",
-        "strike": "Strike",
-        "Strike": {
-          "attributes": "Strike Attributes",
-          "name": "Name",
-          "damage": "Damage Formula",
-          "accuracy": "Accuracy Test",
-          "flavor": "Flavor",
-          "resource": "Resource",
-          "consumed": "Amount Consumed",
-          "template": "Strike Template",
-          "Template": {
-            "none": "None",
-            "sbt": "Small Blast (2m)",
-            "mbt": "Medium Blast (4m)",
-            "lbt": "Large Blast (8m)",
-            "xbt": "Extra-Large Blast (12m)",
-            "cone": "Cone",
-            "line": "Line"
-          },
-          "range": "Range",
-          "Range": {
-            "close": "Close Range",
-            "far": "Far Range"
-          },
-          "Contest": {
-            "trait": "Contest Trait",
-            "Trait": {
-              "agi": "Agility",
-              "str": "Strength",
-              "int": "Intellect",
-              "wil": "Will",
-              "dis": "Display",
-              "cha": "Charm"
-            },
-            "against": "Against Formula"
-          }
-        },
-        "Defenses": {
-          "chill": "Chill",
-          "heat": "Heat",
-          "energy": "Energy",
-          "physical": "Physical",
-          "psyche": "Psyche"
         }
       },
-      "Spells": {
-        "Arts": {
-          "array": "Array",
-          "alteration": "Alteration",
-          "divination": "Divination",
-          "enchantment": "Enchantment",
-          "evocation": "Evocation",
-          "illusion": "Illusion",
-          "necromancy": "Necromancy",
-          "wake": "Wake"
+      "Generic": {
+        "FIELDS": {
+          "quantity": {
+            "label": "Quantity"
+          },
+          "slots": {
+            "label": "Slots"
+          },
+          "value": {
+            "label": "Value"
+          },
+          "consumeOnUse": {
+            "label": "Consume on Use",
+            "hint": "Consume a quantity of this item when used."
+          },
+          "deleteWhenEmpty": {
+            "label": "Delete When Empty",
+            "hint": "Delete this item (from the actor, not the world) when the quantity reaches 0."
+          },
+          "category": {
+            "label": "Category"
+          },
+          "container.capacity": {
+            "label": "Container Capacity",
+            "hint": "The number of slots this container can hold."            
+          },
+          "container.items": {
+            "label": "Container Items",
+            "hint": "The items this container holds. (Should not be modified directly)"
+          }
         },
-        "Duration": {
-          "instant": "Instant",
-          "concentration": "Concentration",
-          "1Minute": "1 Minute",
-          "1MinuteFocus": "1 Minute (Focus)",
-          "1Hour": "1 Hour",
-          "1HourFocus": "1 Hour (Focus)"
-        },
-        "Range": {
-          "touch": "Touch",
-          "5M": "5 Meters",
-          "10M": "10 Meters",
-          "25M": "25 Meters",
-          "50M": "50 Meters"
-        },
-        "Type": {
-          "attack": "Attack",
-          "healing": "Healing",
-          "defense": "Defense",
-          "utility": "Utility"
-        },
-        "Variables": {
-          "name": "Variable: ",
-          "cast": "Cast Spell"
-        },
-        "arts": "Spell arts",
-        "talents": "Required talents",
-        "stamina": "Stamina",
-        "formula": "Roll formula",
-        "type": "Type",
-        "attack": "Attack",
-        "healing": "Healing",
-        "defense": "Defense",
-        "utility": "Utility",
-        "choices": "Unique choices (use '{C#}' to reference the choice at the corresponding index in formulas)",
-        "choiceExample": "Heat, Energy, Chill",
-        "flavor": "Spell flavor (i.e. 'A shimmering blue bolt of energy streaks from your fingertips, striking the target with a loud crack!')",
-        "range": "Range",
-        "aoe": "Area of effect",
-        "aoeShort": "AoE",
-        "duration": "Duration",
-        "saveAndCast": "Save and Cast",
-        "save": "Save",
-        "cast": "Cast",
-        "edit": "Revise",
-        "delete": "Delete",
-        "spellcrafting": "Open in Spellcrafting"
-      },
-      "SpellFeatures": {
-        "cost": "PP Cost",
-        "costMultiplier": "Math",
-        "CostMultiplier": {
-          "flat": "None / Flat",
-          "add": "Add",
-          "subtract": "Subtract",
-          "multiply": "Multiply",
-          "divide": "Divide",
-          "square": "Square"
-        },
-        "art": "Artistry",
-        "allowRedistribution": "Allow dice redistribution",
-        "doesTarget": "Creates target",
-        "costResult": "Cost result",
-        "variable": "Variable",
-        "Variables": {
-          "character": "Char",
-          "type": "Type",
-          "nameX": "Var X",
-          "nameY": "Var Y",
-          "nameZ": "Var Z",
-          "none": "None",
-          "delete": "Remove",
-          "new": "New Variable",
-          "number": "Number",
-          "options": "Options",
-          "text": "Text",
-          "dice": "Dice",
-          "diceDescription": "Base Dice: "
-        },
-        "Range": {
-          "meters": "Meters",
-          "kilometers": "Kilometers"
-        },
-        "DurationRequirements": {
-          "none": "None",
-          "focus": "Focus",
-          "concentration": "Concentration"
-        },
-        "Duration": {
-          "turns": "Turns",
-          "minutes": "Minutes",
-          "hours": "Hours",
-          "days": "Days",
-          "months": "Months",
-          "years": "Years"
-        },
-        "modifies": "Special Modification",
-        "Modifies": {
-          "none": "None",
-          "range": "Range",
-          "aoe": "Area of Effect",
-          "duration": "Duration"
-        },
-        "Modifications": {
-          "value": "Value",
-          "unit": "Unit",
-          "dispelActionCost": "Dispel Action Cost",
-          "dispelInterruptCost": "Dispel Interrupt Cost",
-          "variable": "Variable",
-          "requirements": "Requirements",
-          "shape": "Shape"
-        },
-        "targetType": "Target Type",
-        "TargetType": {
-          "point": "Point",
-          "template": "Template",
-          "attach": "Attach"
-        },
-        "templateType": "Template",
-        "templateAngle": "Cone Angle",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "variables": "Variables"
-        }
-      },
-      "SpecialistTalent": {
-        "requirements": "Requirements",
-        "attributeRequirements": "Attribute Requirements",
-        "talentRequirements": "Talent Requirements",
-        "talentTreeRequirements": "Talent Tree Requirements",
-        "speciesRequirements": "Species Requirements"
-      },
-      "General": {
-        "category": "Category",
-        "Categories": {
+        "Category": {
           "misc": "Miscellaneous",
           "consumable": "Consumable",
           "tool": "Tool",
@@ -577,287 +325,406 @@
           "junk": "Junk",
           "ammunition": "Ammunition",
           "valuable": "Valuable"
-        },
-        "slots": "Slots",
-        "value": "Value",
-        "quantity": "Quantity",
-        "consumeOnUse": "Consume on use",
-        "deleteWhenEmpty": "Delete when empty",
-        "rarity": "Rarity",
-        "Rarity": {
-          "crude": "Crude",
-          "common": "Common",
-          "extraordinary": "Extraordinary",
-          "rare": "Rare",
-          "legendary": "Legendary",
-          "mythical": "Mythical"
         }
       },
-      "Actions": {
-        "attributes": "Action Attributes",
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "rules": "Rules"
-        },
-        "formula": "Formula",
-        "stamina": "Stamina",
-        "type": "Type",
-        "Type": {
-          "turn": "Turn",
-          "interrupt": "Interrupt",
-          "special": "Special",
-          "free": "Free"
-        },
-        "category": "Category",
-        "Category": {
-          "attack": "Attack",
-          "utility": "Utility",
-          "defense": "Defense",
-          "healing": "Healing",
-          "movement": "Movement",
-          "special": "Special",
-          "macro": "Macro"
-        },
-        "source": "Source",
-        "cost": "Cost",
-        "Cost": {
-          "inherit": "Inherit from source",
-          "double": "Double inherited cost"
-        },
-        "resources": "Resources",
-        "resource": "Resource",
-        "consumed": "Amount Consumed",
-        "macro": "Macro",
-        "actor": "Macro Target",
-        "Actor": {
-          "default": "Default",
-          "self": "Self",
-          "target": "Target"
-        },
-        "template": "Template",
-        "Template": {
-          "none": "None",
-          "sbt": "Small Blast (2m)",
-          "mbt": "Medium Blast (4m)",
-          "lbt": "Large Blast (8m)",
-          "xbt": "Extra-Large Blast (12m)",
-          "cone": "Cone",
-          "line": "Line"
-        }
-      }, 
       "Species": {
-        "quirkPoints": "Current Quirk Points (QP)",
-        "quirks": "Quirks",
-        "controlledByQuirks": "Use Quirks? (see 'Quirks' tab above)",
-        "notControlledByQuirks": "This species is not currently controlled by quirks",
-        "block": "Block",
-        "dodge": "Dodge",
-        "blockDodge": "Block / Dodge (1 QP per quantity)",
-        "quantity": "#",
-        "size": "Size",
-        "sizeBlockQuirks": "d4",
-        "sizeDodgeQuirks": "d12",
-        "stats": "Stats",
-        "statsQuirks": "Stats (1 QP per 1)",
-        "constitution": "Constitution",
-        "endurance": "Endurance",
-        "effervescence": "Effervescence",
-        "travel": "Travel Speeds",
-        "land": "Land",
-        "water": "Water",
-        "air": "Air",
-        "communication": "Communication",
-        "languageChoices": "Choices (#)",
-        "languages": "Languages",
-        "communicationTypes": "Types",
-        "Subtraits": {
-          "trade": "Trade 3 specific subtraits for 2 choice points",
-          "legend": "Character Subtraits",
-          "legendQuirks": "Character Subtraits (1 QP per subtrait)",
-          "hint": "3 specific subtraits = 2 choice points for a total of 3 QP",
-          "specific": "Specific Subtraits",
-          "points": "Choice Points"
+        "FIELDS": {
+          "block.quantity": {
+            "label": "Block Dice",
+            "hint": "The number of d4's to roll for blocking."
+          },
+          "dodge.quantity": {
+            "label": "Dodge Dice",
+            "hint": "The number of d12's to roll for dodging."
+          },
+          "constitution": {
+            "label": "Constitution"
+          },
+          "endurance": {
+            "label": "Endurance"
+          },
+          "effervescence": {
+            "label": "Effervescence"
+          },
+          "quirks": {
+            "label": "Quirks",
+            "hint": "The quirks this species has."
+          },
+          "communication.language.choices": {
+            "label": "Languages",
+            "hint": "The number of languages this species can choose from."
+          },
+          "communication.language.languages": {
+            "label": "Languages",
+            "hint": "The languages this species can speak."
+          },
+          "communication.types": {
+            "label": "Communication Types",
+            "hint": "The types of communication this species can use."
+          },
+          "travel.land.speed": {
+            "label": "Land Speed"
+          },
+          "travel.land.stamina": {
+            "label": "Land Stamina"
+          },
+          "travel.air.speed": {
+            "label": "Air Speed"
+          },
+          "travel.air.stamina": {
+            "label": "Air Stamina"
+          },
+          "travel.water.speed": {
+            "label": "Water Speed"
+          },
+          "travel.water.stamina": {
+            "label": "Water Stamina"
+          },
+          "transform.cost": {
+            "label": "Transformation Cost",
+            "hint": "The TA cost to transform."
+          },
+          "transformation.duration": {
+            "label": "Transformation Duration",
+            "hint": "The duration of the transformation."
+          },
+          "transformation.type": {
+            "label": "Transformation Type",
+            "hint": "The type of transformation."
+          },
+          "transformation.body": {
+            "label": "Transformation Body",
+            "hint": "The body to transform into."
+          },
+          "transformation.species": {
+            "label": "Transformation Species",
+            "hint": "The species to transform into."
+          },
+          "gifts.subtraits": {
+            "label": "Gifted Subtraits",
+            "hint": "The subtraits this species is gifted with."
+          },
+          "gifts.points": {
+            "label": "Gifted Points",
+            "hint": "The number of points to spend on gifted subtraits."
+          }
         },
-        "Communication": {
-          "mute": "Mute",
-          "telepathy": "Telepathy",
-          "speech": "Speech"
+        "CommunicationTypes": {
+          "Mute": "Mute",
+          "Speech": "Speech",
+          "Telepathy": "Telepathy"
         },
-        "paperDoll": "Paper Doll",
-        "PaperDoll": {
-          "head": "Head",
-          "neck": "Neck",
-          "back": "Back",
-          "chest": "Chest",
-          "waist": "Waist",
-          "hands": "Hands",
-          "ring": "Ring",
-          "feet": "Feet",
-          "toggleAugmentable": "Toggle the ability to augment this slot (red = unaugmentable)",
-          "toggleEquippable": "Toggle the ability to equip any item this slot (red = unequippable)",
-          "toggleSpecialty": "Toggle this slot requiring armor be customized before being able to be equipped (red = requires customized armor)"
+        "TransformationTypes": {
+          "none": "None",
+          "wild": "Wild",
+          "enhance": "Enhance"
         }
       },
-      "Talents": {
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
-        },
-        "category": "Choice category",
-        "choices": "Prompt for choices (comma-separated tags)",
-        "grants": "Grants [Item]",
-        "is-species": "Species talent",
-        "tree": "Tree",
-        "position": "Position",
-        "ultimate": "Ult",
-        "body": "Body",
-        "mind": "Mind",
-        "soul": "Soul",
-        "position-error": {
-          "short": "Required (> 0)",
-          "long": "In order for talent tree tracking to work, custom talents must have a position to indicate their place in the tree"
+      "TalentTree": {
+        "FIELDS": {
+          "species": {
+            "label": "Species"
+          },
+          "style.foregroundColor": {
+            "label": "Foreground"
+          },
+          "style.backgroundColor": {
+            "label": "Background"
+          },
+          "style.headerColor": {
+            "label": "Header"
+          },
+          "branchField.name": {
+            "label": "Branch Name"
+          },
+          "talentUuidField": {
+            "label": "Talents"
+          },
+          "allowLooping": {
+            "label": "Allow Looping"
+          },
+          "addBranch": {
+            "label": "Add Branch",
+            "tooltip": "Add Branch"
+          }
         }
       },
-      "Specialist": {
-        "Tabs": {
-          "attributes": "Attributes",
-          "description": "Description",
-          "effects": "Effects"
+      "Talent": {
+        "FIELDS": {
+          "body": {
+            "label": "Body"
+          },
+          "mind": {
+            "label": "Mind"
+          },
+          "soul": {
+            "label": "Soul"
+          },
+          "options.choices": {
+            "label": "Offers Choices",
+            "hint": "If this talent offers choices, you can define them here."
+          },
+          "options.category": {
+            "label": "Belongs to Choice Category",
+            "hint": "Any talents that offer the same choices should be in the same category."
+          },
+          "macro": {
+            "label": "Run Macro on Take",
+            "hint": "The macro to execute when this talent is gained or taken."
+          }
+        }
+      },
+      "Favor": {
+        "FIELDS": {
+          "always": {
+            "label": "Always Active"
+          },
+          "condition": {
+            "label": "Activation Conditions",
+            "hint": "Overrides the always active setting. If this field is empty, the always active setting is used."
+          },
+          "check": {
+            "label": "Check",
+            "hint": "The check(s) this favor applies to."
+          },
+          "checks": {
+            "label": "Checks",
+            "hint": "The check(s) this favor applies to."
+          },
+          "value": {
+            "label": "Value",
+            "hint": "disfavor < 0 < favor"
+          }
+        }
+      },
+      "Spell": {
+        "FIELDS": {
+          "Duration": {
+            "label": "Duration"
+          },
+          "Range": {
+            "label": "Range"
+          },
+          "AoeShort": {
+            "label": "Area of Effect"
+          },
+          "Stamina": {
+            "label": "Stamina"
+          }
+        },
+        "BUTTONS": {
+          "Save": "Save",
+          "Cast": "Cast",
+          "Spellcrafting": "Open in Spellcrafting"
+        }
+      },
+      "SpellFeature": {
+        "FIELDS": {
+          "art": {
+            "label": "Artistry",
+            "hint": "The artistry the feature belongs to."
+          },
+          "cost": {
+            "label": "Cost",
+            "hint": "The PP cost of the feature."
+          },
+          "costMultiplier": {
+            "label": "Cost Multiplier",
+            "hint": "The multiplier (typically the 'X' value) for the cost of the feature."
+          },
+          "doesTarget": {
+            "label": "Does Target",
+            "hint": "Whether the feature targets something."
+          },
+          "targetType": {
+            "label": "Target Type",
+            "hint": "The type of the target."
+          },
+          "templateType": {
+            "label": "Template Type",
+            "hint": "The type of the template."
+          },
+          "templateAngle": {
+            "label": "Template Angle",
+            "hint": "The angle of the template."
+          },
+          "modifies": {
+            "label": "Modifies",
+            "hint": "The feature this feature modifies."
+          },
+          "variableName": {
+            "label": "Variable Name"
+          },
+          "variableDescription": {
+            "label": "Variable Description"
+          },
+          "kind": {
+            "label": "Variable Kind"
+          },
+          "modifiedAoE": {
+            "label": "Modified Area of Effect",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            },
+            "measured": {
+              "label": "Style"
+            },
+            "type": {
+              "label": "Type"
+            },
+            "shape": {
+              "label": "Shape"
+            }
+          },
+          "modifiedRange": {
+            "label": "Modified Range",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            }
+          },
+          "modifiedDuration": {
+            "label": "Modified Duration",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            },
+            "requirements": {
+              "label": "Requirements"
+            },
+            "dispelInterruptCost": {
+              "label": "Dispel IA Cost"
+            },
+            "dispelActionCost": {
+              "label": "Dispel TA Cost"
+            }
+          }
+        },
+        "Variables": {
+          "New": "New Variable",
+          "Delete": "Delete",
+          "None": "None",
+          "Number": "Number",
+          "Text": "Text",
+          "Options": "Options",
+          "Dice": "Dice"
+        },
+        "TargetType": {
+          "Point": "Point in Space",
+          "Template": "Template",
+          "Attach": "Attach to Target"
+        },
+        "Modifies": {
+          "None": "None",
+          "AoE": "Area of Effect",
+          "Range": "Range",
+          "Duration": "Duration"
         }
       }
     },
-    "Effect": {
-      "source": "Source",
-      "toggle": "Toggle Effect",
-      "temporary": "Temporary Effects",
-      "passive": "Passive Effects",
-      "inactive": "Inactive Effects",
-      "grant": "Granted Effects"
-    },
-    "StatusEffects": {
-      "deafened": "Deafened",
-      "blinded": "Blinded",
-      "dazed": "Dazed",
-      "paralysis": "Paralysis",
-      "unconscious": "Unconscious",
-      "concentration": "Concentration",
-      "focus": "Focus",
-      "fatigue": "Fatigue"
-    }, 
-    "Settings": {
-      "autoRollAttacks": "Bypass attack roll dialog",
-      "autoRollAttacksHint": "When enabled, the modifier window that appears when attacking will be bypassed and the attack will be rolled immediately",
-      "targetRequired": "Targeting required for attacks",
-      "targetRequiredHint": "When enabled, a target must be selected before an attack can be rolled",
-      "autoRollContests": "Method for contest rolls",
-      "autoRollContestsHint": "Depending on the setting, contests will either be AUTOMATICALLY rolled, a PROMPT will appear, or contests must be rolled MANUALLY",
-      "autoRollContestsNone": "None",
-      "autoRollContestsPrompt": "Prompt",
-      "autoRollContestsAuto": "Automatic",
-      "displayDamage": "Display damage in chat",
-      "displayDamageHint": "Depending on the setting, one of the following occurs: Either the EXACT damage is displayed, an ESTIMATE is displayed, or the damage is HIDDEN, once a roll is complete, the damage is displayed, exactly as it is, in the chat message",
-      "displayDamageNone": "Hidden",
-      "displayDamageExact": "Exact",
-      "displayDamageEstimate": "Estimate",
-      "diceRedistribution": "Allow dice redistribution",
-      "diceRedistributionHint": "When enabled, when artificing or spellcrafting, dice can be redistributed, so long as the max possible outcome is always equal. (Utopia TTRPG pp. ",
-      "autoMaxDice": "Auto-set redistributable dice",
-      "autoMaxDiceHint": "Depending on the setting, the dice that can be redistributed will either be set to the SMALLEST, LARGEST, or MIDDLE dice automatically, but can still be changed manually",
-      "diceRedistributionNone": "Default to middling dice",
-      "diceRedistributionSmallest": "Default to smallest dice",
-      "diceRedistributionHighest": "Default to largest dice",
-      "displayActionsOnToken": "Allow actions to display on tokens",
-      "displayActionsOnTokenHint": "When enabled, and configured on the token, actions will display on the token",
-      "displayActionsOption": "Default action appearance",
-      "displayActionsOptionHint": "Options presented are for [turn actions | interrupt actions], this setting can be configured per token",
-      "displayActionsOptionCircle": "Semi-circle | Bottom middle",
-      "displayActionsOptionVertical": "Vertical left | Vertical right",
-      "displayActionsOptionHorizontal": "Horizontal top | Horizontal bottom",
-      "allowPlayerArchetypeEdit": "Allow player archetype edits (Default: GM Only)",
-      "allowPlayerArchetypeEditHint": "When enabled, players can edit their own character's archetype, otherwise only the GM can edit the archetype",
-      "Buttons": {
-        "twitch": "Twitch Integration",
-        "discord": "Utopia Discord Server",
-        "compendiumBrowser": "Utopia Compendium Browser"
+    "SPECIALTY_CHECKS": {
+      "GroupName": "Specialty Checks",
+      "Stealth": {
+        "noun": "Stealth",
+        "verb": "to Sneak",
+        "label": "Stealth"
       },
-			"Twitch": {
-        "channel": "Twitch Channel",
-        "channelHint": "The channel name for the Twitch integration",
-        "channelId": "Channel ID",
-        "channelIdHint": "The Twitch channel's ID, used for API calls (set automatically)",
-        "clientId": "Client ID",
-        "clientIdHint": "Your Twitch developer application's client ID, must be set manually",
-        "userId": "User ID",
-        "userIdHint": "Your Twitch user ID, or the user ID of the bot account (set automatically)",
-        "oauthToken": "OAuth Token",
-        "oauthTokenHint": "The OAuth token for the bot account, must be set manually, or retrieved from attached Python script",
-        "viewerNames": "Show viewer names",
-        "viewerNamesHint": "When enabled, viewer names will be displayed in the chat, otherwise it will appear as {channel name}'s {chat name}. This setting does not affect existing messages",
-        "viewerBadges": "Show viewer badges",
-        "viewerBadgesHint": "When enabled, viewer badges will be displayed in the chat. This setting does not affect existing messages",
-        "chatName": "Chat Name",
-        "chatNameHint": "The name of your 'viewers'. This is the name that will appear in the chat, if viewer names are hidden",
-        "enableSpellcrafting": "Enable viewer spellcrafting",
-        "enableSpellcraftingHint": "When enabled, viewers can use channel points to craft spells", 
-        "enableArtifice": "Enable viewer artificing",
-        "enableArtificeHint": "When enabled, viewers can use channel points to craft items",
-        "enableTargeting": "Enable viewers to target",
-        "enableTargetingHint": "When enabled, viewers can vote to target a combatant during encounters",
-        "pauseOnAdBreak": "Pause the game when ads run",
-        "pauseOnAdBreakHint": "When enabled, the game will be paused when ads run, and unpaused when the ads finish"
+      "Disguise": {
+        "noun": "Disguise",
+        "verb": "to Disguise",
+        "label": "Disguise"
+      },
+      "Mimic": {
+        "noun": "Mimic",
+        "verb": "to Mimic",
+        "label": "Mimic"
+      },
+      "Insight": {
+        "noun": "Insight",
+        "verb": "to Discern",
+        "label": "Insight"
+      },
+      "ComprehendLanguages": {
+        "noun": "Comprehend Languages",
+        "verb": "to Comprehend Languages",
+        "label": "Comprehend Languages"
+      },
+      "Perception": {
+        "noun": "Perception",
+        "verb": "to Notice",
+        "label": "Perception"
+      },
+      "Persuasion": {
+        "noun": "Persuasion",
+        "verb": "to Persuade",
+        "label": "Persuasion"
+      },
+      "ResistInfluence": {
+        "noun": "Resist Influence",
+        "verb": "to Resist Influence",
+        "label": "Resist Influence"
+      },
+      "Forage": {
+        "noun": "Forage",
+        "verb": "to Forage",
+        "label": "Forage"
+      },
+      "MaintainFocus": {
+        "noun": "Maintain Focus",
+        "verb": "to Maintain Focus",
+        "label": "Maintain Focus"
+      },
+      "MaintainConcentration": {
+        "noun": "Maintain Concentration",
+        "verb": "to Maintain Concentration",
+        "label": "Maintain Concentration"
       }
     },
-    "TwitchIntegration": {
-      "Tabs": {
-        "settings": "Settings",
-        "commands": "Commands"
+    "Macros": {
+      "FIELDS": {
+        "select": {
+          "label": "Select",
+          "hint": "Select an option from the presented list."
+        }
+      },
+      "TITLES": {
+        "select": {
+          "label": "Select An Option"
+        }
+      },
+      "BUTTONS": {
+        "save": {
+          "label": "Save"
+        }
       }
-    },
-    "RollDialog": {
-      "formula": "Roll formula",
-      "targets": "Current targets",
-      "addFavor": "Add Favor",
-      "addDisfavor": "Add Disfavor",
-      "favors": "System favor / disfavor",
-      "totalDisfavor": "System disfavor",
-      "netFavor": "Net favor",
-      "totalFavor": "System favor"
     }
   },
-
   "TYPES": {
-    "Actor": {
-      "character": "Character",
-      "npc": "NPC"
-    },
     "Item": {
-      "item": "Item",
       "talent": "Talent",
-      "spell": "Spell",
-      "species": "Species",
-      "spellFeature": "Spell Feature",
-      "specialistTalent": "Specialist Talent",
-      "action": "Action",
-      "artificeFeature": "Artifice Feature",
-      "artificeMaterial": "Artifice Material",
-      "gear": "Gear",
-      "armor": "Armor",
-      "artifact": "Artifact",
-      "consumable": "Consumable",
-      "trinket": "Trinket",
-      "weapon": "Weapon",
-      "general": "General Purpose Item",
-      "quirk": "Quirk"
+      "talentTree": "Talent Tree",
+      "species": "Species"
     },
     "ActiveEffect": {
       "temporary": "Temporary",
       "passive": "Passive",
-      "inactive": "Inactive",
-      "talent": "Talent",
-      "specialist": "Specialist",
-      "gear": "Gear"
+      "inactive": "Inactive"
     }
   }
 }

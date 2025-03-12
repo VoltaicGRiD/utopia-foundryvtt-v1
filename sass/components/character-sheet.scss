@@ -1,0 +1,19 @@
+.traits, .subtraits {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 300px;
+  justify-content: space-evenly;
+  align-items: space-evenly;
+
+  .trait-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+
+    .trait-name {
+      font-weight: bold;
+    }
+  }
+}
+

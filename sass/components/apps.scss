@@ -1,0 +1,170 @@
+&.item-sheet,
+&.actor-sheet {
+  box-shadow: none;
+  overflow: visible;
+
+  .window-header {
+    border: none;
+    align-items: center;
+    background: var(--utopia-sheet-background);
+    color: var(--utopia-color-black);
+    border-bottom: 4px solid var(--utopia-color-maroon);
+    
+    > * { max-block-size: 100%; }
+  
+    .header-button, .pseudo-header-button {
+      border-radius: 100%;
+      width: 18px;
+      height: 18px;
+      aspect-ratio: 1;
+      line-height: unset;
+      place-content: center;
+      margin-top: 4px;
+  
+      &:not([hidden]) { display: grid; }
+      > i { margin: 0 }
+    }
+  
+    .window-title {
+      color: var(--utopia-color-black);
+    }
+  }
+  
+  .window-app.minimized .window-header {
+    .window-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  
+    .document-id-link {
+      display: grid;
+      margin-top: 0;
+    }
+  }
+
+  .window-content {
+    font-family: var(--utopia-font-noto);
+    font-size: var(--font-size-13);
+    font-variation-settings: var(--utopia-font-noto-variation);
+    border-radius: 5px;
+    padding: 0;
+    background: var(--utopia-sheet-background-dark);
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    grid-template-rows: 1fr;
+    position: relative;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    border: var(--utopia-border-light);
+    box-shadow: 0 0 20px var(--color-shadow-dark);
+    border-radius: 5px;
+  }
+  
+  nav.tab-container {
+    --tab-full-width: 45px;
+    --tab-inactive-width: 38px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    z-index: -1;
+    border: none;
+
+    > .item {
+      --icon-size: 14px;
+      width: var(--tab-inactive-width);
+      height: 40px;
+      position: relative;
+      align-items: center;
+      background: var(--utopia-color-black);
+      color: var(--utopia-color-blue-white);
+      --icon-fill: var(--utopia-color-blue-white);
+      border: 1px solid transparent;
+      transition: all 250ms ease;
+      flex: none;
+
+      &:not([hidden]) { display: flex; }
+
+      i { font-size: var(--font-size-14)}
+
+      &.active, &:hover {
+        text-shadow: none;
+        border-color: var(--utopia-color-blue-white);
+        box-shadow: 0 0 6px var(--utopia-color-blue-white);
+        width: var(--tab-full-width);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        border: 1px solid var(--utopia-color-blue-white);
+        pointer-events: none;
+      }
+    }
+
+    &.tabs-left {
+      top: 1rem;
+      right: 100%;
+
+      > .item {
+        padding-inline-start: 12px;
+        justify-content: start;
+        margin-inline-start: calc((var(--tab-full-width) - var(--tab-inactive-width)) * 1);
+
+        &::after {
+          inset: 4px 0 4px 4px;
+          border-inline-end: none;
+        }
+
+        &.active, &:hover { margin: 0; }
+      }
+    }
+
+    &.tabs-right {
+      top: 1rem;
+      left: 100%;
+
+      > .item {
+        padding-inline-end: 12px;
+        justify-content: end;
+        border-radius: 0 8px 8px 0;
+        margin-inline-start: calc((var(--tab-full-width) - var(--tab-inactive-width)) * -1);
+
+        &::after {
+          inset: 4px 4px 4px 0;
+          border-radius: 0 5px 5px 0;
+          border-inline-start: none;
+        }
+
+        &.active, &:hover { margin: 0; }
+      }
+    }
+  }
+}
+
+&.actor-sheet {
+  .window-header {
+    background-color: white;
+    background-image: url(../assets/character-header.png);
+    background-size: 1200px 800px;
+    background-position: -110px 0;
+    background-repeat: no-repeat;
+    color: var(--utopia-color-black);
+    border-bottom: 4px solid var(--utopia-color-maroon);
+  }
+
+  .window-content {
+    background: var(--utopia-sheet-background-dark);
+    background-image: url(../assets/character-header.png);
+    background-size: 1200px 800px;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
+}

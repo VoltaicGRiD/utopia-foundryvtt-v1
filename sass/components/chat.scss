@@ -1,0 +1,69 @@
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.damage-instance {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  width: 100%;
+}
+
+.damage-shp,
+.damage-dhp,
+.damage-stamina,
+.damage-total,
+.damage-type {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  padding: 5px 0;
+  border: 1px groove black;
+  line-height: 14px;
+}
+
+.damage-shp {
+  background-color: #859900;
+  color: white;
+}
+
+.damage-dhp {
+  background-color: #8d2321;
+  color: white;
+}
+
+.damage-stamina {
+  background-color: #268bd2;
+  color: white;
+}
+
+.damage-total {
+  background-color: #961279;
+  color: white;
+}
+
+.damage-type {
+  background-color: #000000;
+  color: white;
+}
+
+.damage-label {
+  font-weight: bold;
+  font-size: var(--font-size-14);
+}
+
+.damage-value {
+  font-size: var(--font-size-16);
+}

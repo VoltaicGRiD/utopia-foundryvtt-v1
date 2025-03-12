@@ -1,0 +1,45 @@
+<section class="tab background {{tab.cssClass}}" data-group="primary" data-tab="background">  
+  <div class="background-area">
+    {{#if isPlay}}
+      <div class="grid grid-4col">
+        <span>{{system.biography.pronouns}}</span>
+        <span>{{system.biography.age}}</span>
+        <span>{{system.biography.height}}</span>
+        <span>{{system.biography.weight}}</span>
+      </div>
+      <div class="grid grid-2col">
+        <span aria-multiline="true">{{system.biography.edicts}}</span>
+        <span aria-multiline="true">{{system.biography.anathema}}</span>
+      </div>
+      <div class="grid grid-2col">
+        <span aria-multiline="true">{{system.biography.motiviations}}</span>
+        <span aria-multiline="true">{{system.biography.phobias}}</span>
+      </div>
+    {{else}}
+      <div class="grid grid-4col">
+        {{formGroup systemFields.biography.fields.pronouns value=system.biography.pronouns name='system.biography.pronouns' stacked=true localize=true}}
+        {{formGroup systemFields.biography.fields.age value=system.biography.age name='system.biography.age' stacked=true localize=true}}
+        {{formGroup systemFields.biography.fields.height value=system.biography.height name='system.biography.height' stacked=true localize=true}}
+        {{formGroup systemFields.biography.fields.weight value=system.biography.weight name='system.biography.weight' stacked=true localize=true}}
+      </div>
+      <div class="grid grid-2col">
+        {{formGroup systemFields.biography.fields.edicts value=system.biography.edicts name='system.biography.edicts' stacked=true localize=true}}
+        {{formGroup systemFields.biography.fields.anathema value=system.biography.anathema name='system.biography.anathema' stacked=true localize=true}}
+      </div>
+      <div class="grid grid-2col">
+        {{formGroup systemFields.biography.fields.motivations value=system.biography.motivations name='system.biography.motivations' stacked=true localize=true}}
+        {{formGroup systemFields.biography.fields.phobias value=system.biography.phobias name='system.biography.phobias' stacked=true localize=true}}
+      </div>
+      <div class="grid grid-1col">
+        {{#if editable}}
+          <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+            {{{enrichedDescription}}}
+          </prose-mirror>
+        {{else}} 
+          {{{enrichedDescription}}}
+        {{/if}}
+      </div>
+      {{formGroup systemFields.biographyFields name="system.biographyFields" value=system.biographyFields localize=true}}
+    {{/if}}
+  </div>
+</section>

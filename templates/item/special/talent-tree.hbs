@@ -1,0 +1,59 @@
+<div class="tab talent-tree {{tab.cssClass}}" data-group="primary" data-tab="talent-tree" style="height: calc({{position.height}}px - var(--header-height) - var(--utopia-header-border-width))">
+  {{log position}}
+  {{#each branches as |branch branchIndex|}}
+    <div class="talent-branch" data-drop data-branch="{{branchIndex}}">
+  
+      {{#each branch.talents as |talent|}}
+        {{#unless (eq @index 0)}}
+          <div class="before-talent" data-branch="{{../branchIndex}}" data-talent="{{@index}}">
+            <svg>
+              <line x1="0" y1="60" x2="20" y2="60" style="stroke:maroon;stroke-width:4"/>
+            </svg>
+          </div>
+        {{/unless}}
+        <div class="talent-container">
+          <a class="talent-edit" data-action="editTalent" data-branch="{{branchIndex}}" data-talent="{{@index}}"><i class="fas fa-pen-to-square"></i></a>
+          <a class="talent" data-action="viewItem" draggable data-document-u-u-i-d="{{talent.item.uuid}}" data-drag data-branch="{{branchIndex}}" data-talent="{{@index}}">
+            <img class="talent-img" src="{{talent.item.img}}" />
+            <label class="talent-name">{{talent.item.name}}</label>
+          </a>
+          {{#if talent.overridden}}
+            <div class="talent-overrides">
+              <input class="override override-body" type="number" data-branch="{{branchIndex}}" data-talent="{{@index}}" data-attribute="body" value="{{talent.body}}" />
+              <input class="override override-mind" type="number" data-branch="{{branchIndex}}" data-talent="{{@index}}" data-attribute="mind" value="{{talent.mind}}" />
+              <input class="override override-soul" type="number" data-branch="{{branchIndex}}" data-talent="{{@index}}" data-attribute="soul" value="{{talent.soul}}" />
+            </div>
+          {{/if}}
+          <a class="talent-delete" data-action="deleteTalent" data-branch="{{branchIndex}}" data-talent="{{@index}}"><i class="fas fa-x"></i></a>
+        </div>
+      {{/each}}
+      {{#if (gt branch.talents.length 0)}}
+        <div class="before-talent" data-branch="{{branchIndex}}">
+          <svg>
+            <line x1="0" y1="60" x2="20" y2="60" style="stroke:maroon;stroke-width:4"/>
+          </svg>
+        </div>
+      {{/if}}
+      <div class="empty-talent" data-drop data-branch="{{@index}}" data-tooltip="{{localize 'UTOPIA.COMMON.DragDrop.tooltip'}}"> </div>
+    </div>
+  {{/each}}
+
+  <a class="new-branch" data-action="addBranch" data-tooltip="{{localize 'UTOPIA.Items.TalentTree.FIELDS.addBranch.tooltip'}}">
+    <span><i class="fas fa-plus"></i> {{localize 'UTOPIA.Items.TalentTree.FIELDS.addBranch.tooltip'}}</span>
+  </a>
+
+  <hr/>
+
+  {{#if (eq item.type "talentTree")}}
+    <span class="description-header">{{localize "UTOPIA.COMMON.description"}}</span>
+    <div class="description">
+      {{#if editable}}
+        <prose-mirror name="system.description" data-document-u-u-i-d="{{item.uuid}}" value="{{system.description}}" collaborate="true" toggled="true">
+          {{{enrichedDescription}}}
+        </prose-mirror>
+      {{else}} 
+        {{{enrichedDescription}}}
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

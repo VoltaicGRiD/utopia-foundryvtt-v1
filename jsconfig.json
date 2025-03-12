@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ES2022",
+        "jsx": "react",
+        "allowImportingTsExtensions": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true
+    },
+    "exclude": [
+        "**/css/*",
+        "**/css-wip/*",
+        "**/scripts/*",
+        "**/src/packs/*",
+        "**/lib/*",
+        "**/archive/*",
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}
