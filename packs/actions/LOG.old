@@ -1,3 +1,5 @@
-2025/02/06-10:31:17.011 f2b8 Recovering log #473
-2025/02/06-10:31:17.014 f2b8 Delete type=0 #473
-2025/02/06-10:31:17.014 f2b8 Delete type=3 #471
+2025/03/12-09:06:22.157 cdec Recovering log #477
+2025/03/12-09:06:22.157 cdec Level-0 table #479: started
+2025/03/12-09:06:22.167 cdec Level-0 table #479: 1600 bytes OK
+2025/03/12-09:06:22.171 cdec Delete type=0 #477
+2025/03/12-09:06:22.171 cdec Delete type=3 #476

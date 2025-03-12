@@ -1,7 +1,5 @@
 export class UtopiaSchemaField extends foundry.data.fields.SchemaField {
-  constructor(schema, options={}, context={}) {
-    super(schema, options, context);
-  }
+  // TODO: Replace this whole-ass thing with a "Widget" 
 
   toFormGroup(groupConfig, inputConfig) {
     console.warn(this);

@@ -146,7 +146,75 @@
     </details>
   </div>
 
-  
+  <details>
+    <summary>{{localize "UTOPIA.Actors.Travel.Summary"}}</summary>
+    <div class="details">
+      {{#if isPlay}}
+
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.land.speed.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.travel.land.speed}}" readonly>
+
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.water.speed.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.travel.water.speed}}" readonly>
+
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.air.speed.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.travel.air.speed}}" readonly>
+
+      {{else}}
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.land.speed.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateTravel.land.speed" value="{{systemSource.innateTravel.land.speed}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.water.speed.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateTravel.water.speed" value="{{systemSource.innateTravel.water.speed}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.travel.air.speed.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateTravel.air.speed" value="{{systemSource.innateTravel.air.speed}}">
+        
+      {{/if}}
+    </div>
+  </details>  
+
+  <details>
+    <summary>{{localize "UTOPIA.Actors.Defenses.Summary"}}</summary>
+    <div class="details">
+      {{#if isPlay}}
+
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.physical.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.defenses.physical}}" readonly>
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.energy.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.defenses.energy}}" readonly>
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.heat.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.defenses.heat}}" readonly>
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.chill.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.defenses.chill}}" readonly>
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.psyche.label"}}</label>
+        <input type="text" class="detail-formula" value="{{system.defenses.psyche}}" readonly>
+        
+      {{else}}
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.physical.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateDefenses.physical" value="{{systemSource.innateDefenses.physical}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.energy.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateDefenses.energy" value="{{systemSource.innateDefenses.physical}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.heat.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateDefenses.heat" value="{{systemSource.innateDefenses.physical}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.chill.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateDefenses.chill" value="{{systemSource.innateDefenses.physical}}">
+        
+        <label class="detail-name">{{localize "UTOPIA.Actors.FIELDS.defenses.psyche.label"}}</label>
+        <input type="text" class="detail-formula" name="system.innateDefenses.psyche" value="{{systemSource.innateDefenses.physical}}">
+
+      {{/if}}
+    </div>
+  </details>  
 </div>
 
   

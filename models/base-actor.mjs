@@ -242,10 +242,7 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
 
   async prepareDerivedData() {
     try { this._prepareTraits() } catch (e) { console.error(e) }
-    try { await this._prepareSpecies(); } catch (e) { 
-      console.error(e); 
-      this._prepareSpeciesDefault();
-    }
+    try { await this._prepareSpecies(); } catch (e) { console.error(e); }
     try { this._prepareDefenses() } catch (e) { console.error(e) }
   }
 
@@ -303,11 +300,15 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     }
 
     for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      this.travel[key].speed = await new Roll(String(this.innateTravel[key].speed), this.parent.getRollData()).evaluate().total;
-      this.travel[key].speed += await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
-    }
+      const rolldata = await this.parent.getRollData();
+      const innateRoll = new Roll(String(this.innateTravel[key].speed), rolldata);
+      await innateRoll.evaluate();  
+      this.travel[key].speed = innateRoll.total;
 
-    this.speciesData = Object.freeze(this._speciesData);
+      const speciesRoll = new Roll(String(value.speed), rolldata);
+      await speciesRoll.evaluate();
+      this.travel[key].speed += speciesRoll.total;
+    }
   }
 
   async _prepareSpeciesDefault() {
