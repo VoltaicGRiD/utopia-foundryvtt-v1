@@ -1,4 +1,5 @@
 import UtopiaItemBase from "../base-item.mjs";
+import { UtopiaSchemaField } from "../fields/schema-field.mjs";
 import { TalentField } from "../fields/talent-field.mjs";
 import { PaperDollField } from "../paperdoll-field.mjs";
 
@@ -65,11 +66,11 @@ export class Species extends UtopiaItemBase {
       specialty: armors(),
     })
 
-    schema.block = new fields.SchemaField({
+    schema.block = new UtopiaSchemaField({
       quantity: new fields.NumberField({ ...required, initial: 1, min: 1, max: 6 }),
       size: new fields.NumberField({ ...required, initial: 4, min: 1 }),
     });
-    schema.dodge = new fields.SchemaField({
+    schema.dodge = new UtopiaSchemaField({
       quantity: new fields.NumberField({ ...required, initial: 1, min: 1, max: 6 }),
       size: new fields.NumberField({ ...required, initial: 12, min: 1 }),
     }); 
@@ -107,15 +108,15 @@ export class Species extends UtopiaItemBase {
     })
 
     schema.travel = new fields.SchemaField({
-      land: new fields.SchemaField({
+      land: new UtopiaSchemaField({
         speed: FormulaField("@spd.total"),
         stamina: FormulaField(),
       }),
-      air: new fields.SchemaField({
+      air: new UtopiaSchemaField({
         speed: FormulaField(),
         stamina: FormulaField(),
       }),
-      water: new fields.SchemaField({
+      water: new UtopiaSchemaField({
         speed: FormulaField(),
         stamina: FormulaField(),
       }),
@@ -206,6 +207,36 @@ export class Species extends UtopiaItemBase {
         editable: true,
       },
       {
+        field: this.schema.fields.travel.fields.land,
+        stacked: true,
+        editable: true,
+        columns: 2,
+      },
+      {
+        field: this.schema.fields.travel.fields.water,
+        stacked: true,
+        editable: true,
+        columns: 2,
+      },
+      {
+        field: this.schema.fields.travel.fields.air,
+        stacked: true,
+        editable: true,
+        columns: 2,
+      },
+      {
+        field: this.schema.fields.dodge,
+        stacked: true,
+        editable: true,
+        columns: 2,
+      },
+      {
+        field: this.schema.fields.block,
+        stacked: true,
+        editable: true,
+        columns: 2,
+      },
+      {
         field: this.schema.fields.quirkPoints,
         stacked: false,
         editable: false,
@@ -288,6 +319,8 @@ export class Species extends UtopiaItemBase {
 
   _prepareQuirks() {
     try {
+      this.quirkPoints = 0;
+
       const quirks = [...this.quirks];
 
       // Since we're storing quirks in a Set, we need to convert it to an array before we can iterate over it
@@ -319,9 +352,9 @@ export class Species extends UtopiaItemBase {
         }); 
       });
 
-      this.quirkPoints += this.constitution.total;
-      this.quirkPoints += this.endurance.total;
-      this.quirkPoints += this.effervescence.total;
+      this.quirkPoints += this.constitution;
+      this.quirkPoints += this.endurance;
+      this.quirkPoints += this.effervescence;
   
       this.quirkPoints += this.block.quantity;
       this.quirkPoints += this.dodge.quantity;

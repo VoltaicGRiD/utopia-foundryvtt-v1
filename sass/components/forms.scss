@@ -1,5 +1,4 @@
 &.item-sheet {
-
   & .item-header {
     margin: 0 0.5rem 0 0.5rem;
     grid-column: 1 / span 1;
@@ -17,8 +16,10 @@
     font-size: var(--font-size-11);
 
     .mode-toggle {
-      left: 20px;
-      top: 10px;
+      color: var(--utopia-color-black);
+      position: absolute;
+      left: 15px;
+      bottom: 10px;
     }
 
     .item-icon {
@@ -565,7 +566,8 @@
       }
     }
 
-    .checks {
+    .checks,
+    .details {
       margin-top: 1rem;
       display: flex;
       flex-direction: row;
@@ -573,11 +575,14 @@
       gap: 5px;
       width: 100%;
 
-      .check-name {
+      .check-name,
+      .detail-name {
+        color: var(--utopia-color-black);
         flex: 1 0 50%;
       }
 
-      .check-formula {
+      .check-formula,
+      .detail-formula {
         color: var(--utopia-color-black);
         padding: 0;
         height: 18px;
@@ -617,10 +622,11 @@
       }
       
       input:not([type="checkbox"]) {
-        flex: 0 0 20%;
+        flex: 0 0 40%;
         padding: 0;
         text-align: center;
         color: var(--utopia-color-black);
+        border-radius: 0;
       }
 
       input[type="checkbox"] {
@@ -642,6 +648,21 @@
         &:checked {
           background: var(--utopia-color-maroon);
         }
+      }
+    }
+
+    .details {
+      margin-top: 0;
+    }
+
+    details {
+      width: 100%;
+      margin-top: 5px;
+
+      & > summary {
+        color: var(--utopia-color-black);
+        font-size: var(--font-size-12);
+        font-weight: bold;
       }
     }
   }

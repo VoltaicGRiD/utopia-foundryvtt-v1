@@ -144,6 +144,7 @@
 .utopia {
   @import "components/paper-doll.scss";
   @import "components/grid.scss";
+  @import "components/apps.scss";
 
   &.item-sheet,
   &.actor-sheet {

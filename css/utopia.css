@@ -219,7 +219,6 @@
 }
 
 .utopia .paper-doll {
-  margin-top: 20px;
   position: relative;
   width: 100%;
   height: 300px;
@@ -508,6 +507,164 @@
 .utopia .grid-span-12 {
   grid-column-end: span 12;
 }
+.utopia.item-sheet, .utopia.actor-sheet {
+  box-shadow: none;
+  overflow: visible;
+}
+.utopia.item-sheet .window-header, .utopia.actor-sheet .window-header {
+  border: none;
+  align-items: center;
+  background: var(--utopia-sheet-background);
+  color: var(--utopia-color-black);
+  border-bottom: 4px solid var(--utopia-color-maroon);
+}
+.utopia.item-sheet .window-header > *, .utopia.actor-sheet .window-header > * {
+  max-block-size: 100%;
+}
+.utopia.item-sheet .window-header .header-button, .utopia.item-sheet .window-header .pseudo-header-button, .utopia.actor-sheet .window-header .header-button, .utopia.actor-sheet .window-header .pseudo-header-button {
+  border-radius: 100%;
+  width: 18px;
+  height: 18px;
+  aspect-ratio: 1;
+  line-height: unset;
+  place-content: center;
+  margin-top: 4px;
+}
+.utopia.item-sheet .window-header .header-button:not([hidden]), .utopia.item-sheet .window-header .pseudo-header-button:not([hidden]), .utopia.actor-sheet .window-header .header-button:not([hidden]), .utopia.actor-sheet .window-header .pseudo-header-button:not([hidden]) {
+  display: grid;
+}
+.utopia.item-sheet .window-header .header-button > i, .utopia.item-sheet .window-header .pseudo-header-button > i, .utopia.actor-sheet .window-header .header-button > i, .utopia.actor-sheet .window-header .pseudo-header-button > i {
+  margin: 0;
+}
+.utopia.item-sheet .window-header .window-title, .utopia.actor-sheet .window-header .window-title {
+  color: var(--utopia-color-black);
+}
+.utopia.item-sheet .window-app.minimized .window-header .window-title, .utopia.actor-sheet .window-app.minimized .window-header .window-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.utopia.item-sheet .window-app.minimized .window-header .document-id-link, .utopia.actor-sheet .window-app.minimized .window-header .document-id-link {
+  display: grid;
+  margin-top: 0;
+}
+.utopia.item-sheet .window-content, .utopia.actor-sheet .window-content {
+  font-family: var(--utopia-font-noto);
+  font-size: var(--font-size-13);
+  font-variation-settings: var(--utopia-font-noto-variation);
+  border-radius: 5px;
+  padding: 0;
+  background: var(--utopia-sheet-background-dark);
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  grid-template-rows: 1fr;
+  position: relative;
+}
+.utopia.item-sheet::after, .utopia.actor-sheet::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  border: var(--utopia-border-light);
+  box-shadow: 0 0 20px var(--color-shadow-dark);
+  border-radius: 5px;
+}
+.utopia.item-sheet nav.tab-container, .utopia.actor-sheet nav.tab-container {
+  --tab-full-width: 45px;
+  --tab-inactive-width: 38px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  z-index: -1;
+  border: none;
+}
+.utopia.item-sheet nav.tab-container > .item, .utopia.actor-sheet nav.tab-container > .item {
+  --icon-size: 14px;
+  width: var(--tab-inactive-width);
+  height: 40px;
+  position: relative;
+  align-items: center;
+  background: var(--utopia-color-black);
+  color: var(--utopia-color-blue-white);
+  --icon-fill: var(--utopia-color-blue-white);
+  border: 1px solid transparent;
+  transition: all 250ms ease;
+  flex: none;
+}
+.utopia.item-sheet nav.tab-container > .item:not([hidden]), .utopia.actor-sheet nav.tab-container > .item:not([hidden]) {
+  display: flex;
+}
+.utopia.item-sheet nav.tab-container > .item i, .utopia.actor-sheet nav.tab-container > .item i {
+  font-size: var(--font-size-14);
+}
+.utopia.item-sheet nav.tab-container > .item.active, .utopia.item-sheet nav.tab-container > .item:hover, .utopia.actor-sheet nav.tab-container > .item.active, .utopia.actor-sheet nav.tab-container > .item:hover {
+  text-shadow: none;
+  border-color: var(--utopia-color-blue-white);
+  box-shadow: 0 0 6px var(--utopia-color-blue-white);
+  width: var(--tab-full-width);
+}
+.utopia.item-sheet nav.tab-container > .item::after, .utopia.actor-sheet nav.tab-container > .item::after {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--utopia-color-blue-white);
+  pointer-events: none;
+}
+.utopia.item-sheet nav.tab-container.tabs-left, .utopia.actor-sheet nav.tab-container.tabs-left {
+  top: 1rem;
+  right: 100%;
+}
+.utopia.item-sheet nav.tab-container.tabs-left > .item, .utopia.actor-sheet nav.tab-container.tabs-left > .item {
+  padding-inline-start: 12px;
+  justify-content: start;
+  margin-inline-start: calc((var(--tab-full-width) - var(--tab-inactive-width)) * 1);
+}
+.utopia.item-sheet nav.tab-container.tabs-left > .item::after, .utopia.actor-sheet nav.tab-container.tabs-left > .item::after {
+  inset: 4px 0 4px 4px;
+  border-inline-end: none;
+}
+.utopia.item-sheet nav.tab-container.tabs-left > .item.active, .utopia.item-sheet nav.tab-container.tabs-left > .item:hover, .utopia.actor-sheet nav.tab-container.tabs-left > .item.active, .utopia.actor-sheet nav.tab-container.tabs-left > .item:hover {
+  margin: 0;
+}
+.utopia.item-sheet nav.tab-container.tabs-right, .utopia.actor-sheet nav.tab-container.tabs-right {
+  top: 1rem;
+  left: 100%;
+}
+.utopia.item-sheet nav.tab-container.tabs-right > .item, .utopia.actor-sheet nav.tab-container.tabs-right > .item {
+  padding-inline-end: 12px;
+  justify-content: end;
+  border-radius: 0 8px 8px 0;
+  margin-inline-start: calc((var(--tab-full-width) - var(--tab-inactive-width)) * -1);
+}
+.utopia.item-sheet nav.tab-container.tabs-right > .item::after, .utopia.actor-sheet nav.tab-container.tabs-right > .item::after {
+  inset: 4px 4px 4px 0;
+  border-radius: 0 5px 5px 0;
+  border-inline-start: none;
+}
+.utopia.item-sheet nav.tab-container.tabs-right > .item.active, .utopia.item-sheet nav.tab-container.tabs-right > .item:hover, .utopia.actor-sheet nav.tab-container.tabs-right > .item.active, .utopia.actor-sheet nav.tab-container.tabs-right > .item:hover {
+  margin: 0;
+}
+.utopia.actor-sheet .window-header {
+  background-color: white;
+  background-image: url(../assets/character-header.png);
+  background-size: 1200px 800px;
+  background-position: -110px 0;
+  background-repeat: no-repeat;
+  color: var(--utopia-color-black);
+  border-bottom: 4px solid var(--utopia-color-maroon);
+}
+.utopia.actor-sheet .window-content {
+  background: var(--utopia-sheet-background-dark);
+  background-image: url(../assets/character-header.png);
+  background-size: 1200px 800px;
+  background-position: top;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  grid-template-columns: 340px 1fr;
+  grid-template-rows: 1fr;
+  position: relative;
+}
 .utopia.item-sheet.item-sheet .item-header, .utopia.actor-sheet.item-sheet .item-header {
   margin: 0 0.5rem 0 0.5rem;
   grid-column: 1/span 1;
@@ -525,8 +682,10 @@
   font-size: var(--font-size-11);
 }
 .utopia.item-sheet.item-sheet .item-header .mode-toggle, .utopia.actor-sheet.item-sheet .item-header .mode-toggle {
-  left: 20px;
-  top: 10px;
+  color: var(--utopia-color-black);
+  position: absolute;
+  left: 15px;
+  bottom: 10px;
 }
 .utopia.item-sheet.item-sheet .item-header .item-icon, .utopia.actor-sheet.item-sheet .item-header .item-icon {
   margin-top: 2rem;
@@ -1019,7 +1178,9 @@
   color: var(--utopia-color-black);
   border: 1px solid var(--utopia-color-maroon);
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks, .utopia.actor-sheet.actor-sheet .actor-header .checks {
+.utopia.item-sheet.actor-sheet .actor-header .checks,
+.utopia.item-sheet.actor-sheet .actor-header .details, .utopia.actor-sheet.actor-sheet .actor-header .checks,
+.utopia.actor-sheet.actor-sheet .actor-header .details {
   margin-top: 1rem;
   display: flex;
   flex-direction: row;
@@ -1027,10 +1188,23 @@
   gap: 5px;
   width: 100%;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks .check-name, .utopia.actor-sheet.actor-sheet .actor-header .checks .check-name {
+.utopia.item-sheet.actor-sheet .actor-header .checks .check-name,
+.utopia.item-sheet.actor-sheet .actor-header .checks .detail-name,
+.utopia.item-sheet.actor-sheet .actor-header .details .check-name,
+.utopia.item-sheet.actor-sheet .actor-header .details .detail-name, .utopia.actor-sheet.actor-sheet .actor-header .checks .check-name,
+.utopia.actor-sheet.actor-sheet .actor-header .checks .detail-name,
+.utopia.actor-sheet.actor-sheet .actor-header .details .check-name,
+.utopia.actor-sheet.actor-sheet .actor-header .details .detail-name {
+  color: var(--utopia-color-black);
   flex: 1 0 50%;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks .check-formula, .utopia.actor-sheet.actor-sheet .actor-header .checks .check-formula {
+.utopia.item-sheet.actor-sheet .actor-header .checks .check-formula,
+.utopia.item-sheet.actor-sheet .actor-header .checks .detail-formula,
+.utopia.item-sheet.actor-sheet .actor-header .details .check-formula,
+.utopia.item-sheet.actor-sheet .actor-header .details .detail-formula, .utopia.actor-sheet.actor-sheet .actor-header .checks .check-formula,
+.utopia.actor-sheet.actor-sheet .actor-header .checks .detail-formula,
+.utopia.actor-sheet.actor-sheet .actor-header .details .check-formula,
+.utopia.actor-sheet.actor-sheet .actor-header .details .detail-formula {
   color: var(--utopia-color-black);
   padding: 0;
   height: 18px;
@@ -1040,7 +1214,11 @@
   border: var(--utopia-formula-border);
   flex: 1 0 40%;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks select, .utopia.item-sheet.actor-sheet .actor-header .checks input, .utopia.actor-sheet.actor-sheet .actor-header .checks select, .utopia.actor-sheet.actor-sheet .actor-header .checks input {
+.utopia.item-sheet.actor-sheet .actor-header .checks select, .utopia.item-sheet.actor-sheet .actor-header .checks input,
+.utopia.item-sheet.actor-sheet .actor-header .details select,
+.utopia.item-sheet.actor-sheet .actor-header .details input, .utopia.actor-sheet.actor-sheet .actor-header .checks select, .utopia.actor-sheet.actor-sheet .actor-header .checks input,
+.utopia.actor-sheet.actor-sheet .actor-header .details select,
+.utopia.actor-sheet.actor-sheet .actor-header .details input {
   flex: 1 0 40%;
   height: 18px;
   line-height: 18px;
@@ -1050,7 +1228,11 @@
   border: 1px solid var(--utopia-color-maroon);
   background: transparent;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks select option, .utopia.item-sheet.actor-sheet .actor-header .checks input option, .utopia.actor-sheet.actor-sheet .actor-header .checks select option, .utopia.actor-sheet.actor-sheet .actor-header .checks input option {
+.utopia.item-sheet.actor-sheet .actor-header .checks select option, .utopia.item-sheet.actor-sheet .actor-header .checks input option,
+.utopia.item-sheet.actor-sheet .actor-header .details select option,
+.utopia.item-sheet.actor-sheet .actor-header .details input option, .utopia.actor-sheet.actor-sheet .actor-header .checks select option, .utopia.actor-sheet.actor-sheet .actor-header .checks input option,
+.utopia.actor-sheet.actor-sheet .actor-header .details select option,
+.utopia.actor-sheet.actor-sheet .actor-header .details input option {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -1059,20 +1241,29 @@
   background: var(--utopia-color-blue-white);
 }
 .utopia.item-sheet.actor-sheet .actor-header .checks .trait-check-edit,
-.utopia.item-sheet.actor-sheet .actor-header .checks .subtrait-check-edit, .utopia.actor-sheet.actor-sheet .actor-header .checks .trait-check-edit,
-.utopia.actor-sheet.actor-sheet .actor-header .checks .subtrait-check-edit {
+.utopia.item-sheet.actor-sheet .actor-header .checks .subtrait-check-edit,
+.utopia.item-sheet.actor-sheet .actor-header .details .trait-check-edit,
+.utopia.item-sheet.actor-sheet .actor-header .details .subtrait-check-edit, .utopia.actor-sheet.actor-sheet .actor-header .checks .trait-check-edit,
+.utopia.actor-sheet.actor-sheet .actor-header .checks .subtrait-check-edit,
+.utopia.actor-sheet.actor-sheet .actor-header .details .trait-check-edit,
+.utopia.actor-sheet.actor-sheet .actor-header .details .subtrait-check-edit {
   flex: 1 0 40%;
   display: flex;
   flex-direction: row;
   gap: 5px;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks input:not([type=checkbox]), .utopia.actor-sheet.actor-sheet .actor-header .checks input:not([type=checkbox]) {
-  flex: 0 0 20%;
+.utopia.item-sheet.actor-sheet .actor-header .checks input:not([type=checkbox]),
+.utopia.item-sheet.actor-sheet .actor-header .details input:not([type=checkbox]), .utopia.actor-sheet.actor-sheet .actor-header .checks input:not([type=checkbox]),
+.utopia.actor-sheet.actor-sheet .actor-header .details input:not([type=checkbox]) {
+  flex: 0 0 40%;
   padding: 0;
   text-align: center;
   color: var(--utopia-color-black);
+  border-radius: 0;
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox], .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox] {
+.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox],
+.utopia.item-sheet.actor-sheet .actor-header .details input[type=checkbox], .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox],
+.utopia.actor-sheet.actor-sheet .actor-header .details input[type=checkbox] {
   flex: 0 0 18px;
   height: 18px;
   width: 18px;
@@ -1080,14 +1271,32 @@
   background: transparent;
   border: 1px solid var(--utopia-color-maroon);
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]::before, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]::before {
+.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]::before,
+.utopia.item-sheet.actor-sheet .actor-header .details input[type=checkbox]::before, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]::before,
+.utopia.actor-sheet.actor-sheet .actor-header .details input[type=checkbox]::before {
   content: "";
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]::after, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]::after {
+.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]::after,
+.utopia.item-sheet.actor-sheet .actor-header .details input[type=checkbox]::after, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]::after,
+.utopia.actor-sheet.actor-sheet .actor-header .details input[type=checkbox]::after {
   content: "";
 }
-.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]:checked, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]:checked {
+.utopia.item-sheet.actor-sheet .actor-header .checks input[type=checkbox]:checked,
+.utopia.item-sheet.actor-sheet .actor-header .details input[type=checkbox]:checked, .utopia.actor-sheet.actor-sheet .actor-header .checks input[type=checkbox]:checked,
+.utopia.actor-sheet.actor-sheet .actor-header .details input[type=checkbox]:checked {
   background: var(--utopia-color-maroon);
+}
+.utopia.item-sheet.actor-sheet .actor-header .details, .utopia.actor-sheet.actor-sheet .actor-header .details {
+  margin-top: 0;
+}
+.utopia.item-sheet.actor-sheet .actor-header details, .utopia.actor-sheet.actor-sheet .actor-header details {
+  width: 100%;
+  margin-top: 5px;
+}
+.utopia.item-sheet.actor-sheet .actor-header details > summary, .utopia.actor-sheet.actor-sheet .actor-header details > summary {
+  color: var(--utopia-color-black);
+  font-size: var(--font-size-12);
+  font-weight: bold;
 }
 .utopia.item-sheet.actor-sheet div.tag, .utopia.actor-sheet.actor-sheet div.tag {
   color: var(--utopia-color-blue-white);

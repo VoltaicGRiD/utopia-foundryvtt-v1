@@ -1,7 +1,8 @@
 <div class="item-header">
   {{#if (eq item.type "species")}}
-    <label class="mode-toggle">{{localize "UTOPIA.Items.Species.ToggleMode"}}
+    <label class="mode-toggle">
       <input type="checkbox" data-action="toggleMode" data-target="data.attributes" data-mode="edit">
+      {{localize "UTOPIA.Items.Species.ToggleMode"}}
     </label>
   {{/if}}
 
@@ -10,7 +11,7 @@
   <img class='item-icon' src='{{item.img}}' data-edit='img' data-action="image" title='{{item.name}}'/>
   {{#each headerFields as |field|}}
     {{log field}}
-    {{formGroup field.field classes="item-header-field" value=field.value stacked=field.stacked localize=true options=field.options}}
+    {{formGroup field.field classes="item-header-field" value=field.value editable=field.editable stacked=field.stacked localize=true options=field.options columns=field.columns}}
   {{/each}}
 </div>
 

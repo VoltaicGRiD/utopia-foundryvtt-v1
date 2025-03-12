@@ -4,6 +4,8 @@ import { BiographyField as TextareaField } from "./fields/biography-field.mjs";
 
 export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
 
+  static LOCALIZATION_PREFIXES = [...super.LOCALIZATION_PREFIXES, "UTOPIA.Actors"];
+
   prepareBaseData() {
     this.actions = {
       turn: {
@@ -139,10 +141,19 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       telepathy: new fields.BooleanField({ required: true, nullable: false, initial: false }),
     });
 
-    schema.travel = new fields.SchemaField({
-      land: ResourceField(),
-      water: ResourceField(),
-      air: ResourceField(),
+    schema.innateTravel = new fields.SchemaField({
+      land: new fields.SchemaField({
+        speed: new fields.StringField({ required: true, nullable: false, initial: "0" }),
+        stamina: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
+      water: new fields.SchemaField({
+        speed: new fields.StringField({ required: true, nullable: false, initial: "0" }),
+        stamina: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
+      air: new fields.SchemaField({
+        speed: new fields.StringField({ required: true, nullable: false, initial: "0" }),
+        stamina: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      }),
     });
 
     schema.size = new fields.StringField({ required: true, nullable: false, initial: "medium", choices: {
@@ -240,7 +251,7 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
 
   _prepareDefenses() {
     this.defenses = {
-    energy:      this.innateDefenses.energy    + this.armorDefenses.energy,
+      energy:    this.innateDefenses.energy    + this.armorDefenses.energy,
       heat:      this.innateDefenses.heat      + this.armorDefenses.heat,
       chill:     this.innateDefenses.chill     + this.armorDefenses.chill,
       physical:  this.innateDefenses.physical  + this.armorDefenses.physical,
@@ -281,23 +292,28 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     const species = this.parent.items.find(i => i.type === "species");
     this._speciesData = species;
 
-    if (this.languagePoints) this.languagePoints.available += this._speciesData.communication.languages - this.languagePoints.spent;
-    if (this.communication) this.communication.telepathy = this._speciesData.communication.telepathy;
-    this.size = this._speciesData.size;
-    for (const [key, value] of Object.entries(this._speciesData.travel)) {
-      this.travel[key].max = await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
+    if (this.languagePoints) this.languagePoints.available += this._speciesData.system.communication.languages - this.languagePoints.spent;
+    if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
+    this.size = this._speciesData.system.size;
+
+    this.travel = {
+      land: { speed: 0, stamina: 0 },
+      water: { speed: 0, stamina: 0 },
+      air: { speed: 0, stamina: 0 }
+    }
+
+    for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
+      this.travel[key].speed = await new Roll(String(this.innateTravel[key].speed), this.parent.getRollData()).evaluate().total;
+      this.travel[key].speed += await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
     }
 
     this.speciesData = Object.freeze(this._speciesData);
   }
 
   async _prepareSpeciesDefault() {
-    const talentTree = await game.packs.get('utopia.talentTrees').getDocuments().filter(i => i.system.species.includes("human"))[0];
-
     this._speciesData = {
       name: "Human",
       system: {
-        talentTree: talentTree,
         travel: {
           land: "@spd.total",
           water: 0,
@@ -314,8 +330,16 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     if (this.languagePoints) this.languagePoints.available = this._speciesData.system.communication.languages;
     if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
     this.size = this._speciesData.system.size;
+    
+    this.travel = {
+      land: { speed: 0, stamina: 0 },
+      water: { speed: 0, stamina: 0 },
+      air: { speed: 0, stamina: 0 }
+    }
+
     for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      this.travel[key] = new Roll(String(value), this.parent.getRollData()).evaluateSync();
+      this.travel[key].speed = await new Roll(String(this.innateTravel[key].speed), this.parent.getRollData()).evaluate().total;
+      this.travel[key].speed += await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
     }
   }
 

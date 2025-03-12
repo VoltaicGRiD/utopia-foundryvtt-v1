@@ -40,13 +40,14 @@ export class DragDropItemV2 extends api.HandlebarsApplicationMixin(sheets.ItemSh
   _prepareContext(options) {
     const headerFields = this.item.system.headerFields;
     headerFields.forEach((field) => {
-      field.value = foundry.utils.getProperty(this.item, field.field.fieldPath);
+      const value = foundry.utils.getProperty(this.item, field.field.fieldPath);
+      field.value = value;
     });
 
     var attributeFields = this.item.system.attributeFields || [];
     attributeFields.forEach((field) => {
       const value = foundry.utils.getProperty(this.item, field.field.fieldPath);
-      field.value = foundry.utils.getProperty(this.item, field.field.fieldPath);
+      field.value = value;
     });
 
     return {

@@ -4,7 +4,7 @@ export class BiographyField extends foundry.data.fields.StringField {
   }
 
   static get _defaults() {
-    return mergeObject(super._defaults, {
+    return foundry.utils.mergeObject(super._defaults, {
       type: "textarea",
       rows: 3,
       cols: 30

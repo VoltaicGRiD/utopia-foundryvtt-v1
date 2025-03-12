@@ -166,5 +166,9 @@
     background-size: 1200px 800px;
     background-position: top;
     background-repeat: no-repeat;
+    border-radius: 5px;
+    grid-template-columns: 340px 1fr;
+    grid-template-rows: 1fr;
+    position: relative;
   }
 }

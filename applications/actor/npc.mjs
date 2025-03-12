@@ -20,7 +20,7 @@ export class NPC extends DragDropActorV2 {
     }
   }
 
-  static DEFAULT_OPTIONS = mergeObject(DragDropActorV2.DEFAULT_OPTIONS, {
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(DragDropActorV2.DEFAULT_OPTIONS, {
     classes: ["utopia", "actor-sheet", "character"],
     actions: {
 

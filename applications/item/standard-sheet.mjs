@@ -20,7 +20,7 @@ export class ItemSheet extends DragDropItemV2 {
     }
   }
 
-  static DEFAULT_OPTIONS = mergeObject(DragDropItemV2.DEFAULT_OPTIONS, {
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(DragDropItemV2.DEFAULT_OPTIONS, {
     actions: {
 
     },

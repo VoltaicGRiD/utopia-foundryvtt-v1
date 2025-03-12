@@ -96,6 +96,32 @@
         "Gear": "Gear",
         "Consumables": "Consumables",
         "Components": "Components"
+      },
+      "FIELDS": {
+        "travel.land.speed": {
+          "label": "Land Speed"
+        },
+        "travel.water.speed": {
+          "label": "Water Speed"
+        },
+        "travel.air.speed": {
+          "label": "Air Speed"
+        },
+        "defenses.physical": {
+          "label": "Physical Defense"
+        },
+        "defenses.energy": {
+          "label": "Energy Defense"
+        },
+        "defenses.heat": {
+          "label": "Heat Defense"
+        },
+        "defenses.chill": {
+          "label": "Chill Defense"
+        },
+        "defenses.psyche": {
+          "label": "Psyche Defense"
+        }
       }
     },
     "Chats": {
@@ -330,12 +356,16 @@
       "Species": {
         "FIELDS": {
           "block.quantity": {
-            "label": "Block Dice",
-            "hint": "The number of d4's to roll for blocking."
+            "label": "Block Amount"
+          },
+          "block.size": {
+            "label": "Block Dice"
           },
           "dodge.quantity": {
-            "label": "Dodge Dice",
-            "hint": "The number of d12's to roll for dodging."
+            "label": "Dodge Amount"
+          },
+          "dodge.size": {
+            "label": "Dodge Dice"
           },
           "constitution": {
             "label": "Constitution"
@@ -345,6 +375,10 @@
           },
           "effervescence": {
             "label": "Effervescence"
+          },
+          "quirkPoints": {
+            "label": "Quirk Points",
+            "hint": "The number of quirk points this species has."
           },
           "quirks": {
             "label": "Quirks",

@@ -20,7 +20,7 @@ export class Character extends DragDropActorV2 {
     }
   }
 
-  static DEFAULT_OPTIONS = mergeObject(DragDropActorV2.DEFAULT_OPTIONS, {
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(DragDropActorV2.DEFAULT_OPTIONS, {
     classes: ["utopia", "actor-sheet", "character"],
     actions: {
 
@@ -34,6 +34,11 @@ export class Character extends DragDropActorV2 {
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
     options.parts = ["header", "tabs", "attributes", "background", "effects"];
+  }
+
+  _prepareSubmitData(event, form, formData) {
+    const data = super._prepareSubmitData(event, form, formData);
+    return data;
   }
 
   async _prepareContext(options) {

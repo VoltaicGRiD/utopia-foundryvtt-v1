@@ -7,7 +7,7 @@ export class SpellFeatureSheet extends DragDropItemV2 {
     super(options);
   }
 
-  static DEFAULT_OPTIONS = mergeObject(DragDropItemV2.DEFAULT_OPTIONS, {
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(DragDropItemV2.DEFAULT_OPTIONS, {
     actions: {
       newVariable: this._newVariable,
       removeVariable: this._removeVariable,
