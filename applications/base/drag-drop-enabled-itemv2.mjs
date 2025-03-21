@@ -132,7 +132,7 @@ export class DragDropItemV2 extends api.HandlebarsApplicationMixin(sheets.ItemSh
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
+        label: 'UTOPIA.Items.Tabs.',
       };
   
       switch (partId) {
@@ -145,8 +145,8 @@ export class DragDropItemV2 extends api.HandlebarsApplicationMixin(sheets.ItemSh
           tab.icon = 'fas fa-fw fa-book';
           break;
         case 'description': 
-          tab.id = 'description';
-          tab.label += 'description';
+          tab.id = 'Description';
+          tab.label += 'Description';
           tab.icon = 'fas fa-fw fa-align-left';
           break;
         case 'effects':
@@ -245,6 +245,31 @@ export class DragDropItemV2 extends api.HandlebarsApplicationMixin(sheets.ItemSh
 
     // Push new data object
     existing.push(value);
+
+    // Update the item so that `traits[0].trait` etc. is available
+    await this.item.update({ [name]: existing });
+  }
+
+  static async _schemaSetRemove(event, target) {
+    const value = target.dataset.value;
+    const container = target.closest("div");
+    const name = `system.${container.dataset.name}`;
+    let existing = foundry.utils.getProperty(this.item, name);
+
+    // Convert existing data to an array if needed
+    if (existing instanceof Set) {
+      existing = Array.from(existing);
+    }
+
+    // Remove the value from the array
+    existing = existing.filter((v) => {
+      let content = "";
+      for (const [key, field] of Object.entries(v)) {
+        content += `${v[key]}, `;
+      }
+      content = content.slice(0, -2);
+      return content !== value; 
+    });
 
     // Update the item so that `traits[0].trait` etc. is available
     await this.item.update({ [name]: existing });

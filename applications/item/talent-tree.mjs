@@ -37,20 +37,17 @@ export class TalentTree extends DragDropItemV2 {
 
     context.tabs = this._getTabs(options.parts);
     context.documentField = new foundry.data.fields.DocumentUUIDField({ type: "Item" });
-    context.branches = this.item?.system?.branches ?? []
+    const branches = this.item?.system?.branches ?? [{ name: "", talents: [] }];
 
-    try {
-      await Promise.all(context.branches.map(async b => {
-        if (b.talents.length > 0) {
-          await Promise.all(b.talents.map(async t => {
-            t.item = await fromUuid(t.uuid) || {};
-          }));
-        }
+    context.branches = await Promise.all(branches.map(async (branch) => {
+      branch.talents = await Promise.all(branch.talents.map(async (talent) => {
+        return {
+          ...talent,
+          item: await fromUuid(talent.uuid) || {},
+        };
       }));
-    } catch (error) {
-      console.error(error);
-      
-    }
+      return branch;
+    }));
 
     context.system = this.item.system;
     console.log(context);
@@ -94,7 +91,7 @@ export class TalentTree extends DragDropItemV2 {
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
+        label: 'UTOPIA.Items.Tabs.',
       };
   
       switch (partId) {
@@ -103,12 +100,12 @@ export class TalentTree extends DragDropItemV2 {
           return tabs;
         case 'attributes':
           tab.id = 'attributes';
-          tab.label += 'attributes';
+          tab.label += 'Attributes';
           tab.icon = 'fas fa-fw fa-book';
           break;
         case 'description':
           tab.id = 'description';
-          tab.label += 'description';
+          tab.label += 'Description';
           tab.icon = 'fas fa-fw fa-align-left';
           break;
         default:

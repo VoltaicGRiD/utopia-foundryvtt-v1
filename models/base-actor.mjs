@@ -1,6 +1,7 @@
 const fields = foundry.data.fields;
 const requiredInteger = { required: true, nullable: false, initial: 0 }
 import { BiographyField as TextareaField } from "./fields/biography-field.mjs";
+import { SchemaArrayField } from "./fields/schema-set-field.mjs";
 
 export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
 
@@ -31,6 +32,7 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
         bonus: new fields.NumberField({ ...requiredInteger }),
         total: new fields.NumberField({ ...requiredInteger }),
         gifted: new fields.BooleanField({ required: true, nullable: false, initial: false }),
+        critRisk: new fields.BooleanField({ required: true, nullable: false, initial: false }),
       }
       if (parent) returns.parent = new fields.StringField({ required: true, nullable: false, initial: parent });
       return new fields.SchemaField(returns);
@@ -38,6 +40,7 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     const ResourceField = () => new fields.SchemaField({
       value: new fields.NumberField({ ...requiredInteger, initial: 0 }),
       max: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      rest: new fields.StringField({ required: true, nullable: false, blank: true, initial: "", validate: (v) => Roll.validate(v) || v === "" }),
     });
 
     schema.traits = new fields.SchemaField({});
@@ -130,6 +133,10 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       }      
       return returns;
     }
+
+    schema.constitution = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.endurance = new fields.NumberField({ ...requiredInteger, initial: 0 });
+    schema.effervescence = new fields.NumberField({ ...requiredInteger, initial: 0 });
 
     schema.communication = new fields.SchemaField({
       languages: new fields.SchemaField({
@@ -225,6 +232,25 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       ...specialtyChecks(),
     });
 
+    schema.resources = new SchemaArrayField(new fields.SchemaField({
+      name: new fields.StringField({ required: true, nullable: false }),
+      rollKey: new fields.StringField({ required: true, nullable: false }),
+      max: new fields.NumberField({ required: true, nullable: false }),
+      current: new fields.NumberField({ required: true, nullable: false }),
+      eval: new fields.StringField({ required: true, nullable: false, validate: (v) => Roll.validate(v) }),
+      reset: new fields.StringField({ required: true, nullable: false, validate: (v) => {
+        return ["none", "rest", "dawn", "dusk"].includes(v);
+      }}),
+      resetEval: new fields.StringField({ required: true, nullable: false, validate: (v) => Roll.validate(v) }),
+      onUse: new fields.StringField({ required: true, nullable: false, blank: true, validate: async (v) => {
+        // Value either needs to be a valid Roll or a valid macro UUID (or empty)
+        const uuid = await foundry.utils.parseUuid(v);
+        if (uuid.type === "Macro" || Roll.validate(v) || v.length === 0) return true;
+      }, initial: ""}),
+      canBeNegative: new fields.BooleanField({ required: true, nullable: false, initial: false }),
+      visible: new fields.BooleanField({ required: true, nullable: false, initial: true }),
+    }))
+
     UtopiaActorBase.getBiography(schema);
     
     return schema;
@@ -238,110 +264,6 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
         editable: true,
       }
     ]
-  }
-
-  async prepareDerivedData() {
-    try { this._prepareTraits() } catch (e) { console.error(e) }
-    try { await this._prepareSpecies(); } catch (e) { console.error(e); }
-    try { this._prepareDefenses() } catch (e) { console.error(e) }
-  }
-
-  _prepareDefenses() {
-    this.defenses = {
-      energy:    this.innateDefenses.energy    + this.armorDefenses.energy,
-      heat:      this.innateDefenses.heat      + this.armorDefenses.heat,
-      chill:     this.innateDefenses.chill     + this.armorDefenses.chill,
-      physical:  this.innateDefenses.physical  + this.armorDefenses.physical,
-      psyche:    this.innateDefenses.psyche    + this.armorDefenses.psyche,
-    }
-  }
-
-  _prepareTraits() {
-    console.log(this);
-
-    for (const [key, trait] of Object.entries(this.traits)) {
-      trait.total = trait.value + trait.bonus;
-    }
-
-    for (const [key, subtrait] of Object.entries(this.subtraits)) {
-      subtrait.total = subtrait.value + subtrait.bonus;
-      if (subtrait.total === 0) subtrait.value = 1;
-      subtrait.total = subtrait.value + subtrait.bonus;
-      if (subtrait.gifted) subtrait.mod = Math.max(subtrait.total - 4, 0);
-      else subtrait.mod = subtrait.total - 4;
-      this.traits[subtrait.parent].total += subtrait.total;
-      //this.traits[subtrait.parent].mod = this.traits[subtrait.parent].total - 4;
-    }
-
-    for (const [key, trait] of Object.entries(this.traits)) {
-      trait.mod += trait.total;
-      trait.mod = trait.mod - 4;
-    }
-
-    this.spellcasting.spellcap = this.subtraits.res.total;
-  }
-  
-  async _prepareSpecies() {
-    if (this.parent.items.filter(i => i.type === "species").length === 0) {
-      return this._prepareSpeciesDefault();
-    } 
-
-    const species = this.parent.items.find(i => i.type === "species");
-    this._speciesData = species;
-
-    if (this.languagePoints) this.languagePoints.available += this._speciesData.system.communication.languages - this.languagePoints.spent;
-    if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
-    this.size = this._speciesData.system.size;
-
-    this.travel = {
-      land: { speed: 0, stamina: 0 },
-      water: { speed: 0, stamina: 0 },
-      air: { speed: 0, stamina: 0 }
-    }
-
-    for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      const rolldata = await this.parent.getRollData();
-      const innateRoll = new Roll(String(this.innateTravel[key].speed), rolldata);
-      await innateRoll.evaluate();  
-      this.travel[key].speed = innateRoll.total;
-
-      const speciesRoll = new Roll(String(value.speed), rolldata);
-      await speciesRoll.evaluate();
-      this.travel[key].speed += speciesRoll.total;
-    }
-  }
-
-  async _prepareSpeciesDefault() {
-    this._speciesData = {
-      name: "Human",
-      system: {
-        travel: {
-          land: "@spd.total",
-          water: 0,
-          air: 0
-        },
-        size: "medium",
-        communication: {
-          languages: 2,
-          telepathy: false
-        }
-      }
-    }
-
-    if (this.languagePoints) this.languagePoints.available = this._speciesData.system.communication.languages;
-    if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
-    this.size = this._speciesData.system.size;
-    
-    this.travel = {
-      land: { speed: 0, stamina: 0 },
-      water: { speed: 0, stamina: 0 },
-      air: { speed: 0, stamina: 0 }
-    }
-
-    for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      this.travel[key].speed = await new Roll(String(this.innateTravel[key].speed), this.parent.getRollData()).evaluate().total;
-      this.travel[key].speed += await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
-    }
   }
 
   static getPaperDoll() {

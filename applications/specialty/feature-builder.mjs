@@ -1,6 +1,7 @@
-import { isNumeric } from "../../helpers/numeric.mjs";
+import { gatherItems } from "../../system/helpers/gatherItems.mjs";
+import { isNumeric } from "../../system/helpers/isNumeric.mjs";
 
-const { api } = foundry.applications;
+const { api, sheets } = foundry.applications;
 
 export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.ApplicationV2) {
   constructor(options = {}) {
@@ -24,7 +25,7 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
     },
     actions: {
       toggleAdvanced: () => this.advanced = !this.advanced,
-      toggleAttribute: this._toggleAttribute,
+      toggleClassification: this._toggleClassification,
       shareAttribute: this._shareAttribute,
       removeAttribute: this._removeAttribute,
       removeSharedAttribute: this._unshareAttribute,
@@ -37,7 +38,7 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
 
   static PARTS = {
     content: {
-      template: "systems/utopia/templates/specialty/feature-builder.hbs",
+      template: "systems/utopia/templates/specialty/feature-builder/builder.hbs",
       scrollable: [".options-display", ".classification-container"],
     },
   };
@@ -48,11 +49,7 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
   }
 
   async _prepareContext(options) {
-    const existing = [];
-    Promise.all(game.packs.filter(p => p.metadata.type === "Item").forEach(async pack => {
-      const items = await pack.getDocuments();
-      existing.push(...items.filter(i => i.type === "gearFeature")); 
-    }));
+    const existing = await gatherItems({ type: "gearFeature", gatherFromActor: false, gatherFolders: true });
 
     const featureOptions = {};
     
@@ -160,6 +157,14 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
 
   _onRender(context, options) {
     super._onRender(context, options);
+
+    for (const attribute in this.shared) {
+      for (const classification in this.attributes) {
+        if (Object.keys(this.attributes[classification]).includes(attribute)) {
+          delete this.attributes[classification][attribute];
+        }
+      }
+    }
     
     const editables = this.element.querySelectorAll("[data-editable]");
     editables.forEach(editable => {
@@ -187,6 +192,34 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
   
         this.render(true);
       });      
+    });
+
+    const checkboxes = this.element.querySelectorAll("input[type=checkbox]");
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", (event) => {
+        const target = event.currentTarget;
+        const value = target.innerText.trim();
+        const type = target.dataset.type;
+        const attribute = target.dataset.attribute;
+        if (type === "shared") {
+          if (!this.shared[attribute])
+            this.shared[attribute] = {};
+          this.shared[attribute] = value;
+        }
+        else {
+          if (!this.attributes[type])
+            this.attributes[type] = {};
+
+          if (["maxStacks", "material", "refinement", "power", "costFormula", "componentsPerStack"].includes(attribute)) {
+            this.attributes[type][attribute] = value;
+          }
+          else {
+            this.attributes[type][attribute] = value;
+          }
+        }
+  
+        this.render(true);
+      });
     });
 
     const editableContainers = this.element.querySelectorAll(".attribute-input-group");
@@ -239,7 +272,6 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
         }
       });
     });
-      
 
     const stringTags = this.element.querySelectorAll("string-tags[data-editable]");
     stringTags.forEach(stringTag => {
@@ -394,7 +426,7 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
     });
   }
 
-  static async _toggleAttribute(event, target) {
+  static async _toggleClassification(event, target) {
     const attribute = target.dataset.attribute;
     const classification = target.dataset.type;
     if (classification === "classification") {
@@ -415,9 +447,8 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
     else {
       if (!this.attributes[classification])
         this.attributes[classification] = {};
-
-              this.attributes[classification][attribute] = !this.attributes[classification][attribute] ?? true; 
-          }
+        this.attributes[classification][attribute] = !this.attributes[classification][attribute] ?? true; 
+    }
 
     this.render(true);
   }
@@ -427,8 +458,11 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
     const classification = target.dataset.type;
     
     this.shared[attribute] = this.attributes[classification][attribute];
-    const classifications = Object.keys(this.attributes).forEach(c => {
-      delete this.attributes[c][attribute];
+    const classifications = Object.keys(this.attributes).forEach(async c => {
+      await new Promise(resolve => {
+        delete this.attributes[c][attribute];
+        resolve();
+      });
     });
     
     this.render(true);
@@ -437,11 +471,14 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
   static async _unshareAttribute(event, target) {
     const attribute = target.dataset.attribute;
     
-    const classifications = Object.keys(this.attributes).forEach(c => {
+    Object.keys(this.attributes).forEach(c => {
       this.attributes[c][attribute] = this.shared[attribute];
     });
 
-    delete this.shared[attribute]; 
+    await new Promise(resolve => {
+      delete this.shared[attribute];
+      resolve();
+    });
 
     this.render(true);
   }
@@ -484,9 +521,18 @@ export class FeatureBuilder extends api.HandlebarsApplicationMixin(api.Applicati
           stackCount = 10;
         }
 
-        const material = (attributes.material ?? this.shared.material ?? 0) * stackCount;
-        const refinement = (attributes.refinement ?? this.shared.refinement ?? 0) * stackCount;
-        const power = (attributes.power ?? this.shared.power ?? 0) * stackCount;
+        var material, refinement, power = 0;
+
+        const componentsPerStack = (attributes.componentsPerStack ?? this.shared.componentsPerStack ?? true);
+        if (componentsPerStack) {
+          material = (attributes.material ?? this.shared.material ?? 0) * stackCount;
+          refinement = (attributes.refinement ?? this.shared.refinement ?? 0) * stackCount;
+          power = (attributes.power ?? this.shared.power ?? 0) * stackCount;
+        } else {
+          material = attributes.material ?? this.shared.material ?? 0;
+          refinement = attributes.refinement ?? this.shared.refinement ?? 0;
+          power = attributes.power ?? this.shared.power ?? 0;
+        }
         const costFormula = await new Roll(attributes.costFormula ?? this.shared.costFormula ?? "0", {...this.attributes[c], ...this.shared}).evaluate({async: true});
         const cost = costFormula.total * stackCount;
 

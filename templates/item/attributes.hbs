@@ -2,6 +2,6 @@
 <div class="tab attributes {{tab.cssClass}} {{#if (lt position.width 501)}}flex-sm{{else}}flex-md{{/if}}" data-group="primary" data-tab="attributes">
   {{#each attributeFields as |field|}}
     {{log field}}
-    {{formGroup field.field customClasses=field.classes value=field.value stacked=field.stacked localize=true columns=field.columns flex=field.flex}}
+    {{formGroup field.field customClasses=field.classes value=field.value stacked=field.stacked localize=true options=field.options columns=field.columns flex=field.flex}}
   {{/each}}
 </div>

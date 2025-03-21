@@ -33,7 +33,9 @@ export class Species extends UtopiaItemBase {
     schema.branches = new fields.ArrayField(new fields.SchemaField({
       name: new fields.StringField({ required: true, nullable: false }),
       talents: new fields.ArrayField(talent, { initial: [] }),
-    }), { initial: [{ name: "", talents: [] }] });
+    }), { initial: [{ name: "", talents: [] }, { name: "", talents: [] }, { name: "", talents: [] }] });
+
+    schema.branchCount = new fields.NumberField({ required: true, nullable: false, initial: 3 });
 
     const evolution = () => new fields.SchemaField({
       head: new fields.NumberField({ ...required, initial: 1 }),
@@ -81,8 +83,8 @@ export class Species extends UtopiaItemBase {
 
     schema.quirkPoints = new fields.NumberField({ required: true, nullable: false, initial: 0 });
 
-    schema.communication = new fields.SchemaField({
-      language: new fields.SchemaField({
+    schema.communication = new UtopiaSchemaField({
+      language: new UtopiaSchemaField({
         choices: new fields.NumberField({ ...required, initial: 0 }),
         languages: new fields.SetField(new fields.StringField(), { initial: [] }),
       }),
@@ -122,7 +124,7 @@ export class Species extends UtopiaItemBase {
       }),
     });
 
-    schema.transform = new fields.SchemaField({
+    schema.transform = new UtopiaSchemaField({
       cost: new fields.NumberField({ ...required, initial: 0 }),
       duration: new fields.NumberField({ ...required, initial: 0 }),
       type: new fields.StringField({
@@ -137,7 +139,7 @@ export class Species extends UtopiaItemBase {
       }),
     });
 
-    schema.gifts = new fields.SchemaField({
+    schema.gifts = new UtopiaSchemaField({
       subtraits: new fields.SetField(new fields.StringField(), {
         required: true,
         nullable: false,
@@ -147,6 +149,14 @@ export class Species extends UtopiaItemBase {
         required: true,
         nullable: false,
         initial: 0,
+        min: 0,
+        max: 2,
+        step: 2
+      }),
+      trade: new fields.BooleanField({
+        required: true,
+        nullable: false,
+        initial: false,
       }),
     })
 
@@ -247,7 +257,27 @@ export class Species extends UtopiaItemBase {
   get attributeFields() {
     return [
       {
-        field: this.schema.fields.quirks, 
+        field: this.schema.fields.communication,
+        stacked: true,
+        editable: true,
+        columns: 2
+      },
+      {
+        field: this.schema.fields.transform,
+        stacked: false,
+        editable: true,
+        columns: 3,
+      },
+      {
+        field: this.schema.fields.gifts,
+        stacked: false,
+        editable: true,
+        columns: 3,
+      },
+      {
+        field: this.schema.fields.quirks,
+        stacked: false,
+        editable: true,
       }
     ]
   }
@@ -308,8 +338,6 @@ export class Species extends UtopiaItemBase {
     return context;
   }
 
-
-
   /** @override */
   prepareDerivedData() {
     super.prepareDerivedData();
@@ -317,38 +345,41 @@ export class Species extends UtopiaItemBase {
     this._prepareQuirks();
   }
 
-  _prepareQuirks() {
+  async _prepareQuirks() {
     try {
       this.quirkPoints = 0;
 
       const quirks = [...this.quirks];
 
       // Since we're storing quirks in a Set, we need to convert it to an array before we can iterate over it
-      Array.from(quirks).forEach(quirk => {
-        console.warn(quirk);
+      Array.from(quirks).forEach(async uuid => {
+        console.warn(uuid);
+
+        const quirk = await fromUuid(uuid);
+        if (!quirk) return;
 
         // Get our points
-        this.quirkPoints += quirk.qp;
+        this.quirkPoints += quirk.system.quirkPoints;
 
-        // Now we need to parse the attributes
-        let attributes = [];
-        if (typeof quirk.attributes === "string" && quirk.attributes.length > 0) 
-          attributes = JSON.parse(quirk.attributes);
-        else
-          attributes = quirk.attributes;
-
+        // Attributes are stored as an array of [{key: key, value: value}] objects
+        const attributes = quirk.system.attributes;
         if (attributes.length === 0) return;
         attributes.forEach(attribute => {
-          // The key for the attribute is the path to the value to update
-          // The value is the new value to set
-          const entries = Object.entries(foundry.utils.flattenObject(attribute));
-          entries.forEach(entry => {
-            const [key, value] = entry;
-            const path = key.split(".");
-            const last = path.pop();
-            const target = path.reduce((acc, part) => acc[part], this);
-            target[last] = value;
-          });
+          const key = attribute.key;
+          let value = attribute.value;
+          const path = key.split(".");
+          const last = path.pop();
+          const target = path.reduce((acc, part) => acc[part], this);         
+          const fieldPaths = path.map(part => `${part}.fields`);
+          const fields = fieldPaths.join(".") + "." + last;
+          const field = foundry.utils.getProperty(this.schema.fields, fields);
+          if (field.constructor.name === "NumberField") 
+            value = parseFloat(value);
+          else if (field.constructor.name === "BooleanField")
+            value = Boolean(value);
+          else if (field.constructor.name === "StringField")
+            value = String(value);
+          target[last] = value;
         }); 
       });
 
@@ -362,10 +393,8 @@ export class Species extends UtopiaItemBase {
       this.gifts.subtraitsLeft = 4 - this.gifts.subtraits.size - (this.gifts.points === 2 ? 3 : 0);
   
       this.quirkPoints += this.gifts.subtraits.size;
-  
-      if (this.gifts.points === 2) {
-        this.quirkPoints += 3;
-      }
+      this.quirkPoints += this.gifts.points === 2 ? 3 : 0;
+
     } catch (e) {
       console.error("Error preparing species quirks:", e);
     }

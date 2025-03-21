@@ -1,5 +1,5 @@
-import { EffectChoiceField } from "../../system/fields/effectChoiceField.mjs";
 import UtopiaItemBase from "../base-item.mjs";
+import { UtopiaSchemaField } from "../fields/schema-field.mjs";
 
 
 export class Talent extends UtopiaItemBase {
@@ -19,6 +19,21 @@ export class Talent extends UtopiaItemBase {
       choices: new fields.SetField(new fields.StringField({ required: true, nullable: false, initial: "" }), { initial: [] }),
       category: new fields.StringField({ required: true, nullable: false, initial: "" }),
     });
+
+    schema.flexibility = new UtopiaSchemaField({
+      enabled: new fields.BooleanField({ required: true, nullable: false, initial: false }),
+      body: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      mind: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      soul: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      category: new fields.StringField({ required: true, nullable: false, initial: "subspecies", choices: {
+        "subspecies": "UTOPIA.Items.Talent.FlexibilityCategory.SubSpecies",
+        "speciesFirst": "UTOPIA.Items.Talent.FlexibilityCategory.SpeciesFirst",
+        "speciesSecond": "UTOPIA.Items.Talent.FlexibilityCategory.SpeciesSecond",
+        "speciesAll": "UTOPIA.Items.Talent.FlexibilityCategory.SpeciesAll",
+        "generalPurpose": "UTOPIA.Items.Talent.FlexibilityCategory.GeneralPurpose",
+      }}),
+      tier: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+    })
 
     schema.macro = new fields.DocumentUUIDField({ type: "Macro" });
     schema.grants = new fields.SetField(new fields.DocumentUUIDField({ type: "Item" }), { initial: [] });
@@ -69,6 +84,12 @@ export class Talent extends UtopiaItemBase {
         stacked: true,
         editable: true,
       },
+      {
+        field: this.schema.fields.flexibility,
+        stacked: true,
+        editable: true,
+        columns: 6
+      }
     ]
   }
 

@@ -1,0 +1,8 @@
+<!-- Field -->
+
+<label class="detail-name">{{localize localePath}}</label>
+{{#if isPlay}}
+  <input type="text" class="detail-formula" value="{{value}}" readonly>
+{{else}}
+  <input type="text" class="detail-formula" name="{{name}}" value="{{editValue}}">
+{{/if}}

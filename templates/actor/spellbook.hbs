@@ -1,0 +1,20 @@
+<section class="tab spellbook {{tab.cssClass}}" data-group="primary" data-tab="spellbook"> 
+  <fieldset class="item-set" data-item="{{item.id}}">
+    {{#if isPlay}}
+      <legend>{{localize "UTOPIA.Actors.Items.Spells"}} <i class="fas fa-magic"></i></legend>
+    {{else}}
+      <legend data-action="createDocument" data-document-type="spell">{{localize "DOCUMENT.Create" type="Spell"}} <i class="fas fa-plus"></i></legend>
+    {{/if}}
+    <a data-action="openApplication" data-application="spellcraft"><i class="fas fa-magic"></i> {{localize "UTOPIA.Actors.Actions.OpenSpellcraft"}}</a>
+    <div class="item-container">
+      {{#each spells as |item|}} 
+        <div class="item">
+          <a data-action="roll" data-roll="item" data-item="{{item.id}}"><i class="fa-fw fas fa-magic"></i></a>
+          <a class="action" data-action="viewDocument" data-document-id="{{item.id}}">
+            <span class="item-name">{{item.name}} [{{item.system.cost}}]</span>
+          </a>
+        </div>
+      {{/each}}
+    </div>
+  </fieldset>
+</section>

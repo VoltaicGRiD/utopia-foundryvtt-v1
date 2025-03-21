@@ -1,3 +1,4 @@
+import { getTextContrast, getTextContrastHex } from "../../system/helpers/textContrast.mjs";
 import UtopiaItemBase from "../base-item.mjs";
 import { UtopiaSchemaField } from "../fields/schema-field.mjs";
 
@@ -209,6 +210,12 @@ export class SpellFeature extends UtopiaItemBase {
     }
 
     fields.push({
+      field: this.schema.fields.formula,
+      stacked: false,
+      editable: true,
+    })
+
+    fields.push({
       field: this.schema.fields.doesTarget,
       stacked: false,
       editable: true,
@@ -247,5 +254,14 @@ export class SpellFeature extends UtopiaItemBase {
     } else if (this.costMultiplier === "multiply") {
       this.costResult = `${this.cost}X PP`;  
     } 
+  }
+
+  get style() {
+    const artistries = CONFIG.UTOPIA.ARTISTRIES;
+    return {
+      background: artistries[this.art].color,
+      color: getTextContrastHex(artistries[this.art].color),
+      label: artistries[this.art].label,
+    }
   }
 }

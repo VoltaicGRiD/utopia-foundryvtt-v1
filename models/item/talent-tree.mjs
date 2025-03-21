@@ -8,7 +8,6 @@ export class TalentTree extends UtopiaItemBase {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();
       
-    schema.species = new fields.SetField(new fields.StringField(), { initial: [] });
     schema.style = new fields.SchemaField({
       foregroundColor: new fields.ColorField({ required: true, nullable: false, initial: "#FFFFFF" }),
       backgroundColor: new fields.ColorField({ required: true, nullable: false, initial: "#000000" }),
@@ -16,19 +15,20 @@ export class TalentTree extends UtopiaItemBase {
     });
     schema.allowLooping = new fields.BooleanField({ required: true, nullable: false, initial: false });
 
+    schema.branchCount = new fields.NumberField({ required: true, nullable: false, initial: 3 });
+
     const talent = new fields.SchemaField({
       uuid: new fields.DocumentUUIDField({ type: "Item", validate: async (value) => { 
         return (await fromUuid(value))?.type === "talent";
       }}),
       overridden: new fields.BooleanField({ required: true, nullable: false, initial: false }),
-      body: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-      mind: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
-      soul: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
+      body: new fields.NumberField({ required: true, nullable: false, initial: 0, sign: true }),
+      mind: new fields.NumberField({ required: true, nullable: false, initial: 0, sign: true }),
+      soul: new fields.NumberField({ required: true, nullable: false, initial: 1, sign: true }),
     })
     schema.branches = new fields.ArrayField(new fields.SchemaField({
-      name: new fields.StringField({ required: true, nullable: false }),
       talents: new fields.ArrayField(talent, { initial: [] }),
-    }), { initial: [{ name: "", talents: [] }] });
+    }), { initial: [{ name: "", talents: [] }, { name: "", talents: [] }, { name: "", talents: [] }] });
 
     return schema;
   }
@@ -36,11 +36,6 @@ export class TalentTree extends UtopiaItemBase {
   get headerFields() {
     return [
       ...super.headerFields,
-      {
-        field: this.schema.fields.species,
-        stacked: true,
-        editable: true,
-      },
       {
         field: this.schema.fields.allowLooping,
         stacked: false,
@@ -60,7 +55,7 @@ export class TalentTree extends UtopiaItemBase {
         field: this.schema.fields.style.fields.headerColor,
         stacked: false,
         editable: true,
-      },
+      }, 
     ]
   }
 
@@ -80,31 +75,12 @@ export class TalentTree extends UtopiaItemBase {
 
   async prepareDerivedData() {
     super.prepareDerivedData();
-    
-    for (let i = 0; i < this.branches.length; i++) {
-      if (this.branches.length === 1) break;
-      const current = this.branches[i];
-      const previous = this.branches[i - 1];
-      if (current.talents.length === 0 && previous.talents.length === 0) {
-        this.branches.splice(i, 1);
-        i--;
+
+    if (this.branches.length < this.branchCount) {
+      const diff = this.branchCount - this.branches.length;
+      for (let i = 0; i < diff; i++) {
+        this.branches.push({ name: "", talents: [] });
       }
     }
-
-    if (this.branches.length === 0) {
-      this.branches.push({ name: "", talents: [] });
-    }
-
-    // for (const branch of this.branches) {
-    //   for (const talent of branch.talents) {
-    //     const item = await fromUuid(talent.uuid);
-    //     if (talent.body === -1) 
-    //       talent.body = item.system.body;
-    //     if (talent.mind === -1)
-    //       talent.mind = item.system.mind;
-    //     if (talent.soul === -1)
-    //       talent.soul = item.system.soul;
-    //   }
-    // }
   }
 }

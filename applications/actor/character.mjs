@@ -12,6 +12,9 @@ export class Character extends DragDropActorV2 {
     attributes: {
       template: "systems/utopia/templates/actor/attributes.hbs",
     },
+    spellbook: {
+      template: "systems/utopia/templates/actor/spellbook.hbs",
+    },
     background: {
       template: "systems/utopia/templates/actor/background.hbs",
     },
@@ -33,7 +36,7 @@ export class Character extends DragDropActorV2 {
 
   _configureRenderOptions(options) {
     super._configureRenderOptions(options);
-    options.parts = ["header", "tabs", "attributes", "background", "effects"];
+    options.parts = ["header", "tabs", "attributes", "spellbook", "background", "effects"];
   }
 
   _prepareSubmitData(event, form, formData) {

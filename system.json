@@ -101,6 +101,19 @@
       "flags": {}
     },
     {
+      "name": "quirks",
+      "label": "SRD Quirks",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "talents",
       "label": "SRD Talents",
       "banner": "systems/utopia/assets/Utopia-Background.webp",
@@ -308,7 +321,7 @@
           "name": "Species Etc.",
           "sorting": "a",
           "color": "string",
-          "packs": ["species"],
+          "packs": ["species", "quirks"],
           "folders": []
         },
         {

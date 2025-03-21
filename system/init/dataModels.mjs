@@ -10,11 +10,19 @@ export function registerItemDataModels() {
     class: ItemModels.Class,
     favor: ItemModels.Favor,
     generic: ItemModels.GenericItem,
+    gear: ItemModels.Gear,
     species: ItemModels.Species,
     talentTree: ItemModels.TalentTree,
     talent: ItemModels.Talent,
     spell: ItemModels.Spell,
     spellFeature: ItemModels.SpellFeature,
+    gearFeature: ItemModels.GearFeature,
+    
+    weaponFeature: ItemModels.WeaponFeature,
+    armorFeature: ItemModels.ArmorFeature,
+    shieldFeature: ItemModels.ShieldFeature,
+    artifactFeature: ItemModels.ArtifactFeature,
+    consumableFeature: ItemModels.ConsumableFeature,
   }
 }
 

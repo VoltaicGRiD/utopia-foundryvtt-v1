@@ -88,7 +88,7 @@ export class SpellFeatureSheet extends DragDropItemV2 {
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
+        label: 'UTOPIA.Items.Tabs.',
       };
   
       switch (partId) {
@@ -97,17 +97,17 @@ export class SpellFeatureSheet extends DragDropItemV2 {
           return tabs;
         case 'attributes':
           tab.id = 'attributes';
-          tab.label += 'attributes';
+          tab.label += 'Attributes';
           tab.icon = 'fas fa-atom';
           break;
         case 'variables':
           tab.id = 'variables';
-          tab.label += 'variables';
+          tab.label += 'Variables';
           tab.icon = 'fas fa-flask-vial';
           break;
         case 'description':
           tab.id = 'description';
-          tab.label += 'description';
+          tab.label += 'Description';
           tab.icon = "fas fa-align-left";
           break;
         default:

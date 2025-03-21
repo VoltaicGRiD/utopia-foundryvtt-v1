@@ -5,6 +5,9 @@
  */
 export const preloadHandlebarsTemplates = async function () {
   return loadTemplates({
+    'attribute': 
+      'systems/utopia/templates/specialty/feature-builder/attribute.hbs',
+
     'trait': 
       'systems/utopia/templates/actor/partials/trait.hbs',
 
@@ -16,6 +19,15 @@ export const preloadHandlebarsTemplates = async function () {
 
     'paper-doll':
       'systems/utopia/templates/specialty/paperdoll-attributes.hbs',
+
+    'classification':
+      'systems/utopia/templates/specialty/feature-builder/classification.hbs',
+    
+    'standard-attributes': 
+      'systems/utopia/templates/specialty/feature-builder/standard-attributes.hbs',
+
+    'actor-header-field':
+      'systems/utopia/templates/actor/partials/header-field.hbs',
   });
 };
 

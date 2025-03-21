@@ -1,0 +1,91 @@
+<div class="gear-panel grid-span-2">
+  <div class="gear-name">
+    <input
+      name='name'
+      type='text'
+      value='{{name}}'
+      data-action="update"
+      placeholder='Name'/>
+  </div>
+
+  {{formGroup systemFields.type name="system.type" value=system.type localize=true}}
+
+  {{#if (eq system.type "weapon")}}
+    {{formGroup systemFields.weaponType name="system.weaponType" value=system.weaponType localize=true}}
+  {{/if}}
+  
+  {{#if (eq system.type "armor")}}
+    {{formGroup systemFields.armorType name="system.armorType" value=system.armorType localize=true}}
+  {{/if}}
+
+  <div class="gear-attributes">
+    <div class="gear-attribute">
+      <span class="gear-range">{{localize 'UTOPIA.Items.Gear.FIELDS.Range.label'}}</span>
+      <span class="gear-range-value">{{system.rangeOut}}</span>
+    </div>
+    <div class="gear-attribute">
+      <span class="gear-rarity">{{localize 'UTOPIA.Items.Gear.FIELDS.Rarity.label'}}</span>
+      <span class="gear-rarity-value">{{system.cost}}</span>
+    </div>
+  </div>
+
+  <div class="gear-features">
+    <ol class="selected-feature-list flexcol">
+      {{#each features as |feature key|}}
+        <li class="feature" style="background: {{feature.system.style.background}}; color: {{feature.system.style.color}}" data-id="{{key}}">
+          <img src="{{feature.img}}" class="feature-icon" />
+          <button type="button" class="remove-feature hidden">
+            <i class="fa-fw fa-solid fa-times"></i>
+          </button>
+          <span class="feature-name">
+            <span data-tooltip="{{feature.system.description}}" data-tooltip-direction="DOWN"><i class="fa-fw fa-solid fa-circle-info"></i></span>
+            {{feature.name}} 
+            (<span id="cost" class="cost">{{feature.system.cost}}</span>)
+          </span>
+          <div class="feature-controls">
+            {{#each feature.variables as |variable varKey|}}
+              {{#if (eq varKey "stacks")}}
+                <div class="flexrow feature-variable">
+                  <input type="number" 
+                        name="system.featureSettings.{{feature.id}}.{{varKey}}.value"
+                        min="{{variable.minimum}}" 
+                        max="{{variable.maximum}}" 
+                        value="{{variable.value}}"
+                        data-feature="{{key}}" 
+                        data-variable="{{varKey}}" />
+                  <span class="feature-variable-character"><i class="fa-solid fa-cubes-stacked"></i></span>
+                </div>
+              {{else if (eq variable.kind "number")}}
+                <div class="flexrow feature-variable">
+                  <input type="number" 
+                        name="system.featureSettings.{{feature.id}}.{{varKey}}.value"
+                        min="{{variable.minimum}}" 
+                        max="{{variable.maximum}}" 
+                        value="{{variable.value}}"
+                        data-feature="{{key}}" 
+                        data-variable="{{varKey}}" />
+                  <span class="feature-variable-character">{{variable.character}}</span>
+                </div>
+              {{else if (eq variable.kind "options")}}
+                <div class="flexrow feature-variable">
+                  <button type="button" class="feature-variable-options {{#if (eq feature.value "")}}unset{{/if}}"
+                          data-variable="{{varKey}}"
+                          data-feature="{{key}}">
+                    <i class="fa-fw fa-solid fa-list"></i>
+                  </button>
+                </div>
+              {{/if}}
+            {{/each}}
+          </div>
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+  <div class="gear-flavor">
+    <textarea name="system.flavor" placeholder="{{localize 'UTOPIA.Item.flavor'}}"></textarea>
+  </div>
+  <div class="gear-controls">
+    <a type="button" data-action="save">{{localize "UTOPIA.Items.Gear.BUTTONS.Save"}}</a>
+    <a type="button" data-action="edit">{{localize "UTOPIA.Items.Gear.BUTTONS.Artifice"}}</a>
+  </div>
+</div>  

@@ -43,6 +43,8 @@ export class Favor extends UtopiaItemBase {
     }
     
     schema.check = new fields.StringField({ required: true, nullable: false, initial: "agi", choices: allOptions });
+    schema.checks = new fields.SetField(schema.check, { initial: [] });
+    
     schema.target = new fields.StringField({
       required: true,
       nullable: false,
@@ -52,7 +54,6 @@ export class Favor extends UtopiaItemBase {
         targeted: "UTOPIA.Favors.targeted",
       }
     });
-    schema.checks = new fields.SetField(schema.check, { initial: [] });
     schema.value = new fields.NumberField({ required: true, nullable: false, initial: 1 });
 
     return schema;
@@ -69,20 +70,15 @@ export class Favor extends UtopiaItemBase {
     return [
       ...super.headerFields,
       {
-        field: this.schema.fields.always,
-        stacked: false,
-        editable: true,
-      },
-      {
         field: this.schema.fields.checks,
         stacked: true,
         editable: true,
         options:  Object.entries(this.schema.fields.check.options.choices).map(([key, value]) => {
-            return {
-              ...value,
-              value: key,
-            };
-          })
+          return {
+            ...value,
+            value: key,
+          };
+        })
       },
       {
         field: this.schema.fields.value,
@@ -95,7 +91,7 @@ export class Favor extends UtopiaItemBase {
   get attributeFields() {
     return [
       {
-        field: this.schema.fields.condition,
+        field: this.schema.fields.conditions,
         stacked: true,
         editable: true,
       },
@@ -110,7 +106,7 @@ export class Favor extends UtopiaItemBase {
   getSheetContext(context) {
     return {
       checks: this.schema.fields.check.options,
-      conditions: this.schema.fields.condition.choices,
+      conditions: this.schema.fields.conditions.choices,
       targets: this.schema.fields.target.choices,
     };
   }

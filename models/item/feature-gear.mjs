@@ -55,7 +55,8 @@ export class GearFeature extends UtopiaItemBase {
       bomb: "UTOPIA.Gear.ConsumableType.Bomb",
     }});
 
+    schema.classifications = new fields.ObjectField();
 
-
+    return schema;
   }
 }

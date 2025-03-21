@@ -5,6 +5,7 @@ import { SpellSheet } from "../../applications/item/spell.mjs";
 import { SpellFeatureSheet } from "../../applications/item/spell-feature.mjs";
 import { NPC } from "../../applications/actor/npc.mjs";
 import { Species } from "../../applications/item/species.mjs";
+import { GearSheet } from "../../applications/item/gear.mjs";
 
 export function registerItemSheets() {
   Items.registerSheet("utopia", TalentTree, {
@@ -31,6 +32,11 @@ export function registerItemSheets() {
     makeDefault: true,
     types: ["species"],
     label: "UTOPIA.SheetLabels.species",
+  });
+  Items.registerSheet("utopia", GearSheet, {
+    makeDefault: true,
+    types: ["gear"],
+    label: "UTOPIA.SheetLabels.gear",
   });
 }
 

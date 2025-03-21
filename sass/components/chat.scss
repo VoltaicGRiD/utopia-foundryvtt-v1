@@ -8,8 +8,15 @@
   display: flex;
   flex-direction: row;
   gap: 5px;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
+  height: 30px;
+  line-height: 30px;
+}
+
+.card-title {
+  font-weight: 900;
+  font-size: var(--font-size-16);
 }
 
 .damage-instance {
@@ -66,4 +73,131 @@
 
 .damage-value {
   font-size: var(--font-size-16);
+}
+
+.spell-card {
+  .spell-attributes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+  }
+
+  .selected-feature-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .feature {
+    padding: 0 5px;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  summary {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-start;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  summary:not([open])::before {
+    content: "▶";
+  }
+
+  summary[open]::before {
+    content: "▼";
+  }
+
+  img {
+    border: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  .feature-variables {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .feature-variable {
+    line-height: 20px;
+    height: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .feature-variable-character {
+    width: 25px;
+    text-align: center;
+    font-weight: 900;
+    font-size: var(--font-size-16);
+  }
+
+  //@import "../components/spellcraft.scss";
+
+  // .feature {
+  //   display: flex;
+  //   flex-direction: column;
+  // }
+
+  // .feature-name {
+  //   display: flex;
+  //   flex-direction: row;
+  //   gap: 5px;
+  //   align-items: flex-start;
+  //   justify-content: flex-start;
+  //   position: relative;
+  //   left: 0;
+  //   top: 0;
+  //   transform: none;
+  //   height: 30px;
+  //   line-height: 30px;
+
+  //   img {
+  //     position: unset;
+  //   }
+  // }
+
+  // .feature-controls {
+  //   height: unset;
+  //   position: unset;
+  //   display: flex;
+  //   flex-direction: column;
+  //   width: 100%;
+  //   align-items: flex-end;
+  //   justify-content: flex-end;
+  //   margin-bottom: 5px;
+
+  //   .feature-variable {   
+  //     position: unset;
+  //     width: 100px;
+  //     justify-content: flex-end;
+
+  //     .feature-variable-value { 
+  //       border: 1px solid var(--utopia-color-maroon);
+  //       color: black;
+  //       position: unset;
+  //       text-align: right;
+  //       padding: 2px;
+  //       border: none;
+  //       margin: 0;  
+  //     }
+
+  //     .feature-variable-character {
+  //       width: 50px;
+  //       height: 25px;
+  //       line-height: 25px;
+  //       text-align: center;
+  //     }
+  //   }
+  // }
 }

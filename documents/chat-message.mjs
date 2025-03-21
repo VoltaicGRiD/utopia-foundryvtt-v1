@@ -1,5 +1,5 @@
-import { UtopiaTemplates } from "../system/init/measuredTemplates.mjs";
 import { UtopiaUserVisibility } from "../system/helpers/userVisibility.mjs";
+import { UtopiaTemplates } from "../system/init/measuredTemplates.mjs";
 import { UtopiaItem } from "./item.mjs";
 
 const { api } = foundry.applications
@@ -44,12 +44,28 @@ export class UtopiaChatMessage extends ChatMessage {
     let templateButtons = html.querySelectorAll('button[data-action="template"]'); 
     for (let button of templateButtons) {
       button.addEventListener('click', async (event) => {
-        const actor = this.getActor();
-        const item = actor.items.get(this.getFlag('utopia', 'item'));
-        const template = button.dataset.template;
-        UtopiaTemplates.fromPreset(template, item);
-        button.disabled = false;
-        return null;
+        if (this.system.template) {
+          // Set template data based on preset option
+          const template = new CONFIG.MeasuredTemplate.documentClass(
+            this.system.template,
+            { parent: canvas.scene ?? undefined }
+          );
+          const measuredTemplate = new UtopiaTemplates(template);
+          measuredTemplate.drawPreview();
+        }
+
+        // if (!game.user.isGM) {
+        //   const actor = this.getActor();
+        //   const item = actor.items.get(this.getFlag('utopia', 'item')) ?? undefined;
+        //   const template = button.dataset.template;
+        //   UtopiaTemplates.fromPreset(template, item);
+        //   button.disabled = false;
+        //   return null;
+        // }
+        // else {
+        //   const template = button.dataset.template;
+        //   UtopiaTemplates.fromPreset(template);
+        // }
       });
     }
 

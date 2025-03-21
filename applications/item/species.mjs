@@ -57,8 +57,20 @@ export class Species extends DragDropItemV2 {
     context.tabs = this._getTabs(options.parts);
     context.position = options.position;
     context.isPlay = this._mode === this.constructor.MODES.PLAY,
-    context.branches = this.item.system.branches ?? [],
-      
+    context.branches = this.item?.system?.branches ?? []
+
+    try {
+      await Promise.all(context.branches.map(async b => {
+        if (b.talents.length > 0) {
+          await Promise.all(b.talents.map(async t => {
+            t.item = await fromUuid(t.uuid) || {};
+          }));
+        }
+      }));
+    } catch (error) {
+      console.error(error);
+    }      
+    
     console.log(context);
 
     return context;
@@ -108,7 +120,7 @@ export class Species extends DragDropItemV2 {
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
+        label: 'UTOPIA.Items.Tabs.',
       };
   
       switch (partId) {
@@ -117,27 +129,27 @@ export class Species extends DragDropItemV2 {
           return tabs;
         case 'attributes':
           tab.id = 'attributes';
-          tab.label += 'attributes';
+          tab.label += 'Attributes';
           tab.icon = 'fas fa-fw fa-book';
           break;
         case 'paperdoll': 
           tab.id = 'paperdoll';
-          tab.label += 'paperdoll';
+          tab.label += 'Paperdoll';
           tab.icon = 'fas fa-fw fa-person';
           break
         case 'description': 
           tab.id = 'description';
-          tab.label += 'description';
+          tab.label += 'Description';
           tab.icon = 'fas fa-fw fa-align-left';
           break;
         case 'talenttree':
           tab.id = 'talent-tree';
-          tab.label += 'talent-tree';
+          tab.label += 'Talent-tree';
           tab.icon = 'fas fa-fw fa-tree';
           break
         case 'effects':
           tab.id = 'effects';
-          tab.label += 'effects';
+          tab.label += 'Effects';
           tab.icon = 'fas fa-fw fa-bolt';
           break;
         default:

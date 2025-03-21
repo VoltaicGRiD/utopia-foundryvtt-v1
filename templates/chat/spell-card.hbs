@@ -1,0 +1,65 @@
+<div class="chat-card spell-card">
+  
+  <div class="card-header">
+    <img class="card-header-icon" src="systems/utopia/assets/spell.svg" title="Spell" style="width: 30px; height: 30px;"/>
+    <span class="card-title">Spell</span>
+  </div>
+
+  <div class="spell-attributes">
+    <span class="spell-duration"><i class="fas fa-clock"></i> {{item.system.durationOut}}</span>
+    <span class="spell-range"><i class="fas fa-bow"></i> {{item.system.rangeOut}}</span>
+    <span class="spell-aoe"><i class="fas fa-box"></i> {{item.system.aoeOut}}</span>
+    <span class="spell-cost"><i class="fas fa-coin"></i> {{item.system.cost}}</span>
+  </div>
+
+  <div class="spell-features">
+    <ol class="selected-feature-list flexcol">
+      {{#each features as |feature key|}}
+        <li class="feature" 
+          style="{{#if (eq feature.locked false)}}background: {{feature.background}}; color: {{feature.color}}{{else}}background: #302831; color: white;{{/if}}" 
+          data-id="{{feature.uuid}}">
+          
+          <details>
+            <summary class="feature-name">
+              <img src="{{feature.img}}" class="feature-icon" />
+              {{feature.name}} 
+            </summary>
+
+            <div class="feature-variables">
+              {{#each feature.variables as |variable varKey|}}
+                {{#if (eq varKey "stacks")}}
+                  <div class="feature-variable">
+                    <span class="feature-variable-character"><i class="fa-solid fa-cubes-stacked"></i></span>
+                    <span class="feature-variable-value">{{variable.value}}</span>
+                  </div>
+                {{else if (eq variable.kind "number")}}
+                  <div class="feature-variable">
+                    <span class="feature-variable-character">{{variable.character}}</span>
+                    <span class="feature-variable-value">{{variable.value}}</span>
+                  </div>
+                {{else}}
+                  <div class="feature-variable">
+                    <span class="feature-variable-character" data-tooltip="{{variable.name}}">{{variable.character}}</span>
+                    <span class="feature-variable-value">{{variable.value}}</span>
+                  </div>
+                {{/if}}
+              {{/each}}
+            </div>
+          </details>  
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+
+  {{#if template}}
+    <button data-action="template" data-template="{{template}}"><i class='fa-solid fa-bullseye'></i></button>
+  {{/if}}
+
+  <div class="card-content">
+    {{{item.system.flavor}}}
+  </div>
+
+  <!-- <footer data-visibility="gm">
+    <button data-action="acceptSpell"><i class="fa-solid fa-check"></i>{{localize "UTOPIA.COMMON.accept"}}</button>
+  </footer> -->
+</div>

@@ -11,7 +11,11 @@
   <img class='item-icon' src='{{item.img}}' data-edit='img' data-action="image" title='{{item.name}}'/>
   {{#each headerFields as |field|}}
     {{log field}}
-    {{formGroup field.field classes="item-header-field" value=field.value editable=field.editable stacked=field.stacked localize=true options=field.options columns=field.columns}}
+    {{#if (eq field.field "hr")}}
+      <hr/>
+    {{else}}
+      {{formGroup field.field classes="item-header-field" value=field.value editable=field.editable stacked=field.stacked localize=true options=field.options columns=field.columns}}
+    {{/if}}
   {{/each}}
 </div>
 

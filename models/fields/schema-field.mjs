@@ -32,6 +32,13 @@ export class UtopiaSchemaField extends foundry.data.fields.SchemaField {
     
     for (const [key, field] of Object.entries(this.fields)) {
       const value = inputConfig.value[key];
+      if (field.choices) inputConfig.options = Object.entries(field.choices).map(([key, value]) => {
+        return {
+          ...value,
+          value: key,
+        };
+      });
+      else inputConfig.options = undefined;
       const input = field.toFormGroup({ ...groupConfig }, { ...inputConfig, value: value });
       input.classList.add("schema-input");
       container.append(input);

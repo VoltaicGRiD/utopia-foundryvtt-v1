@@ -1,3 +1,4 @@
+import { FeatureBuilder } from "../../applications/specialty/feature-builder.mjs";
 import { registerDiceSoNice } from "../integrations/DiceSoNice/diceSoNice.mjs";
 
 export function registerHooks() {
@@ -224,6 +225,23 @@ export function registerHooks() {
   });
 
   Hooks.on("renderSidebarTab", (tab) => {
+    if (tab.tabName === "items") {
+      const browserButton = document.createElement("button");
+      const browserIcon = document.createElement("i");
+      browserIcon.classList.add("fas", "fa-gears");
+      browserButton.type = "button";
+      browserButton.style.height = "28px";
+      browserButton.style.lineHeight = "26px";
+      browserButton.style.margin = "4px";
+      browserButton.append(browserIcon, game.i18n.localize("UTOPIA.Settings.Buttons.FeatureBuilder"));
+      browserButton.addEventListener("click", () => {
+        const browser = new FeatureBuilder();
+        browser.render(true);
+      });  
+
+      tab.element[0].querySelector(".directory-footer.action-buttons")?.append(browserButton);
+    }
+
     if (tab.tabName !== "compendium") return;
 
     const browserButton = document.createElement("button");
@@ -233,9 +251,8 @@ export function registerHooks() {
     browserButton.style.height = "28px";
     browserButton.style.lineHeight = "26px";
     browserButton.style.margin = "4px";
-    browserButton.append(browserIcon, game.i18n.localize("UTOPIA.Settings.Buttons.compendiumBrowser"));
+    browserButton.append(browserIcon, game.i18n.localize("UTOPIA.Settings.Buttons.CompendiumBrowser"));
     browserButton.addEventListener("click", () => {
-      // Open the hyperlink to the Utopia Discord
       const browser = new UtopiaCompendiumBrowser();
       browser.render(true);
     });  

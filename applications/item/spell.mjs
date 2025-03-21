@@ -53,13 +53,26 @@ export class SpellSheet extends api.HandlebarsApplicationMixin(
       name: this.item.name,
     };
 
-    context = foundry.utils.mergeObject(context, {
-      tabs: this._getTabs(options.parts),
-    });
-
+    context.features = this.item.system.parsedFeatures ?? [];
+    if (context.features.length === 0) {
+      context.features = await Promise.all(this.item.system.features.map(async (feature) => {
+        const featureItem = await fromUuid(feature);
+        return featureItem;
+      }));
+    }
+    for (const feature of context.features) {
+      feature.variables = this.item.system.featureSettings[feature._id];
+    }
+    
     console.log(context);
 
     return context;
+  }
+
+  _prepareSubmitData(event, form, formData) {
+    const submitData = super._prepareSubmitData(event, form, formData);
+    delete submitData["system.features"];
+    return submitData;
   }
 
   async _preparePartContext(partId, context) {
@@ -87,13 +100,13 @@ export class SpellSheet extends api.HandlebarsApplicationMixin(
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Item.Tabs.',
+        label: 'UTOPIA.Items.Tabs.',
       };
   
       switch (partId) {
         case 'details':
           tab.id = 'details';
-          tab.label += 'details';
+          tab.label += 'Details';
           break;
         default:
       }
@@ -109,18 +122,18 @@ export class SpellSheet extends api.HandlebarsApplicationMixin(
   async _onRender(context, options) {
     super._onRender(context, options);
 
-    const numVariables = this.element.querySelectorAll("input[type='number']");
-    numVariables.forEach(v => {
-      v.addEventListener("change", (event) => {
-        const featureId = event.target.dataset.feature;
-        const variableId = event.target.dataset.variable;
-        const value = event.target.value;
+    // const numVariables = this.element.querySelectorAll("input[type='number']");
+    // numVariables.forEach(v => {
+    //   v.addEventListener("change", (event) => {
+    //     const featureId = event.target.dataset.feature;
+    //     const variableId = event.target.dataset.variable;
+    //     const value = event.target.value;
 
-        this.item.update({
-          [`system.features.${featureId}.system.variables.${variableId}.value`]: value
-        });
-      });
-    });
+    //     this.item.update({
+    //       [`system.features.${featureId}.system.variables.${variableId}.value`]: value
+    //     });
+    //   });
+    // });
   }
 
   static async _edit(event, target) {
@@ -130,5 +143,9 @@ export class SpellSheet extends api.HandlebarsApplicationMixin(
   
   static async _save(event, target) {
     super.submit();
+  }
+
+  static async _cast(event, target) {
+    await this.item.use();
   }
 }

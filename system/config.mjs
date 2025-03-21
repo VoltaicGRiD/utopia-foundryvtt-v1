@@ -259,6 +259,7 @@ export function registerConfig() {
       icon: 'fas fa-bolt',
       block: 1.0,
       dodge: true,
+      armor: true,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Energy'),
     },
     heat: {
@@ -266,6 +267,7 @@ export function registerConfig() {
       icon: 'fas fa-fire',
       block: 1.0,
       dodge: true,
+      armor: true,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Heat'),
     },
     chill: {
@@ -273,6 +275,7 @@ export function registerConfig() {
       icon: 'fas fa-snowflake',
       block: 1.0,
       dodge: true,
+      armor: true,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Chill'),
     },
     physical: {
@@ -280,6 +283,7 @@ export function registerConfig() {
       icon: 'fas fa-fist-raised',
       block: 1.0,
       dodge: true,
+      armor: true,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Physical'),
     },
     pysche: {
@@ -287,6 +291,7 @@ export function registerConfig() {
       icon: 'fas fa-brain',
       block: 1.0,
       dodge: true,
+      armor: true,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Psyche'),
     },
     kinetic: {
@@ -294,14 +299,32 @@ export function registerConfig() {
       icon: 'fas fa-bomb',
       block: 0,
       dodge: false,
+      armor: false,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Kinetic'),
+    },
+    stamina: {
+      name: 'Stamina',
+      icon: 'fas fa-heart-crack',
+      block: 0,
+      dodge: false,
+      armor: false,
+      label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Stamina'),
     },
     healing: {
       name: 'Healing',
       icon: 'fas fa-heart',
       block: 0,
       dodge: false,
+      armor: false,
       label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.Healing'),
+    },
+    restoreStamina: {
+      name: 'Restore Stamina',
+      icon: 'fas fa-heartbeat',
+      block: 0,
+      dodge: false,
+      armor: false,
+      label: game.i18n.localize('UTOPIA.DAMAGE_TYPES.RestoreStamina'),
     }
   }
 
@@ -310,64 +333,56 @@ export function registerConfig() {
       name: 'Alteration',
       short: 'alt',
       long: 'alteration',
-      icon: 'fas fa-random',
-      color: '#7F0D0D',
+      color: '#90c96b',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Alteration'),
     },
     array: {
       name: 'Array',
       short: 'arr',
       long: 'array',
-      icon: 'fas fa-th',
-      color: '#7F0D0D',
+      color: '#f3ec68',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Array'),
     },
     enchantment: {
       name: 'Enchantment',
       short: 'ench',
       long: 'enchantment',
-      icon: 'fas fa-gem',
-      color: '#7F0D0D',
+      color: '#ee92b7',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Enchantment'),
     },
     evocation: {
       name: 'Evocation',
       short: 'evo',
       long: 'evocation',
-      icon: 'fas fa-magic',
-      color: '#7F0D0D',
+      color: '#ee6448',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Evocation'),
     },
     divination: {
       name: 'Divination',
       short: 'div',
       long: 'divination',
-      icon: 'fas fa-eye',
-      color: '#7F0D0D',
+      color: '#62b4ae',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Divination'),
     },
     illusion: {
       name: 'Illusion',
       short: 'ill',
       long: 'illusion',
-      icon: 'fas fa-eye',
-      color: '#7F0D0D',
+      color: '#94d2e1',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Illusion'),
     },
     necromancy: {
       name: 'Necromancy',
       short: 'necro',
       long: 'necromancy',
-      icon: 'fas fa-skull',
-      color: '#7F0D0D',
+      color: '#a75aa2',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Necromancy'),
     },
     wake: {
       name: 'Wake',
       short: 'wake',
       long: 'wake',
-      icon: 'fas fa-brain',
-      color: '#7F0D0D',
+      color: '#f5a755',
       label: game.i18n.localize('UTOPIA.ARTISTRIES.Wake'),
     },
   }
@@ -755,6 +770,12 @@ export function registerConfig() {
     },
     eq: (a, b) => {
       return a == b;
-    }
+    },
+    min: (a, b) => {
+      return Math.min(a, b);
+    },
+    max: (a, b) => {
+      return Math.max(a, b);
+    },
   }
 }

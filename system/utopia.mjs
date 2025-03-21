@@ -1,24 +1,29 @@
 const { game } = globalThis;
 
+import { FeatureBuilder } from "../applications/specialty/feature-builder.mjs";
+import { SpellcraftSheet } from "../applications/specialty/spellcraft.mjs";
+import { TalentBrowser } from "../applications/specialty/talent-browser.mjs";
 import { UtopiaActor } from "../documents/actor.mjs";
 import { UtopiaChatMessage } from "../documents/chat-message.mjs";
 import { UtopiaItem } from "../documents/item.mjs";
 import { registerConfig } from "./config.mjs";
 import * as init from "./init/_init.mjs";
 
-Hooks.once("init", function () {
-  game.utopia = {
-    documents: {
+globalThis.utopia = {
+  documents: {
 
-    },
-    applications: {
+  },
+  applications: {
+    talentBrowser: TalentBrowser,
+    featureBuilder: FeatureBuilder,
+    spellcraft: SpellcraftSheet
+  },
+  utilities: {
 
-    },
-    utilities: {
-
-    }
   }
+}
 
+Hooks.once("init", function () {
   CONFIG.UTOPIA = {};
   registerConfig();
   init.registerHooks();

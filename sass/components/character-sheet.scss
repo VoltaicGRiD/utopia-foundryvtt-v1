@@ -17,3 +17,79 @@
   }
 }
 
+& .item-set {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .item-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;    
+  }
+  
+  .item {
+    flex: 0 0 32%;
+    display: flex;
+    flex-direction: row;
+    gap: 2px;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px;
+    border: 1px solid var(--utopia-color-blue-white);
+    border-radius: 5px 5px 0 0;
+  }  
+
+  .item-edit {
+    flex: 0 0 32%;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    align-items: center;
+    justify-content: space-around;
+
+    .item {
+      border-radius: 5px 0 0 5px;
+      border-right: 0;
+      flex: 20;
+    }
+
+    .item-actions {
+      border: 1px solid var(--utopia-color-blue-white);
+      border-left: 0;
+      background: var(--utopia-color-maroon);
+      border-radius: 0 5px 5px 0;
+      padding: 5px 5px;
+      flex: 1;
+    }
+  }
+}
+
+.experience-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+
+  .attribute-label {
+    font-size: var(--font-size-18);
+    color: black;
+    text-align: center;
+    font-weight: bold;
+    font-family: var(--utopia-font-names);
+  }
+}
+
+.levelup-button {
+  width: 100%;
+  padding: 5px;
+  background: var(--utopia-color-maroon);
+  color: white;
+  border: 1px solid var(--utopia-color-blue-white);
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+}

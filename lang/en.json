@@ -26,8 +26,8 @@
     },
     "COMMON": {
       "consolidate": "Consolidate sheet",
-      "description": "Description"
-
+      "description": "Description",
+      "accept": "Accept"
     },
     "RARITIES": {
       "Crude": "Crude",
@@ -71,6 +71,42 @@
       "Floor": "Floor",
       "Random": "Random"
     },
+    "Settings": {
+      "Buttons": {
+        "CompendiumBrowser": "Compendium Browser",
+        "FeatureBuilder": "Artifice Feature Builder"
+      }
+    },
+    "FeatureBuilder": {
+      "Labels": {
+        "shared": "Shared",
+        "weapon": "Weapon",
+        "other": "Other",
+        "armor": "Armor",
+        "artifacts": "Artifacts",
+        "requires": "Requires",
+        "incompatibleWith": "Incompatible With",
+        "name": "Feature Name",
+        "saveFeature": "Save Feature",
+        "simulation1": "Simulating for ",
+        "simulation2": "stacks"
+      },
+      "Classifications": {
+        "fastWeapon": "Fast",
+        "moderateWeapon": "Moderate",
+        "slowWeapon": "Slow",
+        "shields": "Shield",
+        "headArmor": "Head",
+        "chestArmor": "Chest",
+        "handsArmor": "Hands",
+        "waistArmor": "Waist",
+        "feetArmor": "Feet",
+        "consumable": "Consumable",
+        "equippableArtifact": "Equippable",
+        "handheldArtifact": "Handheld",
+        "ammunitionArtifact": "Ammunition"
+      }
+    },
     "Spellcraft": {
       "Save": "Save",
       "SaveAndCast": "Save and Cast",
@@ -86,9 +122,11 @@
         "Dodge": "Dodge",
         "Rest": "Rest",
         "OpenTalentTree": "Open Talent Tree",
+        "OpenSpellcraft": "Open Spellcraft",
         "NewArtifice": "Create New Artifice",
         "NoSpecies": "No Species, Click to Select",
-        "Perform": "Perform"
+        "Perform": "Perform",
+        "LevelUp": "Level Up"
       },
       "Items": {
         "Talents": "Talents",
@@ -121,7 +159,28 @@
         },
         "defenses.psyche": {
           "label": "Psyche Defense"
+        },
+        "constitution": {
+          "label": "Constitution"
+        },
+        "endurance": {
+          "label": "Endurance"
+        },
+        "effervescence": {
+          "label": "Effervescence"
         }
+      },
+      "Attributes": {
+        "Summary": "Attributes"
+      },
+      "SpecialtyChecks": {
+        "Summary": "Specialty Checks"
+      },
+      "Travel": {
+        "Summary": "Travel Speeds"
+      },
+      "Defenses": {
+        "Summary": "Defenses"
       }
     },
     "Chats": {
@@ -133,6 +192,13 @@
       }
     },
     "Items": {
+      "TABS": {
+        "Attributes": "Attributes",
+        "Description": "Description",
+        "Effects": "Effects",
+        "Talents": "Talents",
+        "Actions": "Actions"
+      },
       "FIELDS": {
         "tags": {
           "label": "Tags"
@@ -301,6 +367,29 @@
         }
       },
       "Gear": {
+        "FIELDS": {
+          "Range": {
+            "label": "Range"
+          },
+          "Damage": {
+            "label": "Damage"
+          },
+          "Rarity": {
+            "label": "Rarity"
+          },
+          "Type": {
+            "label": "Gear Type",
+            "Weapon": "Weapon",
+            "Armor": "Armor",
+            "Artifact": "Artifact",
+            "Consumable": "Consumable",
+            "Shield": "Shield"
+          }
+        },
+        "BUTTONS": {
+          "Save": "Save",
+          "Artifice": "Open in Artifice"
+        },
         "Slot": { 
           "head": "Head",
           "neck": "Neck",
@@ -384,6 +473,10 @@
             "label": "Quirks",
             "hint": "The quirks this species has."
           },
+          "communication": {
+            "label": "Communication",
+            "hint": "The communication settings for this species."
+          },
           "communication.language.choices": {
             "label": "Languages",
             "hint": "The number of languages this species can choose from."
@@ -414,25 +507,21 @@
           "travel.water.stamina": {
             "label": "Water Stamina"
           },
+          "transform": {
+            "label": "Transformation",
+            "hint": "The transformation settings for this species."
+          },
           "transform.cost": {
             "label": "Transformation Cost",
             "hint": "The TA cost to transform."
           },
-          "transformation.duration": {
+          "transform.duration": {
             "label": "Transformation Duration",
             "hint": "The duration of the transformation."
           },
-          "transformation.type": {
+          "transform.type": {
             "label": "Transformation Type",
             "hint": "The type of transformation."
-          },
-          "transformation.body": {
-            "label": "Transformation Body",
-            "hint": "The body to transform into."
-          },
-          "transformation.species": {
-            "label": "Transformation Species",
-            "hint": "The species to transform into."
           },
           "gifts.subtraits": {
             "label": "Gifted Subtraits",
@@ -441,6 +530,10 @@
           "gifts.points": {
             "label": "Gifted Points",
             "hint": "The number of points to spend on gifted subtraits."
+          },
+          "branchCount": {
+            "label": "Branch Count",
+            "hint": "The number of branches this species has."
           }
         },
         "CommunicationTypes": {
@@ -477,9 +570,8 @@
           "allowLooping": {
             "label": "Allow Looping"
           },
-          "addBranch": {
-            "label": "Add Branch",
-            "tooltip": "Add Branch"
+          "branchCount": {
+            "label": "Branch Count"
           }
         }
       },
@@ -505,7 +597,42 @@
           "macro": {
             "label": "Run Macro on Take",
             "hint": "The macro to execute when this talent is gained or taken."
+          },
+          "flexibility": {
+            "label": "Flexibility",
+            "hint": "Taking this talent allows the player to choose another talent from the specified category for an additional cost."
+          },
+          "flexibility.enabled": {
+            "label": "Flexibility Enabled",
+            "hint": "Whether the flexibility is enabled."
+          },
+          "flexibility.body": {
+            "label": "Body Increase",
+            "hint": "The increase in body cost for the flexibility. +0 is the default."
+          },
+          "flexibility.mind": {
+            "label": "Mind Increase",
+            "hint": "The increase in mind cost for the flexibility. +0 is the default."
+          },
+          "flexibility.soul": {
+            "label": "Soul Increase",
+            "hint": "The increase in soul cost for the flexibility. +1 is the default."
+          },
+          "flexibility.category": {
+            "label": "Category",
+            "hint": "The category of talents to choose from."
+          },
+          "flexibility.tier": {
+            "label": "Tier",
+            "hint": "The tier of talents to choose from."
           }
+        },
+        "FlexibilityCategory": {
+          "SubSpecies": "Sub-species Talents (3rd Column)",
+          "SpeciesFirst": "Species Talents (1st Column)",
+          "SpeciesSecond": "Species Talents (2nd Column)",
+          "SpeciesAll": "Any Species Talent",
+          "GeneralPurpose": "General Purpose Talents"
         }
       },
       "Favor": {

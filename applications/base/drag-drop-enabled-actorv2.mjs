@@ -1,5 +1,6 @@
 import { fitTextToWidth } from "../../system/helpers/fitTextToWidth.mjs";
 import { flattenFields } from "../../system/helpers/flattenFields.mjs";
+import { SpellcraftSheet } from "../specialty/spellcraft.mjs";
 import { TalentBrowser } from "../specialty/talent-browser.mjs";
 
 const { api, sheets } = foundry.applications;
@@ -168,6 +169,7 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
   async _preparePartContext(partId, context) {
     switch (partId) {
       case 'attributes':
+      case 'spellbook':
       case 'background':
         context.tab = context.tabs[partId];
         context.enrichedDescription = await TextEditor.enrichHTML(
@@ -203,7 +205,7 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
         // FontAwesome Icon, if you so choose
         icon: '',
         // Run through localization
-        label: 'UTOPIA.Actor.Tabs.',
+        label: 'UTOPIA.Actors.Tabs.',
       };
   
       switch (partId) {
@@ -212,36 +214,36 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
           return tabs;
         case 'attributes':
           tab.id = 'attributes';
-          tab.label += 'attributes';
+          tab.label += 'Attributes';
           tab.icon = 'fas fa-fw fa-dice';
           break;
         case 'actions': 
           tab.id = 'actions';
-          tab.label += 'actions';
+          tab.label += 'Actions';
           tab.icon = 'fas fa-fw fa-person-running';
           break;
         case 'equipment': 
           tab.id = 'equipment';
-          tab.label += 'equipment';
+          tab.label += 'Equipment';
           tab.icon = 'fas fa-fw fa-suitcase';
           break;
-        case 'spellcasting': 
-          tab.id = 'spellcasting';
-          tab.label += 'spellcasting';
+        case 'spellbook': 
+          tab.id = 'spellbook';
+          tab.label += 'spellbook';
           tab.icon = 'fas fa-fw fa-hat-wizard';
           break;
         case 'talents': 
           tab.id = 'talents';
-          tab.label += 'talents';
+          tab.label += 'Talents';
           tab.icon = 'fas fa-fw fa-star';
         case 'background': 
           tab.id = 'background';
-          tab.label += 'background';
+          tab.label += 'Background';
           tab.icon = 'fas fa-fw fa-align-left';
           break;
         case 'effects':
           tab.id = 'effects';
-          tab.label += 'effects';
+          tab.label += 'Effects';
           tab.icon = 'fas fa-fw fa-bolt';
           break;
         default:
@@ -396,6 +398,11 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
     await this.actor.createEmbeddedDocuments("Item", [{ name: target.innerText, type: type }]);
   }
 
+  static async _deleteDocument(event, target) {
+    const id = target.dataset.documentId;
+    await this.actor.deleteEmbeddedDocuments("Item", [id]);
+  }
+
   static async _viewDocument(event, target) {
     if (target.dataset.documentId) {
       const item = this.actor.items.get(target.dataset.documentId);
@@ -430,7 +437,11 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
     const app = target.dataset.application;
     switch (app) {
       case "talent-browser":
-        return new TalentBrowser().render(true);
+        return new TalentBrowser({ actor: this.actor }).render(true);
+      case "spellcraft": 
+        return new SpellcraftSheet({ actor: this.actor }).render(true);
+      case "artifice": 
+        return new ArtificeSheet({ actor: this.actor }).render(true);
     }
   }
 

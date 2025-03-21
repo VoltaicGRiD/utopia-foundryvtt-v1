@@ -1,3 +1,4 @@
+import { UtopiaTemplates } from "../../system/init/measuredTemplates.mjs";
 import UtopiaItemBase from "../base-item.mjs";
 
 export class Spell extends UtopiaItemBase {
@@ -15,7 +16,10 @@ export class Spell extends UtopiaItemBase {
 
     // Primary numeric fields for the spell
     schema.duration = new fields.StringField(); // raw duration info
-    schema.aoe = new fields.ArrayField(new fields.StringField()); // area-of-effect representation
+    schema.aoe = new fields.ArrayField(new fields.SchemaField({
+      size: new fields.StringField(),
+      shape: new fields.StringField()
+    })); // area-of-effect representation
     schema.range = new fields.StringField(); // range info
     schema.cost = new fields.NumberField();  // stamina or resource cost
 
@@ -24,6 +28,70 @@ export class Spell extends UtopiaItemBase {
     schema.featureSettings = new fields.ObjectField();
 
     return schema;
+  }
+
+  getTemplate(item) {
+    // Base data for all templates
+    const templateBaseData = {
+      user: game.user?.id,
+      distance: 0,
+      direction: 0,
+      x: 0,
+      y: 0,
+      fillColor: game.user?.color,
+      flags: item ? { utopia: { origin: this.parent.uuid } } : {}
+    };
+
+    // Parse this AoE and return a placeable template that corresponds to the AoE
+    for (const aoe of this.aoe) {
+      const size = aoe.split("m" )[0];
+      const shape = aoe.split("m ")[1];
+
+      if (shape.includes("radius")) {
+        const template = new CONFIG.MeasuredTemplate.documentClass(
+          foundry.utils.mergeObject(templateBaseData, {
+            t: foundry.CONST.MEASURED_TEMPLATE_TYPES.CIRCLE,
+            distance: size
+          }), { parent: canvas.scene ?? undefined }
+        );
+        
+        return template;
+      }
+
+      if (shape.includes("angle")) {
+        const template = new CONFIG.MeasuredTemplate.documentClass(
+          foundry.utils.mergeObject(templateBaseData, {
+            t: foundry.CONST.MEASURED_TEMPLATE_TYPES.CONE,
+            distance: size
+          }), { parent: canvas.scene ?? undefined }
+        );
+        
+        return template;
+      }
+
+      if (shape.includes("width")) {
+        const template = new CONFIG.MeasuredTemplate.documentClass(
+          foundry.utils.mergeObject(templateBaseData, {
+            t: foundry.CONST.MEASURED_TEMPLATE_TYPES.RECTANGLE,
+            direction: 45,
+            distance: size * Math.SQRT2
+          }), { parent: canvas.scene ?? undefined }
+        );
+        
+        return template;
+      }
+
+      if (shape.includes("length")) {
+        const template = new CONFIG.MeasuredTemplate.documentClass(
+          foundry.utils.mergeObject(templateBaseData, {
+            t: foundry.CONST.MEASURED_TEMPLATE_TYPES.RAY,
+            distance: size
+          }), { parent: canvas.scene ?? undefined }
+        );
+        
+        return template;
+      }
+    }  
   }
 
   /**
@@ -49,6 +117,34 @@ export class Spell extends UtopiaItemBase {
     this._prepareSpellDuration();
     this._prepareSpellRange();
     this._prepareSpellAoE();
+    if (this.parent.parent)
+      await this._prepareActorSpecificCost();
+  }
+
+  /**
+   * _prepareActorSpecificCost
+   * -------------------------------------------------------
+   * If the spell is owned by an actor, this method will
+   * interpret the spell's features and calculate a final
+   * cost based on the actor's specific settings.
+   * @private
+   */
+  async _prepareActorSpecificCost() {
+    const spellcasting = this.parent.parent.system.spellcasting;
+    const artistries = spellcasting.artistries;
+    const features = this.parsedFeatures;
+    let cost = 0;
+  
+    for (const feature of features) {
+      const art = feature.system.art;
+      const artSettings = artistries[art];
+      const cost = feature.system.cost;
+      
+      if (artSettings.unlocked === false) 
+        this.canCast = false;
+      // if (artSettings.multiplier === 0)      
+      //   cost += 
+    }
   }
 
   /**
@@ -64,18 +160,17 @@ export class Spell extends UtopiaItemBase {
     if (this.features.length === 0) return;
 
     // Convert feature UUIDs to actual objects
-    features = [];
+    const features = [];
     for (const feature of this.features) {
       features.push(await fromUuid(feature));
     }
+
+    this.parsedFeatures = features;
 
     let ppCost = 0;      // Tracks "power point" cost, which converts to stamina
     let staminaCost = 0; // Final stamina cost
 
     for (let feature of features) {
-      // feature is [key, value], so we reassign "feature = feature[1]"
-      feature = feature[1];
-
       // Gather cost or stack info from the feature
       ppCost = this._handleFeatureCostAndStacks(feature, ppCost);
 
@@ -88,6 +183,21 @@ export class Spell extends UtopiaItemBase {
       }
       if (feature.system.modifies === "aoe") {
         this._handleFeatureAoE(feature);
+      }
+
+      this.featureSettings[feature.uuid] ??= settings[feature.uuid] ?? {};
+      for (const [variable, value] of Object.entries(feature.system.variables)) {
+        this.featureSettings[feature.uuid][variable] = value;
+      }
+      if (this.featureSettings[feature.uuid].stacks === undefined) {
+        this.featureSettings[feature.uuid].stacks = {
+          variableName: "stacks",
+          variableDescription: "Stacks",
+          character: "@",
+          kind: "number",
+          minimum: 1,
+          value: 1
+        };
       }
     }
 
@@ -107,17 +217,23 @@ export class Spell extends UtopiaItemBase {
    * @private
    */
   _handleFeatureCostAndStacks(feature, ppCost) {
-    // Check for feature stack variables
-    if (feature.system.variables["stacks"]) {
-      feature.stacks = feature.system.variables["stacks"].value;
-    }
+    // Feature variable settings are now stored in 'this.featureSettings'
+    // where the key is the feature's uuid and the value is the feature's settings object.
+    
+    // Initialize stacks to 1
+    feature.stacks ??= 1;
 
-    // If the feature has a "cost" variable, apply it
-    if (feature.system.variables["cost"]) {
-      ppCost += (feature.system.cost * feature.system.variables["cost"].value) * feature.stacks;
-    } else {
-      ppCost += feature.system.cost * feature.stacks;
-    }
+    // Check for feature settings
+    if (this.featureSettings[feature._id]) {
+      feature.stacks = this.featureSettings[feature._id].stacks.value;
+
+      if (this.featureSettings[feature._id].cost) {
+        ppCost += feature.system.cost * this.featureSettings[feature._id].cost * feature.stacks;
+      }
+      else {
+        ppCost += feature.system.cost * feature.stacks;
+      }
+    } 
 
     return ppCost;
   }
@@ -272,6 +388,10 @@ export class Spell extends UtopiaItemBase {
 
     // e.g. "10m radius"
     this.aoe.push(`${aoe}m ${output}`);
+
+    if (this.aoe.length === 0) {
+      this.aoe.push("None");
+    }
   }
 
   /**
@@ -365,12 +485,6 @@ export class Spell extends UtopiaItemBase {
     let features = undefined;
 
     if (this.features.length === 0) return "";
-
-    Promise.all(this.features.map(async (feature) => {
-      return await fromUuid(feature);
-    })).then((f) => {
-      features = f;
-    });
 
     // Collect background colors from features (sorted by 'art')
     let colors = features

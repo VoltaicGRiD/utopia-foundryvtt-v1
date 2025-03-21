@@ -1,5 +1,8 @@
 <div class="tab talent-tree {{tab.cssClass}}" data-group="primary" data-tab="talent-tree" style="height: calc({{position.height}}px - var(--header-height) - var(--utopia-header-border-width))">
+  {{formGroup systemFields.branchCount value=system.branchCount stacked=true localize=true}}
+  
   {{log position}}
+  {{log branches}}
   {{#each branches as |branch branchIndex|}}
     <div class="talent-branch" data-drop data-branch="{{branchIndex}}">
   
@@ -38,9 +41,9 @@
     </div>
   {{/each}}
 
-  <a class="new-branch" data-action="addBranch" data-tooltip="{{localize 'UTOPIA.Items.TalentTree.FIELDS.addBranch.tooltip'}}">
+  <!-- <a class="new-branch" data-action="addBranch" data-tooltip="{{localize 'UTOPIA.Items.TalentTree.FIELDS.addBranch.tooltip'}}">
     <span><i class="fas fa-plus"></i> {{localize 'UTOPIA.Items.TalentTree.FIELDS.addBranch.tooltip'}}</span>
-  </a>
+  </a> -->
 
   <hr/>
 

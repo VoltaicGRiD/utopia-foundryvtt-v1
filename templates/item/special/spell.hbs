@@ -29,8 +29,8 @@
 
   <div class="spell-features">
     <ol class="selected-feature-list flexcol">
-      {{#each system.features as |feature key|}}
-        <li class="feature" style="background: {{feature.background}}; color: {{feature.color}}" data-id="{{key}}">
+      {{#each features as |feature key|}}
+        <li class="feature" style="background: {{feature.system.style.background}}; color: {{feature.system.style.color}}" data-id="{{key}}">
           <img src="{{feature.img}}" class="feature-icon" />
           <button type="button" class="remove-feature hidden">
             <i class="fa-fw fa-solid fa-times"></i>
@@ -38,13 +38,14 @@
           <span class="feature-name">
             <span data-tooltip="{{feature.system.description}}" data-tooltip-direction="DOWN"><i class="fa-fw fa-solid fa-circle-info"></i></span>
             {{feature.name}} 
-            (<span id="cost" class="cost">{{feature.cost}}</span>)
+            (<span id="cost" class="cost">{{feature.system.cost}}</span>)
           </span>
           <div class="feature-controls">
-            {{#each feature.system.variables as |variable varKey|}}
+            {{#each feature.variables as |variable varKey|}}
               {{#if (eq varKey "stacks")}}
                 <div class="flexrow feature-variable">
                   <input type="number" 
+                        name="system.featureSettings.{{feature.id}}.{{varKey}}.value"
                         min="{{variable.minimum}}" 
                         max="{{variable.maximum}}" 
                         value="{{variable.value}}"
@@ -55,6 +56,7 @@
               {{else if (eq variable.kind "number")}}
                 <div class="flexrow feature-variable">
                   <input type="number" 
+                        name="system.featureSettings.{{feature.id}}.{{varKey}}.value"
                         min="{{variable.minimum}}" 
                         max="{{variable.maximum}}" 
                         value="{{variable.value}}"

@@ -1,4 +1,5 @@
 import UtopiaItemBase from "../base-item.mjs";
+import { UtopiaSchemaField } from "../fields/schema-field.mjs";
 import { SchemaArrayField } from "../fields/schema-set-field.mjs";
 
 export class Action extends UtopiaItemBase {
@@ -19,34 +20,31 @@ export class Action extends UtopiaItemBase {
     schema.category = new fields.StringField({ required: false, nullable: false, initial: "damage", choices: {
       "damage": "UTOPIA.Items.Action.Category.damage",
       "test": "UTOPIA.Items.Action.Category.test",
+      "formula": "UTOPIA.Items.Action.Category.flat",
       "macro": "UTOPIA.Items.Action.Category.macro",
     }});
 
-    schema.check = new fields.StringField({ required: true, nullable: false, initial: "agi", options: () => {
-      const returns = {};
-      const allOptions = {
-        ...Object.entries(CONFIG.UTOPIA.TRAITS).reduce((acc, [key, value]) => {
-          acc[key] = { ...value, group: "UTOPIA.TRAITS.GroupName" };
-          return acc;
-        }, {}),
-        ...Object.entries(CONFIG.UTOPIA.SUBTRAITS).reduce((acc, [key, value]) => {
-          acc[key] = { ...value, newValue: "UTOPIA.SUBTRAITS.GroupName" };
-          return acc;
-        }, {}),
-        ...Object.entries(CONFIG.UTOPIA.SPECIALTY_CHECKS).reduce((acc, [key, value]) => {
-          acc[key] = { ...value, newValue: "UTOPIA.SPECIALTY_CHECKS.GroupName" };
-          return acc;
-        }, {}),
-        ...Object.entries(CONFIG.UTOPIA.DAMAGE_TYPES).reduce((acc, [key, value]) => {
-          acc[key] = { ...value, newValue: "UTOPIA.DAMAGE_TYPES.GroupName" };
-          return acc;
-        }, {}),
-      }
-      for (const [key, value] of Object.entries(allOptions)) {
-        returns[key] = value.label;
-      }
-      return returns;
-    }});
+    const returns = {};
+    const allOptions = {
+      ...Object.entries(CONFIG.UTOPIA.TRAITS).reduce((acc, [key, value]) => {
+        acc[key] = { ...value, group: "UTOPIA.TRAITS.GroupName" };
+        return acc;
+      }, {}),
+      ...Object.entries(CONFIG.UTOPIA.SUBTRAITS).reduce((acc, [key, value]) => {
+        acc[key] = { ...value, group: "UTOPIA.SUBTRAITS.GroupName" };
+        return acc;
+      }, {}),
+      ...Object.entries(CONFIG.UTOPIA.SPECIALTY_CHECKS).reduce((acc, [key, value]) => {
+        acc[key] = { ...value, group: "UTOPIA.SPECIALTY_CHECKS.GroupName" };
+        return acc;
+      }, {}),
+      ...Object.entries(CONFIG.UTOPIA.DAMAGE_TYPES).reduce((acc, [key, value]) => {
+        acc[key] = { ...value, group: "UTOPIA.DAMAGE_TYPES.GroupName" };
+        return acc;
+      }, {}),
+    }
+
+    schema.check = new fields.StringField({ required: true, nullable: false, initial: "agi", choices: allOptions });
     schema.checks = new fields.SetField(schema.check, { initial: [] });
     schema.checkFavor = new fields.BooleanField({ required: true, nullable: false, initial: true });
 
@@ -62,6 +60,12 @@ export class Action extends UtopiaItemBase {
       type: new fields.StringField({ required: false, nullable: false, initial: "physical", options: damageTypes }),
     }), { initial: [] });
     
+    schema.validityCheck = new UtopiaSchemaField({
+      check: new fields.StringField({ required: true, nullable: false, initial: "agi", choices: allOptions }),
+      favor: new fields.BooleanField({ required: true, nullable: false, initial: true }),
+      difficulty: new fields.StringField({ required: true, nullable: false, initial: "10", validate: (v) => Roll.validate(v) }),
+    });
+
     schema.resource = new fields.StringField({ required: false, nullable: false });
     schema.consumed = new fields.NumberField({ required: false, nullable: false, initial: 0 });
     schema.macro = new fields.DocumentUUIDField({ required: false, nullable: true });
@@ -145,6 +149,17 @@ export class Action extends UtopiaItemBase {
           stacked: true,
           editable: true,
         })
+        fields.push({
+          field: this.schema.fields.validityCheck,
+          stacked: true,
+          editable: true,
+          options: Object.entries(this.schema.fields.check.options.choices).map(([key, value]) => {
+            return {
+              ...value,
+              value: key,
+            };
+          })
+        })
         break;
       case "test": 
         fields.push({
@@ -155,6 +170,18 @@ export class Action extends UtopiaItemBase {
         fields.push({
           field: this.schema.fields.checkFavor,
           stacked: false,
+          editable: true,
+        })
+        fields.push({
+          field: this.schema.fields.formula,
+          stacked: true,
+          editable: true,
+        })
+        break;
+      case "formula": 
+        fields.push({
+          field: this.schema.fields.formula,
+          stacked: true,
           editable: true,
         })
         break;

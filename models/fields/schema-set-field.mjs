@@ -48,6 +48,7 @@ export class SchemaArrayField extends foundry.data.fields.ArrayField {
       const tags = [];
       for (const value of config.value) {
         const tag = document.createElement("div");
+        tag.dataset.name = this.name;
         tag.classList.add("tag");
         let content = "";
         for (const [key, field] of Object.entries(e.fields)) {
@@ -55,10 +56,18 @@ export class SchemaArrayField extends foundry.data.fields.ArrayField {
         }
         content = content.slice(0, -2);
         tag.textContent = content;
+
+        const tagDelete = document.createElement("a");
+        tagDelete.classList.add("fa-fw", "fas", "fa-xmark");
+        tagDelete.dataset.action = "schemaSetRemove";
+        tagDelete.dataset.value = content;
+        
+        tag.append(tagDelete);
         tags.push(tag);
       }
 
       tagContainer.append(...tags);
+
       container.append(tagContainer);
 
       return container;

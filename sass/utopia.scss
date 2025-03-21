@@ -104,6 +104,8 @@
     var(--utopia-artistry-necromancy) 71.4286%,
     var(--utopia-artistry-divination) 85.7143%,
     var(--utopia-artistry-wake) 100%);
+
+  --utopia-artifice-background: #053019;
   
   --utopia-capacity-container-background-color: oklch(57.5% 0.012 101);
   --utopia-capacity-container-border-color: oklch(20.8% 0.01 98);
@@ -118,24 +120,25 @@
   // box-shadow: none;
 }
 
-.sidebar-tab {
-  background: none;
+#sidebar {
+  box-shadow: none;
+
+  &::after {
+    content: "";
+    background-image: url(../assets/chat-background.svg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+    filter: blur(5px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
 
-.sidebar-tab::after {
-  content: "";
-  background-image: url(../assets/chat-background.svg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-  filter: blur(5px);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
 
 .chat-message {
   @import "components/chat.scss";
@@ -143,22 +146,36 @@
 
 .utopia {
   @import "components/paper-doll.scss";
-  @import "components/grid.scss";
-  @import "components/apps.scss";
+  @import "general/grid.scss";
+  @import "general/apps.scss";
 
   &.item-sheet,
   &.actor-sheet {
-    @import "components/forms";
+    @import "general/forms";
+    @import "components/character-sheet.scss";
+    @import "components/talent-tree.scss";
   }
-  
-  @import "components/talent-tree";
+
+  &.talent-browser {
+    @import "components/talent-browser.scss";
+  }
 
   .effects {
-    @import "components/effects";
+    @import "general/effects";
   }
 
-  .character {
-    @import "components/character-sheet";
+  &.feature-builder {
+    border-radius: 0 25px 0 25px ;
+
+    @import "components/feature-builder.scss";
+  }
+
+  &.gear-sheet, 
+  &.artifice {
+    border-radius: 0 25px 0 25px ;
+
+    @import "components/gear.scss";
+    @import "components/artifice.scss";
   }
 
   &.spell-sheet,

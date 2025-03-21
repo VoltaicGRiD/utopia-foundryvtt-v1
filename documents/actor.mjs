@@ -13,6 +13,13 @@ export class UtopiaActor extends Actor {
       data[key] = trait;
     }
 
+    const owner = game.users.find(u => u.character?.name === this.name);
+    if (owner && owner.targets.size > 0) {
+        data.target = owner.targets.values().next().value.actor.getRollData();
+    } else if (game.user.targets.size > 0) {
+        data.target = game.user.targets.values().next().value.actor.getRollData();
+    }
+
     return data;
   }
 
@@ -22,12 +29,26 @@ export class UtopiaActor extends Actor {
       points = this.system.talentPoints.available;
     
     const item = await fromUuid(talent);
-    const cost = item.system.cost;
+    const cost = item.system.total ?? item.system.body + item.system.mind + item.system.soul ?? 0;
     if (points >= cost) 
-      return await this.createEmbeddedDocument("Item", item);
-  
+      await this.createEmbeddedDocuments("Item", [item]);
     else 
-      return ui.notifications.error(game.i18n.localize("UTOPIA.Errors.NotEnoughTalentPoints"));
+      ui.notifications.error(game.i18n.localize("UTOPIA.Errors.NotEnoughTalentPoints"));
+
+    if (item.system.macro && item.system.macro.length > 0) {
+      const macro = await fromUuid(item.system.macro);
+      await macro.execute({
+        actor: this,
+        item: item,
+      });
+    }
+
+    if (item.system.grants && item.system.grants.size > 0) {
+      for (const grant of item.system.grants) {
+        const item = await fromUuid(grant);
+        await this.createEmbeddedDocuments("Item", [item]);
+      }
+    }
   }
 
   async takeDamage(damageInstance) {
@@ -150,13 +171,13 @@ export class UtopiaActor extends Actor {
     const data = { item: item, instances: instances };
     if (!["self", "none", "target"].includes(item.system.template))
       data.template = item.system.template;
-    const content = await renderTemplate("systems/utopia/templates/chat/damage-card.hbs", data);
+    // const content = await renderTemplate("systems/utopia/templates/chat/damage-card.hbs", data);
 
-    return UtopiaChatMessage.create({
-      user: game.user._id,
-      speaker: ChatMessage.getSpeaker(),
-      content: content,
-    })
+    // return UtopiaChatMessage.create({
+    //   user: game.user._id,
+    //   speaker: ChatMessage.getSpeaker(),
+    //   content: content,
+    // })
   }
 
   async _dealDamage(formula) {
@@ -179,6 +200,24 @@ export class UtopiaActor extends Actor {
   _macro(macro, { item = null }) {
     return fromUuid(macro).then((macro) => {
       macro.execute(item?.system.macroData ?? {});
+    })
+  }
+
+  async applyDamage(damage) {
+    await this.update({
+      "system.hitpoints.surface.value": this.system.hitpoints.surface.value - damage.final.shp,
+      "system.hitpoints.deep.value": this.system.hitpoints.deep.value - damage.final.dhp,
+      "system.stamina.value": this.system.stamina.value - damage.final.stamina,
+    })
+
+    const content = await renderTemplate("systems/utopia/templates/chat/damage-card.hbs", { instances: [damage] });
+    
+    console.log(`Actor {${this.name}} took damage:`, damage.final);
+
+    return UtopiaChatMessage.create({
+      user: game.user._id,
+      speaker: ChatMessage.getSpeaker(),
+      content: content,
     })
   }
 
@@ -213,14 +252,16 @@ export class UtopiaActor extends Actor {
   }
 
   async checkForFavor(trait, condition = "always") {
-    const favors = this.items.filter(i => i.type === 'favor').filter(f => f.checks.includes(trait)).map(f => f.system);
+    const favors = this.items.filter(i => i.type === 'favor').filter(f => f.system.checks.has(trait));
 
-    const netFavor = 0;
+    var netFavor = 0;
 
     for (const favor of favors) {
-      if (favor.conditions.has(condition) && favor.target === "self") {
+      if (favor.system.conditions.has(condition) && favor.target === "self") {
         netFavor += favor.value;
       }
     }
+
+    return netFavor;
   }
 }
