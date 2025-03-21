@@ -19,6 +19,8 @@
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Installation](#installation)
+    - [Requirements](#requirements)
+    - [Instructions](#instructions)
   - [Legal \& License](#legal--license)
   - [Issues \& Contributions](#issues--contributions)
   - [Contact](#contact)
@@ -51,6 +53,12 @@ Please read below for more details on licensing, usage, and how you can tailor t
 
   
 ## Installation
+
+### Requirements 
+
+FoundryVTT - Version 12 Stable
+
+### Instructions
 
 To manually install the **Utopia TTRPG** system in Foundry Virtual Tabletop, follow these steps:
 

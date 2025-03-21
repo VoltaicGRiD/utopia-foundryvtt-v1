@@ -27,9 +27,10 @@ export class UtopiaActor extends Actor {
     let points = -1;
     if (this.type === "character")
       points = this.system.talentPoints.available;
-    
+
     const item = await fromUuid(talent);
     const cost = item.system.total ?? item.system.body + item.system.mind + item.system.soul ?? 0;
+
     if (points >= cost) 
       await this.createEmbeddedDocuments("Item", [item]);
     else 

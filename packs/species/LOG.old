@@ -1,5 +1,23 @@
-2025/03/17-21:01:37.786 361c Recovering log #582
-2025/03/17-21:01:37.787 361c Level-0 table #584: started
-2025/03/17-21:01:37.789 361c Level-0 table #584: 13474 bytes OK
-2025/03/17-21:01:37.794 361c Delete type=0 #582
-2025/03/17-21:01:37.795 361c Delete type=3 #580
+2025/03/21-08:56:59.626 150 Recovering log #587
+2025/03/21-08:56:59.631 150 Delete type=0 #587
+2025/03/21-08:56:59.632 150 Delete type=3 #586
+2025/03/21-09:17:27.664 9218 Level-0 table #591: started
+2025/03/21-09:17:27.664 9218 Level-0 table #591: 0 bytes OK
+2025/03/21-09:17:27.665 9218 Delete type=0 #589
+2025/03/21-09:17:27.673 9218 Manual compaction at level-0 from '!items!1W76r88lWpNEGqdR' @ 72057594037927935 : 1 .. '!items!u7vHJUai8B9HXdnE' @ 0 : 0; will stop at '!items!XdSOQXsih7YvUZNZ' @ 386 : 1
+2025/03/21-09:17:27.673 9218 Compacting 3@0 + 0@1 files
+2025/03/21-09:17:27.681 9218 Generated table #592@0: 1 keys, 1261 bytes
+2025/03/21-09:17:27.681 9218 Compacted 3@0 + 0@1 files => 1261 bytes
+2025/03/21-09:17:27.682 9218 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/03/21-09:17:27.682 9218 Delete type=2 #578
+2025/03/21-09:17:27.683 9218 Delete type=2 #581
+2025/03/21-09:17:27.684 9218 Delete type=2 #584
+2025/03/21-09:17:27.689 9218 Manual compaction at level-0 from '!items!XdSOQXsih7YvUZNZ' @ 386 : 1 .. '!items!u7vHJUai8B9HXdnE' @ 0 : 0; will stop at (end)
+2025/03/21-09:17:27.694 9218 Manual compaction at level-1 from '!items!1W76r88lWpNEGqdR' @ 72057594037927935 : 1 .. '!items!u7vHJUai8B9HXdnE' @ 0 : 0; will stop at '!items!XdSOQXsih7YvUZNZ' @ 423 : 1
+2025/03/21-09:17:27.694 9218 Compacting 1@1 + 1@2 files
+2025/03/21-09:17:27.696 9218 Generated table #593@1: 15 keys, 6356 bytes
+2025/03/21-09:17:27.696 9218 Compacted 1@1 + 1@2 files => 6356 bytes
+2025/03/21-09:17:27.697 9218 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/03/21-09:17:27.697 9218 Delete type=2 #570
+2025/03/21-09:17:27.698 9218 Delete type=2 #592
+2025/03/21-09:17:27.703 9218 Manual compaction at level-1 from '!items!XdSOQXsih7YvUZNZ' @ 423 : 1 .. '!items!u7vHJUai8B9HXdnE' @ 0 : 0; will stop at (end)
