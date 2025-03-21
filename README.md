@@ -18,6 +18,7 @@
 - [Utopia TTRPG System for Foundry VTT](#utopia-ttrpg-system-for-foundry-vtt)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
+  - [Installation](#installation)
   - [Legal \& License](#legal--license)
   - [Issues \& Contributions](#issues--contributions)
   - [Contact](#contact)
@@ -49,6 +50,23 @@ This repository is **open source**, allowing you to review, learn from, and exte
 Please read below for more details on licensing, usage, and how you can tailor this system to your own needs.
 
   
+## Installation
+
+To manually install the **Utopia TTRPG** system in Foundry Virtual Tabletop, follow these steps:
+
+1. **Download or Clone**: Get the repository on your local machine.
+2. **Extract if Needed**: If you downloaded a ZIP archive, extract it.
+3. **Copy to FoundryVTT Folder**:
+   1. Windows path: `C:\Users\[your user]\AppData\Local\FoundryVTT\Data\systems`
+   2. Linux path: `$HOME/foundrydata/systems`
+   3. MacOS path: `$HOME/foundrydata/systems`
+4. **Rename Folder**: After placing in the `systems` folder, rename the folder to `utopia` (all lower-case).
+5. **Open Foundry VTT**: Launch FoundryVTT.
+6. **Create New World**: Navigate to the "Game Worlds" section, create a new world with the `utopia` system.
+
+For more details, please refer to the [FoundryVTT installation guide](https://foundryvtt.com/article/system-development#entry-point).
+
+
 
 ## Legal & License
 
