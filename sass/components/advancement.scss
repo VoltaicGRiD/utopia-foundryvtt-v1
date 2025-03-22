@@ -1,0 +1,43 @@
+.subtrait-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; 
+  width: 100%;
+}
+
+.subtrait {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  text-align: left;
+  line-height: 20px;
+}
+
+.subtrait-name {
+  width: 100px;
+  text-align: center;
+}
+
+.subtrait-decrease,
+.subtrait-increase {
+  border: 1px solid var(--utopia-color-maroon);
+  border-radius: 5px;
+  width: 20px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.subtrait-value,
+.subtrait-new-value {
+  width: 20px;
+  text-align: center;
+}
+
+.subtrait-new-value.greater {
+  color: var(--utopia-color-hp-2);
+}
+
+.subtrait-new-value.lesser {
+  color: var(--utopia-color-red);
+}

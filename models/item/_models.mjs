@@ -1,3 +1,4 @@
+export { Advancement } from "./advancement.mjs";
 export { Action } from "./action.mjs";
 export { Species } from "./species.mjs";
 export { Kit } from "./kit.mjs";

@@ -1,8 +1,12 @@
+import { gatherItems } from "../../system/helpers/gatherItems.mjs";
 import UtopiaActorBase from "../base-actor.mjs";
+import { prepareSpeciesData, prepareSpeciesDefault } from "../utility/species-utils.mjs";
 
+// This class extends UtopiaActorBase to model character-specific attributes and methods.
 export class Character extends UtopiaActorBase {
-
-  /** @override */
+  /**
+   * Pre-creation hook that configures default token settings for newly created characters.
+   */
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
@@ -19,6 +23,9 @@ export class Character extends UtopiaActorBase {
     });
   }
 
+  /**
+   * Extend the base schema with additional fields and specialized logic for playable characters.
+   */
   static defineSchema() {
     const fields = foundry.data.fields;
     const schema = super.defineSchema();
@@ -57,6 +64,9 @@ export class Character extends UtopiaActorBase {
     return schema;
   }
 
+  /**
+   * Provide a list of header fields specific to characters (e.g., level, experience).
+   */
   get headerFields() {
     return [
       ...super.headerFields,
@@ -73,6 +83,10 @@ export class Character extends UtopiaActorBase {
     ]
   }
 
+  /**
+   * Main function to process derived data after the base data is ready.
+   * Invokes multiple preparation methods for traits, species, defenses, etc.
+   */
   prepareDerivedData() {
     try { this._prepareTraits() } catch (e) { console.error(e) }
     try { this._prepareSpecies() } catch (e) { console.error(e) }
@@ -80,8 +94,15 @@ export class Character extends UtopiaActorBase {
     try { this._prepareTalents() } catch (e) { console.error(e) }
     try { this._preparePoints(); } catch (e) { console.error(e); }
     try { this._prepareAttributes(); } catch (e) { console.error(e); }
+    try { this._prepareAutomation(); } catch (e) { console.error(e); }
+    try { prepareSpeciesData(this); } catch (e) { console.error(e); }
+    try { this._prepareAdvancements(); } catch (e) { console.error(e); }
   }
   
+  /**
+   * Adjust the actor's attributes (hitpoints, stamina) based on stats and current level.
+   * Helps enforce minimum/maximum values.
+   */
   _prepareAttributes() {
     this.hitpoints.surface.max += (this.body * this.constitution) + this.level;
     this.hitpoints.deep.max += (this.soul * this.effervescence) + this.level;
@@ -94,6 +115,9 @@ export class Character extends UtopiaActorBase {
     this.canLevel = this.experience >= this.level * 100;
   }
 
+  /**
+   * Handle the initialization and tracking of point pools (talents, specialists).
+   */
   _preparePoints() {
     this.points = {
       body: 0,
@@ -112,9 +136,17 @@ export class Character extends UtopiaActorBase {
     
     this.specialistPoints.spent = this.parent.items.filter(i => i.type === "specialist").length;
     this.specialistPoints.available = Math.floor(this.level / 10) - this.specialistPoints.spent + this.specialistPoints.bonus;
+
+    Object.keys(this.subtraits).forEach(k =>{
+      this.subtraitPoints.spent += (this.subtraits[k].value - 1);
+      this.subtraitPoints.available = 5 + this.level - this.subtraitPoints.spent + this.subtraitPoints.bonus;
+    })
   }
 
-  _prepareTalents() {
+  /**
+   * Process talents by iterating over talent trees, checking highest tiers acquired, and summing stats.
+   */
+  async _prepareTalents() {
     this.body = 0;
     this.mind = 0;
     this.soul = 0;
@@ -125,8 +157,70 @@ export class Character extends UtopiaActorBase {
       this.mind += talent.system.mind;
       this.soul += talent.system.soul;
     }
+
+    const treeTiers = {};
+    const trees = await gatherItems({ type: 'talentTree', gatherFromActor: false });
+    for (const tree of trees) {
+      treeTiers[tree.name] = [];
+      
+      for (const branch of tree.system.branches) {
+        var highestTier = -1;
+        
+        for (var t = 0; t < branch.talents.length; t++) {
+          const branchTalent = await fromUuid(branch.talents[t].uuid);
+          
+          // We can compare points, name, and other properties, but can't compare
+          // the entire object because it's a different instance
+          for (const talent of talents) {
+            var match = true;
+            
+            if (talent.name !== branchTalent.name) match = false;
+            if (foundry.utils.objectsEqual(talent.system.toObject(), branchTalent.system.toObject()) === false) match = false;
+            
+            if (match) {
+              if (t > highestTier) highestTier = t;
+              break;
+            }
+          }
+        }
+        
+        treeTiers[tree.name].push(highestTier);
+      }
+    }
+    
+    const species = this._speciesData.system.branches;
+    for (const branch of species) {
+      var highestTier = -1;
+      
+      for (var t = 0; t < branch.talents.length; t++) {
+        const branchTalent = await fromUuid(branch.talents[t].uuid);
+        
+        // We can compare points, name, and other properties, but can't compare
+        // the entire object because it's a different instance
+        for (const talent of talents) {
+          var match = true;
+          
+          if (talent.name !== branchTalent.name) match = false;
+          if (foundry.utils.objectsEqual(talent.system.toObject(), branchTalent.system.toObject()) === false) match = false;
+          
+          if (match) {
+            if (t > highestTier) highestTier = t;
+            break;
+          }
+        }
+      }
+      
+      treeTiers[this._speciesData.name] = highestTier;
+    }
+
+
+    this.trees = treeTiers;
+    console.log(this);
   }
 
+  /**
+   * Aggregate innate and armor-based defenses for this actor.
+   */
   _prepareDefenses() {
     this.defenses = {
       energy:    this.innateDefenses.energy    + this.armorDefenses.energy,
@@ -137,6 +231,9 @@ export class Character extends UtopiaActorBase {
     }
   }
 
+  /**
+   * Compile trait values (including bonuses and mods) into final totals for calculations.
+   */
   _prepareTraits() {
     console.log(this);
 
@@ -159,83 +256,20 @@ export class Character extends UtopiaActorBase {
       trait.mod = trait.mod - 4;
     }
 
+    // Slot capacity is calculated from size and strength
+    const str = this.traits.str.total;
+    switch (this.size) {
+      case "sm": 
+        this.slotCapacity.total = this.slotCapacity.bonus + (2 * str);
+        break;
+      case "med":
+        this.slotCapacity.total = this.slotCapacity.bonus + (5 * str);
+        break;
+      case "lg":
+        this.slotCapacity.total = this.slotCapacity.bonus + (15* str);
+        break;
+    }
+
     this.spellcasting.spellcap = this.subtraits.res.total;
-  }
-  
-  async _prepareSpecies() {
-    if (this.parent.items.filter(i => i.type === "species").length === 0) {
-      return this._prepareSpeciesDefault();
-    } 
-
-    const species = this.parent.items.find(i => i.type === "species");
-    this._speciesData = species;
-
-    if (this.languagePoints) this.languagePoints.available += this._speciesData.system.communication.languages - this.languagePoints.spent;
-    if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
-    this.size = this._speciesData.system.size;
-
-    this.travel = {
-      land: { speed: 0, stamina: 0 },
-      water: { speed: 0, stamina: 0 },
-      air: { speed: 0, stamina: 0 }
-    }
-
-    this.block = {
-      size: this._speciesData.system.block.size,
-      quantity: this._speciesData.system.block.quantity
-    }
-
-    this.dodge = {
-      size: this._speciesData.system.dodge.size,
-      quantity: this._speciesData.system.dodge.quantity
-    }
-
-    for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      const rolldata = await this.parent.getRollData();
-      const innateRoll = new Roll(String(this.innateTravel[key].speed), rolldata);
-      await innateRoll.evaluate();  
-      this.travel[key].speed = innateRoll.total;
-
-      const speciesRoll = new Roll(String(value.speed), rolldata);
-      await speciesRoll.evaluate();
-      this.travel[key].speed += speciesRoll.total;
-    }
-
-    this.constitution += this._speciesData.system.constitution;
-    this.endurance += this._speciesData.system.endurance;
-    this.effervescence += this._speciesData.system.effervescence;
-  }
-
-  async _prepareSpeciesDefault() {
-    this._speciesData = {
-      name: "Human",
-      system: {
-        travel: {
-          land: "@spd.total",
-          water: 0,
-          air: 0
-        },
-        size: "medium",
-        communication: {
-          languages: 2,
-          telepathy: false
-        }
-      }
-    }
-
-    if (this.languagePoints) this.languagePoints.available = this._speciesData.system.communication.languages;
-    if (this.communication) this.communication.telepathy = this._speciesData.system.communication.telepathy;
-    this.size = this._speciesData.system.size;
-    
-    this.travel = {
-      land: { speed: 0, stamina: 0 },
-      water: { speed: 0, stamina: 0 },
-      air: { speed: 0, stamina: 0 }
-    }
-
-    for (const [key, value] of Object.entries(this._speciesData.system.travel)) {
-      this.travel[key].speed = await new Roll(String(this.innateTravel[key].speed), this.parent.getRollData()).evaluate().total;
-      this.travel[key].speed += await new Roll(String(value.speed), this.parent.getRollData()).evaluate().total;
-    }
   }
 }

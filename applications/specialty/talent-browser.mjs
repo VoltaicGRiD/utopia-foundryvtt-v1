@@ -36,10 +36,10 @@ export class TalentBrowser extends api.HandlebarsApplicationMixin(api.Applicatio
 
   static PARTS = {
     header: {
-      template: "systems/utopia/templates/specialty/talent-browser-header.hbs",
+      template: "systems/utopia/templates/specialty/talent-browser/header.hbs",
     },
     content: {
-      template: "systems/utopia/templates/specialty/talent-browser-content.hbs",
+      template: "systems/utopia/templates/specialty/talent-browser/content.hbs",
       scrollable: [''],
     },
   }
@@ -54,17 +54,45 @@ export class TalentBrowser extends api.HandlebarsApplicationMixin(api.Applicatio
       actorSpecies = this.options.actor.system._speciesData.name;
     }
 
+    const actorTrees = this.options.actor.system.trees;
+    const flexibilities = [];
+
     for (const tree of allTrees) {
       if (tree.type === "talentTree" || (actorSpecies && tree.type === 'species' && tree.name === actorSpecies) ) {
-        for (const branch of tree.system.branches) {
-          branch.talents = await Promise.all(branch.talents.map(async (talent) => {
-            return {
-              ...talent,
-              item: await fromUuid(talent.uuid) || {},
-              unlocked: true,
-              availble: true,
-            };
-          }));
+        for (var b = 0; b < tree.system.branches.length; b++) {
+          const branch = tree.system.branches[b];
+
+          for (var t = 0; t < branch.talents.length; t++) {
+            const talent = branch.talents[t];
+            const item = await fromUuid(talent.uuid);
+
+            if (item) {
+              branch.talents[t] = {
+                ...talent,
+                item: item,
+              }
+            }
+
+            // Identify if this talent has flexibility enabled
+            // Flexibililty allows for talents from other trees to be taken
+            if (item.system.flexibility.enabled) 
+              flexibilities.push(item.system.flexibility)
+
+            if (this.unlockAll) continue;
+
+            // Available has 3 states:
+            // - unlocked: The talent is able to be taken
+            // - locked: The talent is locked and cannot be taken
+            // - taken: The talent is already taken
+            if (actorTrees[tree.name]) {
+              if (actorTrees[tree.name][b] === t - 1) 
+                branch.talents[t].available = "available";
+              else if (actorTrees[tree.name][b] >= t) 
+                branch.talents[t].available = "taken";
+              else 
+                branch.talents[t].available = "unavailable";
+            }
+          };
         }
       }
       else {
@@ -80,11 +108,29 @@ export class TalentBrowser extends api.HandlebarsApplicationMixin(api.Applicatio
     // Remove all empty trees
     const filteredTrees = allTrees.filter(tree => tree.system.branches.length > 0);
 
+    // Add all trees that meet flexibilities
+    for (const flex of flexibilities) {
+      switch (flex.category) {
+        case "species": 
+          break;
+        case "subspecies":
+          break;
+      }
+    }
+
     const context = {
       trees: filteredTrees,
     }
 
     console.log(this, context);
+
+    this.availableTalents = filteredTrees.reduce((acc, tree) => {
+      for (const branch of tree.system.branches) {
+        acc.push(...branch.talents);
+      }
+      return acc;
+    }
+    , []);
 
     return context;
   }
@@ -95,16 +141,16 @@ export class TalentBrowser extends api.HandlebarsApplicationMixin(api.Applicatio
     callback: this._filter.bind(this),
   });
 
-  async _onRender(context, options) {
+  _onRender(context, options) {
     try {
-      if (options.parts.includes('header')) {
-        this.element.querySelector('[data-action="unlockAll"]').addEventListener('click', this._unlockAll.bind(this)); 
-        this.#searchFilter.bind(this.element);
-      };
+      // if (options.parts.includes('header')) {
+      //   this.element.querySelector('[data-action="unlockAll"]').addEventListener('click', this._unlockAll.bind(this)); 
+      //   this.#searchFilter.bind(this.element);
+      // };
 
       this.element.querySelectorAll('.skill').forEach(skill => {
         skill.addEventListener('mouseover', async (event) => {
-          let content = await renderTemplate('systems/utopia/templates/other/talent-tree/tooltip.hbs', { 
+          let content = await renderTemplate('systems/utopia/templates/specialty/talent-browser/tooltip.hbs', { 
             talent: this.availableTalents.find(t => t.id === event.target.dataset.talent),
           });
           let element = document.createElement('div');
@@ -120,9 +166,14 @@ export class TalentBrowser extends api.HandlebarsApplicationMixin(api.Applicatio
     }
   }
 
-  static async _onTalentClick(event) {
-    const id = event.target.dataset.talent;
-    await this.options.actor.addTalent(id);
+  static async _onTalentClick(event, target) {
+    const id = target.dataset.talent;
+    const tree = target.dataset.tree;
+    const available = target.dataset.available;
+    
+    if (available === "available")
+      await this.options.actor.addTalent(id, tree);
+
     this.render();
   }
 

@@ -179,6 +179,15 @@ export class Species extends DragDropItemV2 {
       });
     });
 
+    this.element.querySelectorAll('select.branch-category').forEach((element) => {
+      element.addEventListener('change', async (event) => {
+        const branchIndex = parseFloat(event.target.dataset.branch);
+        const branches = this.item.system.branches;
+        branches[branchIndex].category = event.target.value;
+        await this.item.update({ 'system.branches': branches });
+      });
+    });
+
     this.element.querySelectorAll('.override').forEach((element) => {
       element.addEventListener('change', async (event) => {
         const branchIndex = parseFloat(event.target.dataset.branch);

@@ -12,7 +12,7 @@ export class UtopiaActor extends Actor {
     for (const [key, trait] of Object.entries(data.subtraits)) {
       data[key] = trait;
     }
-
+    
     const owner = game.users.find(u => u.character?.name === this.name);
     if (owner && owner.targets.size > 0) {
         data.target = owner.targets.values().next().value.actor.getRollData();
@@ -20,10 +20,20 @@ export class UtopiaActor extends Actor {
         data.target = game.user.targets.values().next().value.actor.getRollData();
     }
 
+    // Automation-required data should be added here
+    const paperDoll = this.system.getPaperDoll();
+    for (const [slot, obj] of Object.entries(paperDoll)) {
+      data["paperdoll"] ??= {};
+      data["paperdoll"][slot] = obj;
+    }
+
+    data["filledAugments"] = Object.values(this.system.augments).filter(a => a !== null).length;
+    //data["filledEquipment"] = Object.values(this.system.equipment).filter(e => e !== null).length;
+
     return data;
   }
 
-  async addTalent(talent) {
+  async addTalent(talent, talentTree) {
     let points = -1;
     if (this.type === "character")
       points = this.system.talentPoints.available;

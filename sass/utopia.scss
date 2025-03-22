@@ -185,4 +185,10 @@
     @import "components/spells.scss";
     @import "components/spellcraft.scss";
   }
+
+  &.advancement-sheet {
+    border-radius: 0 25px 0 25px ;
+
+    @import "components/advancement.scss";
+  }
 }

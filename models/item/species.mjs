@@ -31,7 +31,10 @@ export class Species extends UtopiaItemBase {
       soul: new fields.NumberField({ required: true, nullable: false, initial: 0 }),
     })
     schema.branches = new fields.ArrayField(new fields.SchemaField({
-      name: new fields.StringField({ required: true, nullable: false }),
+      category: new fields.StringField({ required: true, nullable: false, initial: "species", choices: {
+        "species": "UTOPIA.Items.Species.BranchCategory.Species",
+        "subspecies": "UTOPIA.Items.Species.BranchCategory.Subspecies",
+      } }),
       talents: new fields.ArrayField(talent, { initial: [] }),
     }), { initial: [{ name: "", talents: [] }, { name: "", talents: [] }, { name: "", talents: [] }] });
 

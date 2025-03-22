@@ -27,7 +27,9 @@
     "COMMON": {
       "consolidate": "Consolidate sheet",
       "description": "Description",
-      "accept": "Accept"
+      "accept": "Accept",
+      "save": "Save",
+      "saveFinal": "Save (You cannot undo this action)"
     },
     "RARITIES": {
       "Crude": "Crude",
@@ -534,7 +536,15 @@
           "branchCount": {
             "label": "Branch Count",
             "hint": "The number of branches this species has."
+          },
+          "branches.category": {
+            "label": "Branch Category",
+            "hint": "The category of this branch."
           }
+        },
+        "BranchCategory": {
+          "Species": "Species",
+          "Subspecies": "Subspecies"
         },
         "CommunicationTypes": {
           "Mute": "Mute",

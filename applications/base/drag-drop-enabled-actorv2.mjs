@@ -1,5 +1,6 @@
 import { fitTextToWidth } from "../../system/helpers/fitTextToWidth.mjs";
 import { flattenFields } from "../../system/helpers/flattenFields.mjs";
+import { AdvancementSheet } from "../item/advancement.mjs";
 import { SpellcraftSheet } from "../specialty/spellcraft.mjs";
 import { TalentBrowser } from "../specialty/talent-browser.mjs";
 
@@ -442,6 +443,8 @@ export class DragDropActorV2 extends api.HandlebarsApplicationMixin(sheets.Actor
         return new SpellcraftSheet({ actor: this.actor }).render(true);
       case "artifice": 
         return new ArtificeSheet({ actor: this.actor }).render(true);
+      case "advancement":
+        return new AdvancementSheet({ actor: this.actor }).render(true);
     }
   }
 

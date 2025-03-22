@@ -48,6 +48,8 @@
       "npc": {}
     },
     "Item": {
+      "advancement": {},
+
       "body": {},
       "kit": {},
       "class": {},

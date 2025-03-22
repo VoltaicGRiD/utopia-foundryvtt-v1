@@ -1,12 +1,18 @@
+// Provide a clear description of this import and constant usage.
 const fields = foundry.data.fields;
 const requiredInteger = { required: true, nullable: false, initial: 0 }
 import { BiographyField as TextareaField } from "./fields/biography-field.mjs";
 import { SchemaArrayField } from "./fields/schema-set-field.mjs";
+import { getPaperDollContext } from "./utility/paper-doll-utils.mjs";
 
 export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
+  // Extended from Foundry's TypeDataModel to represent base data logic for Utopia Actors.
 
   static LOCALIZATION_PREFIXES = [...super.LOCALIZATION_PREFIXES, "UTOPIA.Actors"];
 
+  /**
+   * Prepare base data, such as establishing default action values.
+   */
   prepareBaseData() {
     this.actions = {
       turn: {
@@ -20,6 +26,10 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     }
   }
 
+  /**
+   * Define the comprehensive data schema for the actor.
+   * Includes fields, resources, traits, subtraits, and relevant data structures.
+   */
   static defineSchema() {
     const requiredInteger = { required: true, nullable: false, initial: 0 };
     const schema = {};
@@ -75,14 +85,7 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       chill: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       physical: new fields.NumberField({ ...requiredInteger, initial: 1 }),
       psyche: new fields.NumberField({ ...requiredInteger, initial: 1 }),
-    })
-    schema.armorDefenses = new fields.SchemaField({
-      energy: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      heat: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      chill: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      physical: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      psyche: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-    })
+    });
 
     schema.weaponlessAttacks = new fields.SchemaField({
       formula: new fields.StringField({ ...requiredInteger, initial: "1d6" }),
@@ -94,6 +97,41 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       stamina: new fields.NumberField({ ...requiredInteger, initial: 0 }),
     });
 
+    const siphon = () => {
+      const returns = {};
+      for (const [key, value] of Object.entries(CONFIG.UTOPIA.DAMAGE_TYPES)) {
+        returns[key] = new fields.SchemaField({
+          convertToStaminaPercent: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToStaminaFixed: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToSurfacePercent: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToSurfaceFixed: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToDeepPercent: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToDeepFixed: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToResource: new fields.StringField({ required: false, nullable: true, initial: "", blank: true }),
+          convertToResourcePercent: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          convertToResourceFixed: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        })
+      }
+      return returns
+    }
+
+    schema.siphons = new fields.SchemaField({
+      ...siphon()
+    })
+
+    schema.healing = new fields.SchemaField({ 
+      item: new fields.SchemaField({
+        staminaPercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        surfacePercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        deepPercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      }),
+      natural: new fields.SchemaField({
+        staminaPercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        surfacePercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        deepPercent: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      }),      
+    });
+
     const artistries = () => {
       // Create a new StringField for each SPECIALTY_CHECKS
       const returns = {};
@@ -101,10 +139,25 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
         returns[key] = new fields.SchemaField({
           multiplier: new fields.NumberField({ ...requiredInteger, initial: 1 }),
           unlocked: new fields.BooleanField({ required: true, nullable: false, initial: false }),
+          discount: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         });
       }      
       return returns;
     }
+
+    schema.artifice = new fields.SchemaField({
+      level: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      gearDiscounts: new fields.SchemaField({ // Discounts is used for anything that is NOT a crafting component
+        material: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        refinement: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        power: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      }),
+      componentDiscounts: new fields.SchemaField({
+        material: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        refinement: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+        power: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      })
+    })
 
     schema.spellcasting = new fields.SchemaField({
       artistries: new fields.SchemaField({
@@ -185,26 +238,59 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     schema.turnActions = ResourceField();
     schema.interruptActions = ResourceField();
 
-    schema.equipmentSlots = new fields.SchemaField({
-      head: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      neck: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      chest: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      back: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      hands: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      ring: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      waist: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      feet: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
+    schema.evolution = new fields.SchemaField({
+      head: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      feet: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      hands: new fields.NumberField({ ...requiredInteger, initial: 1 }),
     });
-    schema.augmentSlots = new fields.SchemaField({
-      head: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      neck: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      chest: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      back: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      hands: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      ring: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      waist: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-      feet: new fields.SetField(new fields.DocumentIdField({ required: false, nullable: true }), { initial: [] }),
-    });      
+
+    const armors = () => new fields.SchemaField({
+      count: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      all: new fields.BooleanField({ required: true, initial: false }),
+      head: new fields.BooleanField({ required: true, initial: false }),
+      neck: new fields.BooleanField({ required: true, initial: false }),
+      back: new fields.BooleanField({ required: true, initial: false }),
+      chest: new fields.BooleanField({ required: true, initial: false }),
+      waist: new fields.BooleanField({ required: true, initial: false }),
+      hands: new fields.BooleanField({ required: true, initial: false }),
+      ring: new fields.BooleanField({ required: true, initial: false }),
+      feet: new fields.BooleanField({ required: true, initial: false }),
+    });
+
+    schema.armors = new fields.SchemaField({
+      unaugmentable: armors(),
+      unequippable: armors(),
+      specialty: armors(),
+    });
+
+    schema.augments = new fields.SchemaField({
+      head: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      neck: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      back: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      chest: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      waist: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      hands: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      ring: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      feet: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+    });
+
+    schema.equipmentSlots = new fields.SchemaField({
+      head: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      neck: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      back: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      chest: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      waist: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      hands: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      ring: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+      feet: new fields.ArrayField(new fields.DocumentIdField(), { initial: [] }),
+    });
+    schema.slotCapacity = new fields.SchemaField({
+      bonus: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      total: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+    });
+    schema.slots = new fields.NumberField({ ...requiredInteger, initial: 0 });
+
+      
 
     const returns = {};
     const traitOptions = {
@@ -232,6 +318,13 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
       ...specialtyChecks(),
     });
 
+    schema.augmenting = new fields.SchemaField({
+      canAugment: new fields.BooleanField({ required: true, nullable: false, initial: true }),
+      damageFormula: new fields.StringField({ required: true, nulllable: false, initial: "1d"}),
+      actions: new fields.NumberField({ required: true, nullable: false, initial: 6 }),
+      damage: new fields.BooleanField({ required: true, nullable: false, initial: true }),
+    })
+
     schema.resources = new SchemaArrayField(new fields.SchemaField({
       name: new fields.StringField({ required: true, nullable: false }),
       rollKey: new fields.StringField({ required: true, nullable: false }),
@@ -256,6 +349,9 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     return schema;
   }
 
+  /**
+   * Retrieve the header fields to display at the top of the sheet.
+   */
   get headerFields() {
     return [
       {
@@ -266,86 +362,17 @@ export default class UtopiaActorBase extends foundry.abstract.TypeDataModel {
     ]
   }
 
-  static getPaperDoll() {
-    const context = {}
-
-    context.head = {}
-    context.head.augments = this.augments.head.map(i => this.parent.items.get(i));
-    context.head.evolution = this.evolution.head;
-    context.head.unaugmentable = this.armors.unaugmentable.head;
-    context.head.unequippable = this.armors.unequippable.head;
-    context.head.specialty = this.armors.specialty.head;
-    context.head.items = this.equipmentSlots.head.map(i => this.parent.items.get(i));
-    context.head.augments = this.augments.head.map(i => this.parent.items.get(i));
-
-    context.neck = {}
-    context.neck.augments = this.augments.neck.map(i => this.parent.items.get(i));
-    context.neck.evolution = this.evolution.neck;
-    context.neck.unaugmentable = this.armors.unaugmentable.neck;
-    context.neck.unequippable = this.armors.unequippable.neck
-    context.neck.specialty = this.armors.specialty.neck;
-    context.neck.items = this.equipmentSlots.neck.map(i => this.parent.items.get(i));
-    context.neck.augments = this.augments.neck.map(i => this.parent.items.get(i));
-
-    context.chest = {}
-    context.chest.augments = this.augments.chest.map(i => this.parent.items.get(i));
-    context.chest.evolution = this.evolution.chest;
-    context.chest.unaugmentable = this.armors.unaugmentable.chest;
-    context.chest.unequippable = this.armors.unequippable.chest
-    context.chest.specialty = this.armors.specialty.chest;
-    context.chest.items = this.equipmentSlots.chest.map(i => this.parent.items.get(i));
-    context.chest.augments = this.augments.chest.map(i => this.parent.items.get(i));
-
-    context.back = {}
-    context.back.augments = this.augments.back.map(i => this.parent.items.get(i));
-    context.back.evolution = this.evolution.back;
-    context.back.unaugmentable = this.armors.unaugmentable.back;
-    context.back.unequippable = this.armors.unequippable.back
-    context.back.specialty = this.armors.specialty.back;
-    context.back.items = this.equipmentSlots.back.map(i => this.parent.items.get(i));
-    context.back.augments = this.augments.back.map(i => this.parent.items.get(i));
-
-    context.hands = {}
-    context.hands.augments = this.augments.hands.map(i => this.parent.items.get(i));
-    context.hands.evolution = this.evolution.hands;
-    context.hands.unaugmentable = this.armors.unaugmentable.hands;
-    context.hands.unequippable = this.armors.unequippable.hands
-    context.hands.specialty = this.armors.specialty.hands;
-    context.hands.items = this.equipmentSlots.hands.map(i => this.parent.items.get(i));
-    context.hands.augments = this.augments.hands.map(i => this.parent.items.get(i));
-
-    context.ring = {}
-    context.ring.augments = this.augments.ring.map(i => this.parent.items.get(i));
-    context.ring.evolution = this.evolution.ring;
-    context.ring.unaugmentable = this.armors.unaugmentable.ring;
-    context.ring.unequippable = this.armors.unequippable.ring
-    context.ring.specialty = this.armors.specialty.ring;
-    context.ring.items = this.equipmentSlots.ring.map(i => this.parent.items.get(i));
-    context.ring.augments = this.augments.ring.map(i => this.parent.items.get(i));
-
-    context.waist = {}
-    context.waist.augments = this.augments.waist.map(i => this.parent.items.get(i));
-    context.waist.evolution = this.evolution.waist;
-    context.waist.unaugmentable = this.armors.unaugmentable.waist;
-    context.waist.unequippable = this.armors.unequippable.waist
-    context.waist.specialty = this.armors.specialty.waist;
-    context.waist.items = this.equipmentSlots.waist.map(i => this.parent.items.get(i));
-    context.waist.augments = this.augments.waist.map(i => this.parent.items.get(i));
-
-    context.feet = {}
-    context.feet.augments = this.augments.feet.map(i => this.parent.items.get(i));
-    context.feet.evolution = this.evolution.feet;
-    context.feet.unaugmentable = this.armors.unaugmentable.feet;
-    context.feet.unequippable = this.armors.unequippable.feet
-    context.feet.specialty = this.armors.specialty.feet;
-    context.feet.items = this.equipmentSlots.feet.map(i => this.parent.items.get(i));
-    context.feet.augments = this.augments.feet.map(i => this.parent.items.get(i));
-
-    console.log(context);
-
-    return context;
+  /**
+   * Construct a "paper doll" data view of equipped items and evolution headings.
+   * Useful in visualizing actor augmentations in specific body slots.
+   */
+  getPaperDoll() {
+    return getPaperDollContext(this);
   }
 
+  /**
+   * Add biography fields to the schema, allowing for structured character background data.
+   */
   static getBiography(schema) {
     schema.biographyFieldOptions = new fields.StringField({
       required: true,

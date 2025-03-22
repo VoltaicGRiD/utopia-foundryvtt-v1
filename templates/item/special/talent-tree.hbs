@@ -4,6 +4,13 @@
   {{log position}}
   {{log branches}}
   {{#each branches as |branch branchIndex|}}
+    {{#if (eq ../item.type "species")}}
+      <select class="branch-category" data-branch="{{branchIndex}}">
+        <option value="species" {{#if (eq branch.category "species")}}selected{{/if}}>{{localize "UTOPIA.Items.Species.BranchCategory.Species"}}</option>
+        <option value="subspecies" {{#if (eq branch.category "subspecies")}}selected{{/if}}>{{localize "UTOPIA.Items.Species.BranchCategory.Subspecies"}}</option>
+      </select>
+    {{/if}}
+
     <div class="talent-branch" data-drop data-branch="{{branchIndex}}">
   
       {{#each branch.talents as |talent|}}

@@ -1,0 +1,41 @@
+<section class="advancement">
+  <span class="subtrait-points">{{localize 'UTOPIA.Actor.Points.subtraits'}}: {{points}}</span>
+
+  <div class="subtrait-selection">
+    {{#each subtraits as |subtrait|}}
+    {{#if subtrait.gifted}}
+      <div class="subtrait gifted">
+        <i class="fas fa-gift"></i>
+        <span class="subtrait-gifted">{{localize 'UTOPIA.Actor.Points.gifted'}}</span>
+    {{else}}
+      <div class="subtrait" data-value="subtrait.value">
+    {{/if}}
+        <a class="subtrait-decrease" data-action="decrease" data-key="{{subtrait.short}}"><i class="fas fa-fw fa-minus"></i></a>
+        <label class="subtrait-name" for="subtrait-{{subtrait.short}}">{{localize subtrait.label}}</label>
+        <a class="subtrait-increase" data-action="increase" data-key="{{subtrait.short}}"><i class="fas fa-fw fa-plus"></i></a>
+        <span class="subtrait-value" data-key="{{subtrait.short}}">{{subtrait.value}}</span>
+        <span class="subtrait-arrow"><i class="fas fa-arrow-right"></i></span>
+        <span class="subtrait-new-value {{#if (gt subtrait.newValue subtrait.value)}}greater{{else if (lt subtrait.newValue subtrait.value)}}lesser{{/if}}" data-key="{{subtrait.short}}">{{subtrait.newValue}}</span>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="points">
+    <div class="form-group">
+      <label>{{localize 'UTOPIA.Actor.Points.body'}}:</label>
+      <span>{{actor.system.body}}</span>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize 'UTOPIA.Actor.Points.mind'}}:</label>
+      <span>{{actor.system.body}}</span>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize 'UTOPIA.Actor.Points.soul'}}:</label>
+      <span>{{actor.system.body}}</span>
+    </div>
+  </div>
+
+  <button type="submit" data-action="save">{{localize 'UTOPIA.COMMON.saveFinal'}}</button>
+</section> 
