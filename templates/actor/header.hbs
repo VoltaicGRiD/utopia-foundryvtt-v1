@@ -1,0 +1,94 @@
+<header class="sheet-header">
+  <div class="profile-section">
+    <img class="profile-img" src="{{actor.img}}" data-action="onEditImage" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <div class="char-header">
+      <div class="char-name"><input name="name" type="text" class="item-name-input" value="{{actor.name}}" placeholder="Name"/></div>
+      <div class="species-container">
+        <input disabled class="species-input" name="species" placeholder="Species" type="text" value="{{species}}"/>
+      </div>
+    </div>
+  </div>
+  <div class="header-fields">
+    <div class="char-header flexrow">
+      {{!-- <div class="edit-slider">
+        <label for="overrideDerivedData">{{localize "UTOPIA.Actors.overrideDerivedData"}}</label>
+        <label class="switch" for="overrideDerivedData">
+          <input type="checkbox" id="overrideDerivedData" name="overrideDerivedData" {{#if (eq overrideDerivedData true)}} checked {{/if}} />
+          <div class="slider round"></div>
+        </label>
+      </div> --}}
+    </div>
+    <div class="resources">
+
+      <div class="new-resource">
+        <div class="resource-context">
+          <div class="add-buttons">
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="1">+1</button>
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="5">+5</button>
+            <button type="button" data-action="addToStat" data-stat="system.shp.value" data-value="20">+20</button>
+            <button type="button" data-action="maxStat" data-stat="system.shp.value" data-value="system.shp.max">Max</button>
+          </div>
+          <div class="subtract-buttons">
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="1">-1</button>
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="5">-5</button>
+            <button type="button" data-action="subtractFromStat" data-stat="system.shp.value" data-value="20">-20</button>
+            <button type="button" data-action="minStat" data-stat="system.shp.value" data-value="0">Min</button>
+          </div>
+        </div>
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.shpLong'}}">
+          {{formInput systemFields.shp.fields.value value=system.shp.value name="system.shp.value" localize=true}}
+          <span class="new-resource-max">{{system.shp.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.shpShort'}}</span>
+        </label>
+      </div>  
+
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.dhpLong'}}">
+          {{formInput systemFields.dhp.fields.value value=system.dhp.value name="system.dhp.value" localize=true}}
+          <span class="new-resource-max">{{system.dhp.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.dhpShort'}}</span>
+        </label>
+      </div>
+
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.staLong'}}">
+          {{formInput systemFields.stamina.fields.value value=system.stamina.value name="system.stamina.value" localize=true}}
+          <span class="new-resource-max">{{system.stamina.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.staShort'}}</span>
+        </label>
+      </div>
+
+      <div class="new-resource large">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.expLong'}}">
+          {{formInput systemFields.experience value=system.experience name="system.experience" localize=true}}
+          <span class="new-resource-max">{{system.experience.next}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.expShort'}}</span>
+        </label>
+      </div>
+
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.taLong'}}">
+          {{formInput systemFields.turnActions.fields.value value=system.turnActions.value name="system.turnActions.value" localize=true}}
+          <span class="new-resource-max">{{system.turnActions.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.taShort'}}</span>
+        </label>
+      </div>
+
+      <div class="new-resource">
+        <label class="new-resource-container" data-tooltip="{{localize 'UTOPIA.Actors.Stats.iaLong'}}">
+          {{formInput systemFields.interruptActions.fields.value value=system.interruptActions.value name="system.interruptActions.value" localize=true}}
+          <span class="new-resource-max">{{system.interruptActions.max}}</span>
+          <span class="new-resource-label">{{localize 'UTOPIA.Actors.Stats.iaShort'}}</span>
+        </label>
+      </div>  
+
+      <div class="new-resource">
+        <button type="button" class="rest-button" data-action="rest">
+          <i class="fas fa-alarm-clock"></i>
+          <span>{{localize "UTOPIA.Actors.rest"}}</span>
+        </button>
+      </div>  
+
+    </div>
+  </div>
+</header>

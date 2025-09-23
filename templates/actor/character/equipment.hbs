@@ -1,0 +1,49 @@
+<div class="right-column">
+  <table class="favorites equipment">
+    <thead>
+      <tr>
+        <th>{{localize "UTOPIA.EQUIPMENT.NAME"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.TYPE"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.QUANTITY"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.SLOTS"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.ACTIONS"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each system.favorites as |item|}}
+        <tr>
+          <td>{{item.name}}</td>
+          <td>{{item.type}}</td>
+          <td>{{item.system.quality}}</td>
+          <td>{{item.system.quantity}}</td>
+          <td>{{item.system.slots}}</td>
+          <td>
+            <!-- !! This is a placeholder for actions, which can be expanded later -->
+          </td>
+        </tr>
+      {{/each}}
+  </table>
+
+  <table class="favorites spells">
+    <thead>
+      <tr>
+        <th>{{localize "UTOPIA.SPELLS.NAME"}}</th>
+        <th>{{localize "UTOPIA.SPELLS.TYPE"}}</th>
+        <th>{{localize "UTOPIA.SPELLS.COST"}}</th>
+        <th>{{localize "UTOPIA.SPELLS.ACTIONS"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each system.spells as |spell|}}
+        <tr>
+          <td>{{spell.name}}</td>
+          <td>{{spell.type}}</td>
+          <td>{{spell.system.cost}}</td>
+          <td>
+            <!-- !! This is a placeholder for actions, which can be expanded later -->
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

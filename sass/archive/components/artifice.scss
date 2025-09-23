@@ -1,0 +1,412 @@
+.window-header {
+  border-radius: 0 25px 0 0;
+  &::after {
+    content: "";
+    position: absolute;
+    border: solid;
+    border-image-source: var(--utopia-spellcraft-background);
+    border-image-slice: 1;
+    border-width: 0px 4px 0 4px;
+    pointer-events: none;
+    left: 4px;
+    right: 4px;
+  }
+}
+
+.window-content {
+  padding: 0;
+}
+
+.artifice, .gear {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-content: start;
+  position: relative;
+  scrollbar-color: var(--utopia-color-scrollbar);
+  scrollbar-width: 3px;
+  overflow: hidden auto;
+  color: var(--utopia-color-black);
+  flex: 1 1 400px;
+
+  &::before {
+    content: "";
+    background-color: #000000;
+    opacity: 0.8;
+    background-image: url("../assets/gear-background.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  &.dragging {
+    border: 2px dashed white;
+  }
+  
+  &::after {
+    content: "";
+    position: absolute;
+    border: solid;
+    border-image-source: var(--utopia-spellcraft-background);
+    border-image-slice: 1;
+    border-width: 0px 4px 0 4px;
+    pointer-events: none;
+    inset: 0;
+    left: 4px;
+    right: 4px;
+  }
+}
+
+.gear {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+}
+
+aside {
+  z-index: 100;
+  flex: 1 1 390px;
+  height: 750px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 25px;
+}
+
+.stack-cost {
+  text-align: center;
+  font-weight: 900;
+  color: var(--utopia-color-attribute-max);
+}
+
+.artifice-content {
+  flex: 3 3 600px;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  pointer-events: all;
+  z-index: 100;
+  scrollbar-width: 0px;
+  
+  table {
+    margin: 0;
+  }
+}
+
+.gear {
+  .artifice-content {
+    flex: 1 1;
+    padding: 0 1rem 0.5rem 1rem;
+  }
+}
+
+.artifice {
+  .artifice-content {
+    flex: 3 3 600px;
+    padding: 1rem;
+  }
+}
+
+.artifice-content::-webkit-scrollbar { 
+  width: 15px; 
+}
+
+.artifice-header {
+  flex: 1 1 50px;
+}
+
+.artifact-table-header {
+  font-size: var(--font-size-16);
+  font-weight: 700;
+  color: var(--utopia-color-blue-white);
+}
+
+.artifice-selection {
+  z-index: 100;
+  flex: 1 1 700px;
+  display: flex;
+  flex-direction: column;
+  align-content: start;
+  gap: 10px;
+}
+
+.artifice-craft-div {
+  position: absolute;
+  right: -150px;
+  height: 150px;
+  width: 150px;
+  top: 50px;
+  padding: 15px;
+  background: black;
+}
+
+.artifice-craft-button {
+  width: 100%;
+  height: 100%;
+  background-color: var(--utopia-color-gold);
+  color: var(--utopia-color-black);
+  font-size: var(--font-size-20);
+  font-weight: 700;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: var(--utopia-color-blue-white);
+    color: var(--utopia-color-gold);
+    transform: scale(1.05);
+    box-shadow: 0px 0px 10px var(--utopia-color-blue-white), inset 0px 0px 10px var(--utopia-color-blue-white);
+    filter: brightness(1.2);
+  }
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0px 0px 5px var(--utopia-color-blue-white), inset 0px 0px 5px var(--utopia-color-blue-white);
+    filter: brightness(1.1);
+  }
+}
+
+.artifice-attributes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+.artifice-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+
+  span {
+    font-size: var(--font-size-20);
+    font-weight: 700;
+    text-align: center;
+    color: white;
+    background-color: var(--utopia-color-black);
+    padding: 0.5rem;
+    border-radius: 15px;
+    border: 1px solid var(--utopia-color-gold);
+  }
+}
+
+.artifice-totals {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  width: 100%;
+  gap: 10px;
+}
+
+.artifice-total {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  height: 60px;
+  width: 60px;
+  background-color: var(--utopia-color-black);
+  border-radius: 15px;
+  border: 1px solid var(--utopia-color-gold);
+
+  .total-title {
+    font-size: var(--font-size-16);
+    font-weight: 700;
+    color: var(--utopia-color-blue-white);
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .total-value {
+    font-size: var(--font-size-20);
+    font-weight: 500;
+    color: var(--utopia-color-gold);
+    position: absolute;
+    top: 45%;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+}
+
+.artifice-rp, .artifice-rarity, .artifice-value {
+  text-align: center;
+  flex: 1 0 30%;
+}
+
+.artifice-actions, .artifice-hands, .artifice-slots, .artifice-components {
+  flex: 1 1 100px;
+}
+
+.artifice-components {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--utopia-color-black);
+  border-radius: 15px;
+  border: 1px solid var(--utopia-color-gold);
+  height: 60px;
+  width: 60px;
+  position: relative;
+
+  .artifice-component {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .artifice-component-title {
+      font-size: var(--font-size-16);
+      font-weight: 700;
+      color: var(--utopia-color-blue-white);
+      position: absolute;
+      top: 5px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .artifice-material, .artifice-refinement, .artifice-power {
+      font-size: var(--font-size-20);
+      font-weight: 500;
+      color: var(--utopia-color-gold);
+      position: absolute;
+      top: 45%;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+  }
+}
+
+.gear-attribute {
+  padding: 0 0.5rem;
+}
+
+.artifice-table {
+  z-index: 100;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  pointer-events: all;
+
+  tr {
+    max-height: 30px;
+  }
+
+  td {
+    padding: 0.2rem 0.5rem;
+    height: 30px;
+    vertical-align: center; /* Center align content vertically */
+
+    button: {
+      height: 30px;
+    }
+  }
+
+  .name-col {
+    text-align: left;
+    font-weight: 900;
+  }
+
+  .cost-col {
+    text-align: center;
+  }
+
+  .stack-col {
+    text-align: center;
+    font-weight: 900;
+    color: var(--utopia-color-hp-2);
+    width: 60px;
+
+    input {
+      width: 60px;
+      height: 30px;
+      text-align: center;
+      font-size: var(--font-size-14);
+      background-color: var(--utopia-color-gold);
+      color: var(--utopia-color-black);
+    }
+  }
+
+  .action-col {
+    width: 30px;
+
+    button {
+      height: 30px;
+    }
+  }
+}
+
+.gear-header {
+  z-index: 100;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0.5rem 1rem;
+}
+
+.gear-icon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--utopia-color-black);
+  border-radius: 15px;
+  border: 1px solid var(--utopia-color-gold);
+  display: flex;
+  padding: 0.1rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    object-fit: cover;
+    filter: brightness(0.8);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      filter: brightness(1);
+      transform: scale(1.05);
+      box-shadow: 0px 0px 10px var(--utopia-color-blue-white), inset 0px 0px 10px var(--utopia-color-blue-white);
+    }
+    &:active {
+      transform: scale(0.95);
+      box-shadow: 0px 0px 5px var(--utopia-color-blue-white), inset 0px 0px 5px var(--utopia-color-blue-white);
+    }
+  }
+}
+
+.gear-name {
+  flex: 3 1 300px;
+
+  input {
+    font-size: var(--font-size-24);
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    height: 60px;
+    color: var(--utopia-color-blue-white);
+    text-align: center;
+  }
+}

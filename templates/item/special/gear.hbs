@@ -1,0 +1,221 @@
+<div class="gear">
+  <div class="gear-header" style="background-color: {{artifice.rarity.color}}bb; background-blend-mode: multiply;">
+    <div class="gear-icon">
+      <img src="{{item.img}}" data-action="image" class="gear-img" />
+    </div>
+
+    <div class="gear-name">
+      <input
+        name='name'
+        type='text'
+        value='{{item.name}}'
+        placeholder='Name'/>
+    </div>
+  </div>
+
+  <div class="artifice-content" data-drop style="background-color: {{artifice.rarity.color}}bb; background-blend-mode: multiply;">
+
+    <div class="artifice-type">
+      <span>{{localize (concat "UTOPIA.Artifice.Types." item.system.type)}} {{#if (eq item.system.type "consumable")}}[Qty. {{numberFormat item.system.quantity}}]{{/if}}</span>
+    </div>
+
+    <div class="artifice-totals">
+      <div class="artifice-total artifice-rp">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalRP"}}
+        </span>
+        <span class="total-value">
+          {{artifice.RP}}
+        </span>
+      </div>
+      <div class="artifice-total artifice-rarity">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalRarity"}}
+        </span>
+        <span class="total-value">
+          {{localize artifice.rarity.label}}
+        </span>
+      </div>
+      <div class="artifice-total artifice-value">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalValue"}}
+        </span>
+        <span class="total-value">
+          {{artifice.value}}
+        </span>
+      </div>
+      <div class="artifice-total artifice-actions">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalActions"}}
+        </span>
+        <span class="total-value">
+          {{artifice.actions}}
+        </span>
+      </div>
+      <div class="artifice-total artifice-hands">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalHands"}}
+        </span>
+        <span class="total-value">
+          {{artifice.hands}}
+        </span>
+      </div>
+      <div class="artifice-total artifice-slots">
+        <span class="total-title">
+          {{localize "UTOPIA.Artifice.TotalSlots"}}
+        </span>
+        <span class="total-value">
+          {{artifice.slots}}
+        </span>
+      </div>
+      <div class="artifice-components">
+        <div class="artifice-component">
+          <span class="artifice-component-title">{{localize "UTOPIA.Artifice.TotalMaterial"}}</span>
+          <span class="artifice-material">{{artifice.material}}</span>
+        </div>
+        <div class="artifice-component">
+          <span class="artifice-component-title">{{localize "UTOPIA.Artifice.TotalRefinement"}}</span>
+          <span class="artifice-refinement">{{artifice.refinement}}</span>
+        </div>
+        <div class="artifice-component">
+          <span class="artifice-component-title">{{localize "UTOPIA.Artifice.TotalPower"}}</span>
+          <span class="artifice-power">{{artifice.power}}</span>
+        </div>
+      </div>
+    </div>
+
+    {{#if (eq isArtifact true)}}
+      <div class="artifice-selection">
+        
+        {{#each activations as |activation activationKey|}}
+          <table class="artifice-table" data-drop data-dropzone="{{activationKey}}">
+            <thead>
+              <tr>
+                <th class="activation-title" colspan="4">{{localize activation.activation.name}} (RP x {{activation.activation.activation.costMultiplier}})</th>
+              </tr>
+              <tr>
+                <th>{{localize "UTOPIA.Artifice.Name"}}</th>
+                <th class="cost-col">{{localize "UTOPIA.Artifice.Cost"}}</th>
+                <th>{{localize "UTOPIA.Artifice.Stacks"}}</th>
+                <th>{{localize "UTOPIA.Artifice.Delete"}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each activation.features as |feature key|}}
+                <tr>
+                  <td class="name-col">{{localize feature.name}}</td>
+                  <td class="cost-col">{{feature.cost.RP}}{{#if feature.stackable}} x {{feature.stacks}}{{/if}}</td>
+                  <td class="stack-col">{{#if feature.stackable}}<input type="number" data-id="{{key}}" value="{{feature.stacks}}"/>{{/if}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    {{#each feature.keys}} 
+                      <span class="gear-attribute">
+                      {{#if this.parts}}
+                        {{#each this.parts as |part|}}
+                          <span class="gear-part">{{localize part.display}}: {{part.value}}</span>
+                        {{/each}}
+                      {{else}}
+                        {{#if this.specialLabel}}
+                          {{localize this.specialLabel}}: {{this.value}}
+                        {{else}}
+                          {{this.display}}
+                          {{#if (or (gt (length this.value) 0) (gt this.value 0))}}: {{this.value}}{{/if}}
+                        {{/if}}
+                      {{/if}}
+                      </span>
+                    {{/each}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{/each}}
+
+        <table class="artifice-table">
+          <thead>
+            <tr>
+              <th>{{localize "UTOPIA.Artifice.Name"}}</th>
+              <th class="cost-col">{{localize "UTOPIA.Artifice.Cost"}}</th>
+              <th>{{localize "UTOPIA.Artifice.Stacks"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each features as |feature key|}}
+              <tr>
+                <td class="name-col">{{localize feature.name}}</td>
+                <td class="cost-col">{{feature.cost.RP}}{{#if feature.stackable}} x {{feature.stacks}}{{/if}}</td>
+                <td class="stack-col">{{#if feature.stackable}}<input type="number" data-id="{{key}}" value="{{feature.stacks}}"/>{{/if}}</td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  {{#each feature.keys}} 
+                      <span class="gear-attribute">
+                      {{#if this.parts}}
+                        {{#each this.parts as |part|}}
+                          <span class="gear-part">{{localize part.display}}: {{part.value}}</span>
+                        {{/each}}
+                      {{else}}
+                        {{#if this.specialLabel}}
+                          {{localize this.specialLabel}}: {{this.value}}
+                        {{else}}
+                          {{this.display}}
+                          {{#if (or (gt (length this.value) 0) (gt this.value 0))}}: {{this.value}}{{/if}}
+                        {{/if}}
+                      {{/if}}
+                      </span>
+                    {{/each}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+
+      </div>
+    {{else}}
+      <div class="artifice-selection">
+        
+        <table class="artifice-table">
+          <thead>
+            <tr>
+              <th>{{localize "UTOPIA.Artifice.Name"}}</th>
+              <th class="cost-col">{{localize "UTOPIA.Artifice.Cost"}}</th>
+              <th>{{localize "UTOPIA.Artifice.Stacks"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each features as |feature key|}}
+              <tr>
+                <td class="name-col">{{localize feature.name}}</td>
+                <td class="cost-col">{{feature.cost.RP}}{{#if feature.stackable}} x {{feature.stacks}}{{/if}}</td>
+                <td class="stack-col">{{#if feature.stackable}}{{feature.stacks}}{{/if}}</td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  {{#each feature.keys}} 
+                      <span class="gear-attribute">
+                      {{#if this.parts}}
+                        {{#each this.parts as |part|}}
+                          <span class="gear-part">{{localize part.display}}: {{part.value}}</span>
+                        {{/each}}
+                      {{else}}
+                        {{#if this.specialLabel}}
+                          {{localize this.specialLabel}}: {{this.value}}
+                        {{else}}
+                          {{this.display}}
+                          {{#if (or (gt (length this.value) 0) (gt this.value 0))}}: {{this.value}}{{/if}}
+                        {{/if}}
+                      {{/if}}
+                      </span>
+                    {{/each}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+
+      </div>
+    {{/if}}
+
+  </div>
+</div>  

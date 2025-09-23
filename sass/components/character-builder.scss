@@ -1,0 +1,634 @@
+// Character Builder - Dynamic Species Styling with Theme Support
+
+// ThreeJS background styles
+.threejs-background {
+  canvas {
+    display: block;
+    background: radial-gradient(ellipse at center, 
+      rgba(25, 25, 50, 0.8) 0%, 
+      rgba(10, 10, 25, 0.95) 70%, 
+      rgba(0, 0, 0, 1) 100%);
+  }
+}
+
+// Character Builder Application styling
+& {
+  background-image: url("/systems/utopia/assets/sheet-backgrounds/character-builder.webp");
+  background-size: cover;
+  background-position: center;
+  transition: background-position 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Parallax effect: add a class when JS is active
+  &.parallax-bg {
+    cursor: pointer; // Optional: indicate interactivity
+  }
+
+  .window-content {
+    padding: 0;
+    backdrop-filter: brightness(0.5) blur(5px);
+  }
+
+  .tab {
+    padding: 0.5rem;
+  }
+}
+
+// Ensure UI elements appear above 3D background
+.builder-species, 
+.builder-footer,
+.sheet-tabs {
+  position: relative;
+  z-index: 10;
+  
+  // Add subtle backdrop for better readability over 3D background
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(2px);
+    border-radius: inherit;
+    z-index: -1;
+  }
+}
+
+// Mixin for species color theming
+@mixin species-theme($species) {
+  // Apply the colors first
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+
+  // Light theme (default)
+  --species-bg: var(--utopia-light-#{$species}-bg);
+  --species-fg: var(--utopia-light-#{$species}-fg);
+  --species-accent: var(--utopia-dark-#{$species}-fg);
+  --species-accent-rgb: var(--utopia-#{$species}-accent-rgb);
+  
+  // Dark theme (system preference)
+  @media (prefers-color-scheme: dark) {
+    --species-bg: var(--utopia-dark-#{$species}-bg);
+    --species-fg: var(--utopia-dark-#{$species}-fg);
+    --species-accent: var(--utopia-light-#{$species}-fg);
+  }
+
+  // Manual theme overrides
+  .theme-dark & {
+    --species-bg: var(--utopia-dark-#{$species}-bg);
+    --species-fg: var(--utopia-dark-#{$species}-fg);
+    --species-accent: var(--utopia-light-#{$species}-fg);
+  }
+
+  .theme-light & {
+    --species-bg: var(--utopia-light-#{$species}-bg);
+    --species-fg: var(--utopia-light-#{$species}-fg);
+    --species-accent: var(--utopia-dark-#{$species}-fg);
+  }
+}
+
+// Mixin for species details styling
+@mixin species-details-theme($species) {
+  border-color: var(--species-accent);
+  @include species-theme($species);
+}
+
+// Mixin for builder theme properties
+@mixin builder-theme($bg, $text, $border, $hover-border, $shadow) {
+  --builder-bg: #{$bg};
+  --builder-text: #{$text};
+  --builder-border: #{$border};
+  --builder-hover-border: #{$hover-border};
+  --builder-shadow: #{$shadow};
+}
+
+.tab {
+  height: 100%;
+}
+
+// Main species tab
+.builder-species-content { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  & .species-selector {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    & .species-option {
+      border: 2px solid;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      min-width: 150px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      // Default theming - will be overridden by specific species
+      @include species-theme('human');
+
+      // Apply species-specific themes based on data attributes
+      &[data-species*="human"] { @include species-theme('human'); }
+      &[data-species*="cambion"] { @include species-theme('cambion'); }
+      &[data-species*="dwarf"] { @include species-theme('dwarf'); }
+      &[data-species*="elf"] { @include species-theme('elf'); }
+      &[data-species*="automaton"] { @include species-theme('automaton'); }
+      &[data-species*="cyborg"] { @include species-theme('cyborg'); }
+      &[data-species*="oxtus"] { @include species-theme('oxtus'); }
+
+      // Shimmer effect
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+          transparent, 
+          rgba(255, 255, 255, 0.2), 
+          transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &.active {
+        background: var(--species-accent);
+        color: var(--species-bg);
+        border-color: var(--species-accent);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+
+  & .content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+
+    // Default theming that will be overridden by JavaScript
+    @include species-details-theme('human');
+    
+    // The specific theming will be applied via JavaScript by adding a class
+    &.species-human { @include species-details-theme('human'); }
+    &.species-cambion { @include species-details-theme('cambion'); }
+    &.species-dwarf { @include species-details-theme('dwarf'); }
+    &.species-elf { @include species-details-theme('elf'); }
+    &.species-automaton { @include species-details-theme('automaton'); }
+    &.species-cyborg { @include species-details-theme('cyborg'); }
+    &.species-oxtus { @include species-details-theme('oxtus'); }
+
+    & .image {
+      background-color: #00000093;
+      border: 2px solid #ffffff;
+      flex: 1 2;
+      margin-right: 1rem;
+      max-width: 50vh;
+      max-height: 50vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+
+      & img {
+        max-height: 50vh;
+        max-width: 100%;
+      }
+    }
+
+    & .info {
+      flex: 1 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+
+      & .attributes, & .travel, & .counters {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        justify-content: center;
+        width: 50%;
+        background-color: #00000093;
+        border: 2px solid #ffffff;
+
+        & .attribute, & .speed, & .counter {
+          display: flex;
+          gap: 0.5rem;
+          width: 200px;
+          align-items: center;
+          justify-content: flex-start;
+
+          & img {
+            width: 50px;
+            height: 50px;
+            align-self: center;
+          }
+
+          & span {
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
+
+          & .value {
+            margin-left: 2rem;
+            position: relative;
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 2;
+            
+            // Glowing circular icon behind the value
+            &::before {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 2.5rem;
+              height: 2.5rem;
+              border-radius: 50%;
+              background: radial-gradient(circle, 
+                rgba(var(--species-accent-rgb, 255, 255, 255), 0.1) 0%, 
+                rgba(var(--species-accent-rgb, 255, 255, 255), 0.05) 70%, 
+                transparent 100%);
+              border: 2px solid var(--species-accent);
+              box-shadow: 
+                0 0 10px rgba(var(--species-accent-rgb, 255, 255, 255), 0.3),
+                0 0 20px rgba(var(--species-accent-rgb, 255, 255, 255), 0.2),
+                inset 0 0 10px rgba(var(--species-accent-rgb, 255, 255, 255), 0.1);
+              z-index: -1;
+              
+              // Subtle rotation animation for a dynamic feel
+              animation: subtle-rotate 8s linear infinite;
+            }
+            
+            // Optional: Add a subtle pulse effect
+            &::after {
+              content: '';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 2.5rem;
+              height: 2.5rem;
+              border-radius: 50%;
+              border: 1px solid var(--species-accent);
+              opacity: 0.4;
+              z-index: -1;
+              animation: pulse-glow 2s ease-in-out infinite alternate;
+            }
+          }
+        }
+      }
+
+      & .special-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          font-size: 1rem;
+          font-weight: bold;
+          color: var(--species-fg);
+        }
+      }
+
+      & .talents {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 1rem;
+
+        & .talent-container {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          & .talent-branch {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          & .talent {
+            background: var(--species-bg);
+            color: var(--species-fg);
+            border: 1px solid #ffffff;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            height: 35px;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+              background: var(--species-hover-bg);
+              border-color: var(--species-hover-border);
+            }
+
+            &.active {
+              background: var(--species-active-bg);
+              color: var(--species-active-fg);
+              border-color: var(--species-active-border);
+            }
+          }
+        }
+      }
+    }
+
+    & .description {
+      flex: 1 2;
+      padding: 1rem;
+      background: var(--species-bg);
+      border: 1px solid var(--species-border);
+      border-radius: 0.5rem;
+      overflow: scroll;
+      max-height: 50vh;
+    }
+  }
+}
+
+.builder-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  position: sticky;
+  width: 100%;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+
+  & .footer-button {
+    width: 200px;
+    height: 45px;
+    padding: 0.5rem;
+
+    &.back,
+    &.next {
+      position: relative;
+      overflow: hidden;
+      font-size: 1.2rem;
+      border-radius: 0;
+
+      clip-path: polygon(
+        0% 0%, 
+        90% 0%, 
+        100% 50%, 
+        90% 100%, 
+        0% 100%
+      );
+
+      &.back {
+      background: var(--utopia-color-red);
+      color: white;
+      border: 1px solid var(--utopia-color-red);
+      clip-path: polygon(
+        10% 0%, 
+        100% 0%, 
+        100% 100%, 
+        10% 100%, 
+        0% 50%
+      );
+
+        &:hover {
+          background: var(--utopia-color-maroon);
+        }
+      }
+
+      &.next {
+        background: var(--utopia-color-green);
+        color: white;
+        border: 1px solid var(--utopia-color-green);
+
+        &:hover {
+          background: var(--utopia-color-dark-green);
+        }
+      }
+    }
+  }
+}
+
+.builder-talents-content {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  height: 100vh;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  & .talent-selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    overflow-y: auto;
+    align-content: flex-start;
+    flex: 2 1 0;
+    padding-bottom: 16rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.3));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    & .talent-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      width: 49%;
+      border-radius: 0.5rem;
+      border: 1px solid #ffffff;
+
+      &.species-tree {
+        // Default theming that will be overridden by JavaScript
+        @include species-details-theme('human');
+        
+        // The specific theming will be applied via JavaScript by adding a class
+        &.species-human { @include species-details-theme('human'); }
+        &.species-cambion { @include species-details-theme('cambion'); }
+        &.species-dwarf { @include species-details-theme('dwarf'); }
+        &.species-elf { @include species-details-theme('elf'); }
+        &.species-automaton { @include species-details-theme('automaton'); }
+        &.species-cyborg { @include species-details-theme('cyborg'); }
+        &.species-oxtus { @include species-details-theme('oxtus'); }
+
+        background: var(--species-bg);
+        color: var(--species-fg);
+      }
+
+      & .talent-tree-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        transform-origin: center;
+      }
+
+      & .talent-branch {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+
+        & .talent {
+          background-color: rgba(0, 0, 0, 0.5764705882);
+          color: #ffffff;
+          border: 1px solid #ffffff;
+          border-radius: 0.5rem;
+          padding: 1rem 0;
+          text-align: center;
+          cursor: pointer;
+          flex: 1 5;
+
+          &:hover {
+            background: var(--species-hover-bg);
+            border-color: var(--species-hover-border);
+          }
+
+          &.active {
+            background: var(--species-active-bg);
+            color: var(--species-active-fg);
+            border-color: var(--species-active-border);
+          }
+        }
+      }
+    }
+  }
+
+  & .talent-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--species-bg);
+    border: 1px solid var(--species-border);
+    border-radius: 0.5rem;
+
+    & .image {
+      display: flex;
+      width: 100%;
+      align-content: center;
+      justify-content: center;
+
+      & img {
+        max-width: 128px;
+        min-width: 128px;
+        min-height: 128px;
+      }
+    }
+
+    & .info {
+      background-color: #00000093;
+      border: 1px solid #ffffff;
+      padding: 1rem;
+    }
+  }
+}
+
+// Keyframe animations for the glowing value icons
+@keyframes subtle-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+// Content theming classes for dynamic species theme switching
+.content-theme-human { @include species-details-theme('human'); }
+.content-theme-cambion { @include species-details-theme('cambion'); }
+.content-theme-dwarf { @include species-details-theme('dwarf'); }
+.content-theme-elf { @include species-details-theme('elf'); }
+.content-theme-automaton { @include species-details-theme('automaton'); }
+.content-theme-cyborg { @include species-details-theme('cyborg'); }
+.content-theme-oxtus { @include species-details-theme('oxtus'); }
+
+// Glowing value classes for species-themed UI elements
+.glow-value-human { 
+  color: var(--utopia-human-accent-rgb, 59, 130, 246); 
+  text-shadow: 0 0 5px rgba(var(--utopia-human-accent-rgb, 59, 130, 246), 0.5);
+}
+.glow-value-cambion { 
+  color: var(--utopia-cambion-accent-rgb, 239, 68, 68); 
+  text-shadow: 0 0 5px rgba(var(--utopia-cambion-accent-rgb, 239, 68, 68), 0.5);
+}
+.glow-value-dwarf { 
+  color: var(--utopia-dwarf-accent-rgb, 168, 85, 247); 
+  text-shadow: 0 0 5px rgba(var(--utopia-dwarf-accent-rgb, 168, 85, 247), 0.5);
+}
+.glow-value-elf { 
+  color: var(--utopia-elf-accent-rgb, 34, 197, 94); 
+  text-shadow: 0 0 5px rgba(var(--utopia-elf-accent-rgb, 34, 197, 94), 0.5);
+}
+.glow-value-automaton { 
+  color: var(--utopia-automaton-accent-rgb, 148, 163, 184); 
+  text-shadow: 0 0 5px rgba(var(--utopia-automaton-accent-rgb, 148, 163, 184), 0.5);
+}
+.glow-value-cyborg { 
+  color: var(--utopia-cyborg-accent-rgb, 6, 182, 212); 
+  text-shadow: 0 0 5px rgba(var(--utopia-cyborg-accent-rgb, 6, 182, 212), 0.5);
+}
+.glow-value-oxtus { 
+  color: var(--utopia-oxtus-accent-rgb, 251, 146, 60); 
+  text-shadow: 0 0 5px rgba(var(--utopia-oxtus-accent-rgb, 251, 146, 60), 0.5);
+}

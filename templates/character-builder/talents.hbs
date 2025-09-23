@@ -1,0 +1,51 @@
+<section class="tab builder-talents {{tab.cssClass}}" data-group="primary" data-tab="talents">
+  <div class="builder-talents-content">
+    <div class="talent-selector">
+      {{#each trees as |tree treeIndex|}}
+        {{log tree}}
+        {{#if tree.isSpecies}} 
+          <div class="talent-tree species-tree">
+        {{else}}
+          <div class="talent-tree" style="background-color: {{tree.bg}};">
+        {{/if}}
+          <span class="talent-tree-header" style="color: {{tree.header}};">{{tree.name}}</span>
+          {{#each tree.branches as |branch branchIndex|}}
+            <div class="talent-branch">
+              {{#each branch as |talent|}}
+                <button class="talent"
+                  data-talent="{{talent.slug}}" 
+                  data-talent-uuid="{{talent.talent.uuid}}" 
+                  data-action="viewTalent"
+                  data-branch-index="{{branchIndex}}"
+                  data-talent-index="{{@index}}"
+                  data-tree-uuid="{{tree.tree.uuid}}"
+                  {{#if (eq talent.owned true)}}disabled{{/if}}
+                  >
+                  <span class="talent-name">{{talent.name}}</span>
+                </button>
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="talent-details">
+      <div class="image">
+        <img src="systems/utopia/assets/icons/talents/{{selectedTalent.slug}}.svg" alt="{{selectedTalent.name}}">
+      </div>
+
+      <div class="info">
+        <h3>{{selectedTalent.name}}</h3>
+        <p>{{{selectedTalent.description}}}</p>
+        <div class="requirements">
+          <span>Requirements: {{selectedTalent.requirement.name}}</span>
+        </div>
+      </div>
+
+      <button class="take-talent" data-action="takeTalent" >
+        <i class="fas fa-check"></i> Take Talent
+      </button>
+    </div>
+  </div>
+</section>

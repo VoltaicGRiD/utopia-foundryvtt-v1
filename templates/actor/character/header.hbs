@@ -1,0 +1,96 @@
+<div class="center-column">
+  <h1>{{actor.name}}</h1>
+  <image src="{{actor.image}}" alt="{{name}}'s portrait" class="portrait" />
+  <p class="level">{{system.level}}</p>
+  
+  <input type="number" readonly={{isEditable}} class="body">{{system.body}}</p>
+  <input type="number" readonly={{isEditable}} class="mind">{{system.mind}}</p>
+  <input type="number" readonly={{isEditable}} class="soul">{{system.soul}}</p>
+
+  <table class="equipped equipment">
+    <thead>
+      <tr>
+        <th></th>
+        <th>{{localize "UTOPIA.EQUIPMENT.SLOT"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.NAME"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.SPECIAL"}}</th>
+        <th>{{localize "UTOPIA.EQUIPMENT.ACTIONS"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/helm.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.HEAD"}}</td>
+        <td>{{system.equipped.head.name}}</td>
+        <td>{{system.equipped.head.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/charm.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.NECK"}}</td>
+        <td>{{system.equipped.neck.name}}</td>
+        <td>{{system.equipped.neck.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/cuirass.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.CHEST"}}</td>
+        <td>{{system.equipped.chest.name}}</td>
+        <td>{{system.equipped.chest.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/pouch.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.BACK"}}</td>
+        <td>{{system.equipped.back.name}}</td>
+        <td>{{system.equipped.back.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/relic.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.WAIST"}}</td>
+        <td>{{system.equipped.waist.name}}</td>
+        <td>{{system.equipped.waist.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/hand.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.HANDS"}}</td>
+        <td>{{system.equipped.hands.name}}</td>
+        <td>{{system.equipped.hands.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/token.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.RING"}}</td>
+        <td>{{system.equipped.ring.name}}</td>
+        <td>{{system.equipped.ring.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+      <tr>
+        <td><img src="systems/utopia/assets/icons/rpg-icons/boots.png"></td>
+        <td>{{localize "UTOPIA.EQUIPMENT.FEET"}}</td>
+        <td>{{system.equipped.feet.name}}</td>
+        <td>{{system.equipped.feet.system.special}}</td>
+        <td>
+          <!-- Placeholder for actions, can be expanded later -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

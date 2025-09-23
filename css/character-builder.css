@@ -1,0 +1,954 @@
+.threejs-background canvas {
+  display: block;
+  background: radial-gradient(ellipse at center, rgba(25, 25, 50, 0.8) 0%, rgba(10, 10, 25, 0.95) 70%, rgb(0, 0, 0) 100%);
+}
+
+.character-builder {
+  background-image: url("/systems/utopia/assets/sheet-backgrounds/character-builder.webp");
+  background-size: cover;
+  background-position: center;
+  transition: background-position 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.character-builder.parallax-bg {
+  cursor: pointer;
+}
+.character-builder .window-content {
+  padding: 0;
+  backdrop-filter: brightness(0.5) blur(5px);
+}
+.character-builder .tab {
+  padding: 0.5rem;
+}
+
+.builder-species,
+.builder-footer,
+.sheet-tabs {
+  position: relative;
+  z-index: 10;
+}
+.builder-species::before,
+.builder-footer::before,
+.sheet-tabs::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.builder-species {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+.builder-species .species-selector {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.builder-species .species-selector .species-option {
+  border: 2px solid;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  min-width: 150px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+  --species-accent-rgb: var(--utopia-human-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option {
+    --species-bg: var(--utopia-dark-human-bg);
+    --species-fg: var(--utopia-dark-human-fg);
+    --species-accent: var(--utopia-light-human-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option {
+  --species-bg: var(--utopia-dark-human-bg);
+  --species-fg: var(--utopia-dark-human-fg);
+  --species-accent: var(--utopia-light-human-fg);
+}
+.theme-light .builder-species .species-selector .species-option {
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+}
+.builder-species .species-selector .species-option[data-species*=human] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+  --species-accent-rgb: var(--utopia-human-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=human] {
+    --species-bg: var(--utopia-dark-human-bg);
+    --species-fg: var(--utopia-dark-human-fg);
+    --species-accent: var(--utopia-light-human-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=human] {
+  --species-bg: var(--utopia-dark-human-bg);
+  --species-fg: var(--utopia-dark-human-fg);
+  --species-accent: var(--utopia-light-human-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=human] {
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+}
+.builder-species .species-selector .species-option[data-species*=cambion] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+  --species-accent-rgb: var(--utopia-cambion-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=cambion] {
+    --species-bg: var(--utopia-dark-cambion-bg);
+    --species-fg: var(--utopia-dark-cambion-fg);
+    --species-accent: var(--utopia-light-cambion-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=cambion] {
+  --species-bg: var(--utopia-dark-cambion-bg);
+  --species-fg: var(--utopia-dark-cambion-fg);
+  --species-accent: var(--utopia-light-cambion-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=cambion] {
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+}
+.builder-species .species-selector .species-option[data-species*=dwarf] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+  --species-accent-rgb: var(--utopia-dwarf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=dwarf] {
+    --species-bg: var(--utopia-dark-dwarf-bg);
+    --species-fg: var(--utopia-dark-dwarf-fg);
+    --species-accent: var(--utopia-light-dwarf-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=dwarf] {
+  --species-bg: var(--utopia-dark-dwarf-bg);
+  --species-fg: var(--utopia-dark-dwarf-fg);
+  --species-accent: var(--utopia-light-dwarf-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=dwarf] {
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+}
+.builder-species .species-selector .species-option[data-species*=elf] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+  --species-accent-rgb: var(--utopia-elf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=elf] {
+    --species-bg: var(--utopia-dark-elf-bg);
+    --species-fg: var(--utopia-dark-elf-fg);
+    --species-accent: var(--utopia-light-elf-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=elf] {
+  --species-bg: var(--utopia-dark-elf-bg);
+  --species-fg: var(--utopia-dark-elf-fg);
+  --species-accent: var(--utopia-light-elf-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=elf] {
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+}
+.builder-species .species-selector .species-option[data-species*=automaton] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+  --species-accent-rgb: var(--utopia-automaton-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=automaton] {
+    --species-bg: var(--utopia-dark-automaton-bg);
+    --species-fg: var(--utopia-dark-automaton-fg);
+    --species-accent: var(--utopia-light-automaton-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=automaton] {
+  --species-bg: var(--utopia-dark-automaton-bg);
+  --species-fg: var(--utopia-dark-automaton-fg);
+  --species-accent: var(--utopia-light-automaton-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=automaton] {
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+}
+.builder-species .species-selector .species-option[data-species*=cyborg] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+  --species-accent-rgb: var(--utopia-cyborg-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=cyborg] {
+    --species-bg: var(--utopia-dark-cyborg-bg);
+    --species-fg: var(--utopia-dark-cyborg-fg);
+    --species-accent: var(--utopia-light-cyborg-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=cyborg] {
+  --species-bg: var(--utopia-dark-cyborg-bg);
+  --species-fg: var(--utopia-dark-cyborg-fg);
+  --species-accent: var(--utopia-light-cyborg-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=cyborg] {
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+}
+.builder-species .species-selector .species-option[data-species*=oxtus] {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+  --species-accent-rgb: var(--utopia-oxtus-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .species-selector .species-option[data-species*=oxtus] {
+    --species-bg: var(--utopia-dark-oxtus-bg);
+    --species-fg: var(--utopia-dark-oxtus-fg);
+    --species-accent: var(--utopia-light-oxtus-fg);
+  }
+}
+.theme-dark .builder-species .species-selector .species-option[data-species*=oxtus] {
+  --species-bg: var(--utopia-dark-oxtus-bg);
+  --species-fg: var(--utopia-dark-oxtus-fg);
+  --species-accent: var(--utopia-light-oxtus-fg);
+}
+.theme-light .builder-species .species-selector .species-option[data-species*=oxtus] {
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+}
+.builder-species .species-selector .species-option::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+.builder-species .species-selector .species-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.builder-species .species-selector .species-option:hover::before {
+  left: 100%;
+}
+.builder-species .species-selector .species-option.active {
+  background: var(--species-accent);
+  color: var(--species-bg);
+  border-color: var(--species-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.builder-species .content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+  --species-accent-rgb: var(--utopia-human-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content {
+    --species-bg: var(--utopia-dark-human-bg);
+    --species-fg: var(--utopia-dark-human-fg);
+    --species-accent: var(--utopia-light-human-fg);
+  }
+}
+.theme-dark .builder-species .content {
+  --species-bg: var(--utopia-dark-human-bg);
+  --species-fg: var(--utopia-dark-human-fg);
+  --species-accent: var(--utopia-light-human-fg);
+}
+.theme-light .builder-species .content {
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+}
+.builder-species .content.species-human {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+  --species-accent-rgb: var(--utopia-human-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-human {
+    --species-bg: var(--utopia-dark-human-bg);
+    --species-fg: var(--utopia-dark-human-fg);
+    --species-accent: var(--utopia-light-human-fg);
+  }
+}
+.theme-dark .builder-species .content.species-human {
+  --species-bg: var(--utopia-dark-human-bg);
+  --species-fg: var(--utopia-dark-human-fg);
+  --species-accent: var(--utopia-light-human-fg);
+}
+.theme-light .builder-species .content.species-human {
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+}
+.builder-species .content.species-cambion {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+  --species-accent-rgb: var(--utopia-cambion-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-cambion {
+    --species-bg: var(--utopia-dark-cambion-bg);
+    --species-fg: var(--utopia-dark-cambion-fg);
+    --species-accent: var(--utopia-light-cambion-fg);
+  }
+}
+.theme-dark .builder-species .content.species-cambion {
+  --species-bg: var(--utopia-dark-cambion-bg);
+  --species-fg: var(--utopia-dark-cambion-fg);
+  --species-accent: var(--utopia-light-cambion-fg);
+}
+.theme-light .builder-species .content.species-cambion {
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+}
+.builder-species .content.species-dwarf {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+  --species-accent-rgb: var(--utopia-dwarf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-dwarf {
+    --species-bg: var(--utopia-dark-dwarf-bg);
+    --species-fg: var(--utopia-dark-dwarf-fg);
+    --species-accent: var(--utopia-light-dwarf-fg);
+  }
+}
+.theme-dark .builder-species .content.species-dwarf {
+  --species-bg: var(--utopia-dark-dwarf-bg);
+  --species-fg: var(--utopia-dark-dwarf-fg);
+  --species-accent: var(--utopia-light-dwarf-fg);
+}
+.theme-light .builder-species .content.species-dwarf {
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+}
+.builder-species .content.species-elf {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+  --species-accent-rgb: var(--utopia-elf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-elf {
+    --species-bg: var(--utopia-dark-elf-bg);
+    --species-fg: var(--utopia-dark-elf-fg);
+    --species-accent: var(--utopia-light-elf-fg);
+  }
+}
+.theme-dark .builder-species .content.species-elf {
+  --species-bg: var(--utopia-dark-elf-bg);
+  --species-fg: var(--utopia-dark-elf-fg);
+  --species-accent: var(--utopia-light-elf-fg);
+}
+.theme-light .builder-species .content.species-elf {
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+}
+.builder-species .content.species-automaton {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+  --species-accent-rgb: var(--utopia-automaton-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-automaton {
+    --species-bg: var(--utopia-dark-automaton-bg);
+    --species-fg: var(--utopia-dark-automaton-fg);
+    --species-accent: var(--utopia-light-automaton-fg);
+  }
+}
+.theme-dark .builder-species .content.species-automaton {
+  --species-bg: var(--utopia-dark-automaton-bg);
+  --species-fg: var(--utopia-dark-automaton-fg);
+  --species-accent: var(--utopia-light-automaton-fg);
+}
+.theme-light .builder-species .content.species-automaton {
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+}
+.builder-species .content.species-cyborg {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+  --species-accent-rgb: var(--utopia-cyborg-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-cyborg {
+    --species-bg: var(--utopia-dark-cyborg-bg);
+    --species-fg: var(--utopia-dark-cyborg-fg);
+    --species-accent: var(--utopia-light-cyborg-fg);
+  }
+}
+.theme-dark .builder-species .content.species-cyborg {
+  --species-bg: var(--utopia-dark-cyborg-bg);
+  --species-fg: var(--utopia-dark-cyborg-fg);
+  --species-accent: var(--utopia-light-cyborg-fg);
+}
+.theme-light .builder-species .content.species-cyborg {
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+}
+.builder-species .content.species-oxtus {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+  --species-accent-rgb: var(--utopia-oxtus-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .builder-species .content.species-oxtus {
+    --species-bg: var(--utopia-dark-oxtus-bg);
+    --species-fg: var(--utopia-dark-oxtus-fg);
+    --species-accent: var(--utopia-light-oxtus-fg);
+  }
+}
+.theme-dark .builder-species .content.species-oxtus {
+  --species-bg: var(--utopia-dark-oxtus-bg);
+  --species-fg: var(--utopia-dark-oxtus-fg);
+  --species-accent: var(--utopia-light-oxtus-fg);
+}
+.theme-light .builder-species .content.species-oxtus {
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+}
+.builder-species .content .image {
+  flex: 1;
+  margin-right: 1rem;
+}
+.builder-species .content .info {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.builder-species .content .info .attributes, .builder-species .content .info .travel, .builder-species .content .info .counters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  justify-content: center;
+  width: 50%;
+  background-color: rgba(0, 0, 0, 0.5764705882);
+  border: 2px solid #ffffff;
+}
+.builder-species .content .info .attributes .attribute, .builder-species .content .info .attributes .speed, .builder-species .content .info .attributes .counter, .builder-species .content .info .travel .attribute, .builder-species .content .info .travel .speed, .builder-species .content .info .travel .counter, .builder-species .content .info .counters .attribute, .builder-species .content .info .counters .speed, .builder-species .content .info .counters .counter {
+  display: flex;
+  gap: 0.5rem;
+  width: 200px;
+  align-items: center;
+  justify-content: flex-start;
+}
+.builder-species .content .info .attributes .attribute img, .builder-species .content .info .attributes .speed img, .builder-species .content .info .attributes .counter img, .builder-species .content .info .travel .attribute img, .builder-species .content .info .travel .speed img, .builder-species .content .info .travel .counter img, .builder-species .content .info .counters .attribute img, .builder-species .content .info .counters .speed img, .builder-species .content .info .counters .counter img {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+}
+.builder-species .content .info .attributes .attribute span, .builder-species .content .info .attributes .speed span, .builder-species .content .info .attributes .counter span, .builder-species .content .info .travel .attribute span, .builder-species .content .info .travel .speed span, .builder-species .content .info .travel .counter span, .builder-species .content .info .counters .attribute span, .builder-species .content .info .counters .speed span, .builder-species .content .info .counters .counter span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.builder-species .content .info .attributes .attribute .value, .builder-species .content .info .attributes .speed .value, .builder-species .content .info .attributes .counter .value, .builder-species .content .info .travel .attribute .value, .builder-species .content .info .travel .speed .value, .builder-species .content .info .travel .counter .value, .builder-species .content .info .counters .attribute .value, .builder-species .content .info .counters .speed .value, .builder-species .content .info .counters .counter .value {
+  margin-left: 2rem;
+  position: relative;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--species-accent);
+  z-index: 2;
+}
+.builder-species .content .info .attributes .attribute .value::before, .builder-species .content .info .attributes .speed .value::before, .builder-species .content .info .attributes .counter .value::before, .builder-species .content .info .travel .attribute .value::before, .builder-species .content .info .travel .speed .value::before, .builder-species .content .info .travel .counter .value::before, .builder-species .content .info .counters .attribute .value::before, .builder-species .content .info .counters .speed .value::before, .builder-species .content .info .counters .counter .value::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--species-accent-rgb, 255, 255, 255), 0.1) 0%, rgba(var(--species-accent-rgb, 255, 255, 255), 0.05) 70%, transparent 100%);
+  border: 2px solid var(--species-accent);
+  box-shadow: 0 0 10px rgba(var(--species-accent-rgb, 255, 255, 255), 0.3), 0 0 20px rgba(var(--species-accent-rgb, 255, 255, 255), 0.2), inset 0 0 10px rgba(var(--species-accent-rgb, 255, 255, 255), 0.1);
+  z-index: -1;
+  opacity: 0.8;
+  animation: subtle-rotate 8s linear infinite;
+}
+.builder-species .content .info .attributes .attribute .value::after, .builder-species .content .info .attributes .speed .value::after, .builder-species .content .info .attributes .counter .value::after, .builder-species .content .info .travel .attribute .value::after, .builder-species .content .info .travel .speed .value::after, .builder-species .content .info .travel .counter .value::after, .builder-species .content .info .counters .attribute .value::after, .builder-species .content .info .counters .speed .value::after, .builder-species .content .info .counters .counter .value::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--species-accent);
+  opacity: 0.4;
+  z-index: -1;
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+.builder-species .content .info .special-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.builder-species .content .info .special-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--species-fg);
+}
+.builder-species .content .info .talents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+.builder-species .content .info .talents .talent-container {
+  display: flex;
+  align-items: center;
+}
+.builder-species .content .info .talents .talent-container .talent-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.builder-species .content .info .talents .talent-container .talent {
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border: 1px solid var(--species-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  height: 35px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+.builder-species .content .info .talents .talent-container .talent:hover {
+  background: var(--species-hover-bg);
+  border-color: var(--species-hover-border);
+}
+.builder-species .content .info .talents .talent-container .talent.active {
+  background: var(--species-active-bg);
+  color: var(--species-active-fg);
+  border-color: var(--species-active-border);
+}
+.builder-species .content .description {
+  flex: 2;
+  padding: 1rem;
+  background: var(--species-bg);
+  border: 1px solid var(--species-border);
+  border-radius: 0.5rem;
+}
+
+.builder-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+.builder-footer .footer-button {
+  width: 200px;
+  height: 45px;
+  padding: 0.5rem;
+}
+.builder-footer .footer-button.back, .builder-footer .footer-button.next {
+  position: relative;
+  overflow: hidden;
+  font-size: 1.2rem;
+  border-radius: 0;
+  clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+}
+.builder-footer .footer-button.back.back, .builder-footer .footer-button.next.back {
+  background: var(--utopia-color-red);
+  color: white;
+  border: 1px solid var(--utopia-color-red);
+  clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%);
+}
+.builder-footer .footer-button.back.back:hover, .builder-footer .footer-button.next.back:hover {
+  background: var(--utopia-color-maroon);
+}
+.builder-footer .footer-button.back.next, .builder-footer .footer-button.next.next {
+  background: var(--utopia-color-green);
+  color: white;
+  border: 1px solid var(--utopia-color-green);
+}
+.builder-footer .footer-button.back.next:hover, .builder-footer .footer-button.next.next:hover {
+  background: var(--utopia-color-dark-green);
+}
+
+@keyframes subtle-rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+.content-theme-human {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+  --species-accent-rgb: var(--utopia-human-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-human {
+    --species-bg: var(--utopia-dark-human-bg);
+    --species-fg: var(--utopia-dark-human-fg);
+    --species-accent: var(--utopia-light-human-fg);
+  }
+}
+.theme-dark .content-theme-human {
+  --species-bg: var(--utopia-dark-human-bg);
+  --species-fg: var(--utopia-dark-human-fg);
+  --species-accent: var(--utopia-light-human-fg);
+}
+.theme-light .content-theme-human {
+  --species-bg: var(--utopia-light-human-bg);
+  --species-fg: var(--utopia-light-human-fg);
+  --species-accent: var(--utopia-dark-human-fg);
+}
+
+.content-theme-cambion {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+  --species-accent-rgb: var(--utopia-cambion-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-cambion {
+    --species-bg: var(--utopia-dark-cambion-bg);
+    --species-fg: var(--utopia-dark-cambion-fg);
+    --species-accent: var(--utopia-light-cambion-fg);
+  }
+}
+.theme-dark .content-theme-cambion {
+  --species-bg: var(--utopia-dark-cambion-bg);
+  --species-fg: var(--utopia-dark-cambion-fg);
+  --species-accent: var(--utopia-light-cambion-fg);
+}
+.theme-light .content-theme-cambion {
+  --species-bg: var(--utopia-light-cambion-bg);
+  --species-fg: var(--utopia-light-cambion-fg);
+  --species-accent: var(--utopia-dark-cambion-fg);
+}
+
+.content-theme-dwarf {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+  --species-accent-rgb: var(--utopia-dwarf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-dwarf {
+    --species-bg: var(--utopia-dark-dwarf-bg);
+    --species-fg: var(--utopia-dark-dwarf-fg);
+    --species-accent: var(--utopia-light-dwarf-fg);
+  }
+}
+.theme-dark .content-theme-dwarf {
+  --species-bg: var(--utopia-dark-dwarf-bg);
+  --species-fg: var(--utopia-dark-dwarf-fg);
+  --species-accent: var(--utopia-light-dwarf-fg);
+}
+.theme-light .content-theme-dwarf {
+  --species-bg: var(--utopia-light-dwarf-bg);
+  --species-fg: var(--utopia-light-dwarf-fg);
+  --species-accent: var(--utopia-dark-dwarf-fg);
+}
+
+.content-theme-elf {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+  --species-accent-rgb: var(--utopia-elf-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-elf {
+    --species-bg: var(--utopia-dark-elf-bg);
+    --species-fg: var(--utopia-dark-elf-fg);
+    --species-accent: var(--utopia-light-elf-fg);
+  }
+}
+.theme-dark .content-theme-elf {
+  --species-bg: var(--utopia-dark-elf-bg);
+  --species-fg: var(--utopia-dark-elf-fg);
+  --species-accent: var(--utopia-light-elf-fg);
+}
+.theme-light .content-theme-elf {
+  --species-bg: var(--utopia-light-elf-bg);
+  --species-fg: var(--utopia-light-elf-fg);
+  --species-accent: var(--utopia-dark-elf-fg);
+}
+
+.content-theme-automaton {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+  --species-accent-rgb: var(--utopia-automaton-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-automaton {
+    --species-bg: var(--utopia-dark-automaton-bg);
+    --species-fg: var(--utopia-dark-automaton-fg);
+    --species-accent: var(--utopia-light-automaton-fg);
+  }
+}
+.theme-dark .content-theme-automaton {
+  --species-bg: var(--utopia-dark-automaton-bg);
+  --species-fg: var(--utopia-dark-automaton-fg);
+  --species-accent: var(--utopia-light-automaton-fg);
+}
+.theme-light .content-theme-automaton {
+  --species-bg: var(--utopia-light-automaton-bg);
+  --species-fg: var(--utopia-light-automaton-fg);
+  --species-accent: var(--utopia-dark-automaton-fg);
+}
+
+.content-theme-cyborg {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+  --species-accent-rgb: var(--utopia-cyborg-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-cyborg {
+    --species-bg: var(--utopia-dark-cyborg-bg);
+    --species-fg: var(--utopia-dark-cyborg-fg);
+    --species-accent: var(--utopia-light-cyborg-fg);
+  }
+}
+.theme-dark .content-theme-cyborg {
+  --species-bg: var(--utopia-dark-cyborg-bg);
+  --species-fg: var(--utopia-dark-cyborg-fg);
+  --species-accent: var(--utopia-light-cyborg-fg);
+}
+.theme-light .content-theme-cyborg {
+  --species-bg: var(--utopia-light-cyborg-bg);
+  --species-fg: var(--utopia-light-cyborg-fg);
+  --species-accent: var(--utopia-dark-cyborg-fg);
+}
+
+.content-theme-oxtus {
+  background: var(--species-bg);
+  border-color: var(--species-accent);
+  background: var(--species-bg);
+  color: var(--species-fg);
+  border-color: var(--species-accent);
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+  --species-accent-rgb: var(--utopia-oxtus-accent-rgb);
+}
+@media (prefers-color-scheme: dark) {
+  .content-theme-oxtus {
+    --species-bg: var(--utopia-dark-oxtus-bg);
+    --species-fg: var(--utopia-dark-oxtus-fg);
+    --species-accent: var(--utopia-light-oxtus-fg);
+  }
+}
+.theme-dark .content-theme-oxtus {
+  --species-bg: var(--utopia-dark-oxtus-bg);
+  --species-fg: var(--utopia-dark-oxtus-fg);
+  --species-accent: var(--utopia-light-oxtus-fg);
+}
+.theme-light .content-theme-oxtus {
+  --species-bg: var(--utopia-light-oxtus-bg);
+  --species-fg: var(--utopia-light-oxtus-fg);
+  --species-accent: var(--utopia-dark-oxtus-fg);
+}
+
+.glow-value-human {
+  color: var(--utopia-human-accent-rgb, 59, 130, 246);
+  text-shadow: 0 0 5px rgba(var(--utopia-human-accent-rgb, 59, 130, 246), 0.5);
+}
+
+.glow-value-cambion {
+  color: var(--utopia-cambion-accent-rgb, 239, 68, 68);
+  text-shadow: 0 0 5px rgba(var(--utopia-cambion-accent-rgb, 239, 68, 68), 0.5);
+}
+
+.glow-value-dwarf {
+  color: var(--utopia-dwarf-accent-rgb, 168, 85, 247);
+  text-shadow: 0 0 5px rgba(var(--utopia-dwarf-accent-rgb, 168, 85, 247), 0.5);
+}
+
+.glow-value-elf {
+  color: var(--utopia-elf-accent-rgb, 34, 197, 94);
+  text-shadow: 0 0 5px rgba(var(--utopia-elf-accent-rgb, 34, 197, 94), 0.5);
+}
+
+.glow-value-automaton {
+  color: var(--utopia-automaton-accent-rgb, 148, 163, 184);
+  text-shadow: 0 0 5px rgba(var(--utopia-automaton-accent-rgb, 148, 163, 184), 0.5);
+}
+
+.glow-value-cyborg {
+  color: var(--utopia-cyborg-accent-rgb, 6, 182, 212);
+  text-shadow: 0 0 5px rgba(var(--utopia-cyborg-accent-rgb, 6, 182, 212), 0.5);
+}
+
+.glow-value-oxtus {
+  color: var(--utopia-oxtus-accent-rgb, 251, 146, 60);
+  text-shadow: 0 0 5px rgba(var(--utopia-oxtus-accent-rgb, 251, 146, 60), 0.5);
+}
+
+/*# sourceMappingURL=character-builder.css.map */

@@ -1,0 +1,375 @@
+import { gatherItems } from "../../system/helpers/gatherItems.mjs";
+
+const { api, sheets } = foundry.applications;
+
+export class CharacterBuilder extends api.HandlebarsApplicationMixin(sheets.ActorSheetV2) {
+
+  constructor(options = {}) {
+    super(options);
+
+    this.tab = 0;
+  }
+
+  static PARTS = {
+    header: {
+      template: "systems/utopia/templates/character-builder/header.hbs"
+    },
+    tabs: {
+      template: "templates/generic/tab-navigation.hbs",
+    },
+    species: {
+      template: "systems/utopia/templates/character-builder/species.hbs"
+    },
+    talents: {
+      template: "systems/utopia/templates/character-builder/talents.hbs"
+    },
+    gifts: {
+      template: "systems/utopia/templates/character-builder/gifts.hbs"
+    },
+    subtraits: {
+      template: "systems/utopia/templates/character-builder/subtraits.hbs"
+    },
+    footer: {
+      template: "systems/utopia/templates/character-builder/footer.hbs"
+    }
+  }
+
+  _configureRenderOptions(options) {
+    super._configureRenderOptions(options);
+    options.parts = [
+      "header",
+      "tabs",
+      "species",
+      "talents",
+      "gifts",
+      "subtraits",
+      "footer"
+    ];
+  }
+
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(
+    sheets.ActorSheetV2.DEFAULT_OPTIONS,
+    {
+      actions: {
+        toggleTheme: this._toggleTheme,
+        selectSpecies: this._selectSpecies,
+        takeTalent: this._takeTalent,
+        back: this._onBack,
+        next: this._onNext,
+      },
+      form: {
+        submitOnChange: true,
+        closeOnSubmit: false,
+      },
+      window: {
+        resizable: false,
+      },
+      tag: "form",
+      dragDrop: [{ dragSelector: "[data-drag]", dropSelector: null }],
+    }
+  );  
+  
+  async _prepareContext(contextOptions) {
+    const context = await super._prepareContext(contextOptions);
+
+    context.actor = this.actor;
+    context.isEditable = this.isEditable
+    context.system = this.actor.system;
+    context.systemSource = this.actor.system._source;
+    context.systemFields = this.actor.system.fields;
+    context.fields = this.actor.system.fields;
+    context.tabs = this._getTabs(contextOptions.parts);
+
+    context.speciesOptions = await gatherItems({
+      type: "species",
+      gatherFolders: false,
+      gatherFromActor: false,
+      gatherFromWorld: true
+    });
+
+    const fixSlug = (slug) => {
+      const hyphenated = slug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      const parts = hyphenated.split('-');
+      return parts.length > 1 ? parts.slice(Math.floor(parts.length / 2)).join('-') : hyphenated;
+    }
+
+    // Add species slugs for CSS styling and image paths
+    context.speciesOptions = context.speciesOptions.map(species => ({
+      ...species,
+      uuid: species.uuid,
+      cssSlug: fixSlug(species.name),
+      imagePath: `assets/species/${species.name}.PNG`
+    }));
+
+    const selectedSpecies = await fromUuid(this.actor.system._species) || null;
+    context.selectedSpecies = selectedSpecies;
+    if (selectedSpecies) {
+      context.selectedSpecies.system.image = `assets/species/${selectedSpecies.name}.PNG`;
+    }
+    context.selectedSpeciesSlug = selectedSpecies ? fixSlug(selectedSpecies.name) : null;
+
+    const talentTrees = await gatherItems({
+      type: "talentTree",
+      gatherFolders: false,
+      gatherFromActor: false,
+      gatherFromWorld: true
+    });
+
+    context.talentTrees = await Promise.all(talentTrees.map(async tree => {
+      const branches = await Promise.all(tree.system.branches.map(async branch => {
+        const talents = await Promise.all(branch.talents.map(async talent => {
+          const item = await fromUuid(talent.uuid);
+          return {
+            ...talent,
+            item,
+            body: item.system.body,
+            mind: item.system.mind,
+            soul: item.system.soul,
+            cost: item.system.cost,
+          };
+        }));
+        return {
+          ...branch,
+          talents,
+        };
+      }));
+      return {
+        ...tree,
+        uuid: tree.uuid,
+        branches,
+      };
+    }));
+
+    this.talentTrees = context.talentTrees;
+
+    console.log(context);
+    return context;
+  }
+
+  async _preparePartContext(partId, context, options) {
+    context = await super._preparePartContext(partId, context, options);
+
+    switch (partId) {
+      case "species":
+      case "talents":
+      case "gifts":
+      case "subtraits":
+        context.tab = context.tabs[partId];
+        break;
+    }
+
+    return context;
+  }
+  
+  _onRender() {
+    super._onRender();
+    this._setupSpeciesInteractions();
+    this._applyStoredTheme();
+  }
+
+  /**
+   * Tab-specific functions
+   * These functions are called when the user interacts with the tabs in the character builder.
+   */  
+  _setupSpeciesInteractions() {
+    // Add click handlers for species selection with dynamic styling
+    this.element.querySelectorAll('.species-option').forEach(option => {
+      option.addEventListener('click', (event) => {
+        // Remove selected class from all options
+        this.element.querySelectorAll('.species-option').forEach(opt => 
+          opt.classList.remove('selected')
+        );
+        
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Optional: Apply species theme to entire builder
+        const speciesUuid = option.dataset.species;
+        this.element.dataset.selectedSpecies = speciesUuid;
+      });
+    });
+  }
+
+  /**
+   * Generates the data for the generic tab navigation template
+   * @param {string[]} parts An array of named template parts to render
+   * @returns {Record<string, Partial<ApplicationTab>>}
+   * @protected
+   */
+  _getTabs(parts) {
+    // Default tab for first time it's rendered this session
+    if (!this.tabGroups["primary"]) this.tabGroups["primary"] = "species";
+
+    return parts.reduce((tabs, partId) => {
+      const tab = {
+        cssClass: "",
+        group: "primary",
+        // Matches tab property to
+        id: "",
+        // FontAwesome Icon, if you so choose
+        icon: "",
+        // Run through localization
+        label: "UTOPIA.Actor.Tabs.",
+      };
+      switch (partId) {
+        case "header":
+        case "footer":
+        case "tabs":
+          return tabs;
+        case "species":
+          tab.id = "species";
+          tab.label += "Species";
+          tab.icon = "fa-solid fa-dna";
+          break;
+        case "talents":
+          tab.id = "talents";
+          tab.label += "Talents";
+          tab.icon = "fa-solid fa-star";
+          break;
+        case "gifts":
+          tab.id = "gifts";
+          tab.label += "Gifts";
+          tab.icon = "fa-solid fa-gift";
+          break;
+        case "subtraits":
+          tab.id = "subtraits";
+          tab.label += "Subtraits";
+          tab.icon = "fa-solid fa-shield-alt";
+          break;
+        default:
+      }
+
+      if (this.tabGroups["primary"] === tab.id) tab.cssClass = "active";
+
+      tabs[partId] = tab;
+      return tabs;
+    }, {});
+  }
+
+  /**
+   * Handles talent selection and applies the selected talent to the character
+   * @private
+   */
+  static async _takeTalent(event, target) {
+    const talentId = target.dataset.id;
+    const talentTree = target.dataset.tree;
+    const branchIndex = target.dataset.branchIndex;
+    
+    const talentTrees = this.talentTrees;
+    const talent = talentTrees.find(tt => tt.uuid === talentTree).branches[branchIndex].talents.find(t => t.uuid === talentId);
+
+    const talentIndex = talentTrees.find(tt => tt.uuid === talentTree).branches[branchIndex].talents.indexOf(talent);
+
+    const cost = talent.cost;
+    const actor = this.document;
+    actor.addTalent(talent, talentTree, branchIndex, talentIndex);
+  }
+
+  /**
+   * Handles species selection and applies the selected species to the character
+   * @private
+   */
+  static async _selectSpecies(event, target) {
+    const species = target.dataset.species;
+    await this.document.update({
+      "system._species": species,
+    });
+  }
+
+  /**
+   * Theme helper functions
+   */
+  /**
+   * Apply stored theme preference from localStorage
+   * @private
+   */
+  _applyStoredTheme() {
+    const storedTheme = localStorage.getItem('utopia-theme');
+    if (storedTheme) {
+      const builderSection = this.element.querySelector('.builder-species');
+      if (builderSection) {
+        builderSection.classList.remove('theme-dark', 'theme-light');
+        builderSection.classList.add(`theme-${storedTheme}`);
+      }
+    }
+  }
+
+  /**
+   * Toggle between light and dark themes
+   * @param {Event} event The triggering event
+   * @param {HTMLElement} target The clicked element
+   * @private
+   */
+  static _toggleTheme(event, target) {
+    const builderSection = event.currentTarget.querySelector('.builder-species');
+    if (!builderSection) return;
+
+    let currentTheme = 'auto';
+    if (builderSection.classList.contains('theme-dark')) currentTheme = 'dark';
+    if (builderSection.classList.contains('theme-light')) currentTheme = 'light';
+
+    // Cycle through: auto -> light -> dark -> auto
+    let nextTheme;
+    switch (currentTheme) {
+      case 'auto':
+        nextTheme = 'light';
+        break;
+      case 'light':
+        nextTheme = 'dark';
+        break;
+      case 'dark':
+        nextTheme = 'auto';
+        break;
+      default:
+        nextTheme = 'auto';
+    }
+
+    // Apply theme classes
+    builderSection.classList.remove('theme-dark', 'theme-light');
+    if (nextTheme !== 'auto') {
+      builderSection.classList.add(`theme-${nextTheme}`);
+      localStorage.setItem('utopia-theme', nextTheme);
+    } else {
+      localStorage.removeItem('utopia-theme');
+    }
+
+    // Update button text/icon if needed
+    if (target) {
+      const themeNames = {
+        auto: '🌓 Auto',
+        light: '☀️ Light', 
+        dark: '🌙 Dark'
+      };
+      target.innerHTML = themeNames[nextTheme] || '🌓 Auto';
+    }
+  }
+
+  /**
+   * Tab / button navigation helpers
+   * @param {Event} event The triggering event
+   * @returns {Promise<void>}
+   */
+  static async _onBack(event) {
+    event.preventDefault();
+    const tabs = event.currentTarget.querySelector('nav.sheet-tabs.tabs');
+    if (tabs) {
+      const currentTab = tabs.querySelector('.active');
+      const previousTab = currentTab ? currentTab.previousElementSibling : null;
+      if (previousTab) {
+        previousTab.click();
+      }
+    }
+  }
+
+  static async _onNext(event) {
+    event.preventDefault();
+    const tabs = event.currentTarget.querySelector('nav.sheet-tabs.tabs');
+    if (tabs) {
+      const currentTab = tabs.querySelector('.active');
+      const nextTab = currentTab ? currentTab.nextElementSibling : null;
+      if (nextTab) {
+        nextTab.click();
+      }
+    }
+  }
+}

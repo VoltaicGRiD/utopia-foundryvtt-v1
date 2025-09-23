@@ -1,0 +1,256 @@
+<section class="tab builder-species {{tab.cssClass}}" data-group="primary" data-tab="species">
+  <div class="species-header">
+    <div class="species-step">
+      <span class="step-icon">🧬</span>
+      <span class="step-number">Step 1</span>
+      <span class="step-title">Species</span>
+    </div>
+    <div class="talents-step">
+      <span class="step-icon">⭐</span>
+      <span class="step-number">Step 2</span>
+      <span class="step-title">Talents</span>
+    </div>
+    <div class="specialist-step">
+      <span class="step-icon">⭐</span>
+      <span class="step-number">Step 3</span>
+      <span class="step-title">Specialist Talents</span>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <!-- Left Sidebar - Species Selection -->
+    <section class="species-sidebar">
+      <div class="species-categories">
+        <h4>Species Selection</h4>
+        <div class="species-buttons">
+          {{#each speciesOptions}}
+            <button class="species-option" data-action="selectSpecies" data-id="{{this.id}}" data-species="{{ this.uuid }}" data-species-slug="{{this.cssSlug}}">
+              {{ this.name }}
+            </button>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+
+    <!-- Center - Character Attributes -->
+    <section class="character-attributes">
+      <div class="character-portrait">
+        {{#if selectedSpecies}}
+          <img src="{{selectedSpecies.system.image}}" alt="{{selectedSpecies.name}}" class="species-portrait">
+        {{else}}
+          <div class="portrait-placeholder">Select a Species</div>
+        {{/if}}
+      </div>
+
+      <div class="core-attributes">
+        <div class="attribute-row">
+          <div class="attribute-group">
+            <div class="attribute-icon">❤️</div>
+            <div class="attribute-label">Constitution</div>
+            <div class="attribute-value">{{#if selectedSpecies}}{{selectedSpecies.system.constitution}}{{else}}4{{/if}}</div>
+          </div>
+          <div class="attribute-group">
+            <div class="attribute-icon">🏃</div>
+            <div class="attribute-label">Endurance</div>
+            <div class="attribute-value">{{#if selectedSpecies}}{{selectedSpecies.system.endurance}}{{else}}5{{/if}}</div>
+          </div>
+          <div class="attribute-group">
+            <div class="attribute-icon">⚡</div>
+            <div class="attribute-label">Effervescence</div>
+            <div class="attribute-value">{{#if selectedSpecies}}{{selectedSpecies.system.effervescence}}{{else}}3{{/if}}</div>
+          </div>
+        </div>
+
+        <div class="travel-speeds">
+          <div class="speed-group">
+            <div class="speed-icon">🚶</div>
+            <div class="speed-label">Land Speed</div>
+            <div class="speed-value">NaN</div>
+          </div>
+          <div class="speed-group">
+            <div class="speed-icon">🏊</div>
+            <div class="speed-label">Water Speed</div>
+            <div class="speed-value">NaN</div>
+          </div>
+          <div class="speed-group">
+            <div class="speed-icon">🕊️</div>
+            <div class="speed-label">Air Speed</div>
+            <div class="speed-value">NaN</div>
+          </div>
+        </div>
+
+        <div class="subtrait-points">
+          <div class="points-icon">🔧</div>
+          <div class="points-label">Subtrait Points</div>
+          <div class="points-value">12</div>
+        </div>
+
+        <div class="character-traits">
+          <div class="trait-column">
+            <div class="trait-group">
+              <div class="trait-icon">🤲</div>
+              <div class="trait-label">Dexterity</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">💪</div>
+              <div class="trait-label">Power</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">⚙️</div>
+              <div class="trait-label">Engineering</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">0</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🎯</div>
+              <div class="trait-label">Resolve</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🎭</div>
+              <div class="trait-label">Portrayal</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">👑</div>
+              <div class="trait-label">Appeal</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="trait-column">
+            <div class="trait-group">
+              <div class="trait-icon">🏃</div>
+              <div class="trait-label">Speed</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">4</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">0</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🍀</div>
+              <div class="trait-label">Fortitude</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🧠</div>
+              <div class="trait-label">Memory</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">-3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">👁️</div>
+              <div class="trait-label">Awareness</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">0</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🎪</div>
+              <div class="trait-label">Stunt</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+            <div class="trait-group">
+              <div class="trait-icon">🗣️</div>
+              <div class="trait-label">Language</div>
+              <div class="trait-controls">
+                <button class="trait-decrease">-</button>
+                <span class="trait-base">1</span>
+                <button class="trait-increase">+</button>
+                <span class="trait-total">3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <button class="nav-button prev-button">Previous Step</button>
+        <button class="nav-button close-button">Close Character Creator</button>
+        <button class="nav-button next-button">Next Step</button>
+      </div>
+    </section>
+
+    <!-- Right Sidebar - Species Details -->
+    <section class="species-details" data-species-slug="{{selectedSpeciesSlug}}">
+      {{#if selectedSpecies}}
+        <div class="species-details-content">
+          <h2 class="species-title">{{toUpperCase selectedSpecies.name}}</h2>
+          
+          <div class="species-description-section">
+            <p><!-- Description will be filled in manually --></p>
+          </div>
+
+          <h3>LOCATION</h3>
+          <div class="location-section">
+            <p><!-- Location information will be filled in manually --></p>
+          </div>
+
+          <h3>LIFESPAN AND GENETICS</h3>
+          <div class="genetics-section">
+            <p><!-- Genetics information will be filled in manually --></p>
+          </div>
+
+          <h3>BACKGROUND</h3>
+          <div class="background-section">
+            <p><!-- Background information will be filled in manually --></p>
+          </div>
+        </div>
+      {{else}}
+        <div class="no-selection">
+          <p>Select a species to view details</p>
+        </div>
+      {{/if}}
+    </section>  
+  </div>
+</section>  

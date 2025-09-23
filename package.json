@@ -1,0 +1,27 @@
+{
+  "name": "utopia-v2",
+  "version": "2.0.0",
+  "description": "CSS compiler for the Utopia system",
+  "scripts": {
+    "sass": "sass src/:dist/",
+    "build": "sass sass/utopia.scss css/utopia.css --style=expanded --no-source-map",
+    "watch": "sass sass/utopia.scss css/utopia.css --style=expanded --source-map --watch",
+    "unpack": "node ./utils/foundry-unpack.mjs",
+    "pack": "node ./utils/foundry-pack.mjs"
+  },
+  "browserslist": [
+    "last 3 versions"
+  ],
+  "author": "VoltaicGRiD",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.3",
+    "sass": "^1.53.0"
+  },
+  "dependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta.20250704132251",
+    "gsap": "^3.13.0",
+    "three": "^0.178.0"
+  }
+}

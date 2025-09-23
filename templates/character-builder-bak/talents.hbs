@@ -1,0 +1,54 @@
+<section class="tab builder-talents {{tab.cssClass}}" data-group="primary" data-tab="talents">
+  <div class="talents-header">
+    <h3>{{localize 'UTOPIA.CharacterBuilder.talents'}}</h3>
+
+    <span class="points-available">
+      {{localize 'UTOPIA.CharacterBuilder.pointsAvailable'}}: 
+      <span class="points-value">{{actor.system.points.standardTalents.available}}</span>
+    </span>
+  </div>
+  <section class="talent-list">
+    {{#each talentTrees as |tree|}}
+      <div class="talent-tree">
+    
+        <div class="talent-tree-header">
+          <h4>{{tree.name}}</h4>
+          <p>{{{tree.system.description}}}</p>
+        </div>
+
+        <div class="talent-branches">
+          {{#each tree.branches as |branch branchIndex|}}
+            <div class="talent-branch" data-branch-id="{{branch.id}}">
+              <h5>{{branch.name}}</h5>
+              {{#each branch.talents as |talent|}}
+                <button class="talent-item" data-action="takeTalent" data-tree="{{tree.uuid}}" data-branch-index="{{branchIndex}}" data-id="{{talent.item.uuid}}" data-tooltip="{{talent.item.system.description}}" data-talent-index="{{loop.index}}">
+                  <div class="talent-name">{{talent.item.name}}</div>
+                  <span class="talent-cost">{{talent.item.system.cost}}</span>
+                  <div class="talent-icons">
+                    {{#if talent.item.system.body}}
+                      <span>{{talent.item.system.body}}</span>
+                      <i class="icon utopia-icon-body"></i>
+                    {{/if}}
+                    {{#if talent.item.system.mind}}
+                      <span>{{talent.item.system.mind}}</span>
+                      <i class="icon utopia-icon-mind"></i>
+                    {{/if}}
+                    {{#if talent.item.system.soul}}
+                      <span>{{talent.item.system.soul}}</span>
+                      <i class="icon utopia-icon-soul"></i>
+                    {{/if}}
+                  </div>
+                  <div class="talent-controls" style="display: none">
+                    <a data-action="editTalent">{{localize 'UTOPIA.Item.Talents.edit'}}</a>
+                    <a data-action="roll" data-roll-type="talent" data-talent="{{talent.id}}">{{localize 'UTOPIA.Item.Talents.use'}}</a>
+                    <a data-action="deleteTalent">{{localize 'UTOPIA.Item.Talents.delete'}}</a>
+                  </div>
+                </button>
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/each}}
+  </section>
+</section>

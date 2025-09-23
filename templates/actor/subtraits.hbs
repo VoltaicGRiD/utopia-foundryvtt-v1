@@ -1,0 +1,158 @@
+<div class="subtrait-sheet-content">
+  {{#if canDock}}
+    <div class="flexrow">
+      <button type="button" class="dock-button" data-action="dock">
+        <i class="fas fa-anchor"></i>
+        {{#if docked}}
+          {{localize "UTOPIA.SheetLabels.undockShort"}}
+        {{else}}
+          {{localize "UTOPIA.SheetLabels.dockShort"}}
+        {{/if}}
+      </button>
+      <button type="button" class="swap-dock-side-button" data-action="swapDock">
+        <i class="fas fa-left-right"></i>
+        {{localize "UTOPIA.SheetLabels.swapDockShort"}}
+      </button>
+    </div>
+  {{/if}}
+
+  <span class="subtrait-points">{{localize 'UTOPIA.Descriptions.subtraitPoints'}}: {{actor.system.points.subtrait.total}}</span>
+  <span class="subtrait-points">{{localize 'UTOPIA.Descriptions.subtraitGifts'}}: {{actor.system.points.gifted.value}}</span>
+
+  <div class="actor-points">
+    <div class="flexrow point-blocks">
+      <div class="point-overlay">
+        <i class="fa-solid fa-shield fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.body'}}"></i>
+        <span class="point-number">
+          {{numberFormat actor.system.points.body.total decimals=0}}
+        </span>
+      </div>
+
+      <div class="point-overlay">
+        <i class="fa-solid fa-brain fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.mind'}}"></i>
+        <span class="point-number">
+          {{numberFormat actor.system.points.mind.total decimals=0}}
+        </span>
+      </div>
+
+      <div class="point-overlay">
+        <i class="fa-solid fa-flame fa-fw" data-tooltip="{{localize 'UTOPIA.Actor.Points.soul'}}"></i>
+        <span class="point-number">
+          {{numberFormat actor.system.points.soul.total decimals=0}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="subtrait-boxes">
+    
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-bolt fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.agi.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="spd">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.spd.long'}} ({{subtraits.spd.total}}, {{subtraits.spd.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="spd" {{#if (or subtraits.spd.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="dex">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.dex.long'}} ({{subtraits.dex.total}}, {{subtraits.dex.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="dex" {{#if (or subtraits.dex.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-hand-fist fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.str.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="pow">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.pow.long'}} ({{subtraits.pow.total}}, {{subtraits.pow.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="pow" {{#if (or subtraits.pow.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="for">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.for.long'}} ({{subtraits.for.total}}, {{subtraits.for.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="for" {{#if (or subtraits.for.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-screwdriver-wrench fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.int.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="eng">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.eng.long'}} ({{subtraits.eng.total}}, {{subtraits.eng.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="eng" {{#if (or subtraits.eng.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="mem">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.mem.long'}} ({{subtraits.mem.total}}, {{subtraits.mem.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="mem" {{#if (or subtraits.mem.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-eye fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.wil.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="res">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.res.long'}} ({{subtraits.res.total}}, {{subtraits.res.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="res" {{#if (or subtraits.res.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="awa">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.awa.long'}} ({{subtraits.awa.total}}, {{subtraits.awa.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="awa" {{#if (or subtraits.awa.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-masks-theater fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.dis.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="por">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.por.long'}} ({{subtraits.por.total}}, {{subtraits.por.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="por" {{#if (or subtraits.por.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="stu">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.stu.long'}} ({{subtraits.stu.total}}, {{subtraits.stu.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="stu" {{#if (or subtraits.stu.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+    <fieldset class="subtrait-box">
+      <legend><i class="fa-solid fa-gem fa-fw"></i>&nbsp;{{localize 'UTOPIA.Actor.Traits.cha.long'}}</legend>
+      <div class="data-blocks">
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="app">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.app.long'}} ({{subtraits.app.total}}, {{subtraits.app.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="app" {{#if (or subtraits.app.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+        <button type="button" class="subtrait" data-action="addPoint" data-trait="lan">
+          <span>{{localize 'UTOPIA.Actor.Subtraits.lan.long'}} ({{subtraits.lan.total}}, {{subtraits.lan.mod}})</span>
+        </button>
+        <button type="button" class="gift" data-action="addGift" data-trait="lan" {{#if (or subtraits.lan.gifted (eq actor.system.points.gifted.value 0))}}disabled{{/if}}>
+          <i class="fa-solid fa-gift fa-fw"></i>
+        </button>
+      </div>
+    </fieldset>
+
+  </div>
+</div>

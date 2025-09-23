@@ -1,0 +1,1947 @@
+{
+  "UTOPIA": {
+    "TRAITS": {
+      "Agility": "Agility",
+      "Strength": "Strength",
+      "Intellect": "Intellect",
+      "Will": "Will",
+      "Display": "Display",
+      "Charm": "Charm",
+      "GroupName": "Traits"
+    },
+    "SUBTRAITS": {
+      "Dexterity": "Dexterity",
+      "Speed": "Speed",
+      "Fortitude": "Fortitude",
+      "Power": "Power",
+      "Engineering": "Engineering",
+      "Memory": "Memory",
+      "Awareness": "Awareness",
+      "Resolve": "Resolve",
+      "Portrayal": "Portrayal",
+      "Stunt": "Stunt",
+      "Appeal": "Appeal",
+      "Language": "Language",
+      "GroupName": "Subtraits"
+    },
+    "SPECIALTY_CHECKS": {
+      "WindowTitle": "Specialty Check Description",
+      
+      "GroupName": "Specialty Checks",
+      "Stealth": {
+        "noun": "Stealth",
+        "verb": "to Sneak",
+        "label": "Stealth",
+        "description": "Stealth is the ability to move silently and avoid detection."
+      },
+      "Disguise": {
+        "noun": "Disguise",
+        "verb": "to Disguise",
+        "label": "Disguise",
+        "description": "Disguise is the ability to alter one's appearance to avoid recognition."
+      },
+      "Mimic": {
+        "noun": "Mimic",
+        "verb": "to Mimic",
+        "label": "Mimic",
+        "description": "Mimic is the ability to imitate the voice or mannerisms of another."
+      },
+      "Insight": {
+        "noun": "Insight",
+        "verb": "to Discern",
+        "label": "Insight",
+        "description": "Insight is the ability to read and understand the emotions and intentions of others."
+      },
+      "ComprehendLanguages": {
+        "noun": "Comprehend Languages",
+        "verb": "to Comprehend Languages",
+        "label": "Comprehend Languages",
+        "description": "Comprehend Languages is the ability to understand and interpret languages."
+      },
+      "Perception": {
+        "noun": "Perception",
+        "verb": "to Notice",
+        "label": "Perception",
+        "description": "Perception is the ability to notice and interpret sensory information."
+      },
+      "Persuasion": {
+        "noun": "Persuasion",
+        "verb": "to Persuade",
+        "label": "Persuasion",
+        "description": "Persuasion is the ability to convince others to accept your point of view."
+      },
+      "ResistInfluence": {
+        "noun": "Resist Influence",
+        "verb": "to Resist Influence",
+        "label": "Resist Influence",
+        "description": "Resist Influence is the ability to withstand attempts to manipulate or control your mind."
+      },
+      "Forage": {
+        "noun": "Forage",
+        "verb": "to Forage",
+        "label": "Forage",
+        "description": "Forage is the ability to search for and gather components and other resources."
+      },
+      "MaintainFocus": {
+        "noun": "Maintain Focus",
+        "verb": "to Maintain Focus",
+        "label": "Maintain Focus",
+        "description": "Maintain Focus is the ability to maintain focus on spells when taking damage."
+      },
+      "MaintainConcentration": {
+        "noun": "Maintain Concentration",
+        "verb": "to Maintain Concentration",
+        "label": "Maintain Concentration",
+        "description": "Maintain Concentration is the ability to maintain concentration on spells when taking damage."
+      },
+      "Grapple": {
+        "noun": "Grapple",
+        "verb": "to Grapple",
+        "label": "Grapple",
+        "description": "Grapple is the ability to seize and hold onto a creature in combat."
+      },
+      "TraverseDifficultTerrain": {
+        "noun": "Traverse Difficult Terrain",
+        "verb": "to Traverse Difficult Terrain",
+        "label": "Traverse Difficult Terrain",
+        "description": "Traverse Difficult Terrain is the ability to navigate through difficult terrain and climb obstacles."
+      },
+      "Accuracy": {
+        "noun": "Accuracy",
+        "verb": "to Aim",
+        "label": "Accuracy",
+        "description": "Accuracy is the ability to hit a target with a ranged or thrown weapon."
+      },
+      "Devices": {
+        "noun": "Devices",
+        "verb": "to Use or Alter Devices",
+        "label": "Devices",
+        "description": "Devices is the ability to use and alter devices, such as computers or machinery."
+      },
+      "ResistSpellEffects": {
+        "noun": "Resist Spell Effects",
+        "verb": "to Resist Spell Effects",
+        "label": "Resist Spell Effects",
+        "description": "Resist Spell Effects is the ability to resist the effects of spells."
+      }
+    },
+    "COMMON": {
+      "consolidate": "Consolidate sheet",
+      "description": "Description",
+      "confirmDialog": "Are you sure?",
+      "confirmUpdateGearType": "Are you sure you want to update the gear type?<br/>This will remove all existing gear features.",
+      "accept": "Accept",
+      "save": "Save",
+      "saveFinal": "Save (You cannot undo this action)",
+      "gmCraftItem": "No actor owns this item. As the GM you can craft it.<br/>This will not create a new item, but will mark this item as crafted.<br/>Craft anyways?",
+      "success": "Success",
+      "failure": "Failure",
+      "Source": "Source"
+    },
+    "RARITIES": {
+      "Crude": "Crude",
+      "Common": "Common",
+      "Extraordinary": "Extraordinary",
+      "Rare": "Rare",
+      "Legendary": "Legendary",
+      "Mythical": "Mythical",
+      "GroupName": "Rarities"
+    },
+    "COMPONENTS": {
+      "Material": "Material",
+      "Refinement": "Refinement",
+      "Power": "Power"
+    },
+    "DAMAGE_TYPES": {
+      "Physical": "Physical",
+      "Energy": "Energy",
+      "Heat": "Heat",
+      "Chill": "Chill",
+      "Psyche": "Psyche",
+      "Kinetic": "Kinetic",
+      "Necrotic": "Necrotic",
+      "Stamina": "Stamina (Damage)",
+      "Healing": "Healing (SHP)",
+      "Medical": "Medical (DHP)",
+      "Restore": "Restoration (STA)"
+    },  
+    "ARTISTRIES": {
+      "Alteration": "Alteration",
+      "Array": "Array",
+      "Illusion": "Illusion",
+      "Evocation": "Evocation",
+      "Enchantment": "Enchantment",
+      "Divination": "Divination",
+      "Necromancy": "Necromancy",
+      "Wake": "Wake"
+    },
+    "MATH": {
+      "Flat": "Flat",
+      "Multiply": "Multiply",
+      "Add": "Add",
+      "Subtract": "Subtract",
+      "Divide": "Divide",
+      "Square": "Square",
+      "SquareRoot": "Square Root",
+      "Round": "Round",
+      "Ceiling": "Ceiling",
+      "Floor": "Floor",
+      "Random": "Random"
+    },
+    "TIME": {
+      "Seconds": "Seconds",
+      "Minutes": "Minutes",
+      "Hours": "Hours",
+      "Days": "Days",
+      "Weeks": "Weeks",
+      "Months": "Months",
+      "Years": "Years"
+    },
+    "ERRORS": {
+      "ArtistryNotUnlocked": "At least one of the features of this spell is from an artistry that you haven't unlocked yet.",
+      "NotEnoughStamina": "<p>You don't have enough stamina to cast this spell.<br/>However, you can spend Deep Hitpoints (DHP) to in place of the remaining stamina, if you wish.<br/>Cast this spell for <b>{dhp}</b> DHP?</p>",
+      "NotEnoughActions": "You don't have enough turn or interrupt actions to perform this action.",
+      "ReplaceSpeciesTitle": "Replace Species",
+      "ReplaceSpecies": "You must be a GM to replace the species of an actor.",
+      "ReplaceSpeciesGM": "As the GM, you can replace the species of this actor.<br>This will remove the existing species features and talents.<br/>Are you sure you want to do this? (Talent points will be returned)",
+      "SpeciesDataNotFound": "New characters don't have a species by default. Please select a species to see you character's data update.",
+      "NoTargetsSelected": "The game rule \"Target Required\" is enabled, you must target at least one token to perform this action.",
+      "NoTargetsSelectedInfo": "No tokens are targeted. Defense calculations will need to be performed manually.",
+      "ActionAgainstNoTarget": "This action requires you to have a target, please target a token first.",
+      "NoSpeciesWarning": "There is no species assigned to this actor. A species is required to browse talents.",
+      "NoConsumableQuantity": "You're trying to consume a consumable that has no quantity. Craft a new one, or set the quantity to 1.",
+      "NoParentActor": "This item is not owned by a character or creature. It cannot be equipped.",
+      "CraftingMacroNotFound": "Crafting macro not found. Please ensure the macro is created, you may need to redefine the macro's UUID in the associated Gear Feature.",
+      "Encumbered": "{actorName} is encumbered! They automatically have a point of fatigue applied to them.",
+      "CannotDeleteBaseAction": "You cannot delete a base action of an actor. This action is inherit to the system.",
+      "ItemNotEquippable": "This item cannot be equipped.",
+      "ItemCannotBeAugmented": "This item cannot be augmented.",
+      "SpellCostExceedsStamina": "Your spellcap is too low to be able to cast this spell.",
+      "AdvancementPointsWarning": "You have unspend talent points. You cannot level up until you spend them.",
+      "IncompatibleFeature": "This feature is incompatible with another selected feature.",
+      "RequiredFeature": "This feature is required by another feature. Delete that feature first.",
+      "TotalSuccess": "Total Success",
+      "TotalFailure": "Total Failure",
+      "PartialSuccess": "Partial Success",
+      "ItemNotEquipped": "This item is an equippable item, but it is not equipped. Please equip it first.",
+      "NotEnoughComponents": "You don't have enough components to craft this item."
+    },
+    "CHAT": {
+      "Block": "Block",
+      "Dodge": "Dodge",
+      "TakeCover": "Take Cover",
+      "DamageAppliedFlavor": "Damage Applied",
+      "HealingAppliedFlavor": "Healing Applied",
+      "SHPTaken": "SHP damage taken",
+      "DHPTaken": "DHP damage taken",
+      "STATaken": "STA removed",
+      "SHPHealed": "SHP healed",
+      "DHPHealed": "DHP healed",
+      "STAHealed": "STA restored",
+      "DamageAbsorbed": "Damage absorbed by defenses",
+      "Absorbed": "Damage <b>absorbed entirely</b> by defenses!",
+      "NotAbsorbed": "Damage <b>not</b> entirely absorbed by defenses!",
+      "Harvest": "Harvest Creatures",
+      "PlaceTemplate": "Place Template",
+      "FinishCasting": "Finish Casting Spell",
+      "DamagePreDefenses": "Rolls below indicate damage before defenses are applied.",
+      "EstimatedDamage": "Estimated Damage: {damage}",
+      "DamageResponse": "You're being targeted to recieve the above damage, how will you respond. If you don't wish to respond, you can ignore this message.",
+      "Harvestables": "Harvestables",
+      "FinishUsing": "Finish Using Consumable"
+    },
+    "DIALOGS": {
+      "AttackQuery": {
+        "Title": "Incoming Damage",
+        "Header": "Respond to incoming damage",
+        "Description": "You are being attacked{damageString}. How will you respond?",
+        "Block": "Block {rating}",
+        "Dodge": "Dodge {rating}",
+        "TakeCover": "Take Cover",
+        "None": "No Response",
+        "Redacted": " {REDACTED damage}",
+        "Estimated": " for approximately {damage} damage",
+        "Exact": " for {damage} damage"
+      }
+    },
+    "LABELS": {
+      "Points": "Points",
+      "Attributes": "Attributes",
+      "Travel": "Travel",
+      "Defenses": "Defenses",
+      "Spellcap": "Spellcap"
+    },
+    "Features": {
+      "Slam": "Slam",
+      "Harsh": "Harsh",
+      "Compact": "Compact",
+      "Elegant": "Elegant",
+      "Extravagant": "Extravagant",
+      "Reach": "Reach",
+      "Range": "Range",
+      "Assisted": "Assisted",
+      "Poisonous": "Poisonous",
+      "Wounding": "Wounding",
+      "Exhausting": "Exhausting",
+      "Penetrative": "Penetrative",
+      "ShipWrecker": "Ship Wrecker",
+      "Sentient": "Sentient",
+      "Blinding": "Blinding",
+      "Confusing": "Confusing",
+      "Blasting": "Blasting",
+      "Booming": "Booming",
+      "Awkward": "Awkward",
+      "Inordinate": "Inordinate",
+      "Unwieldy": "Unwieldy",
+      "Armed": "Armed",
+      "Sapping": "Sapping",
+      "Thorned": "Thorned",
+      "NonLethal": "Non-Lethal",
+      "Loaded": "Loaded",
+      "Elaborate": "Elaborate",
+      "Articulate": "Articulate",
+      "Convoluted": "Convoluted",
+      "Defensive": "Defensive",
+      "Guarded": "Guarded",
+      "Spry": "Spry",
+      "Magus": "Magus",
+      "Augmentable": "Augmentable",
+      "Screen": "Screen",
+      "Shrouded": "Shrouded",
+      "Intensify": "Intensify",
+      "Breathless": "Breathless",
+      "Tethered": "Tethered",
+      "Constricting": "Constricting",
+      "Corroded": "Corroded",
+      "Aerial": "Aerial",
+      "Swift": "Swift",
+      "Arachnid": "Arachnid",
+      "Boosted": "Boosted",
+      "Marine": "Marine",
+      "Dosed": "Dosed",
+      "Radiating": "Radiating",
+      "Simple": "Simple",
+      "Splash": "Splash",
+      "Spelltech": "Spelltech",
+      "Destructive": "Destructive",
+      "Psychosis": "Psychosis",
+      "Heal": "Heal",
+      "Refresh": "Refresh",
+      "Medical": "Medical",
+      "Residual": "Residual",
+      "Lingering": "Lingering",
+      "Persisting": "Persisting",
+      "Necrotic": "Necrotic",
+      "Complicated": "Complicated",
+      "Charged": "Charged",
+      "Deployed": "Deployed",
+      "Clamber": "Clamber",
+      "Seaworthy": "Seaworthy",
+      "Airborne": "Airborne",
+      "VersatileBlock": "Versatile Block",
+      "VersatileDodge": "Versatile Dodge",
+      "Remote": "Remote",
+      "MinorCasting": "Minor Casting",
+      "ModerateCasting": "Moderate Casting",
+      "MajorCasting": "Major Casting",
+      "Capacity": "Capacity",
+      "Resistance": "Resistance",
+      "Incorporeal": "Incorporeal",
+      "Hermetic": "Hermetic",
+      "Instrumental": "Instrumental",
+      "Flight": "Flight",
+      "Hexproof": "Hexproof",
+      "Fiddly": "Fiddly",
+      "Travel": "Travel",
+      "FastActivationI": "Fast Activation I",
+      "FastActivationII": "Fast Activation II",
+      "FastActivationIII": "Fast Activation III",
+      "FastActivationIV": "Fast Activation IV",
+      "FastActivationV": "Fast Activation V",
+      "FastActivationVI": "Fast Activation VI",
+      "ActivatedI": "Activated I",
+      "ActivatedII": "Activated II",
+      "CommandTrigger": "Command Trigger",
+      "SpecialLabels": {
+        "Artistry": "Artistry Unlocked"
+      }
+    },
+    "StatusEffects": {
+      "deafened": "Deafened",
+      "blinded": "Blinded",
+      "unconscious": "Unconscious",
+      "dazed": "Dazed",
+      "paralysis": "Paralysis",
+      "concentration": "Concentration",
+      "focus": "Focus",
+      "stasis": "Stasis",
+      "dead": "Dead",
+      "grappled": "Grappled",
+      "fatigue_1": "Fatigue 1",
+      "fatigue_2": "Fatigue 2",
+      "fatigue_3": "Fatigue 3",
+      "fatigue_4": "Fatigue 4",
+      "fatigue_5": "Fatigue 5",
+      "fatigue_6": "Fatigue 6"
+    },
+    "Settings": {
+      "advancedSettingsMenu": "Advanced Settings (Homebrew)",
+      "AdvancedSettings": {
+        "Traits": "Traits",
+        "Subtraits": "Subtraits",
+        "SpecialtyChecks": "Specialty Checks",
+        "Components": "Components",
+        "Rarities": "Rarities",
+        "Artistries": "Artistries",
+        "DamageTypes": "Damage Types",
+        "Languages": "Languages"
+      }, 
+      "Buttons": {
+        "CompendiumBrowser": "Compendium Browser",
+        "FeatureBuilder": "Artifice Feature Builder",
+        "Artifice": "Artifice",
+        "twitch": "Twitch Integration",
+        "discord": "Utopia Discord",  
+        "Save": "Save",
+        "Reset": "Reset this setting to defaults (You will lose all changes)"
+      },
+      "targetRequired": "Require Targeting for Attacks",
+      "targetRequiredHint": "When enabled, you must target at least one token to perform attacks and actions that require a target.",
+      "highlightTemplate": "Highlight Placeable Templates",
+      "highlightTemplateHint": "Highlight currently-placing template for attacks and actions that have templates assigned to them.",
+      "autoRollAttacks": "Automatically Roll Attacks",
+      "autoRollAttacksHint": "When enabled, attack rolls for gear and spells will be automatically rolled when the action is performed.",
+      "autoRollContests": "Automatically Roll Tests and Checks",
+      "autoRollContestsHint": "When enabled, tests and checks for all item types will be automatically rolled when the action is performed.",
+      "displayDamage": "Display Damage on Cards",
+      "displayDamageHint": "When enabled, damage for strikes will either be displayed accurately, with an estimate, or not at all. The formula will always be displayed regardless of this setting.",
+      "displayDamageEstimate": "Estimate damage",
+      "displayDamageExact": "Exact damage",
+      "displayDamageNone": "Do not display damage",
+      "estimateDamageSimulations": "Rolls for Damage Estimates",
+      "estimateDamageSimulationsHint": "The number of simulations to run for damage estimates. Higher numbers will result in more accurate estimates, but will take longer to calculate.",
+      "diceRedistribution": "Allow Dice Redistribution",
+      "diceRedistributionHint": "By default, Utopia allows attack rolls to be redistributed to standard RPG dice sets based on the maximum possible output of a roll from the default formula. For example: 5d4 can be redistributed to 2d10 or 1d20. Players can customize this option with the \"Dice Redistribution Size\" setting themselves.",
+      "autoMaxDice": "Dice Redistribution Size (Individual Setting)",
+      "autoMaxDiceHint": "Set the preferred dice redistribution size.",
+      "diceRedistributionNone": "Use default size",
+      "diceRedistributionSmallest": "Use smallest dice size (higher average, lower maximums)",
+      "diceRedistributionLargest": "Use largest dice size (higher maximums, lower average)",
+      "turnActionsMax": "Turn Actions",
+      "turnActionsMaxHint": "Only applies to Character and NPC type actors only. This setting only applies to newly created actors. Action maximums can still be set with ActiveEffects.",
+      "interruptActionsMax": "Interrupt Actions",
+      "interruptActionsMaxHint": "Only applies to Character and NPC type actors only. This setting only applies to newly created actors. Action maximums can still be set with ActiveEffects.",
+      "displayActionsOnToken": "Display Actions on Tokens",
+      "displayActionsOnTokenHint": "When enabled, turn and interrupt actions will appear on tokens on the map. This is enabled by default.",
+      "displayActionsOption": "How Should Actions be Displayed?",
+      "displayActionsOptionHint": "Choose how actions should be displayed on tokens on the map.",
+      "displayActionsOptionCircle": "Display as circle",
+      "displayActionsOptionVertical": "Display vertically",
+      "displayActionsOptionHorizontal": "Display horizontally",
+      "displayActionsSize": "Token Action indicator size",
+      "displayActionsSizeHint": "The size of the action indicators on tokens. This is basically a division of the size of the grid. You may need to tinker with this setting to get the right size for your preference.",
+      "restOnLevelUp": "[Homebrew] Rest on Level Up",
+      "restOnLevelUpHint": "When enabled, and a character or NPC levels up, the rest action will be performed automatically. Resting sets Surface HP and Stamina to their maximums, and resets turn and interrupt actions to their maximums.",
+      "diceRedistributionDiceSizes": "Dice Redistribution Sizes",
+      "diceRedistributionDiceSizesHint": "Comma separated list of the face counts of dice available for redistribution. By default, uses the the standard TTRPG dice set (d100, d20, d12, d10, d8, d6, d4). <b>Do not include the 'd' when listing dice</b>."
+    },
+    "CompendiumBrowser": {
+      "Title": "Utopia Compendium Browser",
+      "Take": "Take Item",
+      "Type": "Type",
+      "TakeAndClose": "Take Item and Close",
+      "ViewWorldItems": "Include World Items",
+      "ViewActorItems": "Include Actor Items",
+      "Search": "Search"
+    },
+    "ForageAndCrafting": {
+      "Foraging": "Foraging",
+      "Crafting": "Crafting",
+      "Forage": "Forage",
+      "Craft": "Craft",
+      "Difficulty": "Difficulty",
+      "Formula": "Formula",
+      "Returns": "Returns",
+      "Requirements": "Requirements",
+      "ForagingResult": "<b>Foraging Result:</b> {result}",
+      "ForagingReturns": "<b>Foraging Returns:</b> {returns}",
+      "ForagingTimeTaken": "<b>Time Taken:</b> {time}",
+      "ForagingNoReturns": "<b>No Returns</b>",
+      "CraftingResult": "<b>Crafting Result:</b> {result}",
+      "CraftingReturns": "<b>Crafting Returns:</b> {returns}",
+      "CraftingTimeTaken": "<b>Time Taken:</b> {time}",
+      "CraftingNotEnoughComponents": "You don't have enough components to craft this component.",
+      "ForagingTimes": {
+        "1": "1 Hour",
+        "4": "4 Hours",
+        "8": "8 Hours",
+        "12": "12 Hours",
+        "18": "18 Hours"
+      }
+    },
+    "FeatureBuilder": {
+      "Labels": {
+        "shared": "Shared",
+        "weapon": "Weapon",
+        "other": "Other",
+        "armor": "Armor",
+        "artifacts": "Artifacts",
+        "requires": "Requires",
+        "incompatibleWith": "Incompatible With",
+        "name": "Feature Name",
+        "saveFeature": "Save Feature",
+        "simulation1": "Simulating for ",
+        "simulation2": "stacks"
+      },
+      "Classifications": {
+        "fastWeapon": "Fast",
+        "moderateWeapon": "Moderate",
+        "slowWeapon": "Slow",
+        "shields": "Shield",
+        "headArmor": "Head",
+        "chestArmor": "Chest",
+        "handsArmor": "Hands",
+        "waistArmor": "Waist",
+        "feetArmor": "Feet",
+        "consumable": "Consumable",
+        "equippableArtifact": "Equippable",
+        "handheldArtifact": "Handheld",
+        "ammunitionArtifact": "Ammunition"
+      }
+    },
+    "Artifice": {
+      "Damage": "Damage",
+      "Formula": "Formula",
+      "Range": "Range",
+      "AoE": "AoE",
+      "Rarity": "Rarity",
+      "Save": "Save",
+      "Chat": "To Chat",
+      "Cost": "Cost",
+      "Flavor": "Gear Flavor (Boxed) Text",
+      "Name": "Name",
+      "Upgrade": "Upgrade",
+      "Stacks": "Stacks",
+      "Delete": "Delete",
+      "Stackable": "Stackable",
+      "Details": "Details",
+      "TotalRP": "Total RP",
+      "TotalRarity": "Rarity",
+      "TotalValue": "Value (SP)",
+      "TotalActions": "Actions",
+      "TotalHands": "Hands",
+      "TotalSlots": "Slots",
+      "TotalMaterial": "MC",
+      "TotalRefinement": "RC",
+      "TotalPower": "PC",
+      "ActivatedFeatures": "Activated Features",
+      "PassiveFeatures": "Passive Features",
+      "Activations": "Artifact Activations",
+      "Duplicated": "Increased consumable quantity by 1",
+      "Types": {
+        "fastWeapon": "Fast Weapon",
+        "moderateWeapon": "Moderate Weapon",
+        "slowWeapon": "Slow Weapon",
+        "shields": "Shield",
+        "headArmor": "Head Armor",
+        "chestArmor": "Chest Armor",
+        "handsArmor": "Hands Armor",
+        "feetArmor": "Feet Armor",
+        "consumable": "Consumable",
+        "equippableArtifact": "Equippable Artifact",
+        "handheldArtifact": "Handheld Artifact",
+        "ammunitionArtifact": "Ammunition Artifact"
+      }
+    },
+    "Spellcraft": {
+      "Save": "Save",
+      "SaveAndCast": "Save and Cast",
+      "Cast": "Cast",
+      "Duration": "Duration",
+      "Range": "Range",
+      "AoEShort": "Area of Effect",
+      "Stamina": "Stamina",
+      "Flavor": "Spell Flavor (Boxed) Text"
+    },
+    "Actors": {
+      "Tabs": {
+        "Details": "Details",
+        "Talents": "Talents",
+        "Gear": "Gear",
+        "Spells": "Spells",
+        "Actions": "Actions",
+        "Effects": "Effects"
+      },
+      "Stats": {
+        "shpShort": "SHP",
+        "dhpShort": "DHP",
+        "staShort": "STA",
+        "expShort": "EXP",
+        "iaShort": "IA",
+        "taShort": "TA"
+      },
+      "Actions": {
+        "Block": "Block",
+        "Dodge": "Dodge",
+        "Rest": "Rest",
+        "Reset": "Reset",
+        "OpenTalentTree": "Open Talent Tree",
+        "OpenCompendiumBrowser": "Open Compendium Browser",
+        "OpenSpellcraft": "Open Spellcraft",
+        "NewArtifice": "New Gear Item",
+        "NewConsumable": "New Consumable",
+        "NewGeneric": "New Generic Item",
+        "NoSpecies": "Select a Species",
+        "Perform": "Perform",
+        "LevelUp": "Level Up",
+        "ForageAndCrafting": "Forage and Crafting", 
+        "ChangeBody": "Change Body",
+        "AddKit": "Add Kit",
+        "AddClass": "Add Class",
+        "Convert": "Convert to NPC",
+        "CreatureTalentsInfo": "Drag-and-Drop talents to use them on creatures.",
+        "ViewSpecialist": "View Specialist Talents",
+        "UnlockArtistry": "Unlock Artistry",
+        "WeaponlessAttack": "Weaponless Attack",
+        "DeepBreath": "Deep Breath",
+        "TakeCover": "Take Cover",
+        "Grapple": "Grapple",
+        "Travel": "Travel",
+        "Aim": "Aim",
+        "Stealth": "Stealth",
+        "Leap": "Leap",
+        "ScaleSame": "Scale (same size)",
+        "ScaleLarger": "Scale (larger)",
+        "HoldAction": "Hold Action (2 TA = 1 IA)",
+        "Assist": "Assist (WIP)",
+        "ViewSubtraits": "View Subtraits",
+        "Spellcap": "Spellcap",
+        "PassiveAction": "Performing Passive Action: {action}",
+        "ToggleEffects": "Toggled Effects for {action}"
+      },
+      "Items": {
+        "Talents": "Talents",
+        "Actions": "Actions",
+        "Gear": "Gear",
+        "Kits": "Creature Kits",
+        "Classes": "Creature Classes",
+        "Consumables": "Consumables",
+        "Components": "Components",
+        "Artistries": "Artistries",
+        "Favors": "Favors",
+        "Spells": "Spellbook"
+      },
+      "Points": {
+        "subtraits": "Subtraits",
+        "body": "Body",
+        "mind": "Mind",
+        "soul": "Soul"
+      },
+      "FIELDS": {
+        "travel.land.speed": {
+          "label": "Land Speed"
+        },
+        "travel.water.speed": {
+          "label": "Water Speed"
+        },
+        "travel.air.speed": {
+          "label": "Air Speed"
+        },
+        "defenses.physical": {
+          "label": "Physical Defense"
+        },
+        "defenses.energy": {
+          "label": "Energy Defense"
+        },
+        "defenses.heat": {
+          "label": "Heat Defense"
+        },
+        "defenses.chill": {
+          "label": "Chill Defense"
+        },
+        "defenses.psyche": {
+          "label": "Psyche Defense"
+        },
+        "constitution": {
+          "label": "Constitution"
+        },
+        "endurance": {
+          "label": "Endurance"
+        },
+        "effervescence": {
+          "label": "Effervescence"
+        },
+        "biography.age": {
+          "label": "Age"
+        },
+        "biography.birthday": {
+          "label": "Birthday"
+        },
+        "biography.deathday": {
+          "label": "Deathday"
+        },
+        "biography.height": {
+          "label": "Height"
+        },
+        "biography.weight": {
+          "label": "Weight"
+        },
+        "biography.pronouns": {
+          "label": "Pronouns"
+        },
+        "biography.hairEyesSkin": {
+          "label": "Hair Eyes Skin"
+        },
+        "biography.markings": {
+          "label": "Markings"
+        },
+        "biography.voice": {
+          "label": "Voice"
+        },
+        "biography.bodyType": {
+          "label": "Body Type"
+        },
+        "biography.ethnicity": {
+          "label": "Ethnicity"
+        },
+        "biography.nationality": {
+          "label": "Nationality"
+        },
+        "biography.quirks": {
+          "label": "Quirks"
+        },
+        "biography.relationshipDivider": {
+          "label": "Relationship Divider"
+        },
+        "biography.enemies": {
+          "label": "Enemies"
+        },
+        "biography.allies": {
+          "label": "Allies"
+        },
+        "biography.rivals": {
+          "label": "Rivals"
+        },
+        "biography.family": {
+          "label": "Family"
+        },
+        "biography.friends": {
+          "label": "Friends"
+        },
+        "biography.partners": {
+          "label": "Partners"
+        },
+        "biography.personalInfoDivider": {
+          "label": "Personal Info Divider"
+        },
+        "biography.strength": {
+          "label": "Strength"
+        },
+        "biography.education": {
+          "label": "Education"
+        },
+        "biography.upbringing": {
+          "label": "Upbringing"
+        },
+        "biography.achievements": {
+          "label": "Achievements"
+        },
+        "biography.coreMemories": {
+          "label": "Core Memories"
+        },
+        "biography.phobias": {
+          "label": "Phobias"
+        },
+        "biography.dreams": {
+          "label": "Dreams"
+        },
+        "biography.nightmares": {
+          "label": "Nightmares"
+        },
+        "biography.anathema": {
+          "label": "Anathema"
+        },
+        "biography.edicts": {
+          "label": "Edicts"
+        },
+        "biography.ambitions": {
+          "label": "Ambitions"
+        },
+        "biography.motivations": {
+          "label": "Motivations"
+        },
+        "biography.personalSecrets": {
+          "label": "Personal Secrets"
+        },
+        "biography.alignmentDivider": {
+          "label": "Alignment Divider"
+        },
+        "biography.moralAlignment": {
+          "label": "Moral Alignment"
+        },
+        "biography.philosophicalAlignment": {
+          "label": "Philosophical Alignment"
+        },
+        "biography.politicalAlignment": {
+          "label": "Political Alignment"
+        },
+        "biography.publicInfoDivider": {
+          "label": "Public Info Divider"
+        },
+        "biography.occupation": {
+          "label": "Occupation"
+        },
+        "biography.reputation": {
+          "label": "Reputation"
+        },
+        "biography.hobbies": {
+          "label": "Hobbies"
+        },
+        "biography.interests": {
+          "label": "Interests"
+        }        
+      },
+      "Attributes": {
+        "Summary": "Attributes",
+        "SurfaceHitpoints": "Surface",
+        "DeepHitpoints": "Deep",
+        "Stamina": "Stamina",
+        "Body": "Body",
+        "DifficultyRating": "DR",
+        "ExperiencePoints": "EXP"
+      },
+      "SpecialtyChecks": {
+        "Summary": "Specialty Checks"
+      },
+      "Travel": {
+        "Summary": "Travel Speeds"
+      },
+      "Defenses": {
+        "Summary": "Defenses"
+      },
+      "Classes": {
+        "Summary": "Creature Classes"
+      },
+      "Kits": {
+        "Summary": "Creature Kits"
+      },
+      "PaperDoll": "Blue slots are augment slots | Drag equipment to a slot to fill it | Right-click to clear a slot"
+    },
+    "Chats": {
+      "DamageInstance": {
+        "SHP": "SHP",
+        "DHP": "DHP",
+        "STAMINA": "STA",
+        "TOTAL": "TOT",
+        "PENDING": "PENDING",
+        "ESTIMATED": "ESTIMATED",
+        "EXACT": "EXACTLY",
+        "DODGED": "DODGED",
+        "BLOCKED": "BLOCKED",
+        "DAMAGE": "DAMAGE"
+      }
+    },
+    "Items": {
+      "TABS": {
+        "Attributes": "Attributes",
+        "Description": "Description",
+        "Effects": "Effects",
+        "Talents": "Talents",
+        "Actions": "Actions"
+      },
+      "FIELDS": {
+        "tags": {
+          "label": "Tags"
+        },
+        "grants": {
+          "label": "Granted Items",
+          "hint": "Other talents, actions, gear, or otherwise granted by this item. These items are created as separate entities in the owning actor."
+        },
+        "formula": {
+          "label": "Formula",
+          "hint": "The roll formula to execute. This may be used for damage, healing, a test, or otherwise."
+        },
+        "rarity": {
+          "label": "Rarity",
+          "hint": "The rarity of this item. This is used to determine the color of the item in the inventory and its value."
+        }
+      },
+      "Activity": {
+        "BaseAction": "Activity replaces base action",
+        "DoesNotReplaceBaseAction": "Activity does not replace base action",
+        "AddOperation": "Select an Operation",
+        "Formula": "Formula",
+        "Operation": {
+          "selectOperation": "Select Specific Operation",
+          "selectOption": "Select Option",
+          "attack": "Attack",
+          "heal": "Heal",
+          "travel": "Travel",
+          "castSpell": "Cast a Spell",
+          "condition": "Check For Condition",
+          "variable": "Variable",
+          "test": "Test",
+          "check": "Check",
+          "use": "Use Item",
+          "setFlag": "Set Flag",
+          "createResource": "Create Resource",
+          "consumeResource": "Consume Resource",
+          "consumption": "Consume Component",
+          "augment": "Augment / De-augment Creature",
+          "generic": "Generic / Chat Message",
+          "attackResponse": "Attack Response",
+          "counterAttack": "Counter Attack",
+          "counterDamage": "Counter Damage",
+          "target": "Run Operation on Target(s)"
+        },
+        "Messages": {
+          "ErrorNoComponent": "No such component or rarity found.",
+          "ErrorNotEnoughComponents": "Not enough components of the specified rarity available to consume.",
+          "ErrorNegative": "A provided formula returned a negative value.",
+          "Consumption": "{actorName} consumed {amount} {rarity} {component} component to recover {restoration} stamina."
+        },
+        "ActionType": {
+          "Turn": "Turn Action",
+          "Interrupt": "Interrupt Action",
+          "Current": "Current Action Type (if in combat, defaults to Turn Action)"
+        },
+        "Costs": {
+          "turnActions": "Turn Actions",
+          "interruptActions": "Interrupt Actions",
+          "stamina": "Stamina",
+          "shp": "Surface HP",
+          "dhp": "Deep HP"
+        },
+        "AttackResponse": {
+          "Block": "Block",
+          "Dodge": "Dodge"
+        },
+        "Target": {
+          "Each": "Each Target",
+          "All": "All Targets",
+          "Random": "Random Target",
+          "NoTargets": "You have no targets selected. Please select at least one target."
+        },
+        "TotalCosts": "Total Costs",
+        "OperationHeader": "Base Operation Details"
+      },
+      "Harvest": {
+        "Name": "Harvest",
+        "Header": "Post-combat Creature Harvesting",
+        "Info": "After combat, you can harvest components from the defeated creature. Below is a table of options for each defeated creature.",
+        "Component": "Component",
+        "Quality": "Quality",
+        "Amount": "Amount",
+        "RequiresTest": "Requires Test",
+        "TestTrait": "Test Trait",
+        "TestDifficulty": "Test Difficulty",
+        "Actions": "Actions",
+        "HarvestFast": "Harvest (6 TA)",
+        "HarvestModerate": "Harvest (1 Minute)",
+        "HarvestSlow": "Harvest (1 Hour)",
+        "Harvested": "Harvested by: ",
+        "Earned": "Earned: ",
+        "Yes": "Yes",
+        "Success": "Harvest successful for ",
+        "Failed": "Harvest failed for ",
+        "Complete": "[GM Only] Complete Encounter and Distribute EXP",
+        "TurnActions": "Not enough Turn Actions to perform this action."
+      },
+      "Action": {
+        "FIELDS": {
+          "type": {
+            "label": "Type"
+          },
+          "category": {
+            "label": "Category",
+            "_hint": "The category modifies the behaviour when performing the action."
+          },
+          "resource": {
+            "label": "Resource",
+            "hint": "The resource (name) required to perform the action."
+          },
+          "consumed": {
+            "label": "Amount Consumed",
+            "hint": "The amount of the resource consumed when performing the action.\nSet to 0 to only check if the resource exists."
+          },
+          "macro": {
+            "label": "Macro",
+            "hint": "The macro to execute when performing the action. Only works if the category is set to 'macro'."
+          },
+          "actor": {
+            "label": "Affected Actor(s)",
+            "hint": "The actor(s) affected by the action."
+          },
+          "range": {
+            "label": "Range",
+            "hint": "The range of the action. This is represented in the format \"close/far\". i.e \"20/40\" for 20M close range, 40M far range."
+          },
+          "accuracyTrait": {
+            "label": "Accuracy Trait",
+            "hint": "The trait to use for the accuracy of the action. This is used for attack rolls and checks."
+          },
+          "template": {
+            "label": "Damage and Effect Template",
+            "hint": "The template to use for the damage and effects of the action."
+          },
+          "cost": {
+            "label": "Cost",
+            "_hint": "The turn or interrupt cost of the action. This can be a number or a formula."
+          },
+          "stamina": {
+            "label": "Stamina",
+            "_hint": "The stamina cost of the action. This can be a number or a formula."
+          },
+          "secret": {
+            "label": "Secret",
+            "hint": "Only visible to the owner of the actor and the GM."
+          },
+          "checks": {
+            "label": "Checks and Tests",
+            "hint": "Select multiple to be able to choose when performing this action."
+          },
+          "checkFavor": {
+            "label": "Check and Test Favor",
+            "hint": "Enable for actor favors to be applied to the checks and tests performed by this action."
+          },
+          "damages": {
+            "label": "Damage and Healing",
+            "hint": "The damage and healing effects of this action."
+          },
+          "damageModifier": {
+            "label": "Damage Modifier",
+            "hint": "The damage modifier to apply to the damage and healing effects of this action."
+          },
+          "validityCheck": {
+            "label": "Only deal damage if a check is successful",
+            "hint": "If enabled, the damage and effects of this action are only applied if the check is successful."
+          },
+          "validityCheck.enabled": {
+            "label": "Enabled",
+            "hint": "If enabled, the validity check is performed."
+          },
+          "validityCheck.check": {
+            "label": "Check",
+            "hint": "The check to perform."
+          },
+          "validityCheck.favor": {
+            "label": "Apply (Dis)Favor",
+            "hint": "Whether to apply favor to the check."
+          },
+          "validityCheck.difficulty": {
+            "label": "Difficulty",
+            "hint": "The difficulty of the check."
+          },
+          "passive.type": {
+            "label": "Type",
+            "hint": "The type of passive effect."
+          },
+          "passive.scaling.enabled": {
+            "label": "Scaling Enabled",
+            "hint": "If enabled, apply a prompted scaling ratio on use."
+          },
+          "passive.scaling.resource": {
+            "label": "Scaling Resource",
+            "hint": "The resource to scale the passive effect with."
+          },
+          "passive.scaling.ratio": {
+            "label": "Scaling Ratio",
+            "hint": "Using a [resource]/[amount] format, e.g. '1/2' to scale the passive effect.<br>If only one value is present, no prompting will occur, and scaling will not apply."
+          },
+          "passive.equipment.enabled": {
+            "label": "Automatically Roll Equipment",
+            "hint": "If enabled, will automatically roll (or prompt if multiple) the specified equipment"
+          },
+          "passive.equipment.mustBeEquipped": {
+            "label": "Must be Equipped",
+            "hint": "Will only roll (or prompt if enabled) of equipment that is equipped."
+          },
+          "passive.equipment.type": {
+            "label": "Equipment Type",
+            "hint": "The type of equipment required for the action."
+          },
+          "passive.equipment.reduceActionCost": {
+            "label": "Reduce Action Cost",
+            "hint": "How should the equipment's action cost be modified by this action?"
+          },
+          "passive.equipment.reduceActionCostFlat": {
+            "label": "Flat Action Cost Reduction",
+            "hint": "The flat amount to reduce the action cost by.<br>Only used if 'Reduce Action Cost' is set to 'Flat'."
+          },
+          "passive.ignoreDamage.energy": {
+            "label": "Ignore Energy Damage"
+          },
+          "passive.ignoreDamage.heat": {
+            "label": "Ignore Heat Damage"
+          },
+          "passive.ignoreDamage.chill": {
+            "label": "Ignore Chill Damage"
+          },
+          "passive.ignoreDamage.physical": {
+            "label": "Ignore Physical Damage"
+          },
+          "passive.ignoreDamage.psyche": {
+            "label": "Ignore Psyche Damage"
+          },
+          "passive.ignoreDamage.kinetic": {
+            "label": "Ignore Kinetic Damage"
+          },
+          "passive.ignoreDamage.stamina": {
+            "label": "Ignore Stamina Damage"
+          },
+          "restoration": {
+            "label": "Enable Resource Restoration",
+            "hint": "If enabled, and when this action is performed, will restore the specified resource, by the amount defined in this action's formula."
+          },
+          "restorationType": {
+            "label": "Resource Type",
+            "hint": "The type of resource to restore when this action is performed."
+          },
+          "toggleActiveEffects": {
+            "label": "Toggle Active Effects",
+            "hint": "Active Effects on this item that transfer to the owner, will be toggled enabled / disabled when this action is used."
+          }
+        },
+        "RestorationType": {
+          "surface": "Surface Hitpoints (SHP)",
+          "deep": "Deep Hitpoints (DHP)",
+          "stamina": "Stamina (STA)"
+        },
+        "Actor": {
+          "self": "Self",
+          "target": "Targets"
+        },
+        "Type": {
+          "current": "Current",
+          "turn": "Turn",
+          "interrupt": "Interrupt",
+          "free": "Free"
+        },
+        "Category": {
+          "damage": "Damage / Healing",
+          "test": "Check / Test",
+          "formula": "Formula",
+          "passive": "Passive",
+          "active": "Active",
+          "utility": "Utility",
+          "macro": "Macro"
+        },
+        "Template": {
+          "none": "None",
+          "self": "Self",
+          "target": "Target",
+          "sbt": "Small Blast (2M)",
+          "mbt": "Medium Blast (4M)",
+          "lbt": "Large Blast (6M)",
+          "xbt": "Extra Large Blast (8M)",
+          "cone": "Cone (2M)",  
+          "line": "Line (2M)"
+        },
+        "PassiveType": {
+          "meleeRedirect": "Redirect Overflow Melee Damage - Redirect damage past 0 DHP to another creature in range",
+          "rangedRedirect": "Redirect Overflow Ranged Damage - Redirect damage past 0 DHP to another creature in range",
+          "travelPlusStunt": "Travel + Stunt Score - Add stunt score to travel speed",
+          "blockWithWeapon": "Block with Weapon - Use weapon's attack roll instead of creatures block rating",
+          "respondWithAttack": "Respond with Attack - When sensing another creature attack, respond with an attack action",
+          "attackAllInRange": "Attack All in Range - When attacking, roll to attack all creatures in range as a single action",
+          "reduceActionCost": "Reduce Attack Cost - Reduce the action cost of equipment attack actions",
+          "ignoreDamageType": "Ignore Damage - Ignore damage of a specific type"
+        },
+        "ScaleResource": {
+          "cost": "Based on this action's TA / IA cost",
+          "stamina": "Based on this action's stamina cost"
+        },
+        "None": "None",
+        "EquipmentType": {
+          "weapon": "Weapon",
+          "armor": "Armor",
+          "shield": "Shield"
+        },
+        "ReduceActionCost": {
+          "scalingRatio": "Use Scaling Ratio",
+          "flat": "Use flat reduction"
+        }
+      },
+      "Body": {
+        "FIELDS": {
+          "baseDR": {
+            "label": "Base DR"
+          },
+          "shp": {
+            "label": "SHP"
+          },
+          "dhp": {
+            "label": "DHP"
+          },
+          "stamina": {
+            "label": "Stamina"
+          },
+          "traitDefault": {
+            "label": "(Sub)Trait Default"
+          },
+          "traits": {
+            "label": "(Sub)Traits",
+            "hint": "The non-default (sub)traits this body has."
+          },
+          "block.quantity": {
+            "label": "Block Dice",
+            "hint": "The number of d4's to roll for blocking."
+          },
+          "dodge.quantity": {
+            "label": "Dodge Dice",
+            "hint": "The number of d12's to roll for dodging."
+          },
+          "defenses": {
+            "label": "Defenses"
+          },
+          "defenses.energy": {
+            "label": "Energy"
+          },
+          "defenses.heat": {
+            "label": "Heat"
+          },
+          "defenses.chill": {
+            "label": "Chill"
+          },
+          "defenses.physical": {
+            "label": "Physical"
+          },
+          "defenses.psyche": {
+            "label": "Psyche"
+          },
+          "harvest": {
+            "label": "Harvest",
+            "hint": "The harvest settings for this body."
+          },
+          "harvest.testTrait": {
+            "label": "Harvest (Sub)Trait"
+          },
+          "harvest.testDifficulty": {
+            "label": "Harvest TD",
+            "hint": "The test difficulty to harvest this item. You may use a formula."
+          },
+          "harvest.componentFormula": {
+            "label": "Harvest Components",
+            "hint": "The formula to determine the components harvested."
+          },
+          "harvest.componentRarity": {
+            "label": "Harvest Rarity",
+            "hint": "The rarity of the harvested components."
+          },
+          "harvest.componentType": {
+            "label": "Harvest Type",
+            "hint": "The type of the harvested components."
+          },
+          "harvest.alwaysHarvestable": {
+            "label": "Always Harvestable",
+            "hint": "The amount of components harvested when harvesting, regardless of the test."
+          },
+          "harvest.testHarvestable": {
+            "label": "Test Harvestable",
+            "hint": "The <b>additional</b> amount of components harvested, if the test is successful."
+          }
+        }
+      },
+      "Kit": {
+        "FIELDS": {
+          "points": {
+            "label": "DR Points",
+            "hint": "The number of DR points this kit provides. Can be negative."
+          },
+          "attributes": {
+            "label": "Kit Attributes",
+            "hint": "The attributes this kit provides. In the format that ActiveEffects use. (eg. 'system.hitpoints.surface.max', '+5')",
+            "FIELDS": {
+              "key": {
+                "label": "Key"
+              },
+              "value": {
+                "label": "Value"
+              },
+              "name": {
+                "label": "Name (for this choice)"
+              },
+              "hasChoices": {
+                "label": "Choices"
+              },
+              "choiceSet": {
+                "label": "Choice Set"
+              }
+            }
+          }
+        }
+      },
+      "Class": {
+        "FIELDS": {
+          "points": {
+            "label": "DR Points",
+            "hint": "The number of DR points this kit provides. Can be negative."
+          },
+          "type": {
+            "label": "Type",
+            "hint": "The type of category this class belongs to. Only a certain amount of certain classes can be given to a creature."
+          },
+          "attributes": {
+            "label": "Class Attributes",
+            "hint": "The attributes this class provides. In the format that ActiveEffects use. (eg. 'system.hitpoints.surface.max', '+5')",
+            "FIELDS": {
+              "key": {
+                "label": "Key"
+              },
+              "value": {
+                "label": "Value"
+              }
+            }
+          }
+        },
+        "Type": {
+          "Arcane": "Arcane",
+          "Martial": "Martial",
+          "Support": "Support",
+          "Innate": "Innate"
+        }
+      },
+      "Gear": {
+        "Prototype": {
+          "true": "This item is a prototype, you must craft it before it can be used.",
+          "false": "This item has been crafted, it can be used immediately."
+        },
+        "FIELDS": {
+          "Range": {
+            "label": "Range"
+          },
+          "Damage": {
+            "label": "Damage"
+          },
+          "Rarity": {
+            "label": "Rarity"
+          },
+          "Type": {
+            "label": "Gear Type",
+            "Weapon": "Weapon",
+            "Armor": "Armor",
+            "Artifact": "Artifact",
+            "Consumable": "Consumable",
+            "Shield": "Shield"
+          },
+          "WeaponType": {
+            "label": "Weapon Type",
+            "Fast": "Fast",
+            "Moderate": "Moderate",
+            "Slow": "Slow"
+          },
+          "ArmorType": {
+            "label": "Armor Type",
+            "Head": "Head",
+            "Neck": "Neck",
+            "Chest": "Chest",
+            "Back": "Back",
+            "Waist": "Waist",
+            "Ring": "Ring",
+            "Hands": "Hands",
+            "Feet": "Feet"
+          },
+          "ArtifactType": {
+            "label": "Artifact Type",
+            "Equippable": "Equippable",
+            "Handheld": "Handheld",
+            "Ammunition": "Ammunition"
+          }
+        },
+        "BUTTONS": {
+          "Use": "Use",
+          "Equip": "Equip",
+          "Augment": "Augment",
+          "Craft": "Craft",
+          "Artifice": "Artifice"
+        },
+        "Slot": { 
+          "head": "Head",
+          "neck": "Neck",
+          "back": "Back",
+          "chest": "Chest",
+          "waist": "Waist",
+          "hands": "Hands",
+          "ring": "Ring",
+          "feet": "Feet"
+        }
+      },
+      "GearFeature": {
+        "UneditableWarning": "You cannot edit this feature directly. Please open the item in the Artifice Feature Builder to edit it.",
+        "OpenInBuilder": "Open in Feature Builder"
+      },
+      "Generic": {
+        "Categories": {
+          "misc": "Miscellaneous",
+          "consumable": "Consumable",
+          "tool": "Tool",
+          "trinket": "Trinket",
+          "junk": "Junk",
+          "ammunition": "Ammunition",
+          "valuable": "Valuable"
+        },
+        "FIELDS": {
+          "quantity": {
+            "label": "Quantity"
+          },
+          "slots": {
+            "label": "Slots"
+          },
+          "value": {
+            "label": "Value"
+          },
+          "consumeOnUse": {
+            "label": "Consume on Use",
+            "hint": "Consume a quantity of this item when used."
+          },
+          "deleteWhenEmpty": {
+            "label": "Delete When Empty",
+            "hint": "Delete this item (from the actor, not the world) when the quantity reaches 0."
+          },
+          "category": {
+            "label": "Category"
+          },
+          "container.capacity": {
+            "label": "Container Capacity",
+            "hint": "The number of slots this container can hold."            
+          },
+          "container.items": {
+            "label": "Container Items",
+            "hint": "The items this container holds. (Should not be modified directly)"
+          }
+        },
+        "Category": {
+          "misc": "Miscellaneous",
+          "consumable": "Consumable",
+          "tool": "Tool",
+          "trinket": "Trinket",
+          "junk": "Junk",
+          "ammunition": "Ammunition",
+          "valuable": "Valuable"
+        }
+      },
+      "Species": {
+        "FIELDS": {
+          "block.quantity": {
+            "label": "Block Amount"
+          },
+          "block.size": {
+            "label": "Block Dice"
+          },
+          "dodge.quantity": {
+            "label": "Dodge Amount"
+          },
+          "dodge.size": {
+            "label": "Dodge Dice"
+          },
+          "constitution": {
+            "label": "Constitution"
+          },
+          "endurance": {
+            "label": "Endurance"
+          },
+          "effervescence": {
+            "label": "Effervescence"
+          },
+          "quirkPoints": {
+            "label": "Quirk Points",
+            "hint": "The number of quirk points this species has."
+          },
+          "quirks": {
+            "label": "Quirks",
+            "hint": "The quirks this species has."
+          },
+          "communication": {
+            "label": "Communication",
+            "hint": "The communication settings for this species."
+          },
+          "communication.language.choices": {
+            "label": "Languages",
+            "hint": "The number of languages this species can choose from."
+          },
+          "communication.language.languages": {
+            "label": "Languages",
+            "hint": "The languages this species can speak."
+          },
+          "communication.types": {
+            "label": "Communication Types",
+            "hint": "The types of communication this species can use."
+          },
+          "travel.land.speed": {
+            "label": "Land Speed"
+          },
+          "travel.land.stamina": {
+            "label": "Land Stamina"
+          },
+          "travel.air.speed": {
+            "label": "Air Speed"
+          },
+          "travel.air.stamina": {
+            "label": "Air Stamina"
+          },
+          "travel.water.speed": {
+            "label": "Water Speed"
+          },
+          "travel.water.stamina": {
+            "label": "Water Stamina"
+          },
+          "transform": {
+            "label": "Transformation",
+            "hint": "The transformation settings for this species."
+          },
+          "transform.cost": {
+            "label": "Transformation Cost",
+            "hint": "The TA cost to transform."
+          },
+          "transform.duration": {
+            "label": "Transformation Duration",
+            "hint": "The duration of the transformation."
+          },
+          "transform.type": {
+            "label": "Transformation Type",
+            "hint": "The type of transformation."
+          },
+          "gifts.subtraits": {
+            "label": "Gifted Subtraits",
+            "hint": "The subtraits this species is gifted with."
+          },
+          "gifts.points": {
+            "label": "Gifted Points",
+            "hint": "The number of points to spend on gifted subtraits."
+          },
+          "branchCount": {
+            "label": "Branch Count",
+            "hint": "The number of branches this species has."
+          },
+          "branches.category": {
+            "label": "Branch Category",
+            "hint": "The category of this branch."
+          }
+        },
+        "BranchCategory": {
+          "Species": "Species",
+          "Subspecies": "Subspecies"
+        },
+        "CommunicationTypes": {
+          "Mute": "Mute",
+          "Speech": "Speech",
+          "Telepathy": "Telepathy"
+        },
+        "TransformationTypes": {
+          "none": "None",
+          "wild": "Wild",
+          "enhance": "Enhance"
+        },
+        "PaperDoll": {
+          "toggleSpecialty": "Requires special armor",
+          "toggleEquippable": "Toggle equippable",
+          "toggleAugmentable": "Toggle augmentable"
+        }
+      },
+      "TalentTree": {
+        "FIELDS": {
+          "species": {
+            "label": "Species"
+          },
+          "style.foregroundColor": {
+            "label": "Foreground"
+          },
+          "style.backgroundColor": {
+            "label": "Background"
+          },
+          "style.headerColor": {
+            "label": "Header"
+          },
+          "branchField.name": {
+            "label": "Branch Name"
+          },
+          "talentUuidField": {
+            "label": "Talents"
+          },
+          "allowLooping": {
+            "label": "Allow Looping"
+          },
+          "branchCount": {
+            "label": "Branch Count"
+          }
+        }
+      },
+      "Talent": {
+        "FIELDS": {
+          "body": {
+            "label": "Body"
+          },
+          "mind": {
+            "label": "Mind"
+          },
+          "soul": {
+            "label": "Soul"
+          },
+          "options.choices": {
+            "label": "Offers Choices",
+            "hint": "If this talent offers choices, you can define them here."
+          },
+          "options.category": {
+            "label": "Belongs to Choice Category",
+            "hint": "Any talents that offer the same choices should be in the same category."
+          },
+          "macro": {
+            "label": "Run Macro on Take",
+            "hint": "The macro to execute when this talent is gained or taken."
+          },
+          "flexibility": {
+            "label": "Flexibility",
+            "hint": "Taking this talent allows the player to choose another talent from the specified category for an additional cost."
+          },
+          "flexibility.enabled": {
+            "label": "Flexibility Enabled",
+            "hint": "Whether the flexibility is enabled."
+          },
+          "flexibility.body": {
+            "label": "Body Increase",
+            "hint": "The increase in body cost for the flexibility. +0 is the default."
+          },
+          "flexibility.mind": {
+            "label": "Mind Increase",
+            "hint": "The increase in mind cost for the flexibility. +0 is the default."
+          },
+          "flexibility.soul": {
+            "label": "Soul Increase",
+            "hint": "The increase in soul cost for the flexibility. +1 is the default."
+          },
+          "flexibility.category": {
+            "label": "Category",
+            "hint": "The category of talents to choose from."
+          },
+          "flexibility.tier": {
+            "label": "Tier",
+            "hint": "The tier of talents to choose from."
+          }
+        },
+        "FlexibilityCategory": {
+          "SubSpecies": "Sub-species Talents (3rd Column)",
+          "SpeciesFirst": "Species Talents (1st Column)",
+          "SpeciesSecond": "Species Talents (2nd Column)",
+          "SpeciesAll": "Any Species Talent",
+          "GeneralPurpose": "General Purpose Talents"
+        }
+      },
+      "Favor": {
+        "FIELDS": {
+          "always": {
+            "label": "Always Active"
+          },
+          "condition": {
+            "label": "Activation Conditions",
+            "hint": "Overrides the always active setting. If this field is empty, the always active setting is used."
+          },
+          "check": {
+            "label": "Check",
+            "hint": "The check(s) this favor applies to."
+          },
+          "checks": {
+            "label": "Checks",
+            "hint": "The check(s) this favor applies to."
+          },
+          "value": {
+            "label": "Value",
+            "hint": "disfavor < 0 < favor"
+          }
+        },
+        "always": "Always Active",
+        "hostile": "vs. Hostiles",
+        "friendly": "vs. Friendlies",
+        "neutral": "vs. Neutrals",
+        "detectedHostile": "vs. Detected Hostiles",
+        "detectedFriendly": "vs. Detected Friendlies",
+        "detectedNeutral": "vs. Detected Neutrals",
+        "detectedByHostile": "vs. Detected By Hostiles",
+        "detectedByFriendly": "vs. Detected By Friendlies",
+        "detectedByNeutral": "vs. Detected By Neutrals",
+        "self": "Affects Self",
+        "targeted": "Affects Target(s) (use with caution)"
+      },
+      "Spell": {
+        "FIELDS": {
+          "Duration": {
+            "label": "Duration"
+          },
+          "Range": {
+            "label": "Range"
+          },
+          "AoeShort": {
+            "label": "Area of Effect"
+          },
+          "Stamina": {
+            "label": "Stamina"
+          }
+        },
+        "BUTTONS": {
+          "Save": "Save",
+          "Cast": "Cast",
+          "Spellcrafting": "Open in Spellcrafting"
+        }
+      },
+      "SpellFeature": {
+        "FIELDS": {
+          "formulaType": {
+            "label": "Formula Type",
+            "hint": "The type of formula this feature uses."
+          },
+          "damageType": {
+            "label": "Damage Type",
+            "hint": "The type of damage (or healing) this feature does."
+          },
+          "art": {
+            "label": "Artistry",
+            "hint": "The artistry the feature belongs to."
+          },
+          "cost": {
+            "label": "Cost",
+            "hint": "The PP cost of the feature."
+          },
+          "costMultiplier": {
+            "label": "Cost Multiplier",
+            "hint": "The multiplier (typically the 'X' value) for the cost of the feature."
+          },
+          "doesTarget": {
+            "label": "Does Target",
+            "hint": "Whether the feature targets something."
+          },
+          "targetType": {
+            "label": "Target Type",
+            "hint": "The type of the target."
+          },
+          "templateType": {
+            "label": "Template Type",
+            "hint": "The type of the template."
+          },
+          "templateAngle": {
+            "label": "Template Angle",
+            "hint": "The angle of the template."
+          },
+          "modifies": {
+            "label": "Modifies",
+            "hint": "The feature this feature modifies."
+          },
+          "variableName": {
+            "label": "Variable Name"
+          },
+          "variableDescription": {
+            "label": "Variable Description"
+          },
+          "kind": {
+            "label": "Variable Kind"
+          },
+          "modifiedAoE": {
+            "label": "Modified Area of Effect",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            },
+            "measured": {
+              "label": "Style"
+            },
+            "type": {
+              "label": "Type"
+            },
+            "shape": {
+              "label": "Shape"
+            }
+          },
+          "modifiedRange": {
+            "label": "Modified Range",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            }
+          },
+          "modifiedDuration": {
+            "label": "Modified Duration",
+            "value": {
+              "label": "Value"
+            },
+            "variable": {
+              "label": "Variable"
+            },
+            "unit": {
+              "label": "Unit"
+            },
+            "requirements": {
+              "label": "Requirements"
+            },
+            "dispelInterruptCost": {
+              "label": "Dispel IA Cost"
+            },
+            "dispelActionCost": {
+              "label": "Dispel TA Cost"
+            }
+          },
+          "grantEffect": {
+            "label": "Grant Effect(s)",
+            "hint": "Any effects added here will apply their changes to the target of the spell for one turn, and will re-apply each turn the spell is active."
+          }
+        },
+        "FormulaType": {
+          "Damage": "Damage",
+          "Heal": "Heal",
+          "Test": "Test",
+          "Imbue": "Imbue"
+        },
+        "Variables": {
+          "New": "New Variable",
+          "Delete": "Delete",
+          "None": "None",
+          "Number": "Number",
+          "Text": "Text",
+          "Options": "Options",
+          "Dice": "Dice"
+        },
+        "TargetType": {
+          "Point": "Point in Space",
+          "Template": "Template",
+          "Attach": "Attach to Target"
+        },
+        "Modifies": {
+          "None": "None",
+          "AoE": "Area of Effect",
+          "Range": "Range",
+          "Duration": "Duration"
+        }
+      },
+      "SpecialistTalent": {
+        "attributeRequirements": "Attribute Requirements",
+        "speciesRequirements": "Species Requirements (species name contains value)",
+        "talentRequirements": "Talent Requirements (talent name contains value)",
+        "talentTreeRequirements": "Talent Tree Requirements (all talents in tree unlocked)",
+        "singleTalentTreeRequirements": "At least one talent in this tree unlocked (talent tree name contains value)",
+        "artistryRequirements": "Artistry Requirements (artistry (name) unlocked)",
+        "Resource": {
+          "title": "Resource",
+          "name": "Resource Name",
+          "amount": "Resource Starting Amount",
+          "max": "Resource Maximum Amount",
+          "recoverAmount": "Resource Recovery Amount",
+          "recoverInterval": "Resource Recovery Interval"
+        }
+      }
+    },
+    "Macros": {
+      "FIELDS": {
+        "select": {
+          "label": "Select",
+          "hint": "Select an option from the presented list."
+        }
+      },
+      "TITLES": {
+        "select": {
+          "label": "Select An Option"
+        }
+      },
+      "BUTTONS": {
+        "save": {
+          "label": "Save"
+        }
+      },
+      "DodgeRating": {
+        "label": "Dodge Rating"
+      },
+      "BlockRating": {
+        "label": "Block Rating"
+      }
+    },
+    "Biography": {
+      "biographyFields": "Biography Fields",
+      "age": "Age",
+      "pronouns": "Pronouns",
+      "education": "Education",
+      "ethnicity": "Ethnicity",
+      "occupation": "Occupation",
+      "nationality": "Nationality",
+      "upbringing": "Upbringing",
+      "height": "Height",
+      "weight": "Weight",
+      "bodyType": "Body Type",
+      "hairEyesSkin": "Hair, eyes, and skin",
+      "markings": "Markings",
+      "voice": "Voice / Accent",
+      "quirks": "Quirks",
+      "enemies": "Enemies",
+      "allies": "Allies",
+      "rivals": "Rivals",
+      "family": "Family",
+      "friends": "Friends",
+      "partners": "Partners",
+      "strength": "Strength Source",
+      "reputation": "Reputation",
+      "personalSecrets": "Personal Secrets",
+      "gmSecrets": "GM Secrets",
+      "achievements": "Achievements",
+      "coreMemories": "Core Memories",
+      "phobias": "Phobias",
+      "dreams": "Dreams",
+      "nightmares": "Nightmares",
+      "anathema": "Anathema",
+      "edicts": "Edicts",
+      "hobbies": "Hobbies",
+      "interests": "Interests",
+      "ambitions": "Ambitions",
+      "moralAlignment": "Moral Alignment",
+      "philosophicalAlignment": "Philosophical Alignment",
+      "politicalAlignment": "Political Alignment",
+      "motivations": "Motivations",
+      "birthday": "Birthday",
+      "deathday": "Deathday",
+      "generalKnowledgeDivider": "----- General Knowledge -----",
+      "relationshipsDivider": "----- Relationships -----",
+      "personalInformationDivider": "----- Personal Information -----",
+      "alignmentsDivider": "----- Alignments -----",
+      "publicInformationDivider": "----- Public Information -----"
+    },
+    "SheetLabels": {
+      "Advancement": "Advancement",
+      "forageAndCrafting": "Foraging and Crafting",
+      "talent-tree-selector": "Talent Browser"
+    }
+  },
+  "TYPES": {
+    "Actor": {
+      "character": "Character",
+      "npc": "NPC",
+      "creature": "Creature"
+    },
+    "Item": {
+      "action": "Action",
+      "activity": "Activity",
+      "body": "Body",
+      "class": "Class",
+      "favor": "(Dis)Favor",
+      "gear": "Gear",
+      "gearFeature": "Gear Feature",
+      "generic": "Generic",
+      "kit": "Kit",
+      "quirk": "Quirk",
+      "specialistTalent": "Specialist Talent",
+      "species": "Species",
+      "spell": "Spell",
+      "spellFeature": "Spell Feature",
+      "talent": "Talent",
+      "talentTree": "Talent Tree"
+    },
+    "ActiveEffect": {
+      "temporary": "Temporary",
+      "passive": "Passive",
+      "inactive": "Inactive"
+    }
+  }
+}

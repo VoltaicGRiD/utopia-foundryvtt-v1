@@ -1,0 +1,410 @@
+{
+  "id": "utopia",
+  "title": "Utopia",
+  "description": "The Utopia system for FoundryVTT!",
+  "authors": [
+    {
+      "name": "Dustin Conlon",
+      "discord": "voltaicgrid",
+      "flags": {}
+    },
+    {
+      "name": "Oridont",
+      "discord": "oridont",
+      "flags": {}
+    }
+  ],
+  "url": "https://github.com/VoltaicGRiD/utopia-foundryvtt",
+  "license": "LICENSE.txt",
+  "readme": "README.md",
+  "bugs": "https://github.com/VoltaicGRiD/utopia-foundryvtt/issues",
+  "changelog": "CHANGELOG.md",
+  "media": [
+    {
+      "type": "setup",
+      "url": "systems/utopia/assets/Utopia-Logo.webp",
+      "thumbnail": "systems/utopia/assets/Utopia-Logo.webp",
+      "loop": false,
+      "flags": {}
+    }
+  ],
+  "version": "1.073",
+  "flags": {
+    "lastConfigurationResetVersion": "1.07"
+  },
+  "compatibility": {
+    "minimum": "12",
+    "verified": "13.342"
+  },
+  "esmodules": [
+    "system/utopia.mjs",
+    "lib/ace/src/ace.js"
+  ],
+  "scripts": [
+    "gsap/dist/gsap.min.js"
+  ],
+  "styles": [
+    {
+      "src": "css/utopia.css"
+    },
+    {
+      "src": "lib/ace/css/ace.css"
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json",
+      "flags": {}
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {},
+      "creature": {}
+    },
+    "Item": {
+      "body": {},
+      "kit": {},
+      "class": {},
+      "action": {},
+      "favor": {},
+      "species": {},
+      "quirk": {},
+      "talent": {},
+      "talentTree": {},
+      "specialistTalent": {},
+      "spell": {},
+      "spellFeature": {},
+      "gear": {},
+      "gearFeature": {},
+      "generic": {},
+      "harvest": {},
+      "activity": {}
+    },
+    "ActiveEffect": {
+      "passive": {},
+      "temporary": {},
+      "inactive": {},
+      "specialist": {},
+      "talent": {},
+      "gear": {}
+    }
+  },
+  "packs": [
+    {
+      "name": "species",
+      "label": "SRD Species",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/species",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "quirks",
+      "label": "SRD Quirks",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/quirks",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "talents",
+      "label": "SRD Talents",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/talents",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "talentTrees",
+      "label": "SRD Talent Trees",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/talentTrees",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "specialistTalents",
+      "label": "SRD Specialist Talents",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/specialistTalents",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "actions",
+      "label": "SRD Actions",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/actions",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spellFeatures",
+      "label": "SRD Spell Features",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/spellFeatures",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spells",
+      "label": "SRD Spells",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/spells",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "artificeFeatures",
+      "label": "SRD Artifice Features",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/artificeFeatures",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "utianEquipment",
+      "label": "SRD Utian Equipment",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/utianEquipment",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "pianEquipment",
+      "label": "SRD Pian Equipment",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/pianEquipment",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "martialGear",
+      "label": "SRD Martial Gear",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/martialGear",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "utopiaMacros",
+      "label": "Utopia System Macros",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/utopiaMacros",
+      "type": "Macro",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "favors",
+      "label": "Utility Favors",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/favors",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bodies",
+      "label": "SRD Bodies",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/bodies",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "classes",
+      "label": "SRD Classes",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/classes",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "kits",
+      "label": "SRD Kits",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/kits",
+      "type": "Item",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "creatures",
+      "label": "SRD Creatures",
+      "banner": "systems/utopia/assets/Utopia-Background.webp",
+      "path": "packs/creatures",
+      "type": "Actor",
+      "system": "utopia",
+      "ownership": {
+        "PLAYER": "LIMITED",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Talents Etc.",
+      "sorting": "a",
+      "color": "#ff9500",
+      "packs": [
+        "talents",
+        "talentTrees",
+        "specialistTalents"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Equipment Etc.",
+      "sorting": "a",
+      "color": "#0084ff",
+      "packs": [
+        "artificeFeatures",
+        "gear",
+        "utianEquipment",
+        "pianEquipment",
+        "martialGear"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Species Etc.",
+      "sorting": "a",
+      "color": "#00ff4c",
+      "packs": [
+        "species",
+        "quirks"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Conceptual Etc.",
+      "sorting": "a",
+      "color": "#ff00c8",
+      "packs": [
+        "actions",
+        "favors",
+        "utopiaMacros"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Spells Etc.",
+      "sorting": "a",
+      "color": "#fff700",
+      "packs": [
+        "spells",
+        "spellFeatures"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Creatures Etc.",
+      "sorting": "a",
+      "color": "#6600ff",
+      "packs": [
+        "bodies",
+        "classes",
+        "kits",
+        "creatures"
+      ],
+      "folders": []
+    }
+  ],
+  "socket": true,
+  "manifest": "https://github.com/VoltaicGRiD/utopia-foundryvtt/releases/latest/download/system.json",
+  "download": "https://github.com/VoltaicGRiD/utopia-foundryvtt/releases/latest/download/utopia.zip",
+  "background": "systems/utopia/assets/Utopia-Background.webp",
+  "grid": {
+    "units": "m"
+  },
+  "primaryTokenAttribute": "hitpoints.surface.value",
+  "secondaryTokenAttribute": "hitpoints.deep.value"
+}

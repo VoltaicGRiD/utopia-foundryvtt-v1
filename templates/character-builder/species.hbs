@@ -1,0 +1,105 @@
+<section class="tab builder-species {{tab.cssClass}}" data-group="primary" data-tab="species" data-species="{{selectedSpecies.slug}}">
+  <div class="builder-species-content">
+    <div class="species-selector">
+      {{#each species as |species index|}}
+      <button class="species-option {{#if (eq selectedSpecies species.name) }} active{{/if}}"
+        data-species="{{species.slug}}" data-uuid="{{species.uuid}}" data-action="selectSpecies" {{#if (eq selectedSpecies
+        species.name)}}data-selected="true" {{/if}}>
+        <span class="species-name">{{species.name}}</span>
+      </button>
+      {{/each}}
+    </div>
+
+    <div class="content" data-species-slug="{{selectedSpecies.slug}}">
+      <div class="image">
+        <img src="systems/utopia/assets/species/{{selectedSpecies.name}}.png" alt="{{selectedSpecies.name}}">
+      </div>
+
+      <div class="info">
+        <div class="attributes">
+          <div class="attribute constitution">
+            <img src="systems/utopia/assets/icons/custom-icons/constitution.png" alt="Constitution Icon">
+            <span>Constitution</span>
+            <span class="value">{{selectedSpecies.attributes.constitution}}</span>
+          </div>
+
+          <div class="attribute endurance">
+            <img src="systems/utopia/assets/icons/custom-icons/endurance.png" alt="Endurance Icon">
+            <span>Endurance</span>
+            <span class="value">{{selectedSpecies.attributes.endurance}}</span>
+          </div>
+
+          <div class="attribute effervescence">
+            <img src="systems/utopia/assets/icons/custom-icons/effervescence.png" alt="Effervescence Icon">
+            <span>Effervescence</span>
+            <span class="value">{{selectedSpecies.attributes.effervescence}}</span>
+          </div>
+        </div>
+
+        <div class="counters">
+          <div class="counter block">
+            <img src="systems/utopia/assets/icons/custom-icons/block.png" alt="Block Icon">
+            <span>Block</span>
+            <span class="value">{{selectedSpecies.attributes.block}}</span>
+          </div>
+          <div class="counter dodge">
+            <img src="systems/utopia/assets/icons/custom-icons/dodge.png" alt="Dodge Icon">
+            <span>Dodge</span>
+            <span class="value">{{selectedSpecies.attributes.dodge}}</span>
+          </div>
+        </div>
+
+  {{!-- 
+        <div class="travel">
+          <div class="speed land-speed">
+            <i class="fas fa-shoe-prints"></i>
+            <span>Land Speed</span>
+            <span class="value">{{selectedSpecies.travel.landSpeed}}</span>
+          </div>
+
+          <div class="speed water-speed">
+            <i class="fas fa-water"></i>
+            <span>Water Speed</span>
+            <span class="value">{{selectedSpecies.travel.waterSpeed}}</span>
+          </div>
+
+          <div class="speed air-speed">
+            <i class="fas fa-plane"></i>
+            <span>Air Speed</span>
+            <span class="value">{{selectedSpecies.travel.airSpeed}}</span>
+          </div>
+        </div> --}}
+
+        <div class="special-info">
+          <span>Special Traits</span>
+          <ul>
+            {{#each selectedSpecies.specialTraits as |trait|}}
+            <li>{{trait}}</li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <div class="talents">
+          <span>Talents</span>
+          <div class="talent-container">
+            {{#each selectedSpecies.branches as |branch|}}
+              <div class="talent-branch">
+                {{#each branch as |talent|}}
+                  <div class="talent">
+                    <span class="talent-name" data-tooltip="{{{talent.description}}}">{{talent.name}}</span>
+                  </div>
+                {{/each}} 
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <button class="button" data-action="confirmSpecies" id="confirm-species-selection">Confirm Selection</button>
+      </div>
+
+      <div class="description">
+        {{{selectedSpecies.species.system.description}}}
+      </div>
+    </div>
+  </div>
+</section>
